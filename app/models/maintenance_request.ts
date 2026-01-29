@@ -2,12 +2,9 @@ import { afterDelete, afterSave, beforeSave, belongsTo, column, hasMany } from '
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import type { DateTime } from 'luxon'
 import meiliSearchClient from '#services/meilisearch_service'
-import Contact from './contact.js'
-import Expense from './expense.js'
+
 import Lease from './lease.js'
 import LeaseableEntity from './leaseable_entity.js'
-import Note from './note.js'
-import Photo from './photo.js'
 import SuperBaseModel from './super_base.js'
 import Tenant from './tenant.js'
 
@@ -39,14 +36,11 @@ export default class MaintenanceRequest extends SuperBaseModel {
 
   @belongsTo(() => LeaseableEntity) declare leaseableEntity: BelongsTo<typeof LeaseableEntity>
 
-  @belongsTo(() => Contact) declare contact: BelongsTo<typeof Contact>
   @belongsTo(() => Tenant) declare tenant: BelongsTo<typeof Tenant>
   @belongsTo(() => Lease) declare lease: BelongsTo<typeof Lease>
-  @hasMany(() => Note) declare notes: HasMany<typeof Note>
-  @hasMany(() => Photo, { foreignKey: 'maintenanceId' }) declare photos: HasMany<typeof Photo>
-  @hasMany(() => Expense, { foreignKey: 'maintenanceRequestId' }) declare expenses: HasMany<
-    typeof Expense
-  >
+  // @hasMany(() => Note) declare notes: HasMany<typeof Note>
+  // @belongsTo(() => Contact) declare contact: BelongsTo<typeof Contact>
+  // @hasMany(() => Photo, { foreignKey: 'maintenanceId' }) declare photos: HasMany<typeof Photo>
 
   @beforeSave()
   public static setDefaults(req: MaintenanceRequest) {

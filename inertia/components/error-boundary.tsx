@@ -113,11 +113,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 leftIcon={<RefreshCw className='h-4 w-4' />}>
                 Try Again
               </Button>
-              <Link href='/'>
+              <a href='/'>
                 <Button className='w-full sm:w-auto' leftIcon={<Home className='h-4 w-4' />}>
                   Back to Home
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>

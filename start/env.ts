@@ -54,14 +54,14 @@ export default await Env.create(new URL('../', import.meta.url), {
   MEILISEARCH_HOST: Env.schema.string(),
   MEILISEARCH_API_KEY: Env.schema.string(),
 
+  DEV_DB: Env.schema.string(),
+  PROD_DB: Env.schema.string(),
   /*
   |----------------------------------------------------------
-  | Variables for configuring database connection
+  | Variables for configuring OneSignal
   |----------------------------------------------------------
   */
-  DB_HOST: Env.schema.string({ format: 'host' }),
-  DB_PORT: Env.schema.number(),
-  DB_USER: Env.schema.string(),
-  DB_PASSWORD: Env.schema.string.optional(),
-  DB_DATABASE: Env.schema.string()
+  ONESIGNAL_APP_ID: Env.schema.string(),
+  ONESIGNAL_API_ENDPOINT: Env.schema.string(),
+  ONESIGNAL_API_KEY: Env.schema.string(),
 })

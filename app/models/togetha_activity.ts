@@ -5,15 +5,13 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Document from './document.js'
 import FileUpload from './file_upload.js'
 import Lease from './lease.js'
-import Note from './note.js'
+// import Note from './note.js'
 import Org from './org.js'
 import Payment from './payment.js'
-import Photo from './photo.js'
+// import Photo from './photo.js'
 import Property from './property.js'
-import Room from './room.js'
-import Template from './template.js'
+
 import Tenant from './tenant.js'
-import Unit from './unit.js'
 import User from './user.js'
 
 export const activityTypes = [
@@ -81,12 +79,7 @@ export default class TogethaActivity extends BaseModel {
   @belongsTo(() => Tenant) declare tenant: BelongsTo<typeof Tenant>
   @belongsTo(() => Property) declare property: BelongsTo<typeof Property>
   @belongsTo(() => Lease) declare lease: BelongsTo<typeof Lease>
-  @belongsTo(() => Room) declare room: BelongsTo<typeof Room>
-  @belongsTo(() => Unit) declare unit: BelongsTo<typeof Unit>
   @belongsTo(() => Org) declare org: BelongsTo<typeof Org>
-  @belongsTo(() => Photo) declare photo: BelongsTo<typeof Photo>
-  @belongsTo(() => Note) declare note: BelongsTo<typeof Note>
-  @belongsTo(() => Template) declare template: BelongsTo<typeof Template>
   @belongsTo(() => FileUpload) declare fileUpload: BelongsTo<typeof FileUpload>
   @belongsTo(() => Document) declare document: BelongsTo<typeof Document>
   @belongsTo(() => Payment) declare payment: BelongsTo<typeof Payment>

@@ -37,10 +37,9 @@ class ApiClient {
 
 const api = new ApiClient({
   baseURL: '/api/v1',
-  withCredentials: true,
   headers: {
-    // 'X-Device-Type': 'web',
-    appEnv: localStorage.getItem('appEnv') || 'dev',
+    'X-Device-Type': 'web',
+    // 'App-Env': localStorage.getItem('appEnv') || 'dev',
     Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
 })

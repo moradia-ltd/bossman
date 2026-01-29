@@ -13,6 +13,7 @@ import AutoSwagger from 'adonis-autoswagger'
 import swagger from '#config/swagger'
 import { middleware } from './kernel.js'
 import { throttle } from './limiter.js'
+import './api/api.js'
 
 const AuthController = () => import('#controllers/auth_controller')
 const HealthChecksController = () => import('#controllers/health_checks_controller')
@@ -27,25 +28,29 @@ const BlogPostsController = () => import('#controllers/blog_posts_controller')
 const BlogCategoriesController = () => import('#controllers/blog_categories_controller')
 const BlogTagsController = () => import('#controllers/blog_tags_controller')
 const BlogAuthorsController = () => import('#controllers/blog_authors_controller')
-const AdminController = () => import('#controllers/admin_controller')
-const AdminUsersController = () => import('#controllers/admin_users_controller')
-const AdminTeamsController = () => import('#controllers/admin_teams_controller')
+const DashboardController = () => import('#controllers/dashboard_controller')
+const TeamsPageController = () => import('#controllers/teams_page_controller')
+const LeasesController = () => import('#controllers/leases_controller')
+const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
+const OrgsController = () => import('#controllers/orgs_controller')
 
 router.on('/').renderInertia('home')
 router.on('/home').renderInertia('home')
 
 /**
- * Authenticated app pages (dashboard, users, teams, blog management).
+ * Authenticated app pages (dashboard, teams, blog management).
  * Blog management routes are registered before `/blog/:slug` so `/blog/manage` is matched first.
  */
 router
   .group(() => {
-    router.get('/dashboard', [AdminController, 'index'])
-    router.get('/users', [AdminUsersController, 'index'])
-    router.get('/users/:id/edit', [AdminUsersController, 'edit'])
-    router.get('/users/:id', [AdminUsersController, 'show'])
-    router.put('/users/:id', [AdminUsersController, 'update'])
-    router.get('/teams', [AdminTeamsController, 'index'])
+    router.get('/dashboard', [DashboardController, 'index'])
+    router.get('/teams', [TeamsPageController, 'index'])
+    router.get('/leases', [LeasesController, 'index'])
+    router.get('/leases/:id', [LeasesController, 'show'])
+    router.get('/properties', [LeaseableEntitiesController, 'index'])
+    router.get('/properties/:id', [LeaseableEntitiesController, 'show'])
+    router.get('/orgs', [OrgsController, 'index'])
+    router.get('/orgs/:id', [OrgsController, 'show'])
 
     router
       .group(() => {
@@ -70,7 +75,7 @@ router
       })
       .prefix('blog/manage')
   })
-  .use([middleware.auth(), middleware.admin(), middleware.adminAccess()])
+  .use([middleware.auth(), middleware.appRole(), middleware.pageAccess()])
 
 // Guest routes
 router

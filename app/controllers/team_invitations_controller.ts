@@ -7,10 +7,10 @@ import Team from '#models/team'
 import TeamInvitation from '#models/team_invitation'
 import TeamMember from '#models/team_member'
 import User from '#models/user'
-import { getAdminPageAccessForUser } from '#services/admin_access_service'
 import { generateShortId } from '#services/app.functions'
 import mailer from '#services/email_service'
 import notificationService from '#services/notification_service'
+import { getPageAccessForUser } from '#services/page_access_service'
 import {
   acceptTeamInviteAuthedValidator,
   acceptTeamInviteGuestValidator,
@@ -101,12 +101,12 @@ export default class TeamInvitationsController {
     const isAdmin = (user as { role?: string }).role === 'admin'
 
     if (isAdminTeam && !isAdmin) {
-      return response.forbidden({ error: 'Admin access required to invite to this team.' })
+      return response.forbidden({ error: 'Access required to invite to this team.' })
     }
     if (isAdminTeam) {
-      const allowed = await getAdminPageAccessForUser(freshUser.id)
-      if (Array.isArray(allowed) && !allowed.includes('admin_teams')) {
-        return response.forbidden({ error: 'You do not have access to manage admin teams.' })
+      const allowed = await getPageAccessForUser(freshUser.id)
+      if (Array.isArray(allowed) && !allowed.includes('teams')) {
+        return response.forbidden({ error: 'You do not have access to manage teams.' })
       }
     }
 
@@ -130,7 +130,7 @@ export default class TeamInvitationsController {
       const raw = Array.isArray(adminPages) ? adminPages : []
       const unique = Array.from(new Set(raw))
       // Always include the admin landing page so invitees don't get stuck.
-      if (!unique.includes('admin_dashboard')) unique.unshift('admin_dashboard')
+      if (!unique.includes('dashboard')) unique.unshift('dashboard')
       return unique
     })()
 
@@ -410,14 +410,14 @@ export default class TeamInvitationsController {
 
     const team = await Team.findOrFail(teamId)
     if (team.kind !== 'admin') {
-      return response.forbidden({ error: 'Only admin team invitations can be updated here.' })
+      return response.forbidden({ error: 'Only dashboard team invitations can be updated here.' })
     }
     if ((user as { role?: string }).role !== 'admin') {
-      return response.forbidden({ error: 'Admin access required.' })
+      return response.forbidden({ error: 'Access required.' })
     }
-    const allowed = await getAdminPageAccessForUser(freshUser.id)
-    if (Array.isArray(allowed) && !allowed.includes('admin_teams')) {
-      return response.forbidden({ error: 'You do not have access to manage admin teams.' })
+    const allowed = await getPageAccessForUser(freshUser.id)
+    if (Array.isArray(allowed) && !allowed.includes('teams')) {
+      return response.forbidden({ error: 'You do not have access to manage teams.' })
     }
 
     const invitation = await TeamInvitation.query()
@@ -430,8 +430,8 @@ export default class TeamInvitationsController {
     if (body.adminPages !== undefined) {
       const pages = Array.isArray(body.adminPages) ? body.adminPages : null
       const resolved = pages?.length ? [...pages] : null
-      if (resolved && !resolved.includes('admin_dashboard')) {
-        resolved.unshift('admin_dashboard')
+      if (resolved && !resolved.includes('dashboard')) {
+        resolved.unshift('dashboard')
       }
       invitation.adminPages = resolved?.length ? resolved : null
       await invitation.save()

@@ -23,7 +23,8 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   passwordColumnName: 'password',
 })
 
-export default class User extends compose(SuperBaseModel, AuthFinder) {
+export default class TogethaUser extends compose(SuperBaseModel, AuthFinder) {
+  static table = 'users'
   @column() declare name: string
   @column() declare email: string
   @column({ serializeAs: null }) declare password: string
@@ -175,12 +176,12 @@ export default class User extends compose(SuperBaseModel, AuthFinder) {
   @belongsTo(() => Tenant) declare tenant: BelongsTo<typeof Tenant>
 
   @beforeSave()
-  public static async lowerCaseEmail(user: User) {
+  public static async lowerCaseEmail(user: TogethaUser) {
     if (user.email) user.email = user.email.toLowerCase()
   }
 
   @afterCreate()
-  public static async registerActivity(user: User) {
+  public static async registerActivity(user: TogethaUser) {
     // create a default team for the user
 
     await Activity.create(
@@ -194,9 +195,9 @@ export default class User extends compose(SuperBaseModel, AuthFinder) {
     )
   }
 
-  static accessTokens = DbAccessTokensProvider.forModel(User, {
+  static accessTokens = DbAccessTokensProvider.forModel(TogethaUser, {
     expiresIn: '30d',
   })
 
-  static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
+  static rememberMeTokens = DbRememberMeTokensProvider.forModel(TogethaUser)
 }

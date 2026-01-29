@@ -2,7 +2,7 @@ import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/inertia'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
 import env from '#start/env'
-import { getAdminPageAccessForUser } from '#services/admin_access_service'
+import { getPageAccessForUser } from '#services/page_access_service'
 
 const inertiaConfig = defineConfig({
   /**
@@ -15,12 +15,12 @@ const inertiaConfig = defineConfig({
    */
   sharedData: {
     user: (ctx) => ctx.inertia.always(() => ctx.auth?.user),
-    adminPageAccess: (ctx) =>
+    pageAccess: (ctx) =>
       ctx.inertia.always(async () => {
         const user = ctx.auth?.user as { id?: string; role?: string } | undefined
         if (!user?.id) return null
         if (user.role !== 'admin') return null
-        return await getAdminPageAccessForUser(user.id)
+        return await getPageAccessForUser(user.id)
       }),
     nodeEnv: () => env.get('NODE_ENV'),
     params: (ctx) => ctx.request.params(),

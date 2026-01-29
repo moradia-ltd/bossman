@@ -47,7 +47,7 @@ export default class Org extends SuperBaseModel {
 
   @computed() get cleanName() {
     if (!this?.name) return ''
-    return this.name?.replace(/\s*org\b/i, '').trim()
+    return this.name?.replace(/\s*_org\b/i, '').trim()
   }
 
   @computed() get email() {

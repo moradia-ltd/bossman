@@ -32,6 +32,10 @@ export default function Login({ errors }: LoginProps) {
         description: 'You have been logged in successfully.',
       })
       const data = (response.data as { data?: { redirectTo?: string } }).data
+      const appEnv = localStorage.getItem('appEnv')
+      if (!appEnv) {
+        localStorage.setItem('appEnv', 'dev')
+      }
       router.visit(data?.redirectTo || '/dashboard')
     },
     onError: (err: ServerErrorResponse) => {

@@ -6,7 +6,7 @@ import {
   Filter,
   Search,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DatePicker } from '@/components/ui/date-picker'
@@ -31,6 +31,9 @@ import {
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { cn } from '@/lib/utils'
 
+/** px number or CSS width string (e.g. '10rem', '20%') */
+type WidthValue = number | string
+
 interface Column<T> {
   key: string
   header: string
@@ -39,6 +42,20 @@ interface Column<T> {
   filterable?: boolean
   filterType?: 'text' | 'select' | 'date' | 'dateRange'
   filterOptions?: { value: string; label: string }[]
+  /** Minimum column width (px or CSS string). Prevents column from shrinking too much. */
+  minWidth?: WidthValue
+  /** Maximum column width (px or CSS string). Prevents long content from stretching this column. */
+  maxWidth?: WidthValue
+  /** Fixed or preferred width (px or CSS string). */
+  width?: WidthValue
+  /** Flex grow weight. Columns with flex share remaining space proportionally; others keep min/max/width. */
+  flex?: number
+}
+
+function toCssWidth(value: WidthValue | undefined): string | undefined {
+  if (value === undefined) return undefined
+  if (typeof value === 'number') return `${value}px`
+  return value
 }
 
 interface FilterPreset {
@@ -284,6 +301,56 @@ export function DataTable<T extends { id?: string }>({
   const pageNumbers = getPageNumbers()
   const pageSizeOptions = [10, 20, 50, 100]
 
+  // Column width styles applied to <col>, <th>, and <td>
+  const colStyles = useMemo(() => {
+    const totalFlex = columns.reduce((sum, col) => sum + (col.flex ?? 0), 0)
+    return columns.map((col) => {
+      const style: React.CSSProperties = { boxSizing: 'border-box' }
+      const minW = toCssWidth(col.minWidth)
+      const maxW = toCssWidth(col.maxWidth)
+      if (minW) style.minWidth = minW
+      if (maxW) style.maxWidth = maxW
+      if (col.width !== undefined) {
+        style.width = toCssWidth(col.width)
+      } else if (col.flex != null && col.flex > 0 && totalFlex > 0) {
+        style.width = `${(col.flex / totalFlex) * 100}%`
+      } else if (minW) {
+        style.width = minW
+      }
+      return style
+    })
+  }, [columns])
+
+  const tableScopeId = useId().replace(/:/g, '-')
+  // Inject scoped CSS so column widths apply reliably (inline styles can be overridden by Tailwind/global CSS)
+  const columnWidthCss = useMemo(() => {
+    const totalFlex = columns.reduce((sum, col) => sum + (col.flex ?? 0), 0)
+    const selector = (n: number) =>
+      `[data-dt-columns="${tableScopeId}"] table th:nth-child(${n}), [data-dt-columns="${tableScopeId}"] table td:nth-child(${n})`
+    return columns
+      .map((col, idx) => {
+        const n = selectable ? idx + 2 : idx + 1
+        const minW = toCssWidth(col.minWidth)
+        const maxW = toCssWidth(col.maxWidth)
+        let width = ''
+        if (col.width !== undefined) width = toCssWidth(col.width) ?? ''
+        else if (col.flex != null && col.flex > 0 && totalFlex > 0)
+          width = `${(col.flex / totalFlex) * 100}%`
+        else if (minW) width = minW
+        if (!minW && !maxW && !width) return ''
+        const decls = [
+          minW && `min-width: ${minW}`,
+          maxW && `max-width: ${maxW}`,
+          width && `width: ${width}`,
+        ]
+          .filter(Boolean)
+          .join('; ')
+        return `${selector(n)} { ${decls} }`
+      })
+      .filter(Boolean)
+      .join('\n')
+  }, [columns, selectable, tableScopeId])
+
   return (
     <div className='space-y-4'>
       {/* Search and Filter Bar */}
@@ -432,8 +499,19 @@ export function DataTable<T extends { id?: string }>({
       </div>
 
       {/* Desktop Table View */}
-      <div className='hidden md:block rounded-md border border-border'>
-        <Table>
+      <div
+        className='hidden md:block rounded-md border border-border'
+        data-dt-columns={tableScopeId}>
+        {columnWidthCss ? (
+          <style type='text/css' dangerouslySetInnerHTML={{ __html: columnWidthCss }} />
+        ) : null}
+        <Table className='table-fixed'>
+          <colgroup>
+            {selectable && <col className='w-12' />}
+            {columns.map((column, idx) => (
+              <col key={column.key} style={colStyles[idx]} />
+            ))}
+          </colgroup>
           <TableHeader>
             <TableRow>
               {selectable && (
@@ -445,8 +523,13 @@ export function DataTable<T extends { id?: string }>({
                   />
                 </TableHead>
               )}
-              {columns.map((column) => (
-                <TableHead key={column.key}>{column.header}</TableHead>
+              {columns.map((column, idx) => (
+                <TableHead
+                  key={column.key}
+                  className='min-w-0 overflow-hidden'
+                  style={colStyles[idx]}>
+                  <span className='block truncate'>{column.header}</span>
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
@@ -491,11 +574,16 @@ export function DataTable<T extends { id?: string }>({
                         />
                       </TableCell>
                     )}
-                    {columns.map((column) => (
-                      <TableCell key={column.key}>
-                        {column.cell
-                          ? column.cell(row)
-                          : String((row as Record<string, unknown>)[column.key] ?? '')}
+                    {columns.map((column, idx) => (
+                      <TableCell
+                        key={column.key}
+                        className='min-w-0'
+                        style={colStyles[idx]}>
+                        <div className='min-w-0 overflow-hidden'>
+                          {column.cell
+                            ? column.cell(row)
+                            : String((row as Record<string, unknown>)[column.key] ?? '')}
+                        </div>
                       </TableCell>
                     ))}
                   </TableRow>
@@ -524,7 +612,7 @@ export function DataTable<T extends { id?: string }>({
             const rowKey = rowId || `row-${Math.random()}`
             const actionsColumn = columns.find((col) => col.key === 'actions')
             const dataColumns = columns.filter((col) => col.key !== 'actions')
-            
+
             const Content = (
               <>
                 {selectable && (

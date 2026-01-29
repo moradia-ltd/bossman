@@ -5,7 +5,7 @@ import { createBlogCategoryValidator } from '#validators/blog'
 export default class BlogCategoriesController {
   async index({ inertia }: HttpContext) {
     const categories = await BlogCategory.query().orderBy('name', 'asc')
-    return inertia.render('blog/admin/categories', { categories })
+    return inertia.render('blog/manage/categories', { categories })
   }
 
   async store({ request, response }: HttpContext) {

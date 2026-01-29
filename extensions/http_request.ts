@@ -1,8 +1,15 @@
 import { Request } from '@adonisjs/core/http'
-import type { CookieOptions } from '@adonisjs/core/types/http'
 import { DateTime } from 'luxon'
 import type { QueryParams } from '#utils/vine'
 import { validateQueryParams } from '#utils/vine'
+
+type AppEnv = 'dev' | 'prod'
+
+Request.macro('appEnv', function (this: Request): AppEnv {
+  const headers = this.headers()
+  const appEnv = headers['appEnv'] || 'dev'
+  return appEnv as AppEnv
+})
 
 Request.macro('timeZone', function (this: Request): string {
   const headers = this.headers()
@@ -29,17 +36,13 @@ Request.macro('paginationQs', async function (this: Request) {
 
 declare module '@adonisjs/core/http' {
   interface Request {
+    appEnv(): AppEnv
+
     timeZone(): string
     userDateTime(): DateTime
     appDateTime(): DateTime
     paginationQs(): Promise<QueryParams>
     authHeader(data: {}): Record<string, string>
   }
-  interface Response {
-    setCookie(
-      name: string,
-      value: string,
-      options?: Partial<CookieOptions & { encode: boolean }>,
-    ): void
-  }
+  interface Response {}
 }

@@ -33,11 +33,11 @@ export default function NotFound() {
               leftIcon={<ArrowLeft className='h-4 w-4' />}>
               Go Back
             </Button>
-            <Link href='/'>
+            <a href='/'>
               <Button className='w-full sm:w-auto' leftIcon={<Home className='h-4 w-4' />}>
                 Back to Home
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

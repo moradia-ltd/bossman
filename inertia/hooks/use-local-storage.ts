@@ -1,5 +1,22 @@
 import { useCallback, useEffect, useState } from 'react'
 
+/** Prefix for string values so we don't store them as JSON (which adds quotes in localStorage). */
+const STRING_PREFIX = '\u200B' // zero-width space: invisible, preserves "no quotes" display
+
+function serialize<T>(value: T): string {
+  if (typeof value === 'string') {
+    return STRING_PREFIX + value
+  }
+  return JSON.stringify(value)
+}
+
+function deserialize<T>(raw: string): T {
+  if (raw.startsWith(STRING_PREFIX)) {
+    return raw.slice(STRING_PREFIX.length) as T
+  }
+  return JSON.parse(raw) as T
+}
+
 export function useLocalStorage<T>(key: string, initialValue: T) {
   // Always start with initialValue to match SSR
   const [storedValue, setStoredValue] = useState<T>(initialValue)
@@ -12,7 +29,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       if (typeof window !== 'undefined') {
         const item = window.localStorage.getItem(key)
         if (item) {
-          setStoredValue(JSON.parse(item) as T)
+          setStoredValue(deserialize<T>(item))
         }
       }
     } catch (error) {
@@ -31,7 +48,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         setStoredValue(valueToStore)
         // Save to local storage (only after mount)
         if (isMounted && typeof window !== 'undefined') {
-          window.localStorage.setItem(key, JSON.stringify(valueToStore))
+          window.localStorage.setItem(key, serialize(valueToStore))
         }
       } catch (error) {
         // A more advanced implementation would handle the error case

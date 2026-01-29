@@ -21,23 +21,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
-type AdminPageKey = 'admin_dashboard' | 'admin_users' | 'admin_blog' | 'admin_teams'
+type PageKey = 'dashboard' | 'teams' | 'blog'
 
-const ADMIN_PAGE_OPTIONS: Array<{
-  key: AdminPageKey
+const PAGE_OPTIONS: Array<{
+  key: PageKey
   label: string
   description: string
   required?: boolean
 }> = [
-    {
-      key: 'admin_dashboard',
-      label: 'Dashboard',
-      description: 'Admin overview + activity',
-      required: true,
-    },
-    { key: 'admin_users', label: 'Users', description: 'View users and user details' },
-    { key: 'admin_blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
-    { key: 'admin_teams', label: 'Teams', description: 'Manage teams and invites' },
+    { key: 'dashboard', label: 'Dashboard', description: 'Overview + activity', required: true },
+    { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
+    { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
   ]
 
 interface TeamMemberRow {
@@ -46,14 +40,14 @@ interface TeamMemberRow {
   email: string | null
   role: string
   createdAt: string
-  adminPages: AdminPageKey[] | null
+  adminPages: PageKey[] | null
 }
 
-function togglePageInSet(pages: AdminPageKey[], key: AdminPageKey, next: boolean): AdminPageKey[] {
+function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): PageKey[] {
   const set = new Set(pages)
   if (next) set.add(key)
   else set.delete(key)
-  set.add('admin_dashboard')
+  set.add('dashboard')
   return Array.from(set)
 }
 
@@ -63,7 +57,7 @@ interface InvitationRow {
   role: string
   createdAt: string
   invitedBy: string | null
-  adminPages: AdminPageKey[] | null
+  adminPages: PageKey[] | null
 }
 
 const memberColumns: Column<TeamMemberRow>[] = [
@@ -77,11 +71,11 @@ const memberColumns: Column<TeamMemberRow>[] = [
   },
   {
     key: 'adminPages',
-    header: 'Admin pages',
+    header: 'Page access',
     cell: (row) => {
       if (!row.adminPages?.length) return <span className='text-sm text-muted-foreground'>All</span>
       const label = row.adminPages
-        .map((k) => ADMIN_PAGE_OPTIONS.find((o) => o.key === k)?.label || k)
+        .map((k) => PAGE_OPTIONS.find((o) => o.key === k)?.label || k)
         .join(', ')
       return <span className='text-sm text-muted-foreground'>{label}</span>
     },
@@ -94,23 +88,23 @@ const memberColumns: Column<TeamMemberRow>[] = [
   },
 ]
 
-export default function AdminTeamsPage() {
+export default function TeamsPage() {
   const queryClient = useQueryClient()
   const [inviteEmail, setInviteEmail] = useState('')
-  const [invitePages, setInvitePages] = useState<AdminPageKey[]>(
-    ADMIN_PAGE_OPTIONS.map((o) => o.key),
+  const [invitePages, setInvitePages] = useState<PageKey[]>(
+    PAGE_OPTIONS.map((o) => o.key),
   )
 
   const [membersPage, setMembersPage] = useState(1)
   const [membersPerPage, setMembersPerPage] = useState(10)
   const [membersSearch, setMembersSearch] = useState('')
   const [editMember, setEditMember] = useState<TeamMemberRow | null>(null)
-  const [editMemberPages, setEditMemberPages] = useState<AdminPageKey[]>(ADMIN_PAGE_OPTIONS.map((o) => o.key))
+  const [editMemberPages, setEditMemberPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
   const [editInvitation, setEditInvitation] = useState<InvitationRow | null>(null)
-  const [editInvitationPages, setEditInvitationPages] = useState<AdminPageKey[]>(ADMIN_PAGE_OPTIONS.map((o) => o.key))
+  const [editInvitationPages, setEditInvitationPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
 
   const teamsQuery = useQuery({
-    queryKey: ['admin-team'],
+    queryKey: ['dashboard-team'],
     queryFn: async () => {
       const res = await api.get<{ data: { teams: RawTeam[] } }>('/teams', {
         params: { kind: 'admin' },
@@ -120,15 +114,15 @@ export default function AdminTeamsPage() {
   })
 
   const teams = teamsQuery.data ?? []
-  const adminTeam = teams[0] ?? null
+  const dashboardTeam = teams[0] ?? null
 
   // Reset list state when switching (shouldn't happen, but keep safe)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const adminTeamId = adminTeam?.id || ''
+  const dashboardTeamId = dashboardTeam?.id || ''
 
   const membersQuery = useQuery({
-    queryKey: ['admin-team-members', adminTeamId, membersPage, membersPerPage, membersSearch],
-    enabled: Boolean(adminTeamId),
+    queryKey: ['dashboard-team-members', dashboardTeamId, membersPage, membersPerPage, membersSearch],
+    enabled: Boolean(dashboardTeamId),
     queryFn: async () => {
       const res = await api.get<{
         data: {
@@ -139,11 +133,11 @@ export default function AdminTeamsPage() {
             role: string
             createdAt: string
             invitedBy: string | null
-            adminPages: AdminPageKey[] | null
+            adminPages: PageKey[] | null
           }>
           meta: { currentPage: number; perPage: number; total: number; lastPage: number }
         }
-      }>(`/teams/${adminTeamId}/members`, {
+      }>(`/teams/${dashboardTeamId}/members`, {
         params: {
           page: membersPage,
           perPage: membersPerPage,
@@ -161,7 +155,7 @@ export default function AdminTeamsPage() {
       email: m.email || '—',
       role: m.role || 'member',
       createdAt: m.createdAt || '',
-      adminPages: (m.adminPages as AdminPageKey[] | null) ?? null,
+      adminPages: (m.adminPages as PageKey[] | null) ?? null,
     }))
   }, [membersQuery.data?.members])
 
@@ -172,23 +166,23 @@ export default function AdminTeamsPage() {
       role: inv.role,
       createdAt: inv.createdAt,
       invitedBy: inv.invitedBy,
-      adminPages: (inv.adminPages as AdminPageKey[] | null) ?? null,
+      adminPages: (inv.adminPages as PageKey[] | null) ?? null,
     }))
   }, [membersQuery.data?.invitations])
 
   const inviteMutation = useMutation({
-    mutationFn: (payload: { teamId: string; email: string; adminPages: AdminPageKey[] }) =>
+    mutationFn: (payload: { teamId: string; email: string; adminPages: PageKey[] }) =>
       api.post(`/teams/${payload.teamId}/invitations`, {
         email: payload.email,
         adminPages: payload.adminPages,
       }),
     onSuccess: async () => {
       setInviteEmail('')
-      setInvitePages(ADMIN_PAGE_OPTIONS.map((o) => o.key))
+      setInvitePages(PAGE_OPTIONS.map((o) => o.key))
       toast.success('Invite sent successfully')
       // Invalidate and refetch the members query to show the new invitation
       await queryClient.invalidateQueries({
-        queryKey: ['admin-team-members', adminTeamId],
+        queryKey: ['dashboard-team-members', dashboardTeamId],
       })
     },
     onError: (err: ServerErrorResponse) => {
@@ -198,20 +192,20 @@ export default function AdminTeamsPage() {
     },
   })
 
-  const toggleInvitePage = (key: AdminPageKey, next: boolean) => {
-    if (key === 'admin_dashboard') return
+  const toggleInvitePage = (key: PageKey, next: boolean) => {
+    if (key === 'dashboard') return
     setInvitePages((prev) => togglePageInSet(prev, key, next))
   }
 
   const updateMemberMutation = useMutation({
-    mutationFn: async ({ memberId, adminPages }: { memberId: string; adminPages: AdminPageKey[] }) => {
-      if (!adminTeam) throw new Error('No team')
-      await api.put(`/teams/${adminTeam.id}/members/${memberId}`, { adminPages })
+    mutationFn: async ({ memberId, adminPages }: { memberId: string; adminPages: PageKey[] }) => {
+      if (!dashboardTeam) throw new Error('No team')
+      await api.put(`/teams/${dashboardTeam.id}/members/${memberId}`, { adminPages })
     },
     onSuccess: () => {
       setEditMember(null)
       toast.success('Member updated')
-      queryClient.invalidateQueries({ queryKey: ['admin-team-members', adminTeamId] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-team-members', dashboardTeamId] })
     },
     onError: (err: ServerErrorResponse) => {
       toast.error(serverErrorResponder(err) || 'Failed to update member')
@@ -219,14 +213,14 @@ export default function AdminTeamsPage() {
   })
 
   const updateInvitationMutation = useMutation({
-    mutationFn: async ({ invitationId, adminPages }: { invitationId: string; adminPages: AdminPageKey[] }) => {
-      if (!adminTeam) throw new Error('No team')
-      await api.put(`/teams/${adminTeam.id}/invitations/${invitationId}`, { adminPages })
+    mutationFn: async ({ invitationId, adminPages }: { invitationId: string; adminPages: PageKey[] }) => {
+      if (!dashboardTeam) throw new Error('No team')
+      await api.put(`/teams/${dashboardTeam.id}/invitations/${invitationId}`, { adminPages })
     },
     onSuccess: () => {
       setEditInvitation(null)
       toast.success('Invitation updated')
-      queryClient.invalidateQueries({ queryKey: ['admin-team-members', adminTeamId] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-team-members', dashboardTeamId] })
     },
     onError: (err: ServerErrorResponse) => {
       toast.error(serverErrorResponder(err) || 'Failed to update invitation')
@@ -235,11 +229,11 @@ export default function AdminTeamsPage() {
 
   const openEditMember = (row: TeamMemberRow) => {
     setEditMember(row)
-    setEditMemberPages(row.adminPages?.length ? [...row.adminPages] : ADMIN_PAGE_OPTIONS.map((o) => o.key))
+    setEditMemberPages(row.adminPages?.length ? [...row.adminPages] : PAGE_OPTIONS.map((o) => o.key))
   }
   const openEditInvitation = (inv: InvitationRow) => {
     setEditInvitation(inv)
-    setEditInvitationPages(inv.adminPages?.length ? [...inv.adminPages] : ADMIN_PAGE_OPTIONS.map((o) => o.key))
+    setEditInvitationPages(inv.adminPages?.length ? [...inv.adminPages] : PAGE_OPTIONS.map((o) => o.key))
   }
 
   const memberColumnsWithActions: Column<TeamMemberRow>[] = useMemo(
@@ -264,15 +258,15 @@ export default function AdminTeamsPage() {
 
   return (
     <DashboardLayout>
-      <Head title='Admin teams' />
+      <Head title='Teams' />
       <div className='space-y-6'>
         <PageHeader
           title='Team members'
-          description='Invite admin users and control which admin pages they can access.'
+          description='Invite users and control which pages they can access.'
           actions={
             <BaseModal
-              title='Invite admin member'
-              description='Select the admin pages this person can access, then send the invite.'
+              title='Invite member'
+              description='Select the pages this person can access, then send the invite.'
               trigger={
                 <Button leftIcon={<Plus className='h-4 w-4' />} isLoading={inviteMutation.isPending} loadingText='Sending invite...'>
                   Invite member
@@ -283,29 +277,29 @@ export default function AdminTeamsPage() {
               primaryVariant='default'
               secondaryVariant='outline'
               isLoading={inviteMutation.isPending}
-              primaryDisabled={!inviteEmail.trim() || !adminTeam}
-              onSecondaryAction={() => {
-                setInviteEmail('')
-                setInvitePages(ADMIN_PAGE_OPTIONS.map((o) => o.key))
-              }}
+              primaryDisabled={!inviteEmail.trim() || !dashboardTeam}
               onPrimaryAction={async () => {
-                if (!adminTeam) return
+                if (!dashboardTeam) return
                 const email = inviteEmail.trim()
                 if (!email) return
                 inviteMutation.mutate({
-                  teamId: adminTeam.id,
+                  teamId: dashboardTeam.id,
                   email,
                   adminPages: invitePages,
                 })
+              }}
+              onSecondaryAction={() => {
+                setInviteEmail('')
+                setInvitePages(PAGE_OPTIONS.map((o) => o.key))
               }}
               className='max-w-2xl'>
               {teamsQuery.isLoading ? (
                 <div className='text-sm text-muted-foreground py-4'>Loading teams…</div>
               ) : teamsQuery.isError ? (
                 <Alert variant='destructive'>
-                  <AlertDescription>Failed to load admin team.</AlertDescription>
+                  <AlertDescription>Failed to load team.</AlertDescription>
                 </Alert>
-              ) : adminTeam ? (
+              ) : dashboardTeam ? (
                 <Stack spacing={4}>
                   <div className='space-y-2'>
                     <Label htmlFor='inviteEmail'>Invite by email</Label>
@@ -319,9 +313,9 @@ export default function AdminTeamsPage() {
                   </div>
 
                   <div className='space-y-2'>
-                    <Label>Admin page access</Label>
+                    <Label>Page access</Label>
                     <div className='grid gap-2 rounded-lg border border-border p-3'>
-                      {ADMIN_PAGE_OPTIONS.map((opt) => {
+                      {PAGE_OPTIONS.map((opt) => {
                         const checked = invitePages.includes(opt.key)
                         const disabled = Boolean(opt.required)
                         return (
@@ -346,14 +340,14 @@ export default function AdminTeamsPage() {
                 </Stack>
               ) : (
                 <div className='text-sm text-muted-foreground py-4'>
-                  Admin team is initializing. Refresh this page in a moment.
+                  Team is initializing. Refresh this page in a moment.
                 </div>
               )}
             </BaseModal>
           }
         />
 
-        {adminTeam ? (
+        {dashboardTeam ? (
           <>
             {invitationRows.length > 0 && (
               <Card>
@@ -368,7 +362,7 @@ export default function AdminTeamsPage() {
                         <TableRow>
                           <TableHead>Email</TableHead>
                           <TableHead>Role</TableHead>
-                          <TableHead>Admin pages</TableHead>
+                          <TableHead>Page access</TableHead>
                           <TableHead>Invited by</TableHead>
                           <TableHead>Invited</TableHead>
                           <TableHead className='w-10' />
@@ -387,7 +381,7 @@ export default function AdminTeamsPage() {
                               ) : (
                                 <span className='text-sm text-muted-foreground'>
                                   {inv.adminPages
-                                    .map((k) => ADMIN_PAGE_OPTIONS.find((o) => o.key === k)?.label || k)
+                                    .map((k) => PAGE_OPTIONS.find((o) => o.key === k)?.label || k)
                                     .join(', ')}
                                 </span>
                               )}
@@ -419,7 +413,7 @@ export default function AdminTeamsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Team members</CardTitle>
-                <CardDescription>Members with admin access.</CardDescription>
+                <CardDescription>Members with page access.</CardDescription>
               </CardHeader>
               <CardContent>
                 {membersQuery.isError ? (
@@ -477,7 +471,7 @@ export default function AdminTeamsPage() {
           isLoading={updateMemberMutation.isPending}
           onSecondaryAction={() => setEditMember(null)}
           onPrimaryAction={() => {
-            if (!editMember || !adminTeam) return
+            if (!editMember || !dashboardTeam) return
             updateMemberMutation.mutate({
               memberId: editMember.id,
               adminPages: editMemberPages,
@@ -488,7 +482,7 @@ export default function AdminTeamsPage() {
             <div className='space-y-2'>
               <Label>Page access</Label>
               <div className='grid gap-2 rounded-lg border border-border p-3'>
-                {ADMIN_PAGE_OPTIONS.map((opt) => {
+                {PAGE_OPTIONS.map((opt) => {
                   const checked = editMemberPages.includes(opt.key)
                   const disabled = Boolean(opt.required)
                   return (
@@ -530,7 +524,7 @@ export default function AdminTeamsPage() {
           isLoading={updateInvitationMutation.isPending}
           onSecondaryAction={() => setEditInvitation(null)}
           onPrimaryAction={() => {
-            if (!editInvitation || !adminTeam) return
+            if (!editInvitation || !dashboardTeam) return
             updateInvitationMutation.mutate({
               invitationId: editInvitation.id,
               adminPages: editInvitationPages,
@@ -541,7 +535,7 @@ export default function AdminTeamsPage() {
             <div className='space-y-2'>
               <Label>Page access</Label>
               <div className='grid gap-2 rounded-lg border border-border p-3'>
-                {ADMIN_PAGE_OPTIONS.map((opt) => {
+                {PAGE_OPTIONS.map((opt) => {
                   const checked = editInvitationPages.includes(opt.key)
                   const disabled = Boolean(opt.required)
                   return (

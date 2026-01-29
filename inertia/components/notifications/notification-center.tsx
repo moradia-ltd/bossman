@@ -57,7 +57,7 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
     staleTime: 30000, // 30 seconds
   })
 
-  console.log(notificationsData)
+
 
   const notifications = notificationsData?.data?.notifications.data || []
   const unreadCount = notificationsData?.data?.unreadCount ?? initialUnreadCount

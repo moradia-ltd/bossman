@@ -7,7 +7,7 @@ import Property from './property.js'
 
 import TeamMember from './team_member.js'
 import type { ActivityType } from './togetha_activity.js'
-import User from './user.js'
+import TogethaUser from './togetha_user.js'
 
 export default class Activity extends BaseModel {
   @column({ isPrimary: true }) declare id: string
@@ -50,8 +50,9 @@ export default class Activity extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @belongsTo(() => User, { localKey: 'id', foreignKey: 'userId' })
-  declare user: BelongsTo<typeof User>
+  @belongsTo(() => TogethaUser, { localKey: 'id', foreignKey: 'userId' })
+  declare user: BelongsTo<typeof TogethaUser>
+
   @belongsTo(() => TeamMember) declare teamMember: BelongsTo<typeof TeamMember>
   @belongsTo(() => Property) declare property: BelongsTo<typeof Property>
   @belongsTo(() => Lease) declare lease: BelongsTo<typeof Lease>

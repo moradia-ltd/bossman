@@ -2,7 +2,7 @@
 
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { router, usePage } from '@inertiajs/react'
-import { Check, LayoutDashboard, LogOut, Moon, Newspaper, PlusSquare, Settings, Sun, Users, UsersRound } from 'lucide-react'
+import { Check, LayoutDashboard, LogOut, Moon, Newspaper, PlusSquare, Settings, Sun, UsersRound } from 'lucide-react'
 import * as React from 'react'
 import {
   CommandDialog,
@@ -15,14 +15,14 @@ import {
 } from '@/components/ui/command'
 import { useTheme } from '@/hooks/use-theme'
 
-type AdminPageKey = 'admin_dashboard' | 'admin_users' | 'admin_blog' | 'admin_teams'
+type PageKey = 'dashboard' | 'teams' | 'blog'
 
 type CommandEntry = {
   label: string
   href: string
   icon?: React.ReactNode
   keywords?: string
-  requires?: AdminPageKey
+  requires?: PageKey
 }
 
 function isEditableTarget(target: EventTarget | null) {
@@ -36,7 +36,7 @@ export function CommandPalette() {
   const page = usePage<SharedProps>()
   const isLoggedIn = Boolean(page.props.isLoggedIn)
   const { theme, setTheme } = useTheme()
-  const adminPageAccess = (page.props as SharedProps & { adminPageAccess?: AdminPageKey[] | null }).adminPageAccess
+  const pageAccess = (page.props as SharedProps & { pageAccess?: PageKey[] | null }).pageAccess
 
   const [open, setOpen] = React.useState(false)
 
@@ -74,14 +74,13 @@ export function CommandPalette() {
   if (!isLoggedIn) return null
 
   const appNav: CommandEntry[] = [
-    { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='mr-2 h-4 w-4' />, requires: 'admin_dashboard' },
-    { label: 'Users', href: '/users', icon: <Users className='mr-2 h-4 w-4' />, requires: 'admin_users' },
-    { label: 'Teams', href: '/teams', icon: <UsersRound className='mr-2 h-4 w-4' />, requires: 'admin_teams' },
-    { label: 'Blog', href: '/blog/manage', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'admin_blog' },
-    { label: 'New blog post', href: '/blog/manage/create', icon: <PlusSquare className='mr-2 h-4 w-4' />, requires: 'admin_blog' },
-    { label: 'Blog categories', href: '/blog/manage/categories', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'admin_blog' },
-    { label: 'Blog tags', href: '/blog/manage/tags', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'admin_blog' },
-    { label: 'Blog authors', href: '/blog/manage/authors', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'admin_blog' },
+    { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Teams', href: '/teams', icon: <UsersRound className='mr-2 h-4 w-4' />, requires: 'teams' },
+    { label: 'Blog', href: '/blog/manage', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'New blog post', href: '/blog/manage/create', icon: <PlusSquare className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Blog categories', href: '/blog/manage/categories', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Blog tags', href: '/blog/manage/tags', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Blog authors', href: '/blog/manage/authors', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
     { label: 'Settings', href: '/settings', icon: <Settings className='mr-2 h-4 w-4' /> },
   ]
 
@@ -90,8 +89,8 @@ export function CommandPalette() {
   ]
 
   const visibleAppNav = (() => {
-    if (!adminPageAccess) return appNav
-    return appNav.filter((i) => !i.requires || adminPageAccess.includes(i.requires))
+    if (!pageAccess) return appNav
+    return appNav.filter((i) => !i.requires || pageAccess.includes(i.requires))
   })()
 
   return (

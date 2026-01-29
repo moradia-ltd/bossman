@@ -14,6 +14,8 @@ export default class extends BaseSchema {
       table.uuid('user_id').notNullable().index()
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
 
+      table.text('admin_pages').nullable()
+
       table.timestamp('created_at')
       table.timestamp('updated_at')
 
@@ -27,4 +29,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

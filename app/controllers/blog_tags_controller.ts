@@ -5,7 +5,7 @@ import { createBlogTagValidator } from '#validators/blog'
 export default class BlogTagsController {
   async index({ inertia }: HttpContext) {
     const tags = await BlogTag.query().orderBy('name', 'asc')
-    return inertia.render('blog/admin/tags', { tags })
+    return inertia.render('blog/manage/tags', { tags })
   }
 
   async store({ request, response }: HttpContext) {

@@ -1,9 +1,21 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
+import env from '#start/env'
 
 const dbConfig = defineConfig({
   connection: 'sqlite',
+
   connections: {
+    dev: {
+      client: 'pg',
+      connection: env.get('DEV_DB'),
+      debug: false,
+    },
+    prod: {
+      client: 'pg',
+      connection: env.get('PROD_DB'),
+    },
+
     sqlite: {
       client: 'better-sqlite3',
       connection: {

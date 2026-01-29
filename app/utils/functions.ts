@@ -5,6 +5,10 @@ export function convertBytesToMb(bytes: number) {
   return (bytes / 1024 / 1024).toFixed(2)
 }
 
+export function formatNumber(num: number | undefined) {
+  return new Intl.NumberFormat('en-GB').format(num ?? 0)
+}
+
 export function startCase(str?: string): string {
   if (!str) {
     return ''
@@ -68,18 +72,6 @@ export function rentBreakdown(monthlyRent: number, frequency: 'monthly' | 'quart
     yearlyRent,
     actualAmount,
   }
-}
-
-export function formatCurrency(value: number, currency?: string): string {
-  if (!value) return '£0.00'
-
-  const formatter = new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: currency || 'GBP',
-    maximumFractionDigits: 2,
-  })
-
-  return formatter.format(value)
 }
 
 export function pluralize(num: number, word: string): string {

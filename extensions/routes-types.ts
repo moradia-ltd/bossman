@@ -1,24 +1,31 @@
+
 export const API_ROUTES = {
-  GET: [
+  GET: ['/dashboard/stats',
+    '/dashboard/activity',
+    '/leases/stats',
+    '/leases/:id/payments',
+    '/leases/:id/activity',
+    '/leaseable-entities/stats',
+    '/leaseable-entities/:id/leases',
+    '/leaseable-entities/:id/activity',
+    '/orgs/stats',
+    '/orgs/:id/leases',
+    '/orgs/:id/properties',
+    '/orgs/:id/activities',
     '/auth/verify-email',
     '/auth/verify-email-change',
-    '/teams',
-    '/teams/:teamId/members',
     '/user/sessions',
     '/user/settings',
+    '/teams',
+    '/teams/:teamId/members',
     '/notifications',
     '/notifications/unread-count',
     '/audits',
-    '/audits/recent',
-  ] as const,
-  POST: [
-    '/auth/login',
+    '/audits/recent'] as const,
+  POST: ['/auth/login',
     '/auth/forgot-password',
     '/auth/reset-password',
     '/auth/verify-email/resend',
-    '/teams',
-    '/teams/:teamId/invitations',
-    '/team-invitations/accept',
     '/user/avatar',
     '/user/sessions/revoke',
     '/user/sessions/revoke-all',
@@ -27,30 +34,39 @@ export const API_ROUTES = {
     '/user/2fa/disable',
     '/user/2fa/verify',
     '/user/2fa/recovery-codes',
+    '/teams',
+    '/teams/:teamId/invitations',
+    '/team-invitations/accept',
     '/notifications/mark-as-read',
-    '/notifications/mark-all-as-read',
-  ] as const,
-  PUT: ['/user/profile', '/user/password', '/user/settings'] as const,
-  DELETE: ['/user/avatar', '/user/account', '/notifications/:id'] as const,
-}
+    '/notifications/mark-all-as-read'] as const,
+  PUT: ['/user/profile',
+    '/user/password',
+    '/user/settings',
+    '/teams/:teamId/members/:memberId',
+    '/teams/:teamId/invitations/:invitationId'] as const,
+  DELETE: ['/user/avatar',
+    '/user/account',
+    '/notifications/:id'] as const,
+};
 
-type ReplaceParam<T extends string> = T extends `${infer Start}:${infer _Param}/${infer Rest}`
-  ? `${Start}${string}/${ReplaceParam<Rest>}`
-  : T extends `${infer Start}:${infer _Param}`
-    ? `${Start}${string}`
-    : T
+type ReplaceParam<T extends string> =
+  T extends `${infer Start}:${infer Param}/${infer Rest}`
+    ? `${Start}${string}/${ReplaceParam<Rest>}`
+    : T extends `${infer Start}:${infer Param}`
+      ? `${Start}${string}`
+      : T;
 
 type TransformRoutes<T extends readonly string[]> = {
-  [K in keyof T]: T[K] | ReplaceParam<T[K]>
-}[number]
+  [K in keyof T]: T[K] | ReplaceParam<T[K]>;
+}[number];
 
 export type APIRoutes = {
-  [K in keyof typeof API_ROUTES]: TransformRoutes<(typeof API_ROUTES)[K]>
-}
+  [K in keyof typeof API_ROUTES]: TransformRoutes<typeof API_ROUTES[K]>;
+};
 
 export type APIRouteStatic = {
-  [K in keyof typeof API_ROUTES]: (typeof API_ROUTES)[K][number]
-}
+  [K in keyof typeof API_ROUTES]: typeof API_ROUTES[K][number];
+};
 
 // Usage example:
 // const apiRoutes: APIRoutes = API_ROUTES as any;

@@ -9,19 +9,16 @@ import { createBlogPostValidator, updateBlogPostValidator } from '#validators/bl
 
 export default class BlogPostsController {
   async index({ request, inertia }: HttpContext) {
-    const queryParams = await request.paginationQs()
-
-    const query = BlogPost.query()
-      .whereNotNull('published_at')
+    const params = await request.paginationQs()
+    const posts = await BlogPost.query()
+      .whereNotNull('publishedAt')
       .preload('category')
       .preload('tags')
       .preload('authors')
-      .orderBy('published_at', 'desc')
-      .if(queryParams.search, (q) => {
-        q.where('title', 'like', `%${queryParams.search}%`)
-      })
-
-    const posts = await query.paginate(queryParams.page || 1, queryParams.perPage || 12)
+      .orderBy('publishedAt', 'desc')
+      .if(params.search, (q) => q.whereILike('title', `%${params.search}%`))
+      .sortBy(params.sortBy || 'publishedAt', params.sortOrder || 'desc')
+      .paginate(params.page || 1, params.perPage || 12)
 
     return inertia.render('blog/index', { posts })
   }
@@ -41,24 +38,20 @@ export default class BlogPostsController {
   }
 
   async adminIndex({ request, inertia }: HttpContext) {
-    const queryParams = await request.paginationQs()
-
-    let query = BlogPost.query()
+    const params = await request.paginationQs()
+    const posts = await BlogPost.query()
       .preload('category')
       .preload('tags')
       .preload('authors')
-      .orderBy('created_at', 'desc')
-
-    if (queryParams.search) {
-      const searchTerm = `%${queryParams.search}%`
-      query = query.where((q) => {
-        q.where('title', 'like', searchTerm).orWhere('summary', 'like', searchTerm)
+      .orderBy('createdAt', 'desc')
+      .if(params.search, (q) => {
+        const term = `%${params.search}%`
+        q.whereILike('title', term).orWhereILike('summary', term)
       })
-    }
+      .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
+      .paginate(params.page || 1, params.perPage || 10)
 
-    const posts = await query.paginate(queryParams.page || 1, queryParams.perPage || 10)
-
-    return inertia.render('blog/admin/index', { posts })
+    return inertia.render('blog/manage/index', { posts })
   }
 
   async create({ inertia }: HttpContext) {
@@ -66,7 +59,7 @@ export default class BlogPostsController {
     const tags = await BlogTag.query().orderBy('name', 'asc')
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
 
-    return inertia.render('blog/admin/create', {
+    return inertia.render('blog/manage/create', {
       categories,
       tags,
       authors,
@@ -87,7 +80,7 @@ export default class BlogPostsController {
     const tags = await BlogTag.query().orderBy('name', 'asc')
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
 
-    return inertia.render('blog/admin/edit', {
+    return inertia.render('blog/manage/edit', {
       post,
       categories,
       tags,

@@ -38,10 +38,9 @@ export default class Payment extends SuperBaseModel {
   @column() declare orgId: string
   @column() declare leaseId: string
   @column() declare notes: string
-  @column() declare landlordId: string
+
   @column() declare category: (typeof formData.payments.categories)[number]
   @belongsTo(() => Lease) declare lease: BelongsTo<typeof Lease>
-  @belongsTo(() => Landlord) declare landlord: BelongsTo<typeof Landlord>
   @column() declare status: PaymentStatus
   @column() declare isLetOnlyPayment: boolean
 

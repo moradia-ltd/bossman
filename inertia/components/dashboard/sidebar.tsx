@@ -1,22 +1,23 @@
 import { Link, router, usePage } from '@inertiajs/react'
 import {
+  Building2,
   ChevronsUpDown,
+  FileText,
+  Globe,
+  Home,
   Laptop,
+  Layers,
   LayoutDashboard,
   LogOut,
   Menu,
   Moon,
   Newspaper,
-  PanelLeft,
   PanelLeftOpen,
-  PanelRight,
   PanelRightOpen,
   Settings,
   Sun,
-  Users,
   UsersRound,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import type { RawUser } from '#types/model-types'
 import { CommandPalette } from '@/components/command-palette'
 import { NotificationCenter } from '@/components/notifications/notification-center'
@@ -37,7 +38,8 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import useDisclosure from '@/hooks/use-disclosure'
+import { useEnvironment } from '@/hooks/use-environment'
+import { useSidebar } from '@/hooks/use-sidebar'
 import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
@@ -57,26 +59,19 @@ const appNavSections: NavSection[] = [
     label: 'App',
     items: [
       { title: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='h-4 w-4' /> },
-      { title: 'Users', href: '/users', icon: <Users className='h-4 w-4' /> },
       { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
+      { title: 'Leases', href: '/leases', icon: <FileText className='h-4 w-4' /> },
+      {
+        title: 'Properties',
+        href: '/properties',
+        icon: <Layers className='h-4 w-4' />,
+      },
+      { title: 'Customers', href: '/orgs', icon: <Building2 className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
       { title: 'Settings', href: '/settings', icon: <Settings className='h-4 w-4' /> },
     ],
   },
 ]
-
-const SIDEBAR_STORAGE_KEY = 'dashboard-sidebar-open'
-
-// Read initial value from localStorage synchronously to avoid flash
-const getInitialSidebarState = (): boolean => {
-  if (typeof window === 'undefined') return true
-  try {
-    const stored = window.localStorage.getItem(SIDEBAR_STORAGE_KEY)
-    return stored !== null ? JSON.parse(stored) : true
-  } catch {
-    return true
-  }
-}
 
 interface SidebarProps {
   children?: React.ReactNode
@@ -86,77 +81,34 @@ export function Sidebar({ children }: SidebarProps) {
   const page = usePage()
   const user = page.props.user as RawUser
   const { theme, setTheme } = useTheme()
+  const { environment, setEnvironment } = useEnvironment()
+  const {
+    isOpen,
+    isMobile,
+    isMobileMenuOpen,
+    openMobileMenu,
+    closeMobileMenu,
+    toggleSidebar,
+    showSectionLabels,
+  } = useSidebar()
+  const pageAccess = (page.props as { pageAccess?: string[] | null }).pageAccess
 
-  const adminPageAccess = (page.props as { adminPageAccess?: string[] | null }).adminPageAccess
-
-  const canSeeAdminHref = (href: string) => {
-    if (!adminPageAccess) return true
-
-    const key =
-      href.startsWith('/users') ? 'admin_users'
-        : href.startsWith('/teams') ? 'admin_teams'
-          : href.startsWith('/blog/manage') ? 'admin_blog'
-            : href === '/dashboard' ? 'admin_dashboard'
-              : 'admin_dashboard'
-
-    return adminPageAccess.includes(key)
+  const canSeePage = (href: string) => {
+    if (!pageAccess) return true
+    const key = href.startsWith('/teams')
+      ? 'teams'
+      : href.startsWith('/blog/manage')
+        ? 'blog'
+        : href === '/dashboard'
+          ? 'dashboard'
+          : 'dashboard'
+    return pageAccess.includes(key)
   }
 
   const effectiveNavSections: NavSection[] = appNavSections.map((section) => ({
     ...section,
-    items: section.items.filter(
-      (item) => item.href === '/settings' || canSeeAdminHref(item.href),
-    ),
+    items: section.items.filter((item) => item.href === '/settings' || canSeePage(item.href)),
   }))
-
-  // Use useState with initial value from localStorage to avoid flash
-  const [sidebarOpen, setSidebarOpenState] = useState(getInitialSidebarState())
-  const { isOpen: isMobileMenuOpen, open: openMobileMenu, close: closeMobileMenu } = useDisclosure()
-  const [isMobile, setIsMobile] = useState(false)
-
-  // Sync to localStorage whenever sidebarOpen changes
-  useEffect(() => {
-    try {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(SIDEBAR_STORAGE_KEY, JSON.stringify(sidebarOpen))
-      }
-    } catch (error) {
-      console.error('Error saving sidebar state to localStorage:', error)
-    }
-  }, [sidebarOpen])
-
-  // Toggle function that updates state (which will sync to localStorage)
-  const toggleSidebar = () => {
-    setSidebarOpenState((prev) => !prev)
-  }
-
-  // Ensure the dashboard scrolls inside the main panel, not the <body>.
-  useEffect(() => {
-    document.documentElement.classList.add('dashboard-shell')
-    document.body.classList.add('dashboard-shell')
-    return () => {
-      document.documentElement.classList.remove('dashboard-shell')
-      document.body.classList.remove('dashboard-shell')
-    }
-  }, [])
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-      if (window.innerWidth >= 768) {
-        closeMobileMenu()
-      }
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  const isOpen = sidebarOpen
-  const onToggle = toggleSidebar
-  const onMobileClose = closeMobileMenu
-
-  const showSectionLabels = isOpen || isMobile
 
   const currentPath = (() => {
     const url = String(page.url || '/')
@@ -195,7 +147,7 @@ export function Sidebar({ children }: SidebarProps) {
             render={
               <Link
                 href={item.href}
-                onClick={() => onMobileClose?.()}
+                onClick={closeMobileMenu}
                 className={linkClassName}
                 aria-label={item.title}
                 title={item.title}>
@@ -216,7 +168,7 @@ export function Sidebar({ children }: SidebarProps) {
       <Link
         key={item.href}
         href={item.href}
-        onClick={() => isMobile && onMobileClose?.()}
+        onClick={() => isMobile && closeMobileMenu()}
         className={linkClassName}>
         <span className={cn('transition-transform', isActive && 'scale-110')}>{item.icon}</span>
         {(isOpen || isMobile) && <span>{item.title}</span>}
@@ -240,7 +192,7 @@ export function Sidebar({ children }: SidebarProps) {
       <div className='flex h-14 items-center px-3'>
         <div className='flex flex-1 items-center'>
           {(isOpen || isMobile) && (
-            <Link href='/' >
+            <Link href='/'>
               <div className='flex py-1 px-2 items-center justify-center rounded-lg bg-primary/10 text-primary'>
                 logo
               </div>
@@ -256,9 +208,13 @@ export function Sidebar({ children }: SidebarProps) {
             <Button
               variant='ghost'
               size='icon'
-              onClick={onToggle}
+              onClick={toggleSidebar}
               aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
-              {isOpen ? <PanelLeftOpen className='h-5 w-5' /> : <PanelRightOpen className='h-6 w-6 ' />}
+              {isOpen ? (
+                <PanelLeftOpen className='h-5 w-5' />
+              ) : (
+                <PanelRightOpen className='h-6 w-6 ' />
+              )}
             </Button>
           )}
         </div>
@@ -321,6 +277,30 @@ export function Sidebar({ children }: SidebarProps) {
 
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
+                <Globe className='h-4 w-4' />
+                Environment
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent side='right' align='start' className='p-2'>
+                <DropdownMenuRadioGroup
+                  value={environment}
+                  onValueChange={(v) => setEnvironment(v as 'prod' | 'dev')}>
+                  <DropdownMenuRadioItem value='prod'>
+                    <Sun className='h-4 w-4' />
+                    Production
+                  </DropdownMenuRadioItem>
+
+                  <DropdownMenuRadioItem value='dev'>
+                    <Laptop className='h-4 w-4' />
+                    Development
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
                 <Sun className='h-4 w-4' />
                 Theme
               </DropdownMenuSubTrigger>
@@ -346,9 +326,7 @@ export function Sidebar({ children }: SidebarProps) {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              variant='destructive'
-              onClick={() => router.visit('/logout')}>
+            <DropdownMenuItem variant='destructive' onClick={() => router.visit('/logout')}>
               <LogOut className='h-4 w-4' />
               Sign out
             </DropdownMenuItem>
@@ -396,11 +374,7 @@ export function Sidebar({ children }: SidebarProps) {
           <div className='w-full flex h-16 items-center justify-between gap-2 px-4 sm:px-6'>
             <div className='flex items-center gap-2'>
               {isMobile && (
-                <Button
-                  variant='ghost'
-                  size='icon'
-                  onClick={openMobileMenu}
-                  aria-label='Open menu'>
+                <Button variant='ghost' size='icon' onClick={openMobileMenu} aria-label='Open menu'>
                   <Menu className='h-5 w-5' />
                 </Button>
               )}

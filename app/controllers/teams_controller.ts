@@ -3,7 +3,7 @@ import Team from '#models/team'
 import TeamInvitation from '#models/team_invitation'
 import TeamMember from '#models/team_member'
 import User from '#models/user'
-import { getAdminPageAccessForUser } from '#services/admin_access_service'
+import { getPageAccessForUser } from '#services/page_access_service'
 import { createTeamValidator, updateMemberValidator } from '#validators/team'
 
 export default class TeamsController {
@@ -16,15 +16,15 @@ export default class TeamsController {
     const isAdmin = (user as { role?: string }).role === 'admin'
 
     if (kind === 'admin' && !isAdmin) {
-      return response.forbidden({ error: 'Admin team access required.' })
+      return response.forbidden({ error: 'Access required.' })
     }
     if (kind === 'admin') {
-      const allowed = await getAdminPageAccessForUser(freshUser.id)
-      if (Array.isArray(allowed) && !allowed.includes('admin_teams')) {
-        return response.forbidden({ error: 'You do not have access to admin teams.' })
+      const allowed = await getPageAccessForUser(freshUser.id)
+      if (Array.isArray(allowed) && !allowed.includes('teams')) {
+        return response.forbidden({ error: 'You do not have access to teams.' })
       }
 
-      // Admin "team" is implicit: ensure a default admin team exists.
+      // Dashboard team is implicit: ensure a default team exists.
       let adminTeam = await Team.query().where('kind', 'admin').orderBy('created_at', 'asc').first()
       if (!adminTeam) {
         adminTeam = await Team.create({
@@ -101,24 +101,20 @@ export default class TeamsController {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)
     const teamId = request.param('teamId')
-    const qs = request.qs()
-    const page = Math.max(Number(qs.page ?? 1) || 1, 1)
-    const perPage = Math.min(Math.max(Number(qs.perPage ?? 10) || 10, 1), 100)
-    const search = typeof qs.search === 'string' ? qs.search.trim() : ''
+    const params = await request.paginationQs()
 
     const team = await Team.findOrFail(teamId)
     const isAdmin = (user as { role?: string }).role === 'admin'
     if (team.kind === 'admin') {
-      if (!isAdmin) return response.forbidden({ error: 'Admin team access required.' })
-      const allowed = await getAdminPageAccessForUser(freshUser.id)
-      if (Array.isArray(allowed) && !allowed.includes('admin_teams')) {
-        return response.forbidden({ error: 'You do not have access to admin teams.' })
+      if (!isAdmin) return response.forbidden({ error: 'Access required.' })
+      const allowed = await getPageAccessForUser(freshUser.id)
+      if (Array.isArray(allowed) && !allowed.includes('teams')) {
+        return response.forbidden({ error: 'You do not have access to teams.' })
       }
-      // For admin teams, any allowed admin can view members (no membership required).
     } else {
       const isMember = await TeamMember.query()
-        .where('team_id', teamId)
-        .where('user_id', freshUser.id)
+        .where('teamId', teamId)
+        .where('userId', freshUser.id)
         .first()
 
       if (!isMember) {
@@ -127,28 +123,29 @@ export default class TeamsController {
     }
 
     const paginator = await TeamMember.query()
-      .where('team_id', teamId)
-      .if(search.length > 0, (q) => {
+      .where('teamId', teamId)
+      .if(params.search, (q) => {
         q.whereHas('user', (uq) => {
-          uq.whereILike('email', `%${search}%`).orWhereILike('full_name', `%${search}%`)
+          uq.whereILike('email', `%${params.search}%`).orWhereILike(
+            'fullName',
+            `%${params.search}%`,
+          )
         })
       })
       .preload('user')
-      .orderBy('created_at', 'asc')
-      .paginate(page, perPage)
+      .orderBy('createdAt', 'asc')
+      .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'asc')
+      .paginate(params.page || 1, params.perPage || 10)
 
     const members = paginator.all()
     const meta = paginator.getMeta()
 
-    // Also fetch pending invitations
     const pendingInvitations = await TeamInvitation.query()
-      .where('team_id', teamId)
-      .whereNull('accepted_at')
-      .if(search.length > 0, (q) => {
-        q.whereILike('email', `%${search}%`)
-      })
+      .where('teamId', teamId)
+      .whereNull('acceptedAt')
+      .if(params.search, (q) => q.whereILike('email', `%${params.search}%`))
       .preload('invitedBy')
-      .orderBy('created_at', 'desc')
+      .orderBy('createdAt', 'desc')
 
     return response.ok({
       data: {
@@ -186,14 +183,14 @@ export default class TeamsController {
 
     const team = await Team.findOrFail(teamId)
     if (team.kind !== 'admin') {
-      return response.forbidden({ error: 'Only admin team members can be updated here.' })
+      return response.forbidden({ error: 'Only dashboard team members can be updated here.' })
     }
     if ((user as { role?: string }).role !== 'admin') {
-      return response.forbidden({ error: 'Admin access required.' })
+      return response.forbidden({ error: 'Access required.' })
     }
-    const allowed = await getAdminPageAccessForUser(freshUser.id)
-    if (Array.isArray(allowed) && !allowed.includes('admin_teams')) {
-      return response.forbidden({ error: 'You do not have access to manage admin teams.' })
+    const allowed = await getPageAccessForUser(freshUser.id)
+    if (Array.isArray(allowed) && !allowed.includes('teams')) {
+      return response.forbidden({ error: 'You do not have access to manage teams.' })
     }
 
     const member = await TeamMember.query()
@@ -205,8 +202,8 @@ export default class TeamsController {
     if (body.adminPages !== undefined) {
       const pages = Array.isArray(body.adminPages) ? body.adminPages : null
       const resolved = pages?.length ? [...pages] : null
-      if (resolved && !resolved.includes('admin_dashboard')) {
-        resolved.unshift('admin_dashboard')
+      if (resolved && !resolved.includes('dashboard')) {
+        resolved.unshift('dashboard')
       }
       member.adminPages = resolved?.length ? resolved : null
       await member.save()

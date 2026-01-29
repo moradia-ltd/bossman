@@ -12,13 +12,12 @@ const markAsReadValidator = vine.compile(
 export default class NotificationsController {
   async index({ auth, request }: HttpContext) {
     const user = auth.getUserOrFail()
-    const page = Number(request.qs().page) || 1
-    const perPage = Number(request.qs().perPage) || 20
-
+    const params = await request.paginationQs()
     const notifications = await Notification.query()
-      .where('user_id', user.id)
-      .orderBy('created_at', 'desc')
-      .paginate(page, perPage)
+      .where('userId', user.id)
+      .orderBy('createdAt', 'desc')
+      .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
+      .paginate(params.page || 1, params.perPage || 20)
 
     const unreadCount = await notificationService.getUnreadCount(user.id)
 

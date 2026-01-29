@@ -53,10 +53,11 @@ export default class LeaseableEntity extends SuperBaseModel {
   @column() declare summary: string
   @column() declare isPublished: boolean
   @column() declare publishedAt: DateTime | null
+  @column.dateTime({ autoCreate: true }) declare createdAt: DateTime | null
+  @column.dateTime({ autoUpdate: true }) declare updatedAt: DateTime | null
   // @belongsTo(() => Property) declare property: BelongsTo<typeof Property>
   // @belongsTo(() => Property) declare parentProperty: BelongsTo<typeof Property>
-  // @belongsTo(() => Unit) declare unit: BelongsTo<typeof Unit>
-  // @belongsTo(() => Room) declare room: BelongsTo<typeof Room>
+
   @belongsTo(() => Org) declare org: BelongsTo<typeof Org>
   // @hasMany(() => Photo) declare photos: HasMany<typeof Photo>
 

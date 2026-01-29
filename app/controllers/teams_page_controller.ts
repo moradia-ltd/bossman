@@ -1,8 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 
-export default class AdminTeamsController {
+export default class TeamsPageController {
   async index({ inertia }: HttpContext) {
-    return inertia.render('admin/teams')
+    return inertia.render('dashboard/teams')
   }
 }
-
