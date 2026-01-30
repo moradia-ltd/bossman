@@ -63,23 +63,26 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
             </Select>
           </FormField>
 
-          <FormField label='Plan' htmlFor='customPaymentSchedule.plan'>
-            <Select
-              itemToStringLabel={(item) => startCase(item)}
-              value={ps.plan}
-              onValueChange={(v) =>
-                setFieldValue('customPaymentSchedule.plan', v as typeof ps.plan)
-              }>
-              <SelectTrigger id='customPaymentSchedule.plan'>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value='standard'>Standard</SelectItem>
-                <SelectItem value='essential'>Essential</SelectItem>
-                <SelectItem value='premium'>Premium</SelectItem>
-              </SelectContent>
-            </Select>
-          </FormField>
+          <OnlyShowIf condition={values.customPaymentSchedule.planType === 'normal'}>
+            <FormField label='Plan' htmlFor='customPaymentSchedule.plan'>
+              <Select
+                itemToStringLabel={(item) => startCase(item)}
+                value={ps.plan}
+                onValueChange={(v) =>
+                  setFieldValue('customPaymentSchedule.plan', v as typeof ps.plan)
+                }>
+                <SelectTrigger id='customPaymentSchedule.plan'>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='standard'>Standard</SelectItem>
+                  <SelectItem value='essential'>Essential</SelectItem>
+                  <SelectItem value='premium'>Premium</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+          </OnlyShowIf>
+
           <OnlyShowIf condition={values.customPaymentSchedule.planType === 'custom'}>
             <FormField label='Currency' htmlFor='customPaymentSchedule.currency'>
               <Select

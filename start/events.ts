@@ -5,6 +5,7 @@ import UserListener from '#listeners/user'
 
 emitter.on('user:created', [UserListener, 'userCreated'])
 emitter.on('user:deleted', [UserListener, 'userDeleted'])
+emitter.on('new:custom-user', [UserListener, 'newCustomUser'])
 
 emitter.on('db:connection:connect', (connectionName) => {
   console.log(`Database connection "${connectionName.clientName}" is now established.`)

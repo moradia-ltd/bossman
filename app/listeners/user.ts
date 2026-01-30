@@ -1,6 +1,8 @@
+import logger from '@adonisjs/core/services/logger'
 import type { EventsList } from '@adonisjs/core/types'
 import db from '@adonisjs/lucid/services/db'
 import mailer from '#services/email_service'
+import StripeService from '#services/stripe_service'
 import env from '#start/env'
 
 export default class UserListener {
@@ -32,5 +34,18 @@ export default class UserListener {
       type: 'goodbye',
       data: { email: user.email, fullName: user.fullName || 'User' },
     })
+  }
+
+  public async newCustomUser({
+    user,
+    org,
+    customPaymentSchedule,
+    featureList,
+    subscriptionId,
+  }: EventsList['new:custom-user']) {
+    // console.log(user, org, customPaymentSchedule, featureList, subscriptionId)
+    logger.info('New custom user created')
+    const subscription = await StripeService.getSubscription(subscriptionId)
+    console.log('subscription', subscription)
   }
 }

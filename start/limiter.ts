@@ -32,7 +32,7 @@ export const apiThrottle = limiter.define('api', (ctx) => {
 
 export const loginThrottle = limiter.define('login', (ctx) => {
   return limiter
-    .allowRequests(10)
+    .allowRequests(100)
     .every('1 minute')
     .usingKey(`login_${ctx.request.ip()}`)
     .blockFor('1 minute')

@@ -3,29 +3,19 @@ import { Head, router, usePage } from '@inertiajs/react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ProfileTab } from './profile-tab'
-import { PasswordTab } from './password-tab'
+import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { NotificationsTab } from './notifications-tab'
+import { PasswordTab } from './password-tab'
+import { ProfileTab } from './profile-tab'
 import { SessionsTab } from './sessions-tab'
 
-const validTabs = ['profile', 'password', 'notifications', 'sessions'] as const
-type TabValue = (typeof validTabs)[number]
+
 
 export default function Settings(_props: SharedProps) {
-  const page = usePage()
-  const qs = (page.props.qs as { tab?: string }) || {}
-  const currentTab = (qs.tab && validTabs.includes(qs.tab as TabValue)
-    ? qs.tab
-    : 'profile') as TabValue
-
+  const { query, updateQuery } = useInertiaParams()
+  const currentTab = query.tab ?? 'profile'
   const handleTabChange = (value: string) => {
-    if (validTabs.includes(value as TabValue)) {
-      router.get('/settings', { tab: value }, {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true,
-      })
-    }
+    updateQuery({ tab: value })
   }
 
   return (

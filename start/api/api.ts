@@ -5,6 +5,7 @@ const DashboardController = () => import('#controllers/dashboard_controller')
 const LeasesController = () => import('#controllers/leases_controller')
 const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
 const OrgsController = () => import('#controllers/orgs_controller')
+const PushNotificationsController = () => import('#controllers/push_notifications_controller')
 
 router
   .group(() => {
@@ -17,9 +18,11 @@ router
     router.get('/leaseable-entities/:id/leases', [LeaseableEntitiesController, 'leases'])
     router.get('/leaseable-entities/:id/activity', [LeaseableEntitiesController, 'activity'])
     router.get('/orgs/stats', [OrgsController, 'stats'])
+    router.post('/orgs', [OrgsController, 'store'])
     router.get('/orgs/:id/leases', [OrgsController, 'leases'])
     router.get('/orgs/:id/properties', [OrgsController, 'properties'])
     router.get('/orgs/:id/activities', [OrgsController, 'activities'])
+    router.get('/push-notifications/users', [PushNotificationsController, 'users'])
   })
   .prefix('api/v1')
   .use(middleware.auth())

@@ -4,12 +4,12 @@ import { useFormik } from 'formik'
 import { Camera, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
+import { AppCard } from '@/components/ui/app-card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 import { AccountTab } from './components/delete-account'
@@ -98,8 +98,6 @@ export function ProfileTab() {
     },
   })
 
-
-
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -138,129 +136,116 @@ export function ProfileTab() {
   return (
     <>
       {/* Avatar Upload */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile Picture</CardTitle>
-          <CardDescription>Upload a profile picture to personalize your account.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className='flex items-center gap-6'>
-            <Avatar className='h-24 w-24'>
-              {avatarUrl ? (
-                <AvatarImage src={avatarUrl} alt={user?.fullName || 'User'} />
-              ) : null}
-              <AvatarFallback className='text-2xl'>
-                {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div className='flex flex-col gap-2'>
-              <div className='flex gap-2'>
+
+      <AppCard
+        title='Profile Picture'
+        description='Upload a profile picture to personalize your account.'>
+        <div className='flex items-center gap-6'>
+          <Avatar className='h-24 w-24'>
+            {avatarUrl ? <AvatarImage src={avatarUrl} alt={user?.fullName || 'User'} /> : null}
+            <AvatarFallback className='text-2xl'>
+              {user?.fullName?.charAt(0) || user?.email?.charAt(0) || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <div className='flex flex-col gap-2'>
+            <div className='flex gap-2'>
+              <Button
+                type='button'
+                variant='outline'
+                size='sm'
+                className={user?.avatar ? 'hidden' : ''}
+                isLoading={isUploadingAvatar}
+                loadingText='Uploading...'
+                leftIcon={<Camera className='mr-2 h-4 w-4' />}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingAvatar}>
+                Upload Avatar
+              </Button>
+              {user?.avatar && (
                 <Button
                   type='button'
                   variant='outline'
                   size='sm'
-                  className={user?.avatar ? 'hidden' : ''}
-                  isLoading={isUploadingAvatar}
-                  loadingText='Uploading...'
-                  leftIcon={<Camera className='mr-2 h-4 w-4' />}
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploadingAvatar}>
-                  Upload Avatar
+                  onClick={handleDeleteAvatar}
+                  leftIcon={<Trash2 className='mr-2 h-4 w-4' />}
+                  loadingText='Deleting...'
+                  disabled={isDeletingAvatar}
+                  className={user?.avatar ? '' : 'hidden'}>
+                  Clear
                 </Button>
-                {user?.avatar && (
-                  <Button
-                    type='button'
-                    variant='outline'
-                    size='sm'
-                    onClick={handleDeleteAvatar}
-                    leftIcon={<Trash2 className='mr-2 h-4 w-4' />}
-                    loadingText='Deleting...'
-                    disabled={isDeletingAvatar}
-                    className={user?.avatar ? '' : 'hidden'}>
-                    Clear
-                  </Button>
-                )}
-              </div>
-              <p className='text-xs text-muted-foreground'>JPG, PNG or GIF. Max size 5MB.</p>
+              )}
             </div>
-            <input
-              ref={fileInputRef}
-              type='file'
-              accept='image/*'
-              className='hidden'
-              onChange={handleAvatarChange}
-            />
+            <p className='text-xs text-muted-foreground'>JPG, PNG or GIF. Max size 5MB.</p>
           </div>
-        </CardContent>
-      </Card>
+          <input
+            ref={fileInputRef}
+            type='file'
+            accept='image/*'
+            className='hidden'
+            onChange={handleAvatarChange}
+          />
+        </div>
+      </AppCard>
 
       {/* Profile Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
-          <CardDescription>
-            Update your profile information. This will be visible to other users.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={profileFormik.handleSubmit} className='space-y-4'>
-            <div className='space-y-2'>
-              <Label htmlFor='fullName'>Full Name</Label>
-              <Input
-                id='fullName'
-                name='fullName'
-                type='text'
-                value={profileFormik.values.fullName}
-                onChange={profileFormik.handleChange}
-                onBlur={profileFormik.handleBlur}
-                placeholder='John Doe'
-              />
-            </div>
+      <AppCard title='Profile Information' description='Update your profile information. This will be visible to other users.'>
+        <form onSubmit={profileFormik.handleSubmit} className='space-y-4'>
+          <div className='space-y-2'>
+            <Label htmlFor='fullName'>Full Name</Label>
+            <Input
+              id='fullName'
+              name='fullName'
+              type='text'
+              value={profileFormik.values.fullName}
+              onChange={profileFormik.handleChange}
+              onBlur={profileFormik.handleBlur}
+              placeholder='John Doe'
+            />
+          </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='email'>Email</Label>
-              <Input
-                id='email'
-                name='email'
-                type='email'
-                value={profileFormik.values.email}
-                onChange={profileFormik.handleChange}
-                onBlur={profileFormik.handleBlur}
-                placeholder='you@example.com'
-                disabled={!user?.emailVerified}
-              />
-              {!user?.emailVerified && (
-                <p className='text-xs text-muted-foreground'>
-                  Please verify your email address before changing it.
-                </p>
-              )}
-              {user?.pendingEmail && (
-                <div className='rounded-lg bg-yellow-500/10 border border-yellow-500/20 p-3'>
-                  <p className='text-sm text-yellow-700 dark:text-yellow-300'>
-                    <strong>Pending email change:</strong> {user.pendingEmail}
-                  </p>
-                  <p className='text-xs text-yellow-600 dark:text-yellow-400 mt-1'>
-                    Please check your new email inbox for a confirmation link.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <Button
-              type='submit'
+          <div className='space-y-2'>
+            <Label htmlFor='email'>Email</Label>
+            <Input
+              id='email'
+              name='email'
+              type='email'
+              value={profileFormik.values.email}
+              onChange={profileFormik.handleChange}
+              onBlur={profileFormik.handleBlur}
+              placeholder='you@example.com'
               disabled={!user?.emailVerified}
-              isLoading={isUpdatingProfile}
-              loadingText='Saving…'>
-              Save Changes
-            </Button>
+            />
             {!user?.emailVerified && (
-              <p className='text-sm text-muted-foreground'>
-                You must verify your email address before updating your profile.
+              <p className='text-xs text-muted-foreground'>
+                Please verify your email address before changing it.
               </p>
             )}
-          </form>
-        </CardContent>
-      </Card>
+            {user?.pendingEmail && (
+              <div className='rounded-lg bg-yellow-500/10 border border-yellow-500/20 p-3'>
+                <p className='text-sm text-yellow-700 dark:text-yellow-300'>
+                  <strong>Pending email change:</strong> {user.pendingEmail}
+                </p>
+                <p className='text-xs text-yellow-600 dark:text-yellow-400 mt-1'>
+                  Please check your new email inbox for a confirmation link.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <Button
+            type='submit'
+            disabled={!user?.emailVerified}
+            isLoading={isUpdatingProfile}
+            loadingText='Saving…'>
+            Save Changes
+          </Button>
+          {!user?.emailVerified && (
+            <p className='text-sm text-muted-foreground'>
+              You must verify your email address before updating your profile.
+            </p>
+          )}
+        </form>
+      </AppCard>
 
       {/* Two-Factor Authentication */}
       <TwoFactorTab />

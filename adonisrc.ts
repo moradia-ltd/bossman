@@ -30,7 +30,7 @@ export default defineConfig({
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/mail/commands'),
     () => import('@jrmc/adonis-attachment/commands'),
-    () => import('@adonisjs/cache/commands')
+    () => import('@adonisjs/cache/commands'),
   ],
 
   /*
@@ -64,8 +64,7 @@ export default defineConfig({
     () => import('@jrmc/adonis-attachment/attachment_provider'),
     () => import('@adonisjs/cache/cache_provider'),
     () => import('@adonisjs/limiter/limiter_provider'),
-    () => import('@adonisjs/ally/ally_provider'),
-    () => import('@stouder-io/adonis-auditing/auditing_provider')
+    () => import('@stouder-io/adonis-auditing/auditing_provider'),
   ],
 
   /*
@@ -76,7 +75,12 @@ export default defineConfig({
   | List of modules to import before starting the application.
   |
   */
-  preloads: [() => import('#start/routes'), () => import('#start/kernel'), () => import('#start/events'), () => import('#start/email')],
+  preloads: [
+    () => import('#start/routes'),
+    () => import('#start/kernel'),
+    () => import('#start/events'),
+    () => import('#start/email'),
+  ],
 
   /*
   |--------------------------------------------------------------------------
@@ -119,6 +123,6 @@ export default defineConfig({
     onBuildStarting: [() => import('@adonisjs/vite/build_hook')],
   },
   directories: {
-    audit_resolvers: 'app/audit_resolvers'
-  }
+    audit_resolvers: 'app/audit_resolvers',
+  },
 })

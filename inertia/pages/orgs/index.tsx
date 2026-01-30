@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Briefcase, Building2, Plus, User } from 'lucide-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawOrg } from '#types/model-types'
+import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
@@ -56,6 +57,11 @@ const columns: Column<RawOrg>[] = [
       ) : (
         <Badge variant='secondary'>Inactive</Badge>
       ),
+  },
+  {
+    key: 'createdAt',
+    header: 'Created at',
+    cell: (row) => timeAgo(row.createdAt ?? ''),
   },
 ]
 

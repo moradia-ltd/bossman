@@ -12,6 +12,7 @@ export default class extends BaseSchema {
 
       table.string('name').notNullable()
       table.uuid('created_by_user_id').notNullable().index()
+      table.string('kind').notNullable().defaultTo('user').index()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
@@ -24,4 +25,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

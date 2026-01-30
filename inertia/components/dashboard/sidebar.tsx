@@ -1,7 +1,9 @@
 import { Link, router, usePage } from '@inertiajs/react'
 import {
+  Bell,
   Building2,
   ChevronsUpDown,
+  Database,
   FileText,
   Globe,
   Home,
@@ -67,6 +69,16 @@ const appNavSections: NavSection[] = [
         icon: <Layers className='h-4 w-4' />,
       },
       { title: 'Customers', href: '/orgs', icon: <Building2 className='h-4 w-4' /> },
+      {
+        title: 'Push notifications',
+        href: '/push-notifications',
+        icon: <Bell className='h-4 w-4' />,
+      },
+      {
+        title: 'Backups',
+        href: '/db-backups',
+        icon: <Database className='h-4 w-4' />,
+      },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
       { title: 'Settings', href: '/settings', icon: <Settings className='h-4 w-4' /> },
     ],
@@ -99,9 +111,11 @@ export function Sidebar({ children }: SidebarProps) {
       ? 'teams'
       : href.startsWith('/blog/manage')
         ? 'blog'
-        : href === '/dashboard'
+        : href.startsWith('/push-notifications') || href.startsWith('/db-backups')
           ? 'dashboard'
-          : 'dashboard'
+          : href === '/dashboard'
+            ? 'dashboard'
+            : 'dashboard'
     return pageAccess.includes(key)
   }
 

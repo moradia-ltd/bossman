@@ -48,6 +48,7 @@ export const createCustomerUserValidator = vine.compile(
       currency: vine.enum(['gbp', 'eur', 'usd']),
       promoCode: vine.string().optional(),
       paymentMethod: vine.enum(['stripe', 'bank_transfer']),
+      planType: vine.enum(['normal', 'custom']),
       plan: vine.enum(['standard', 'essential', 'premium']),
     }),
 

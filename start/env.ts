@@ -42,7 +42,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the drive package
   |----------------------------------------------------------
   */
-  DRIVE_DISK: Env.schema.enum(['fs'] as const),
+  DRIVE_DISK: Env.schema.enum(['fs', 'backup'] as const),
 
   /*
   |----------------------------------------------------------
@@ -67,4 +67,8 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   STRIPE_SECRET: Env.schema.string(),
   STRIPE_TEST_KEY: Env.schema.string(),
+  R2_KEY: Env.schema.string(),
+  R2_SECRET: Env.schema.string(),
+  R2_BUCKET: Env.schema.string(),
+  R2_ENDPOINT: Env.schema.string(),
 })

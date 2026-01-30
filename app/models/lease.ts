@@ -38,7 +38,7 @@ export default class Lease extends compose(SuperBaseModel, Auditable) {
   @column() declare depositPaymentDate: DateTime
   @column() declare status: 'pending' | 'active' | 'inactive' | 'terminated'
   @column() declare frequency: 'weekly' | 'monthly' | 'quarterly' | 'yearly'
-  @attachment({ folder: FileStoreRoutes.LEASE_CONTRACTS, preComputeUrl: true })
+  @attachment({ folder: FileStoreRoutes.LEASE_CONTRACTS, preComputeUrl: false })
   declare contractUrl: Attachment | null
   @column() declare paymentDay: number
   // @column() declare paymentMethod: PaymentMethod

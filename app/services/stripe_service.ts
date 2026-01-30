@@ -20,6 +20,11 @@ const stripe = new Stripe(getStripeKey(), {
 })
 
 class StripeService {
+  public static async getSubscription(subscriptionId: string) {
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+    return subscription
+  }
+
   getBalance() {
     return stripe.balance.retrieve()
   }
@@ -103,9 +108,9 @@ class StripeService {
     const isMonthly = data.frequency === 'monthly'
     const currIsUk = data.currency === 'gbp'
 
-    const success_url = `${getAppUrl()}/stripe-complete?success=true&customerId=${customerId}&plan=${'metered'}`
+    const success_url = `${getAppUrl()}/stripe?success=true&customerId=${customerId}&plan=${'metered'}`
 
-    const cancel_url = `${getAppUrl()}/stripe-complete?cancelled=true&customerId=${customerId}`
+    const cancel_url = `${getAppUrl()}/stripe?cancelled=true&customerId=${customerId}`
 
     const ukPrice = 5
     const usAndEuPrice = 6

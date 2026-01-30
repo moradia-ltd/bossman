@@ -91,9 +91,9 @@ export default class Org extends SuperBaseModel {
   @column() declare customPaymentSchedule: ModelObject
   @column() declare customRenewalDate: DateTime
   @column() declare customExpiryDate: DateTime
-  @attachment({ preComputeUrl: true, folder: FileStoreRoutes.COMPANY_LOGOS })
+  @attachment({ preComputeUrl: false, folder: FileStoreRoutes.COMPANY_LOGOS })
   declare companyLogo: Attachment | null
-  @attachment({ preComputeUrl: true, folder: FileStoreRoutes.COMPANY_FAVICONS })
+  @attachment({ preComputeUrl: false, folder: FileStoreRoutes.COMPANY_FAVICONS })
   declare companyFavicon: Attachment | null
 
   @column() declare metadata: {
@@ -102,6 +102,9 @@ export default class Org extends SuperBaseModel {
     connectionCompletedAt: string
     onboardingCompletedAt: string
   }
+
+  @column.dateTime({ autoCreate: true }) declare createdAt: DateTime
+  @column.dateTime({ autoCreate: true, autoUpdate: true }) declare updatedAt: DateTime | null
 
   @computed() get isBankAccountLinked() {
     return !!this.plaidRecipientId && !!this.plaidAccessToken

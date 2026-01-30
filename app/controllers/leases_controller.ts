@@ -7,6 +7,7 @@ import Payment from '#models/payment'
 export default class LeasesController {
   async index({ request, inertia }: HttpContext) {
     const params = await request.paginationQs()
+
     const appEnv = request.appEnv()
     const leases = await Lease.query({ connection: appEnv })
       .preload('tenants', (q) => q.select('id', 'name', 'email'))

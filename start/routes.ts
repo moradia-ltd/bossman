@@ -33,6 +33,8 @@ const TeamsPageController = () => import('#controllers/teams_page_controller')
 const LeasesController = () => import('#controllers/leases_controller')
 const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
 const OrgsController = () => import('#controllers/orgs_controller')
+const PushNotificationsController = () => import('#controllers/push_notifications_controller')
+const DbBackupsController = () => import('#controllers/db_backups_controller')
 
 router.on('/').renderInertia('home')
 router.on('/home').renderInertia('home')
@@ -51,8 +53,11 @@ router
     router.get('/properties/:id', [LeaseableEntitiesController, 'show'])
     router.get('/orgs', [OrgsController, 'index'])
     router.get('/orgs/create', [OrgsController, 'create'])
-    router.post('/orgs', [OrgsController, 'store'])
     router.get('/orgs/:id', [OrgsController, 'show'])
+    router.get('/push-notifications', [PushNotificationsController, 'index'])
+    router.get('/push-notifications/create', [PushNotificationsController, 'create'])
+    router.post('/push-notifications', [PushNotificationsController, 'store'])
+    router.get('/db-backups', [DbBackupsController, 'index'])
 
     router
       .group(() => {

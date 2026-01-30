@@ -1,14 +1,15 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import emitter from '@adonisjs/core/services/emitter'
 import db from '@adonisjs/lucid/services/db'
+import type Stripe from 'stripe'
 import Activity from '#models/activity'
 import Agency from '#models/agency'
+import Earth from '#models/earth'
 import Landlord from '#models/landlord'
 import Lease from '#models/lease'
 import Org from '#models/org'
 import Property from '#models/property'
 import SubscriptionPlan from '#models/subscription_plan'
-import Team from '#models/team'
 import TogethaTeam from '#models/togetha_teams'
 import TogethaUser from '#models/togetha_user'
 import OrgService from '#services/org_service'
@@ -53,34 +54,37 @@ export default class OrgsController {
     const appEnv = request.appEnv()
     const payload = await request.validateUsing(createCustomerUserValidator)
     const trx = await db.connection(appEnv).transaction()
+    const isCustomPlan = payload.customPaymentSchedule.planType === 'custom'
+    const trxCon = { client: trx, connection: appEnv }
 
-    const user = new TogethaUser().useTransaction(trx).useConnection(appEnv)
-    const existingUser = await TogethaUser.query({ connection: appEnv })
+    logger.info(`isCustomPlan: ${isCustomPlan}`)
+    const user = new TogethaUser().useTransaction(trxCon.client).useConnection(trxCon.connection)
+    const existingUser = await TogethaUser.query(trxCon)
       .where('email', payload.email)
       .orWhere('contactNumber', payload.contactNumber)
       .first()
 
     if (existingUser) {
-      return response.badRequest({
-        error: 'A user with this email or phone number already exists',
-      })
+      return response.badRequest({ error: 'A user with this email or phone number already exists' })
     }
 
     try {
-      const subPlan = await SubscriptionPlan.query({ client: trx })
-        .where({
-          name: payload.customPaymentSchedule.plan,
-          billingFrequency: payload.customPaymentSchedule.frequency,
-        })
-        .firstOrFail()
-      logger.info(`Subscription plan ${subPlan.name} found`)
+      const subPlan = isCustomPlan
+        ? undefined
+        : await SubscriptionPlan.query(trxCon)
+            .where({
+              name: payload.customPaymentSchedule.plan,
+              billingFrequency: payload.customPaymentSchedule.frequency,
+            })
+            .first()
+      logger.info(`Subscription plan ${subPlan?.name} found`)
       // create a new organization with the subscription plan
       const org = await Org.create(
         {
           name: `${payload.name}_org`,
           ownerRole: payload.accountType,
           isMainOrg: true,
-          planId: subPlan.id,
+          planId: isCustomPlan ? undefined : subPlan?.id,
           creatorEmail: payload.email,
           country: payload.country as AppCountries,
           pages: payload.pages,
@@ -88,7 +92,7 @@ export default class OrgsController {
           customPlanFeatures: payload.featureList,
           customPaymentSchedule: payload.customPaymentSchedule,
         },
-        { client: trx, connection: appEnv },
+        trxCon,
       )
 
       logger.info(`Org ${org.name} created successfully`)
@@ -100,15 +104,16 @@ export default class OrgsController {
       })
       logger.info(`Assigning default settings to org ${org.name}`)
 
-      await TogethaTeam.create(
+      const team = await TogethaTeam.create(
         {
           name: `${user.name} team`,
           orgId: org.id,
           description: `first team for ${user.name}`,
           userId: user.id,
         },
-        { client: trx, connection: appEnv },
-      ).then((team) => console.log('Team created', team.name))
+        trxCon,
+      )
+      logger.info(`Team created for ${user.name} with id ${team.id}`)
 
       user.merge({
         password: payload.password,
@@ -134,6 +139,7 @@ export default class OrgsController {
         name: user.name,
         togethaUserId: user.id,
       })
+      logger.info(`Stripe customer created for ${user.name} with id ${customer?.id}`)
 
       await org.merge({ paymentCustomerId: customer?.id }).save()
       await user.save()
@@ -156,16 +162,29 @@ export default class OrgsController {
         await agency.merge({ orgId: org.id }).save()
       }
 
-      const subscription = await StripeService.createCustomSubscription({
-        customerId: customer!.id,
-        data: payload.customPaymentSchedule,
-        featureList: payload.featureList,
-      })
+      let session: Stripe.Response<Stripe.Checkout.Session> | undefined
+      let subscription: Stripe.Response<Stripe.Subscription> | undefined
 
-      logger.info('Subscription created successfully')
-      logger.info(`Team created for ${user.name}`)
+      if (isCustomPlan) {
+        session = await StripeService.createCustomSubscription({
+          customerId: customer!.id,
+          data: payload.customPaymentSchedule,
+          featureList: payload.featureList,
+        })
+        logger.info(`Custom subscription session created for ${user.name} with id ${session?.id}`)
+      } else {
+        subscription = await StripeService.createSubscription({
+          plan: payload.customPaymentSchedule.plan,
+          frequency: payload.customPaymentSchedule.frequency,
+          customerId: customer!.id,
+          isTrial: payload.customPaymentSchedule.trialPeriodInDays > 0,
+        })
+        logger.info(`Subscription created for ${user.name} with id ${subscription?.id}`)
+      }
 
-      org.merge({ subscriptionId: subscription.id })
+      const subscriptionId = isCustomPlan ? session?.subscription : subscription?.id
+
+      org.merge({ subscriptionId: subscriptionId as string })
 
       await org.save()
       await trx.commit()
@@ -176,7 +195,7 @@ export default class OrgsController {
         org,
         customPaymentSchedule: payload.customPaymentSchedule,
         featureList: payload.featureList,
-        subscription,
+        subscriptionId: subscriptionId as string,
       })
 
       return { user, msg: 'Account created sucessfully' }

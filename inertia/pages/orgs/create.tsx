@@ -1,12 +1,16 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
+import { useMutation } from '@tanstack/react-query'
 import type { FormikErrors } from 'formik'
 import { useFormik } from 'formik'
 import { IdCard, Scroll, Users } from 'lucide-react'
 import { useEffect } from 'react'
+import { toast } from 'sonner'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { createStepperSteps, Stepper } from '@/components/ui/stepper'
+import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
+import api from '@/lib/http'
 import { CreateCustomerFormStepOne } from './components/create-customer-step-one'
 import { CreateCustomerFormStepTwo } from './components/create-customer-step-two'
 import { CreateCustomerSummary } from './components/create-customer-summary'
@@ -26,21 +30,22 @@ export default function OrgsCreate(props: OrgsCreateProps) {
     validateOnChange: true,
     onSubmit(values) {
       console.log(values)
-      // router.post('/orgs', values as unknown as Parameters<typeof router.post>[1], {
-      //   preserveScroll: true,
-      //   forceFormData: false,
-      // })
+      createOrgMutation(values)
     },
   })
 
-  console.log(formik.errors)
+  console.log('errors', formik.errors)
 
-  const errors = props.errors as Record<string, string> | undefined
-  useEffect(() => {
-    if (errors && typeof errors === 'object' && Object.keys(errors).length > 0) {
-      formik.setErrors(errors as FormikErrors<CreateCustomerFormValues>)
-    }
-  }, [])
+  const { mutate: createOrgMutation, isPending } = useMutation({
+    mutationFn: (values: CreateCustomerFormValues) => api.post('/orgs', values),
+    onSuccess: () => {
+      toast.success('Customer created successfully')
+      router.visit('/orgs')
+    },
+    onError: (error: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(error) || 'Failed to create customer')
+    },
+  })
 
   const steps = createStepperSteps([
     {
@@ -61,6 +66,7 @@ export default function OrgsCreate(props: OrgsCreateProps) {
       id: 'summary',
       content: <CreateCustomerSummary formik={formik} />,
       nextText: 'Create',
+      nextBtnDisabled: isPending,
       onNextClick() {
         formik.handleSubmit()
       },
@@ -70,6 +76,7 @@ export default function OrgsCreate(props: OrgsCreateProps) {
   return (
     <DashboardLayout>
       <Head title='New customer' />
+
       <div className='space-y-6'>
         <PageHeader
           backHref='/orgs'
