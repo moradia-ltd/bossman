@@ -1,31 +1,22 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
-import { DateTime } from 'luxon'
+
 import PushNotification from '#models/push_notification'
 import TogethaUser from '#models/togetha_user'
 import { sendOneSignalPush } from '#services/one_signal_service'
-import env from '#start/env'
 import { storePushNotificationValidator } from '#validators/push_notification'
 
 export default class PushNotificationsController {
   async users({ request, response }: HttpContext) {
     const appEnv = request.appEnv()
     const search = request.qs().search as string | undefined
-    const query = TogethaUser.query({ connection: appEnv })
+    const users = TogethaUser.query({ connection: appEnv })
       .select('id', 'name', 'email', 'landlordId', 'agencyId', 'tenantId')
       .orderBy('name', 'asc')
+      .if(search, (q) => q.whereILike('name', `%${search}%`).orWhereILike('email', `%${search}%`))
       .limit(200)
-    if (search?.trim()) {
-      query.whereILike('name', `%${search.trim()}%`).orWhereILike('email', `%${search.trim()}%`)
-    }
-    const users = await query
-    const data = users.map((u) => ({
-      id: u.id,
-      name: u.name ?? u.email ?? u.id,
-      email: u.email,
-      accountType: u.accountType,
-    }))
-    return response.ok(data)
+
+    return response.ok(users)
   }
 
   async index({ request, inertia }: HttpContext) {
@@ -85,8 +76,7 @@ export default class PushNotificationsController {
     }
     try {
       const userIds = await this.resolveUserIds(payload.targetType, payload.targetUserIds, appEnv)
-
-      const sendNow = !payload.sendAt?.trim()
+      const sendNow = !payload.sendAt
 
       const notification = await PushNotification.create({
         targetType: payload.targetType as PushNotification['targetType'],

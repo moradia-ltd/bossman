@@ -59,5 +59,6 @@ You are an expert in TypeScript, Node.js, Inertiajs, Adonisjs v6, React, and sha
 
   Adonisjs
   - i prefer to use model.merge() instead of setting properties directly.
+  user.merge({ name: 'John Doe' }).save()
   
 - Follow adonisjs, shadcn and tailwind docs for help if need be.
