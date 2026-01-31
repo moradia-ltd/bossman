@@ -1,4 +1,4 @@
-import { Link, useQuery } from '@tanstack/react-query'
+import { Link } from '@inertiajs/react'
 import { ExternalLink, FileText, Plus } from 'lucide-react'
 import type { Column } from '#types/extra'
 import { formatCurrency } from '#utils/currency'
@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { dateFormatter } from '@/lib/date'
-import api from '@/lib/http'
 
 export type RawOrgInvoice = {
   id: string
@@ -22,8 +21,6 @@ export type RawOrgInvoice = {
   hostedInvoiceUrl: string | null
   invoicePdf: string | null
 }
-
-type InvoicesResponse = { data: RawOrgInvoice[] }
 
 const getColumns = (orgId: string): Column<RawOrgInvoice>[] => [
   {
@@ -107,31 +104,23 @@ const getColumns = (orgId: string): Column<RawOrgInvoice>[] => [
 
 type InvoicesTabProps = {
   orgId: string
+  invoices: RawOrgInvoice[]
 }
 
-export function InvoicesTab({ orgId }: InvoicesTabProps) {
-  const { data, isPending } = useQuery({
-    queryKey: ['org-invoices', orgId],
-    queryFn: async () => {
-      const res = await api.get<InvoicesResponse>(`/orgs/${orgId}/invoices`)
-      return res.data
-    },
-  })
-
-  const invoices = data?.data ?? []
+export function InvoicesTab({ orgId, invoices }: InvoicesTabProps) {
   const columns = getColumns(orgId)
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Invoices</CardTitle>
-        <CardDescription>Invoices for this organisation</CardDescription>
+        <CardDescription>Invoices for this organisation (from Stripe)</CardDescription>
       </CardHeader>
       <CardContent>
         <DataTable
           columns={columns}
           data={invoices}
-          loading={isPending}
+          loading={false}
           emptyMessage='No invoices yet.'
         />
       </CardContent>

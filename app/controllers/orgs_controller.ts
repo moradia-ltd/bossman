@@ -223,7 +223,22 @@ export default class OrgsController {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
 
-    return inertia.render('orgs/show', { org })
+    const stripeService = new StripeService()
+    const invoicesResult = await stripeService.viewInvoices(params.id, appEnv)
+    const invoices = (invoicesResult.data ?? []).map((inv: Stripe.Invoice) => ({
+      id: inv.id,
+      number: inv.number ?? inv.id,
+      status: inv.status ?? 'unknown',
+      amountPaid: inv.amount_paid ?? 0,
+      amountDue: inv.amount_due ?? 0,
+      total: inv.total ?? 0,
+      currency: (inv.currency ?? 'gbp').toUpperCase(),
+      createdAt: inv.created ? new Date(inv.created * 1000).toISOString() : null,
+      hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
+      invoicePdf: inv.invoice_pdf ?? null,
+    }))
+
+    return inertia.render('orgs/show', { org, invoices: { data: invoices } })
   }
 
   async leases({ request, params, response }: HttpContext) {

@@ -10,21 +10,22 @@ import { OnlyShowIf, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { ActivitiesTab } from './components/activities-tab'
+import { InvoicesTab } from './components/invoices-tab'
 import { LeasesTab } from './components/leases-tab'
 import { PropertiesTab } from './components/properties-tab'
 
-const validTabs = ['details', 'leases', 'properties', 'activities'] as const
+const validTabs = ['details', 'leases', 'properties', 'activities', 'invoices'] as const
 type OrgTabValue = (typeof validTabs)[number]
 
 interface OrgShowProps extends SharedProps {
   org: RawOrg
+  invoices?: { data: import('./components/invoices-tab').RawOrgInvoice[] }
 }
 
-export default function OrgShow({ org }: OrgShowProps) {
+export default function OrgShow({ org, invoices }: OrgShowProps) {
   const { query, updateQuery } = useInertiaParams()
   const qs = query as { tab?: string }
   const currentTab =
@@ -61,7 +62,14 @@ export default function OrgShow({ org }: OrgShowProps) {
           title={cleanName}
           backHref='/orgs'
           description={org.companyName ? String(org.companyName) : undefined}
-          actions={<QuickActions options={quickActions} />}
+          actions={
+            <div className='flex items-center gap-2'>
+              <Button variant='outline' size='sm' asChild>
+                <Link href={`/orgs/${id}/invoices/create`}>Create invoice</Link>
+              </Button>
+              <QuickActions options={quickActions} />
+            </div>
+          }
         />
 
         <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
@@ -70,6 +78,7 @@ export default function OrgShow({ org }: OrgShowProps) {
             <TabsTrigger value='leases'>Leases</TabsTrigger>
             <TabsTrigger value='properties'>Properties</TabsTrigger>
             <TabsTrigger value='activities'>Activities</TabsTrigger>
+            <TabsTrigger value='invoices'>Invoices</TabsTrigger>
           </TabsList>
 
           <TabsContent value='details' className='space-y-6'>
@@ -199,6 +208,10 @@ export default function OrgShow({ org }: OrgShowProps) {
 
           <TabsContent value='activities' className='space-y-6'>
             <ActivitiesTab orgId={id} />
+          </TabsContent>
+
+          <TabsContent value='invoices' className='space-y-6'>
+            <InvoicesTab orgId={id} invoices={invoices?.data ?? []} />
           </TabsContent>
         </Tabs>
       </div>
