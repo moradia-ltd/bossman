@@ -16,7 +16,7 @@ import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
 import StripeService from '#services/stripe_service'
 import type { AppCountries } from '#types/extra'
-import { createCustomerUserValidator } from '#validators/org'
+import { createCustomerUserValidator, updateOrgValidator } from '#validators/org'
 
 export default class OrgsController {
   async index({ request, inertia }: HttpContext) {
@@ -239,6 +239,53 @@ export default class OrgsController {
     }))
 
     return inertia.render('orgs/show', { org, invoices: { data: invoices } })
+  }
+
+  async edit({ params, inertia, request }: HttpContext) {
+    const appEnv = request.appEnv()
+    const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
+    return inertia.render('orgs/edit', { org })
+  }
+
+  async update({ params, request, response }: HttpContext) {
+    const appEnv = request.appEnv()
+    const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
+    const payload = await request.validateUsing(updateOrgValidator)
+
+    const updates: Partial<Org> = {}
+    if (payload.name !== undefined) {
+      const name = payload.name.trim()
+      updates.name = name.endsWith('_org') ? name : `${name}_org`
+    }
+    if (payload.creatorEmail !== undefined) updates.creatorEmail = payload.creatorEmail
+    if (payload.companyName !== undefined) updates.companyName = payload.companyName
+    if (payload.companyWebsite !== undefined) updates.companyWebsite = payload.companyWebsite
+    if (payload.companyEmail !== undefined) updates.companyEmail = payload.companyEmail
+    if (payload.country !== undefined) updates.country = payload.country as Org['country']
+    if (payload.ownerRole !== undefined) updates.ownerRole = payload.ownerRole
+    if (payload.isWhiteLabelEnabled !== undefined)
+      updates.isWhiteLabelEnabled = payload.isWhiteLabelEnabled
+    if (payload.customPaymentSchedule !== undefined) {
+      updates.customPaymentSchedule = {
+        ...(org.customPaymentSchedule as object),
+        ...payload.customPaymentSchedule,
+      } as Org['customPaymentSchedule']
+    }
+    if (payload.customPlanFeatures !== undefined) {
+      updates.customPlanFeatures = {
+        ...(org.customPlanFeatures as object),
+        ...payload.customPlanFeatures,
+      } as Org['customPlanFeatures']
+    }
+    if (payload.pages !== undefined) updates.pages = payload.pages as Org['pages']
+    if (payload.settings !== undefined) {
+      updates.settings = { ...org.settings, ...payload.settings } as Org['settings']
+    }
+
+    org.merge(updates)
+    await org.save()
+
+    return response.ok({ success: true, org })
   }
 
   async leases({ request, params, response }: HttpContext) {

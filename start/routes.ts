@@ -53,6 +53,7 @@ router
     router.get('/properties/:id', [LeaseableEntitiesController, 'show'])
     router.get('/orgs', [OrgsController, 'index'])
     router.get('/orgs/create', [OrgsController, 'create'])
+    router.get('/orgs/:id/edit', [OrgsController, 'edit'])
     router.get('/orgs/:id', [OrgsController, 'show'])
     router.get('/orgs/:id/invoices/create', [OrgsController, 'createInvoice'])
     router.post('/orgs/:id/invoices', [OrgsController, 'storeInvoice'])

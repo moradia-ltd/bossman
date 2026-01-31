@@ -139,3 +139,35 @@ mailer.on({
       .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
   },
 })
+
+mailer.on({
+  type: 'customer-account-created',
+  handler: async (message, data) => {
+    const CustomerAccountCreated = await import('#emails/customer-account-created').then(
+      (m) => m.default,
+    )
+    const html = await render(CustomerAccountCreated(data))
+    message
+      .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))
+      .subject('Your account has been created')
+      .to(data.email)
+      .html(html)
+      .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
+  },
+})
+
+mailer.on({
+  type: 'customer-complete-subscription',
+  handler: async (message, data) => {
+    const CustomerCompleteSubscription = await import(
+      '#emails/customer-complete-subscription'
+    ).then((m) => m.default)
+    const html = await render(CustomerCompleteSubscription(data))
+    message
+      .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))
+      .subject('Complete your subscription')
+      .to(data.email)
+      .html(html)
+      .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
+  },
+})

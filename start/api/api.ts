@@ -19,6 +19,7 @@ router
     router.get('/leaseable-entities/:id/activity', [LeaseableEntitiesController, 'activity'])
     router.get('/orgs/stats', [OrgsController, 'stats'])
     router.post('/orgs', [OrgsController, 'store'])
+    router.put('/orgs/:id', [OrgsController, 'update'])
     router.get('/orgs/:id/leases', [OrgsController, 'leases'])
     router.get('/orgs/:id/properties', [OrgsController, 'properties'])
     router.get('/orgs/:id/activities', [OrgsController, 'activities'])

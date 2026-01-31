@@ -2,7 +2,6 @@ import logger from '@adonisjs/core/services/logger'
 import type { EventsList } from '@adonisjs/core/types'
 import db from '@adonisjs/lucid/services/db'
 import mailer from '#services/email_service'
-import StripeService from '#services/stripe_service'
 import env from '#start/env'
 
 export default class UserListener {
@@ -38,22 +37,29 @@ export default class UserListener {
 
   public async newCustomUser({
     user,
-    org,
+    org: _org,
     subscriptionId,
     session,
   }: EventsList['new:custom-user']) {
     logger.info(`New custom user created for ${user.name} with sub_id ${subscriptionId}`)
+    const email = user.email
+    const fullName = user.name || 'User'
+
     try {
-      if (subscriptionId) {
-        const subscription = await StripeService.getSubscription(subscriptionId)
-        console.log('subscription', subscription)
-      }
-      if (session) {
-        // send an email with
-        const url = session.url
+      if (session?.url) {
+        await mailer.send({
+          type: 'customer-complete-subscription',
+          data: { email, fullName, url: session.url },
+        })
+      } else if (subscriptionId) {
+        await mailer.send({
+          type: 'customer-account-created',
+          data: { email, fullName },
+        })
       }
     } catch (err) {
-      console.log('error getting subscription', err)
+      logger.error({ email, fullName, err }, 'Failed to send new custom user email', { err })
+      throw err
     }
   }
 }

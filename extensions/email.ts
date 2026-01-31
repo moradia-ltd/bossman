@@ -1,7 +1,13 @@
 declare module '@adonisjs/core/types' {
   interface Emails {
-    'new:custom-user': {
-      userId: string
+    'customer-account-created': {
+      email: string
+      fullName: string
+    }
+    'customer-complete-subscription': {
+      email: string
+      fullName: string
+      url: string
     }
     'forgot-password': {
       email: string

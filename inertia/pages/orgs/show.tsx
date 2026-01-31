@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
-import { Pause } from 'lucide-react'
+import { Pencil, Pause } from 'lucide-react'
 import type { RawOrg } from '#types/model-types'
 import DetailRow from '@/components/dashboard/detail-row'
 import { DashboardLayout } from '@/components/dashboard/layout'
@@ -64,6 +64,12 @@ export default function OrgShow({ org, invoices }: OrgShowProps) {
           description={org.companyName ? String(org.companyName) : undefined}
           actions={
             <div className='flex items-center gap-2'>
+              <Button variant='outline' size='md' asChild>
+                <Link href={`/orgs/${id}/edit`}>
+                  <Pencil className='mr-2 h-4 w-4' />
+                  Edit
+                </Link>
+              </Button>
               <Button variant='outline' size='md' asChild>
                 <Link href={`/orgs/${id}/invoices/create`}>Create invoice</Link>
               </Button>

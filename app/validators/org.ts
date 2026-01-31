@@ -109,6 +109,49 @@ export const editCustomerUserValidator = vine.compile(
   }),
 )
 
+const customPaymentScheduleUpdate = vine.object({
+  amount: vine.number().optional(),
+  trialPeriodInDays: vine.number().optional(),
+  frequency: vine.enum(['monthly', 'quarterly', 'yearly']).optional(),
+  currency: vine.enum(['gbp', 'eur', 'usd']).optional(),
+  paymentMethod: vine.enum(['stripe', 'bank_transfer']).optional(),
+  planType: vine.enum(['normal', 'custom']).optional(),
+  plan: vine.enum(['standard', 'essential', 'premium']).optional(),
+})
+
+export const updateOrgValidator = vine.compile(
+  vine.object({
+    name: vine.string().optional(),
+    creatorEmail: vine.string().email().optional(),
+    companyName: vine.string().optional(),
+    companyWebsite: vine.string().optional(),
+    companyEmail: vine.string().email().optional(),
+    country: vine.string().optional(),
+    ownerRole: vine.enum(['landlord', 'agency']).optional(),
+    isWhiteLabelEnabled: vine.boolean().optional(),
+    customPaymentSchedule: customPaymentScheduleUpdate.optional(),
+    customPlanFeatures: featureList.optional(),
+    pages: pages.optional(),
+    settings: vine
+      .object({
+        preferredCurrency: vine.string().optional(),
+        preferredTimezone: vine.string().optional(),
+        preferredDateFormat: vine.string().optional(),
+        weeklyDigest: vine.boolean().optional(),
+        monthlyDigest: vine.boolean().optional(),
+        autoArchiveLeases: vine.boolean().optional(),
+        enablePayments: vine.boolean().optional(),
+        notifications: vine
+          .object({
+            leaseExpiry: vine.boolean().optional(),
+            rentPaymentReminder: vine.boolean().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+  }),
+)
+
 export type CreateCustomUserPayload = Awaited<
   ReturnType<typeof createCustomerUserValidator.validate>
 >
