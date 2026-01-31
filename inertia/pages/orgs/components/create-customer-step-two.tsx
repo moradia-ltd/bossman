@@ -42,7 +42,7 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
             onChange={(value) => formik.setFieldValue('customPaymentSchedule.planType', value)}
           />
         </div>
-        <div className='grid gap-4 md:grid-cols-2'>
+        <SimpleGrid cols={4}>
           <FormField label='Frequency' htmlFor='customPaymentSchedule.frequency'>
             <Select
               value={ps.frequency}
@@ -87,7 +87,7 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
             <FormField label='Currency' htmlFor='customPaymentSchedule.currency'>
               <Select
                 value={ps.currency}
-                itemToStringLabel={(item) => startCase(item)}
+                itemToStringLabel={(item) => item.toUpperCase()}
                 onValueChange={(v) =>
                   setFieldValue('customPaymentSchedule.currency', v as typeof ps.currency)
                 }>
@@ -102,7 +102,7 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
               </Select>
             </FormField>
 
-            <FormField label='Amount' htmlFor='customPaymentSchedule.amount'>
+            <FormField label='Cost per tenancy' htmlFor='customPaymentSchedule.amount'>
               <Input
                 id='customPaymentSchedule.amount'
                 type='number'
@@ -124,6 +124,7 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
             <FormField label='Payment method' htmlFor='customPaymentSchedule.paymentMethod'>
               <Select
                 value={ps.paymentMethod}
+                itemToStringLabel={(item) => startCase(item)}
                 onValueChange={(v) =>
                   setFieldValue('customPaymentSchedule.paymentMethod', v as typeof ps.paymentMethod)
                 }>
@@ -137,7 +138,7 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
               </Select>
             </FormField>
           </OnlyShowIf>
-        </div>
+        </SimpleGrid>
       </AppCard>
 
       <AppCard
