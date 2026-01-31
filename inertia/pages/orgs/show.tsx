@@ -64,7 +64,7 @@ export default function OrgShow({ org, invoices }: OrgShowProps) {
           description={org.companyName ? String(org.companyName) : undefined}
           actions={
             <div className='flex items-center gap-2'>
-              <Button variant='outline' size='sm' asChild>
+              <Button variant='outline' size='md' asChild>
                 <Link href={`/orgs/${id}/invoices/create`}>Create invoice</Link>
               </Button>
               <QuickActions options={quickActions} />
