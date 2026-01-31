@@ -36,13 +36,13 @@ export function CreateCustomerFormStepTwo({ formik }: CreateCustomerFormStepTwoP
           <p className='text-sm font-medium mb-2'>Plan type </p>
           <RadioGroup
             spacing={2}
+            cols={2}
             options={planTypeOptions}
-            orientation='horizontal'
             value={values.customPaymentSchedule.planType}
             onChange={(value) => formik.setFieldValue('customPaymentSchedule.planType', value)}
           />
         </div>
-        <SimpleGrid cols={4}>
+        <SimpleGrid cols={3}>
           <FormField label='Frequency' htmlFor='customPaymentSchedule.frequency'>
             <Select
               value={ps.frequency}

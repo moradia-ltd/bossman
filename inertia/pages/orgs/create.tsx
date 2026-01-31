@@ -67,6 +67,7 @@ export default function OrgsCreate(props: OrgsCreateProps) {
       content: <CreateCustomerSummary formik={formik} />,
       nextText: 'Create',
       nextBtnDisabled: isPending,
+
       onNextClick() {
         formik.handleSubmit()
       },

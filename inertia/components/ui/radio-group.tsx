@@ -15,8 +15,8 @@ export interface RadioGroupProps {
   spacing?: number
   /** Options to render (selection is by option.value) */
   options: RadioGroupOption[]
-  /** Layout direction */
-  orientation?: 'horizontal' | 'vertical'
+  /** Number of columns (default 1) */
+  cols?: number
   /** Selected option's value */
   value: string
   /** Called when selection changes (receives the selected option's value) */
@@ -43,7 +43,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
     {
       spacing = 2,
       options,
-      orientation = 'vertical',
+      cols = 1,
       value,
       onChange,
       name: nameProp,
@@ -59,13 +59,9 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
       <div
         ref={ref}
         role='radiogroup'
-        aria-orientation={orientation}
-        className={cn(
-          'flex',
-          orientation === 'horizontal' ? 'flex-row flex-wrap' : 'flex-col',
-          gapClass,
-          className,
-        )}
+        aria-orientation={cols > 1 ? 'horizontal' : 'vertical'}
+        className={cn('grid w-full', gapClass, className)}
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
       >
         {options.map((option) => {
           const isSelected = value === option.value
@@ -76,7 +72,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
               key={option.value}
               htmlFor={optionId}
               className={cn(
-                'relative flex cursor-pointer flex-col rounded-lg border-2 p-4 transition-colors',
+                'relative flex w-full min-w-0 cursor-pointer flex-col rounded-lg border-2 p-4 transition-colors',
                 'focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
                 isSelected
                   ? 'border-primary bg-primary/5'
@@ -95,19 +91,25 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
                 className='sr-only'
                 aria-checked={isSelected}
               />
+
               <div className='flex items-start gap-3'>
                 <span
                   className={cn(
                     'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-                    isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-input',
+                    isSelected
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-input',
                   )}
                 >
                   {isSelected && <Check className='h-3 w-3' />}
                 </span>
+
                 <div className='min-w-0'>
                   <span className='font-medium'>{option.label}</span>
                   {option.description ? (
-                    <p className='text-sm text-muted-foreground mt-0.5'>{option.description}</p>
+                    <p className='mt-0.5 text-sm text-muted-foreground'>
+                      {option.description}
+                    </p>
                   ) : null}
                 </div>
               </div>

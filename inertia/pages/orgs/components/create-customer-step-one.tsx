@@ -32,8 +32,8 @@ export function CreateCustomerFormStepOne({ formik }: CreateCustomerFormStepOneP
         <p className='text-sm font-medium mb-2'>Account type</p>
         <RadioGroup
           spacing={2}
+          cols={2}
           options={accountTypeOptions}
-          orientation='horizontal'
           value={values.accountType}
           onChange={(value) => formik.setFieldValue('accountType', value)}
         />

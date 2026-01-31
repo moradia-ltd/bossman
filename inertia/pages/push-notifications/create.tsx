@@ -96,8 +96,6 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
             <RadioGroup
               spacing={2}
               options={targetTypeOptions}
-              orientation='vertical'
-
               value={data.targetType}
               onChange={(value) => setData('targetType', value as typeof data.targetType)}
             />
