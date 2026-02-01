@@ -207,7 +207,7 @@ export function Sidebar({ children }: SidebarProps) {
         <div className='flex flex-1 items-center'>
           {(isOpen || isMobile) && (
             <Link href='/'>
-              <img src={`/icons/togetha-${theme}.svg`} alt='Logo' className='h-20' />
+              <img src={`/icons/togetha-${theme}.svg`} alt='Logo' className='h-8' />
             </Link>
           )}
         </div>

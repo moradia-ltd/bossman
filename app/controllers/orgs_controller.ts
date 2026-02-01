@@ -12,6 +12,8 @@ import Property from '#models/property'
 import SubscriptionPlan from '#models/subscription_plan'
 import TogethaTeam from '#models/togetha_teams'
 import TogethaUser from '#models/togetha_user'
+import logger from '@adonisjs/core/services/logger'
+import mailer from '#services/email_service'
 import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
 import StripeService from '#services/stripe_service'
@@ -252,6 +254,16 @@ export default class OrgsController {
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
     const payload = await request.validateUsing(updateOrgValidator)
 
+    const oldSchedule = org.customPaymentSchedule as Record<string, unknown> | undefined
+    const oldAmount = oldSchedule?.amount != null ? Number(oldSchedule.amount) : undefined
+    const oldCurrency =
+      oldSchedule?.currency != null ? String(oldSchedule.currency) : undefined
+    const newAmount = payload.customPaymentSchedule?.amount
+    const newCurrency = payload.customPaymentSchedule?.currency
+    const priceChanged =
+      payload.customPaymentSchedule != null &&
+      (oldAmount !== newAmount || oldCurrency !== newCurrency)
+
     const updates: Partial<Org> = {}
     if (payload.name !== undefined) {
       const name = payload.name.trim()
@@ -284,6 +296,32 @@ export default class OrgsController {
 
     org.merge(updates)
     await org.save()
+
+    if (priceChanged && org.paymentCustomerId && org.customPaymentSchedule) {
+      try {
+        const session = await StripeService.createPriceUpdateSession(org)
+        if (session?.url) {
+          const schedule = org.customPaymentSchedule as Record<string, unknown>
+          const amount = Number(schedule.amount)
+          const currency = String(schedule.currency ?? 'gbp')
+          const fullName =
+            (org.cleanName as string) ?? (org.companyName as string) ?? 'Customer'
+          await mailer.send({
+            type: 'customer-price-updated',
+            data: {
+              email: org.creatorEmail,
+              fullName,
+              url: session.url,
+              amount,
+              currency,
+            },
+          })
+          logger.info(`Price-updated email sent to ${org.creatorEmail} with checkout URL`)
+        }
+      } catch (err) {
+        logger.error('Failed to create price-update session or send email', { err, orgId: org.id })
+      }
+    }
 
     return response.ok({ success: true, org })
   }

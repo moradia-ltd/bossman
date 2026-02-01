@@ -171,3 +171,19 @@ mailer.on({
       .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
   },
 })
+
+mailer.on({
+  type: 'customer-price-updated',
+  handler: async (message, data) => {
+    const CustomerPriceUpdated = await import('#emails/customer-price-updated').then(
+      (m) => m.default,
+    )
+    const html = await render(CustomerPriceUpdated(data))
+    message
+      .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))
+      .subject('Your subscription price has been updated')
+      .to(data.email)
+      .html(html)
+      .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
+  },
+})

@@ -9,6 +9,13 @@ declare module '@adonisjs/core/types' {
       fullName: string
       url: string
     }
+    'customer-price-updated': {
+      email: string
+      fullName: string
+      url: string
+      amount: number
+      currency: string
+    }
     'forgot-password': {
       email: string
       fullName: string

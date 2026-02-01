@@ -1,7 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
-import { Pencil, Pause } from 'lucide-react'
+import { Pause, Pencil } from 'lucide-react'
 import type { RawOrg } from '#types/model-types'
+import { formatCurrency } from '#utils/currency'
+import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -159,6 +161,42 @@ export default function OrgShow({ org, invoices }: OrgShowProps) {
                     label='Custom templates limit'
                     value={org.customPlanFeatures?.customTemplatesLimit ?? '—'}
                   />
+                </SimpleGrid>
+              </AppCard>
+
+              <AppCard title='Custom payment schedule' description='Custom payment schedule'>
+                <SimpleGrid cols={3}>
+                  <DetailRow
+                    label='Cost per tenant'
+                    value={formatCurrency(
+                      org.customPaymentSchedule.amount,
+                      org.customPaymentSchedule.currency,
+                    )}
+                  />
+                  <DetailRow
+                    label='Trial period'
+                    value={org.customPaymentSchedule.trialPeriodInDays}
+                  />
+                  <DetailRow
+                    label='Frequency'
+                    value={startCase(org.customPaymentSchedule.frequency)}
+                  />
+                  {org.customPaymentSchedule.promoCode && (
+                    <DetailRow label='Promo code' value={org.customPaymentSchedule.promoCode} />
+                  )}
+                  <DetailRow label='Promo code' value={org.customPaymentSchedule.promoCode} />
+                </SimpleGrid>
+              </AppCard>
+
+              <AppCard title='Pages' description='Enabled sections for this customer'>
+                <SimpleGrid cols={3}>
+                  {org.pages.orgPages.map((page: { label: string; isEnabled: boolean }) => (
+                    <DetailRow
+                      key={page.label}
+                      label={page.label}
+                      value={page.isEnabled ? 'Yes' : 'No'}
+                    />
+                  ))}
                 </SimpleGrid>
               </AppCard>
             </OnlyShowIf>

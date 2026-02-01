@@ -146,12 +146,55 @@ class StripeService {
         trial_period_days: data.trialPeriodInDays > 0 ? data.trialPeriodInDays : undefined,
         description: 'Custom plan for togetha.co.uk',
       },
-      // only apply the coupon if the price is different from the normal price
-      discounts: [{ coupon: coupon?.id }],
+      ...(coupon?.id ? { discounts: [{ coupon: coupon.id }] } : {}),
       success_url,
       cancel_url,
     })
 
+    return session
+  }
+
+  /**
+   * Create a Stripe checkout session for an org whose custom payment schedule (amount/currency)
+   * has been updated. Returns the session (with .url) so the customer can be emailed a link.
+   */
+  public static async createPriceUpdateSession(
+    org: Org
+  ): Promise<Stripe.Response<Stripe.Checkout.Session> | null> {
+    if (!org.paymentCustomerId || !org.customPaymentSchedule) {
+      return null
+    }
+    const schedule = org.customPaymentSchedule as Record<string, unknown>
+    const amount = Number(schedule.amount)
+    const currency = String(schedule.currency ?? 'gbp')
+    const frequency = (schedule.frequency ?? 'monthly') as 'monthly' | 'quarterly' | 'yearly'
+    const trialPeriodInDays = Number(schedule.trialPeriodInDays ?? 0)
+    const featureList = (org.featureList ?? org.customPlanFeatures) as Record<string, unknown>
+    const tenantLimit = Number(featureList?.tenantLimit ?? 1)
+    const data: CustomSubscriptionInfo = {
+      amount,
+      currency,
+      frequency,
+      trialPeriodInDays,
+    }
+    const featureListPayload: CreateCustomUserPayload['featureList'] = {
+      propertyLimit: Number(featureList?.propertyLimit) ?? 20,
+      tenantLimit,
+      storageLimit: Number(featureList?.storageLimit) ?? 0,
+      teamSizeLimit: Number(featureList?.teamSizeLimit) ?? 1,
+      prioritySupport: Boolean(featureList?.prioritySupport),
+      activityLogRetention: Number(featureList?.activityLogRetention) ?? 90,
+      depositProtection: Boolean(featureList?.depositProtection),
+      advancedReporting: Boolean(featureList?.advancedReporting),
+      eSignDocsLimit: Number(featureList?.eSignDocsLimit) ?? 10,
+      aiInvocationLimit: Number(featureList?.aiInvocationLimit) ?? 50,
+      customTemplatesLimit: Number(featureList?.customTemplatesLimit) ?? 0,
+    }
+    const session = await StripeService.createCustomSubscription({
+      customerId: org.paymentCustomerId,
+      data,
+      featureList: featureListPayload,
+    })
     return session
   }
 
