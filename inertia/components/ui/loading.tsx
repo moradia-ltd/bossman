@@ -7,6 +7,8 @@ export type LoadingVariant = 'spinner' | 'skeleton' | 'inline' | 'overlay' | 'ca
 
 interface BaseLoadingProps {
   className?: string
+  /** When false, nothing is rendered. Default true. */
+  isLoading?: boolean
 }
 
 interface SpinnerLoadingProps extends BaseLoadingProps {
@@ -157,6 +159,9 @@ function SkeletonContent({
 export function Loading(props: LoadingProps) {
   const variant = props.variant ?? 'spinner'
   const className = props.className
+  const isLoading = props.isLoading !== false
+
+  if (!isLoading) return null
 
   if (variant === 'spinner') {
     const spinnerProps = props as SpinnerLoadingProps

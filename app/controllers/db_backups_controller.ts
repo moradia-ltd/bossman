@@ -42,16 +42,16 @@ export default class DbBackupsController {
 
     try {
       const r2 = drive.use('backup')
-      const done = await r2.get(fileName)
-      console.log('🚀 ~ DbBackupsController ~ destroy ~ done:', done)
+      const exists = await r2.exists(fileName)
+      console.log('🚀 ~ DbBackupsController ~ destroy ~ exists:', exists)
 
-      // await r2.delete(fileName)
+      await r2.delete(fileName)
+      await backup.delete()
       logger.info(`Deleted backup file from R2: ${fileName}`)
     } catch (err) {
       console.log('🚀 ~ DbBackupsController ~ destroy ~ err:', err)
     }
 
-    // await backup.delete()
-    return response.redirect().back()
+    return response.redirect('/db-backups')
   }
 }

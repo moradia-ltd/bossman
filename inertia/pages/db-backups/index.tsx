@@ -28,12 +28,7 @@ interface DbBackupsIndexProps extends SharedProps {
 }
 
 const columns: Column<RawDbBackup>[] = [
-  {
-    key: 'id',
-    header: 'ID',
-    width: 80,
-    cell: (row) => <span className='text-muted-foreground'>{row.id}</span>,
-  },
+
   {
     key: 'filePath',
     header: 'File path',
@@ -101,9 +96,8 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
   return (
     <DashboardLayout>
       <Head title='Backups' />
-      {createBackupMutation.isPending && (
-        <LoadingOverlay text='Creating backup...' className='z-[100]' />
-      )}
+
+      <LoadingOverlay text='Creating backup...' className='z-[100]' isLoading={createBackupMutation.isPending} />
       <div className='space-y-6'>
         <PageHeader
           title='Backups'

@@ -63,7 +63,7 @@ interface FilterPreset {
   filters: Record<string, unknown>
 }
 
-interface DataTableProps<T extends { id?: string }> {
+interface DataTableProps<T extends { id?: string | number }> {
   columns: Column<T>[]
   data: T[]
   searchable?: boolean
@@ -99,7 +99,7 @@ interface DataTableProps<T extends { id?: string }> {
   }[]
 }
 
-export function DataTable<T extends { id?: string }>({
+export function DataTable<T extends { id?: string | number }>({
   columns,
   data,
   searchable,
@@ -114,7 +114,7 @@ export function DataTable<T extends { id?: string }>({
   selectable = false,
   selectedRows = [],
   onSelectionChange,
-  getRowId = (row) => (row as { id: string }).id || '',
+  getRowId = (row) => String((row as { id?: string | number }).id ?? ''),
   filterable = false,
   filterPresets = [],
   onFiltersChange,
