@@ -1,4 +1,4 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
 import type { DateTime } from 'luxon'
 
 export default class DbBackup extends BaseModel {
@@ -11,6 +11,12 @@ export default class DbBackup extends BaseModel {
    */
   @column()
   declare fileSize: number
+
+  @computed() get fileName() {
+    // backups/v2-backup-1769948533686.sql
+    // remove the backups/ prefix
+    return this.filePath?.replace('backups/', '')
+  }
 
   /**
    * The timestamp when the backup was created.

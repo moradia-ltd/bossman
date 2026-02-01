@@ -64,6 +64,8 @@ router
     router.post('/push-notifications', [PushNotificationsController, 'store'])
     router.post('/push-notifications/:id/resend', [PushNotificationsController, 'resend'])
     router.get('/db-backups', [DbBackupsController, 'index'])
+    router.post('/db-backups', [DbBackupsController, 'create'])
+    router.delete('/db-backups/:id', [DbBackupsController, 'destroy'])
 
     router
       .group(() => {

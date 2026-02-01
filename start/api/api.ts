@@ -2,6 +2,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 
 const DashboardController = () => import('#controllers/dashboard_controller')
+const DbBackupsController = () => import('#controllers/db_backups_controller')
 const LeasesController = () => import('#controllers/leases_controller')
 const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
 const OrgsController = () => import('#controllers/orgs_controller')
@@ -25,6 +26,7 @@ router
     router.get('/orgs/:id/activities', [OrgsController, 'activities'])
     router.get('/orgs/:id/invoices', [OrgsController, 'invoices'])
     router.get('/push-notifications/users', [PushNotificationsController, 'users'])
+    router.post('/db-backups', [DbBackupsController, 'store'])
   })
   .prefix('api/v1')
   .use(middleware.auth())

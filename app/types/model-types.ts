@@ -6,6 +6,7 @@ import type BlogAuthor from '#models/blog_author'
 import type BlogCategory from '#models/blog_category'
 import type BlogPost from '#models/blog_post'
 import type BlogTag from '#models/blog_tag'
+import type DbBackup from '#models/db_backup'
 import type Lease from '#models/lease'
 import type LeaseableEntity from '#models/leaseable_entity'
 import type Org from '#models/org'
@@ -72,3 +73,4 @@ export type RawTenant = ExtractModelType<Tenant>
 export type RawPayment = ExtractModelType<Payment>
 export type RawActivity = ExtractModelType<Activity>
 export type RawOrg = ExtractModelType<Org>
+export type RawDbBackup = ExtractModelType<DbBackup>

@@ -2,7 +2,22 @@
 
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { router, usePage } from '@inertiajs/react'
-import { Check, LayoutDashboard, LogOut, Moon, Newspaper, PlusSquare, Settings, Sun, UsersRound } from 'lucide-react'
+import {
+  Bell,
+  Building2,
+  Check,
+  Database,
+  FileText,
+  Layers,
+  LayoutDashboard,
+  LogOut,
+  Moon,
+  Newspaper,
+  PlusSquare,
+  Settings,
+  Sun,
+  UsersRound,
+} from 'lucide-react'
 import * as React from 'react'
 import {
   CommandDialog,
@@ -76,6 +91,11 @@ export function CommandPalette() {
   const appNav: CommandEntry[] = [
     { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='mr-2 h-4 w-4' />, requires: 'dashboard' },
     { label: 'Teams', href: '/teams', icon: <UsersRound className='mr-2 h-4 w-4' />, requires: 'teams' },
+    { label: 'Leases', href: '/leases', icon: <FileText className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Properties', href: '/properties', icon: <Layers className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Customers', href: '/orgs', icon: <Building2 className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Push notifications', href: '/push-notifications', icon: <Bell className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Backups', href: '/db-backups', icon: <Database className='mr-2 h-4 w-4' />, requires: 'dashboard' },
     { label: 'Blog', href: '/blog/manage', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
     { label: 'New blog post', href: '/blog/manage/create', icon: <PlusSquare className='mr-2 h-4 w-4' />, requires: 'blog' },
     { label: 'Blog categories', href: '/blog/manage/categories', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },

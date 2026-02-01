@@ -1,5 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import logger from '@adonisjs/core/services/logger'
+import drive from '@adonisjs/drive/services/main'
 import DbBackup from '#models/db_backup'
+import BackupService from '#services/backup_service'
 
 export default class DbBackupsController {
   async index({ request, inertia }: HttpContext) {
@@ -11,5 +14,44 @@ export default class DbBackupsController {
       .paginate(params.page ?? 1, params.perPage ?? 20)
 
     return inertia.render('db-backups/index', { backups })
+  }
+
+  /** API: create a new backup. Returns JSON. */
+  async store({ request, response, logger }: HttpContext) {
+    const appEnv = request.appEnv()
+    const backupService = new BackupService()
+    try {
+      logger.info('Creating backup...')
+      await backupService.createBackup(appEnv)
+      logger.info('Backup created successfully')
+      return response.ok({ success: true })
+    } catch (err) {
+      logger.error(err)
+      return response.badRequest({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+  }
+
+  async destroy({ params, response, request }: HttpContext) {
+    const appEnv = request.appEnv()
+    const backup = await DbBackup.query({ connection: appEnv }).where('id', params.id).firstOrFail()
+    const fileName = backup.fileName!
+    console.log('🚀 ~ DbBackupsController ~ destroy ~ fileName:', fileName)
+
+    try {
+      const r2 = drive.use('backup')
+      const done = await r2.get(fileName)
+      console.log('🚀 ~ DbBackupsController ~ destroy ~ done:', done)
+
+      // await r2.delete(fileName)
+      logger.info(`Deleted backup file from R2: ${fileName}`)
+    } catch (err) {
+      console.log('🚀 ~ DbBackupsController ~ destroy ~ err:', err)
+    }
+
+    // await backup.delete()
+    return response.redirect().back()
   }
 }
