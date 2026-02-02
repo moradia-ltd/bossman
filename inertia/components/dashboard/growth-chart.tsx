@@ -166,3 +166,161 @@ export function GrowthChart({ title, data, config }: GrowthChartProps) {
     </Card>
   )
 }
+
+function daysInRange(startDate: string, endDate: string): string[] {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const days: string[] = []
+  const d = new Date(start)
+  while (d <= end) {
+    days.push(d.toISOString().slice(0, 10))
+    d.setDate(d.getDate() + 1)
+  }
+  return days
+}
+
+const MONTHLY_VIEW_DAYS_THRESHOLD = 90
+
+function monthsInRange(startDate: string, endDate: string): { monthKey: string; label: string; start: string; end: string }[] {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const months: { monthKey: string; label: string; start: string; end: string }[] = []
+  const cursor = new Date(start.getFullYear(), start.getMonth(), 1)
+  while (cursor <= end) {
+    const y = cursor.getFullYear()
+    const m = cursor.getMonth()
+    const monthStart = new Date(y, m, 1)
+    const monthEnd = new Date(y, m + 1, 0)
+    const rangeStart = monthStart < start ? start : monthStart
+    const rangeEnd = monthEnd > end ? end : monthEnd
+    months.push({
+      monthKey: `${y}-${String(m + 1).padStart(2, '0')}`,
+      label: monthStart.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      start: rangeStart.toISOString().slice(0, 10),
+      end: rangeEnd.toISOString().slice(0, 10),
+    })
+    cursor.setMonth(cursor.getMonth() + 1)
+  }
+  return months
+}
+
+function buildMonthlyChartData(
+  startDate: string,
+  endDate: string,
+  data: { date: string; count: number }[],
+): { date: string; label: string; count: number; startDate: string; endDate: string }[] {
+  const months = monthsInRange(startDate, endDate)
+  const byDate = new Map<string, number>()
+  for (const d of data) byDate.set(d.date.slice(0, 10), d.count)
+  return months.map(({ monthKey, label, start, end }) => {
+    let count = 0
+    const d = new Date(start)
+    while (d <= new Date(end)) {
+      count += byDate.get(d.toISOString().slice(0, 10)) ?? 0
+      d.setDate(d.getDate() + 1)
+    }
+    return { date: monthKey, label, count, startDate: start, endDate: end }
+  })
+}
+
+export type AnalyticsGrowthChartProps = {
+  title: string
+  startDate: string
+  endDate: string
+  data: { date: string; count: number }[]
+  config: ChartConfig
+  onBarClick?: (payload: { date: string; startDate: string; endDate: string }) => void
+}
+
+export function AnalyticsGrowthChart({
+  title,
+  startDate,
+  endDate,
+  data,
+  config,
+  onBarClick,
+}: AnalyticsGrowthChartProps) {
+  const chartData = useMemo(() => {
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+    const daysCount = Math.round((end.getTime() - start.getTime()) / 86400000) + 1
+    const useMonthly = daysCount > MONTHLY_VIEW_DAYS_THRESHOLD
+
+    if (useMonthly) {
+      return buildMonthlyChartData(startDate, endDate, data)
+    }
+
+    const days = daysInRange(startDate, endDate)
+    const byDate = new Map<string, number>()
+    for (const d of data) byDate.set(d.date.slice(0, 10), d.count)
+    return days.map((date) => ({
+      date,
+      label: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      count: byDate.get(date) ?? 0,
+      startDate: date,
+      endDate: date,
+    }))
+  }, [startDate, endDate, data])
+
+  const seriesLabel = config.count?.label ?? 'Count'
+
+  const handleBarClick = onBarClick
+    ? (entry: { date: string; label: string; count: number; startDate?: string; endDate?: string }) => {
+        const start = entry.startDate ?? entry.date
+        const end = entry.endDate ?? entry.date
+        onBarClick({ date: entry.date, startDate: start, endDate: end })
+      }
+    : undefined
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className='text-sm font-medium'>{title}</CardTitle>
+        <CardDescription>
+          {new Date(startDate).toLocaleDateString()} – {new Date(endDate).toLocaleDateString()}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={config} className='h-[200px] w-full'>
+          <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray='3 3' vertical={false} />
+            <XAxis
+              dataKey='label'
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tick={{ fontSize: 11 }}
+            />
+            <YAxis tickLine={false} axisLine={false} tickMargin={8} tick={{ fontSize: 12 }} />
+            <Tooltip
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length || !label) return null
+                const value = payload[0]?.value ?? 0
+                return (
+                  <div className='rounded-lg border border-border bg-card px-3 py-2 shadow-md'>
+                    <p className='text-xs font-medium text-muted-foreground'>{label}</p>
+                    <p className='text-sm font-semibold'>
+                      {seriesLabel}: {value}
+                    </p>
+                    {onBarClick && (
+                      <p className='text-xs text-muted-foreground mt-1'>Click bar to view entities</p>
+                    )}
+                  </div>
+                )
+              }}
+              cursor={onBarClick ? { fill: 'hsl(var(--muted))', opacity: 0.3 } : false}
+            />
+            <Bar
+              dataKey='count'
+              fill='var(--color-count)'
+              radius={[4, 4, 0, 0]}
+              name={seriesLabel}
+              onClick={handleBarClick}
+              style={onBarClick ? { cursor: 'pointer' } : undefined}
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  )
+}

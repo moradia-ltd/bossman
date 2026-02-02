@@ -1,5 +1,6 @@
 import { Link, router, usePage } from '@inertiajs/react'
 import {
+  BarChart3,
   Bell,
   Building2,
   ChevronsUpDown,
@@ -61,6 +62,7 @@ const appNavSections: NavSection[] = [
   {
     label: 'App',
     items: [
+      { title: 'Analytics', href: '/analytics', icon: <BarChart3 className='h-4 w-4' /> },
       { title: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='h-4 w-4' /> },
       { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
       { title: 'Leases', href: '/leases', icon: <FileText className='h-4 w-4' /> },
@@ -111,6 +113,7 @@ export function Sidebar({ children }: SidebarProps) {
     const path = `/${String(href || '')
       .replace(/^\/+/, '')
       .replace(/\/+$/, '')}`
+    if (path === '/analytics') return 'analytics'
     if (path === '/dashboard') return 'dashboard'
     if (path.startsWith('/teams')) return 'teams'
     if (path.startsWith('/blog/manage')) return 'blog'

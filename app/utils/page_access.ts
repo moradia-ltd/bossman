@@ -1,4 +1,5 @@
 export const PAGE_KEYS = [
+  'analytics',
   'dashboard',
   'teams',
   'blog',
@@ -12,6 +13,7 @@ export const PAGE_KEYS = [
 export type PageKey = (typeof PAGE_KEYS)[number]
 
 export const PAGE_KEY_TO_PATH: Record<PageKey, string> = {
+  analytics: '/analytics',
   dashboard: '/dashboard',
   teams: '/teams',
   blog: '/blog/manage',
@@ -27,6 +29,7 @@ export function requiredPageKeyForPath(pathname: string): PageKey {
     .replace(/^\/+/, '')
     .replace(/\/+$/, '')}`
 
+  if (path === '/analytics') return 'analytics'
   if (path === '/dashboard') return 'dashboard'
   if (path.startsWith('/teams')) return 'teams'
   if (path.startsWith('/blog/manage')) return 'blog'

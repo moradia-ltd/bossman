@@ -2,6 +2,7 @@ import router from '@adonisjs/core/services/router'
 import vine from '@vinejs/vine'
 import { middleware } from '#start/kernel'
 
+const AnalyticsController = () => import('#controllers/analytics_controller')
 const DashboardController = () => import('#controllers/dashboard_controller')
 const DbBackupsController = () => import('#controllers/db_backups_controller')
 const LeasesController = () => import('#controllers/leases_controller')
@@ -12,6 +13,16 @@ const PushNotificationsController = () => import('#controllers/push_notification
 
 router
   .group(() => {
+    router.get('/analytics/orgs/stats', [AnalyticsController, 'orgsStats'])
+    router.get('/analytics/orgs/entities', [AnalyticsController, 'orgsEntities'])
+    router.get('/analytics/users/stats', [AnalyticsController, 'usersStats'])
+    router.get('/analytics/users/entities', [AnalyticsController, 'usersEntities'])
+    router.get('/analytics/leases/stats', [AnalyticsController, 'leasesStats'])
+    router.get('/analytics/leases/entities', [AnalyticsController, 'leasesEntities'])
+    router.get('/analytics/maintenance/stats', [AnalyticsController, 'maintenanceStats'])
+    router.get('/analytics/maintenance/entities', [AnalyticsController, 'maintenanceEntities'])
+    router.get('/analytics/activity/stats', [AnalyticsController, 'activityStats'])
+    router.get('/analytics/activity/entities', [AnalyticsController, 'activityEntities'])
     router.get('/dashboard/stats', [DashboardController, 'stats'])
     router.get('/dashboard/activity', [DashboardController, 'recentActivity'])
     router.get('/leases/stats', [LeasesController, 'stats'])
