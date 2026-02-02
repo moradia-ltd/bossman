@@ -40,7 +40,8 @@
     "#emails/*": "./inertia/emails/*.js",
     "#extensions/*": "./extensions/*.js",
     "#utils/*": "./app/utils/*.js",
-    "#audit_resolvers/*": "./app/audit_resolvers/*.js"
+    "#audit_resolvers/*": "./app/audit_resolvers/*.js",
+    "#boss/*": "./boss/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
@@ -94,7 +95,6 @@
     "@vitejs/plugin-react": "^5.0.2",
     "adonis-autoswagger": "^3.73.0",
     "axios": "^1.13.2",
-    "better-sqlite3": "^12.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -105,6 +105,7 @@
     "luxon": "^3.7.2",
     "meilisearch": "^0.55.0",
     "pg": "^8.17.2",
+    "pg-boss": "^12.8.0",
     "qrcode": "^1.5.4",
     "react": "^19.1.1",
     "react-day-picker": "^9.13.0",

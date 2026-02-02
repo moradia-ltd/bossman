@@ -80,6 +80,7 @@ export default defineConfig({
     () => import('#start/routes'),
     () => import('#start/kernel'),
     () => import('#start/events'),
+    () => import('#start/boss'),
     () => import('#start/email'),
   ],
 
