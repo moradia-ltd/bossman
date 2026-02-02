@@ -3,6 +3,8 @@ import emitter from '@adonisjs/core/services/emitter'
 import logger from '@adonisjs/core/services/logger'
 import UserListener from '#listeners/user'
 
+import '#boss/base'
+
 emitter.on('user:created', [UserListener, 'userCreated'])
 emitter.on('user:deleted', [UserListener, 'userDeleted'])
 emitter.on('new:custom-user', [UserListener, 'newCustomUser'])
