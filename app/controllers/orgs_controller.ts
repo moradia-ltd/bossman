@@ -1,10 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import emitter from '@adonisjs/core/services/emitter'
+import logger from '@adonisjs/core/services/logger'
 import db from '@adonisjs/lucid/services/db'
 import type Stripe from 'stripe'
 import Activity from '#models/activity'
 import Agency from '#models/agency'
-
 import Landlord from '#models/landlord'
 import Lease from '#models/lease'
 import Org from '#models/org'
@@ -12,7 +12,6 @@ import Property from '#models/property'
 import SubscriptionPlan from '#models/subscription_plan'
 import TogethaTeam from '#models/togetha_teams'
 import TogethaUser from '#models/togetha_user'
-import logger from '@adonisjs/core/services/logger'
 import mailer from '#services/email_service'
 import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
@@ -55,6 +54,7 @@ export default class OrgsController {
 
   async store({ request, response, logger }: HttpContext) {
     const appEnv = request.appEnv()
+    console.log('🚀 ~ OrgsController ~ store ~ appEnv:', appEnv)
     const payload = await request.validateUsing(createCustomerUserValidator)
     const trx = await db.connection(appEnv).transaction()
     const isCustomPlan = payload.customPaymentSchedule.planType === 'custom'
@@ -74,12 +74,13 @@ export default class OrgsController {
     try {
       const subPlan = isCustomPlan
         ? undefined
-        : await SubscriptionPlan.query(trxCon)
-          .where({
-            name: payload.customPaymentSchedule.plan,
-            billingFrequency: payload.customPaymentSchedule.frequency,
-          })
-          .first()
+        : await SubscriptionPlan.query({ client: trx, connection: appEnv })
+            .where({
+              name: payload.customPaymentSchedule.plan,
+              billingFrequency: payload.customPaymentSchedule.frequency,
+            })
+            .first()
+
       logger.info(
         isCustomPlan
           ? 'No subscription plan found cos custom'
@@ -225,22 +226,7 @@ export default class OrgsController {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
 
-    const stripeService = new StripeService()
-    const invoicesResult = await stripeService.viewInvoices(params.id, appEnv)
-    const invoices = (invoicesResult.data ?? []).map((inv: Stripe.Invoice) => ({
-      id: inv.id,
-      number: inv.number ?? inv.id,
-      status: inv.status ?? 'unknown',
-      amountPaid: inv.amount_paid ?? 0,
-      amountDue: inv.amount_due ?? 0,
-      total: inv.total ?? 0,
-      currency: (inv.currency ?? 'gbp').toUpperCase(),
-      createdAt: inv.created ? new Date(inv.created * 1000).toISOString() : null,
-      hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
-      invoicePdf: inv.invoice_pdf ?? null,
-    }))
-
-    return inertia.render('orgs/show', { org, invoices: { data: invoices } })
+    return inertia.render('orgs/show', { org })
   }
 
   async edit({ params, inertia, request }: HttpContext) {
@@ -256,8 +242,7 @@ export default class OrgsController {
 
     const oldSchedule = org.customPaymentSchedule as Record<string, unknown> | undefined
     const oldAmount = oldSchedule?.amount != null ? Number(oldSchedule.amount) : undefined
-    const oldCurrency =
-      oldSchedule?.currency != null ? String(oldSchedule.currency) : undefined
+    const oldCurrency = oldSchedule?.currency != null ? String(oldSchedule.currency) : undefined
     const newAmount = payload.customPaymentSchedule?.amount
     const newCurrency = payload.customPaymentSchedule?.currency
     const priceChanged =
@@ -304,8 +289,7 @@ export default class OrgsController {
           const schedule = org.customPaymentSchedule as Record<string, unknown>
           const amount = Number(schedule.amount)
           const currency = String(schedule.currency ?? 'gbp')
-          const fullName =
-            (org.cleanName as string) ?? (org.companyName as string) ?? 'Customer'
+          const fullName = (org.cleanName as string) ?? (org.companyName as string) ?? 'Customer'
           await mailer.send({
             type: 'customer-price-updated',
             data: {
@@ -393,21 +377,26 @@ export default class OrgsController {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
     if (!org.paymentCustomerId) {
-      session.flash('errors', { error: 'This organisation has no Stripe customer and cannot receive invoices.' })
+      session.flash('errors', {
+        error: 'This organisation has no Stripe customer and cannot receive invoices.',
+      })
       return response.redirect().back()
     }
     const description = request.input('description')?.trim() || undefined
-    const rawLineItems = request.input('lineItems') as Array<{ description?: string; amount?: string; currency?: string }> | undefined
+    const rawLineItems = request.input('lineItems') as
+      | Array<{ description?: string; amount?: string; currency?: string }>
+      | undefined
     const lineItems = Array.isArray(rawLineItems)
-      ? rawLineItems
-        .map((row) => {
-          const desc = (row?.description ?? '').toString().trim()
-          const amt = typeof row?.amount === 'string' ? parseFloat(row.amount) : Number(row?.amount)
-          const curr = (row?.currency ?? 'gbp').toString().trim().toLowerCase() || 'gbp'
-          if (!desc || Number.isNaN(amt) || amt < 0) return null
-          return { description: desc, amountCents: Math.round(amt * 100), currency: curr }
-        })
-        .filter(Boolean) as Array<{ description: string; amountCents: number; currency: string }>
+      ? (rawLineItems
+          .map((row) => {
+            const desc = (row?.description ?? '').toString().trim()
+            const amt =
+              typeof row?.amount === 'string' ? parseFloat(row.amount) : Number(row?.amount)
+            const curr = (row?.currency ?? 'gbp').toString().trim().toLowerCase() || 'gbp'
+            if (!desc || Number.isNaN(amt) || amt < 0) return null
+            return { description: desc, amountCents: Math.round(amt * 100), currency: curr }
+          })
+          .filter(Boolean) as Array<{ description: string; amountCents: number; currency: string }>)
       : []
 
     try {
@@ -423,11 +412,14 @@ export default class OrgsController {
         'success',
         lineItems.length > 0
           ? 'Draft invoice created with line items. Finalize it in Stripe when ready.'
-          : 'Draft invoice created. You can add line items and finalize it in Stripe.'
+          : 'Draft invoice created. You can add line items and finalize it in Stripe.',
       )
       return response.redirect(`/orgs/${params.id}?tab=invoices`)
     } catch (err: unknown) {
-      const message = err && typeof err === 'object' && 'message' in err ? String((err as Error).message) : 'Failed to create draft invoice.'
+      const message =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as Error).message)
+          : 'Failed to create draft invoice.'
       session.flash('errors', { error: message })
       return response.redirect().back()
     }
@@ -470,7 +462,10 @@ export default class OrgsController {
       session.flash('success', 'Line item added to the draft invoice.')
       return response.redirect(`/orgs/${params.id}?tab=invoices`)
     } catch (err: unknown) {
-      const message = err && typeof err === 'object' && 'message' in err ? String((err as Error).message) : 'Failed to add line item.'
+      const message =
+        err && typeof err === 'object' && 'message' in err
+          ? String((err as Error).message)
+          : 'Failed to add line item.'
       session.flash('errors', { error: message })
       return response.redirect().back()
     }

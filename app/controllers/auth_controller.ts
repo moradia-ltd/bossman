@@ -1,4 +1,3 @@
-import { randomUUID } from 'node:crypto'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
 import { appUrl } from '#emails/global'
@@ -17,7 +16,7 @@ export default class AuthController {
     await user.merge({ lastLoginAt: now }).save()
 
     // Create or update session
-    const deviceSessionId = randomUUID()
+    const deviceSessionId = session.sessionId
     // Persist the device session id in the session cookie so we can enforce revokes
     session.put('deviceSessionId', deviceSessionId)
     await sessionService.createOrUpdateSession({
