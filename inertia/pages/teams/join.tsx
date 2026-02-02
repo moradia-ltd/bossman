@@ -25,11 +25,13 @@ interface JoinTeamProps {
   error?: string
 }
 
+const INVITE_CONTEXT_NAME = 'the dashboard'
+
 export default function JoinTeam(props: JoinTeamProps) {
   const acceptMutation = useMutation({
     mutationFn: (payload: Record<string, unknown>) => api.post('/team-invitations/accept', payload),
     onSuccess: (response) => {
-      toast.success('You joined the team')
+      toast.success('You have joined.')
       const redirectTo = (response.data as { redirectTo?: string }).redirectTo
       router.visit(redirectTo || '/teams')
     },
@@ -57,18 +59,18 @@ export default function JoinTeam(props: JoinTeamProps) {
 
   return (
     <PublicLayout showFooter={false}>
-      <Head title='Join team' />
+      <Head title='Accept invite' />
       <div className='min-h-[calc(100vh-56px)] flex items-center justify-center p-6'>
         <Card className='w-full max-w-md'>
           <CardHeader>
-            <CardTitle>Join team</CardTitle>
+            <CardTitle>Accept invite</CardTitle>
             <CardDescription>
               {canShowInvite ? (
                 <>
-                  You were invited to join <strong>{props.invitation?.teamName}</strong>
+                  You were invited to join <strong>{props.invitation?.teamName ?? INVITE_CONTEXT_NAME}</strong>
                 </>
               ) : (
-                'Use your invite link to join a team.'
+                'Use your invite link to accept the invitation.'
               )}
             </CardDescription>
           </CardHeader>
@@ -125,7 +127,7 @@ export default function JoinTeam(props: JoinTeamProps) {
                 isLoading={acceptMutation.isPending}
                 loadingText='Joining…'
                 onClick={() => acceptMutation.mutate({ token: props.token })}>
-                Join {props.invitation?.teamName}
+                Join {props.invitation?.teamName ?? INVITE_CONTEXT_NAME}
               </Button>
             )}
 
@@ -173,7 +175,7 @@ export default function JoinTeam(props: JoinTeamProps) {
                 </div>
 
                 <Button type='submit' className='w-full' isLoading={acceptMutation.isPending} loadingText='Joining…'>
-                  Create account & join {props.invitation?.teamName}
+                  Create account & join {props.invitation?.teamName ?? INVITE_CONTEXT_NAME}
                 </Button>
 
                 <div className='text-center text-sm text-muted-foreground'>

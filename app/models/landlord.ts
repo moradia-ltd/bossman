@@ -4,7 +4,6 @@ import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import MaintenanceRequest from '#models/maintenance_request'
 import Org from '#models/org'
 import Property from '#models/property'
-import Team from '#models/team'
 import Tenant from '#models/tenant'
 import User from '#models/user'
 import meiliSearchClient from '#services/meilisearch_service'
@@ -34,7 +33,6 @@ export default class Landlord extends SuperBaseModel {
   @hasOne(() => Org) declare org: HasOne<typeof Org>
   @hasOne(() => User) declare user: HasOne<typeof User>
 
-  @hasMany(() => Team) declare teams: HasMany<typeof Team>
   @hasMany(() => Tenant) declare tenants: HasMany<typeof Tenant>
 
   @computed() public get isAgencyManagedLandlord() {

@@ -12,7 +12,7 @@ import { FileStoreRoutes } from '../enum/file_store.js'
 import Activity from './activity.js'
 import Notification from './notification.js'
 import SuperBaseModel from './super_base.js'
-import Team from './team.js'
+// import Team from './team.js'
 import TeamMember from './team_member.js'
 import Tenant from './tenant.js'
 
@@ -168,7 +168,7 @@ export default class TogethaUser extends compose(SuperBaseModel, AuthFinder) {
     return !!this.hostId && this.metadata.hostUserAccountType === 'agency'
   }
 
-  @hasMany(() => Team) declare teams: HasMany<typeof Team>
+  // @hasMany(() => Team) declare teams: HasMany<typeof Team>
 
   @hasMany(() => Notification) declare notifications: HasMany<typeof Notification>
   @belongsTo(() => TeamMember) declare teamMember: BelongsTo<typeof TeamMember>

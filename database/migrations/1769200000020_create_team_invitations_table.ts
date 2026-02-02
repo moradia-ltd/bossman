@@ -6,7 +6,6 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
-      table.string('team_id').notNullable().references('teams.id').onDelete('CASCADE')
       table.string('email').notNullable().index()
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
       table.string('token_hash').notNullable().unique()

@@ -13,7 +13,6 @@ import type Org from '#models/org'
 import type Payment from '#models/payment'
 import type Property from '#models/property'
 import type Session from '#models/session'
-import type Team from '#models/team'
 import type TeamInvitation from '#models/team_invitation'
 import type TeamMember from '#models/team_member'
 import type Tenant from '#models/tenant'
@@ -58,7 +57,6 @@ type ExtractModelType<T> = Omit<
 >
 
 export type RawSession = ExtractModelType<Session>
-export type RawTeam = ExtractModelType<Team>
 export type RawTeamInvitation = ExtractModelType<TeamInvitation>
 export type RawTeamMember = ExtractModelType<TeamMember>
 export type RawBlogCategory = ExtractModelType<BlogCategory>

@@ -1,9 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Pencil, Plus } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import type { RawTeam } from '#types/model-types'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
@@ -70,24 +68,14 @@ export interface InvitationRow {
   allowedPages: PageKey[] | null
 }
 
-interface TeamInvitationsInviteButtonProps {
-  teamId: string
-  team: RawTeam | null
-  teamsQuery: { isLoading: boolean; isError: boolean }
-}
-
-export function TeamInvitationsInviteButton({
-  teamId,
-  team,
-  teamsQuery,
-}: TeamInvitationsInviteButtonProps) {
+export function TeamInvitationsInviteButton() {
   const queryClient = useQueryClient()
   const [inviteEmail, setInviteEmail] = useState('')
   const [invitePages, setInvitePages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
 
   const inviteMutation = useMutation({
-    mutationFn: (payload: { teamId: string; email: string; allowedPages: PageKey[] }) =>
-      api.post(`/teams/${payload.teamId}/invitations`, {
+    mutationFn: (payload: { email: string; allowedPages: PageKey[] }) =>
+      api.post('/invitations', {
         email: payload.email,
         allowedPages: payload.allowedPages,
       }),
@@ -96,7 +84,7 @@ export function TeamInvitationsInviteButton({
       setInvitePages(PAGE_OPTIONS.map((o) => o.key))
       toast.success('Invite sent successfully')
       await queryClient.invalidateQueries({
-        queryKey: ['dashboard-team-invitations', teamId],
+        queryKey: ['dashboard-invitations'],
       })
     },
     onError: (err: ServerErrorResponse) => {
@@ -128,13 +116,11 @@ export function TeamInvitationsInviteButton({
       primaryVariant='default'
       secondaryVariant='outline'
       isLoading={inviteMutation.isPending}
-      primaryDisabled={!inviteEmail.trim() || !team}
+      primaryDisabled={!inviteEmail.trim()}
       onPrimaryAction={async () => {
-        if (!team) return
         const email = inviteEmail.trim()
         if (!email) return
         inviteMutation.mutate({
-          teamId: team.id,
           email,
           allowedPages: invitePages,
         })
@@ -144,66 +130,49 @@ export function TeamInvitationsInviteButton({
         setInvitePages(PAGE_OPTIONS.map((o) => o.key))
       }}
       className='max-w-2xl'>
-      {teamsQuery.isLoading ? (
-        <div className='text-sm text-muted-foreground py-4'>Loading teams…</div>
-      ) : teamsQuery.isError ? (
-        <Alert variant='destructive'>
-          <AlertDescription>Failed to load team.</AlertDescription>
-        </Alert>
-      ) : team ? (
-        <Stack spacing={4}>
-          <div className='space-y-2'>
-            <Label htmlFor='inviteEmail'>Invite by email</Label>
-            <Input
-              id='inviteEmail'
-              type='email'
-              placeholder='staff@company.com'
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-            />
-          </div>
-
-          <div className='space-y-2'>
-            <Label>Page access</Label>
-            <div className='grid gap-2 rounded-lg border border-border p-3'>
-              {PAGE_OPTIONS.map((opt) => {
-                const checked = invitePages.includes(opt.key)
-                const disabled = Boolean(opt.required)
-                return (
-                  <HStack key={opt.key} spacing={3} align='start'>
-                    <Checkbox
-                      checked={checked}
-                      disabled={disabled}
-                      onCheckedChange={(v) => toggleInvitePage(opt.key, v)}
-                    />
-                    <div className='min-w-0'>
-                      <div className='text-sm font-medium'>{opt.label}</div>
-                      <div className='text-xs text-muted-foreground'>{opt.description}</div>
-                    </div>
-                  </HStack>
-                )
-              })}
-            </div>
-            <p className='text-xs text-muted-foreground'>
-              Dashboard is always included so invitees have a landing page.
-            </p>
-          </div>
-        </Stack>
-      ) : (
-        <div className='text-sm text-muted-foreground py-4'>
-          Team is initializing. Refresh this page in a moment.
+      <Stack spacing={4}>
+        <div className='space-y-2'>
+          <Label htmlFor='inviteEmail'>Invite by email</Label>
+          <Input
+            id='inviteEmail'
+            type='email'
+            placeholder='staff@company.com'
+            value={inviteEmail}
+            onChange={(e) => setInviteEmail(e.target.value)}
+          />
         </div>
-      )}
+
+        <div className='space-y-2'>
+          <Label>Page access</Label>
+          <div className='grid gap-2 rounded-lg border border-border p-3'>
+            {PAGE_OPTIONS.map((opt) => {
+              const checked = invitePages.includes(opt.key)
+              const disabled = Boolean(opt.required)
+              return (
+                <HStack key={opt.key} spacing={3} align='start'>
+                  <Checkbox
+                    checked={checked}
+                    disabled={disabled}
+                    onCheckedChange={(v) => toggleInvitePage(opt.key, v)}
+                  />
+                  <div className='min-w-0'>
+                    <div className='text-sm font-medium'>{opt.label}</div>
+                    <div className='text-xs text-muted-foreground'>{opt.description}</div>
+                  </div>
+                </HStack>
+              )
+            })}
+          </div>
+          <p className='text-xs text-muted-foreground'>
+            Dashboard is always included so invitees have a landing page.
+          </p>
+        </div>
+      </Stack>
     </BaseModal>
   )
 }
 
-interface TeamInvitationsProps {
-  teamId: string
-  team: RawTeam | null
-}
-
-export function TeamInvitations({ teamId, team }: TeamInvitationsProps) {
+export function TeamInvitations() {
   const queryClient = useQueryClient()
   const [editInvitation, setEditInvitation] = useState<InvitationRow | null>(null)
   const [editInvitationPages, setEditInvitationPages] = useState<PageKey[]>(
@@ -211,8 +180,7 @@ export function TeamInvitations({ teamId, team }: TeamInvitationsProps) {
   )
 
   const invitationsQuery = useQuery({
-    queryKey: ['dashboard-team-invitations', teamId],
-    enabled: Boolean(teamId),
+    queryKey: ['dashboard-invitations'],
     queryFn: async () => {
       const res = await api.get<{
         data: {
@@ -225,14 +193,12 @@ export function TeamInvitations({ teamId, team }: TeamInvitationsProps) {
             allowedPages: PageKey[] | null
           }>
         }
-      }>(`/teams/${teamId}/invitations`)
+      }>('/members/invitations')
       return res.data.data
     },
   })
 
-  const invitationRows = useMemo<InvitationRow[]>(() => {
-    return invitationsQuery.data?.invitations ?? []
-  }, [invitationsQuery.data?.invitations])
+  const invitationRows = invitationsQuery.data?.invitations ?? []
 
   const updateInvitationMutation = useMutation({
     mutationFn: async ({
@@ -242,13 +208,12 @@ export function TeamInvitations({ teamId, team }: TeamInvitationsProps) {
       invitationId: string
       allowedPages: PageKey[]
     }) => {
-      if (!team) throw new Error('No team')
-      await api.put(`/teams/${team.id}/invitations/${invitationId}`, { allowedPages })
+      await api.put(`/invitations/${invitationId}`, { allowedPages })
     },
     onSuccess: () => {
       setEditInvitation(null)
       toast.success('Invitation updated')
-      queryClient.invalidateQueries({ queryKey: ['dashboard-team-invitations', teamId] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-invitations'] })
     },
     onError: (err: ServerErrorResponse) => {
       toast.error(serverErrorResponder(err) || 'Failed to update invitation')
@@ -261,8 +226,6 @@ export function TeamInvitations({ teamId, team }: TeamInvitationsProps) {
       inv.allowedPages?.length ? [...inv.allowedPages] : PAGE_OPTIONS.map((o) => o.key),
     )
   }
-
-  if (!team) return null
 
   return (
     <>
@@ -339,7 +302,7 @@ export function TeamInvitations({ teamId, team }: TeamInvitationsProps) {
         isLoading={updateInvitationMutation.isPending}
         onSecondaryAction={() => setEditInvitation(null)}
         onPrimaryAction={() => {
-          if (!editInvitation || !team) return
+          if (!editInvitation) return
           updateInvitationMutation.mutate({
             invitationId: editInvitation.id,
             allowedPages: editInvitationPages,

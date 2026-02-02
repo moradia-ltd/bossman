@@ -3,13 +3,6 @@ import { PAGE_KEYS } from '#utils/page_access'
 
 const email = vine.string().toLowerCase().trim().email()
 
-export const createTeamValidator = vine.compile(
-  vine.object({
-    name: vine.string().trim().minLength(2).maxLength(255),
-    kind: vine.enum(['user', 'admin'] as const).optional(),
-  }),
-)
-
 export const inviteToTeamValidator = vine.compile(
   vine.object({
     email,

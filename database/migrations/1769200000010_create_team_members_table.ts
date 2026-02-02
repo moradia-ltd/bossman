@@ -7,8 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.string('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
 
-      table.string('team_id').notNullable().references('teams.id').onDelete('CASCADE')
-      table.string('user_id').notNullable().references('users.id').onDelete('CASCADE')
+      table.string('user_id').notNullable().references('users.id').onDelete('CASCADE').unique()
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
 
       table.json('allowed_pages').nullable()

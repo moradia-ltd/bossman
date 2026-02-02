@@ -1,8 +1,7 @@
-import { belongsTo, column } from '@adonisjs/lucid/orm'
+import { belongsTo, column, computed } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import type { DateTime } from 'luxon'
+import { DateTime } from 'luxon'
 import SuperBaseModel from './super_base.js'
-import Team from './team.js'
 import type { TeamRole } from './team_member.js'
 import User from './user.js'
 
@@ -11,9 +10,6 @@ export default class TeamInvitation extends SuperBaseModel {
 
   @column({ isPrimary: true })
   declare id: string
-
-  @column()
-  declare teamId: string
 
   @column()
   declare email: string
@@ -25,7 +21,7 @@ export default class TeamInvitation extends SuperBaseModel {
   declare invitedUserRole: 'admin'
 
   /**
-   * Allowed admin page keys for this invite (only used for admin teams).
+   * Allowed admin page keys for this invite.
    * Stored as JSON in DB column allowed_pages.
    */
   @column({
@@ -60,6 +56,11 @@ export default class TeamInvitation extends SuperBaseModel {
   @column.dateTime()
   declare acceptedAt: DateTime | null
 
+  @computed()
+  get isExpired() {
+    return this.expiresAt.toMillis() < DateTime.now().toMillis()
+  }
+
   @column()
   declare acceptedByUserId: string | null
 
@@ -68,9 +69,6 @@ export default class TeamInvitation extends SuperBaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
-
-  @belongsTo(() => Team)
-  declare team: BelongsTo<typeof Team>
 
   @belongsTo(() => User, { foreignKey: 'invitedByUserId' })
   declare invitedBy: BelongsTo<typeof User>

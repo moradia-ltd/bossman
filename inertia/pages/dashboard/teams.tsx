@@ -4,7 +4,7 @@ import { Pencil } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
-import type { RawTeam, RawTeamMember } from '#types/model-types'
+import type { RawTeamMember } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
@@ -28,15 +28,20 @@ import {
   togglePageInSet,
 } from '@/pages/dashboard/components/team-invitations'
 
-
 const memberColumns: Column<RawTeamMember>[] = [
   {
-    key: '', header: 'Name', sortable: true, cell(row) {
+    key: '',
+    header: 'Name',
+    sortable: true,
+    cell(row) {
       return <span className='font-medium'>{row.user.fullName || row.user.email || '—'}</span>
     },
   },
   {
-    key: 'email', header: 'Email', sortable: true, cell(row) {
+    key: 'email',
+    header: 'Email',
+    sortable: true,
+    cell(row) {
       return <span className='text-sm text-muted-foreground'>{row.user.email || '—'}</span>
     },
   },
@@ -58,7 +63,7 @@ const memberColumns: Column<RawTeamMember>[] = [
       return <span className='text-sm text-muted-foreground'>{label}</span>
     },
   },
-  { key: 'createdAt', header: 'Joined', cell: (row) => timeAgo(row.createdAt), },
+  { key: 'createdAt', header: 'Joined', cell: (row) => timeAgo(row.createdAt) },
 ]
 
 export default function TeamsPage() {
@@ -67,33 +72,14 @@ export default function TeamsPage() {
   const [editMember, setEditMember] = useState<RawTeamMember | null>(null)
   const [editMemberPages, setEditMemberPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
 
-  const teamsQuery = useQuery({
-    queryKey: ['dashboard-team'],
-    queryFn: async () => {
-      const res = await api.get<{ data: { teams: RawTeam[] } }>('/teams', {
-        params: { kind: 'admin' },
-      })
-      return res.data.data.teams
-    },
-  })
-
-  const teams = teamsQuery.data ?? []
-  const dashboardTeam = teams[0] ?? null
-
-  // Reset list state when switching (shouldn't happen, but keep safe)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const dashboardTeamId = dashboardTeam?.id || ''
-
   const { data: members, isError, isPending } = useQuery({
-    queryKey: ['dashboard-team-members', query],
-    queryFn: () => api.get<PaginatedResponse<RawTeamMember>>(`/teams/${dashboardTeamId}/members`, {
-      params: query,
-    }),
+    queryKey: ['dashboard-members', query],
+    queryFn: () =>
+      api.get<PaginatedResponse<RawTeamMember>>('/members', {
+        params: query,
+      }),
     select: (res) => res.data,
   })
-  console.log("🚀 ~ TeamsPage ~ members:", members)
-
-
 
   const updateMemberMutation = useMutation({
     mutationFn: async ({
@@ -103,13 +89,12 @@ export default function TeamsPage() {
       memberId: string
       allowedPages: string[]
     }) => {
-      if (!dashboardTeam) throw new Error('No team')
-      await api.put(`/teams/${dashboardTeam.id}/members/${memberId}`, { allowedPages })
+      await api.put(`/members/${memberId}`, { allowedPages })
     },
     onSuccess: () => {
       setEditMember(null)
       toast.success('Member updated')
-      queryClient.invalidateQueries({ queryKey: ['dashboard-team-members', dashboardTeamId] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-members'] })
     },
     onError: (err: ServerErrorResponse) => {
       toast.error(serverErrorResponder(err) || 'Failed to update member')
@@ -119,7 +104,7 @@ export default function TeamsPage() {
   const openEditMember = (row: RawTeamMember) => {
     setEditMember(row)
     setEditMemberPages(
-      row.allowedPages?.length ? [...row.allowedPages as PageKey[]] : PAGE_OPTIONS.map((o) => o.key),
+      row.allowedPages?.length ? [...(row.allowedPages as PageKey[])] : PAGE_OPTIONS.map((o) => o.key),
     )
   }
 
@@ -150,56 +135,46 @@ export default function TeamsPage() {
         <PageHeader
           title='Team members'
           description='Invite users and control which pages they can access.'
-          actions={
-            <TeamInvitationsInviteButton
-              teamId={dashboardTeamId}
-              team={dashboardTeam}
-              teamsQuery={teamsQuery}
-            />
-          }
+          actions={<TeamInvitationsInviteButton />}
         />
 
-        {dashboardTeam ? (
-          <>
-            <TeamInvitations teamId={dashboardTeamId} team={dashboardTeam} />
+        <TeamInvitations />
 
-            <AppCard title='Team members' description='Members with page access.'>
-              {isError ? (
-                <Alert variant='destructive'>
-                  <AlertDescription>Failed to load team members.</AlertDescription>
-                </Alert>
-              ) : (
-                <DataTable
-                  columns={memberColumnsWithActions}
-                  data={members?.data ?? []}
-                  searchable
-                  searchPlaceholder='Search team members...'
-                  searchValue={query.search}
-                  onSearchChange={(value) => {
-                    searchTable(value)
-                    changePage(1)
-                  }}
-                  pagination={
-                    members?.meta
-                      ? {
-                        page: members.meta.currentPage,
-                        pageSize: members.meta.perPage,
-                        total: members.meta.total,
-                        onPageChange: (p) => changePage(p),
-                        onPageSizeChange: (pageSize) => {
-                          changeRows(pageSize)
-                          changePage(1)
-                        },
-                      }
-                      : undefined
-                  }
-                  loading={isPending}
-                  emptyMessage='No members found'
-                />
-              )}
-            </AppCard>
-          </>
-        ) : null}
+        <AppCard title='Members' description='Users with dashboard access.'>
+          {isError ? (
+            <Alert variant='destructive'>
+              <AlertDescription>Failed to load members.</AlertDescription>
+            </Alert>
+          ) : (
+            <DataTable
+              columns={memberColumnsWithActions}
+              data={members?.data ?? []}
+              searchable
+              searchPlaceholder='Search members...'
+              searchValue={query.search}
+              onSearchChange={(value) => {
+                searchTable(value)
+                changePage(1)
+              }}
+              pagination={
+                members?.meta
+                  ? {
+                      page: members.meta.currentPage,
+                      pageSize: members.meta.perPage,
+                      total: members.meta.total,
+                      onPageChange: (p) => changePage(p),
+                      onPageSizeChange: (pageSize) => {
+                        changeRows(pageSize)
+                        changePage(1)
+                      },
+                    }
+                  : undefined
+              }
+              loading={isPending}
+              emptyMessage='No members found'
+            />
+          )}
+        </AppCard>
 
         {/* Edit member page access modal */}
         <BaseModal
@@ -218,7 +193,7 @@ export default function TeamsPage() {
           isLoading={updateMemberMutation.isPending}
           onSecondaryAction={() => setEditMember(null)}
           onPrimaryAction={() => {
-            if (!editMember || !dashboardTeam) return
+            if (!editMember) return
             updateMemberMutation.mutate({
               memberId: editMember.id,
               allowedPages: editMemberPages,

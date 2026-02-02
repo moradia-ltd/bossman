@@ -22,7 +22,7 @@ const TwoFactorController = () => import('#controllers/two_factor_controller')
 const SessionsController = () => import('#controllers/sessions_controller')
 const NotificationsController = () => import('#controllers/notifications_controller')
 const AuditsController = () => import('#controllers/audits_controller')
-const TeamsController = () => import('#controllers/teams_controller')
+const MembersController = () => import('#controllers/members_controller')
 const TeamInvitationsController = () => import('#controllers/team_invitations_controller')
 const BlogPostsController = () => import('#controllers/blog_posts_controller')
 const BlogCategoriesController = () => import('#controllers/blog_categories_controller')
@@ -163,21 +163,22 @@ router
   .prefix('api/v1/user')
   .use(middleware.auth())
 
-// Team routes
+// Members and invitations (no teams)
 router
   .group(() => {
-    router.get('/', [TeamsController, 'index'])
-    router.post('/', [TeamsController, 'store'])
-    router.get('/:teamId/members', [TeamsController, 'members'])
-    router.get('/:teamId/invitations', [TeamsController, 'invitations'])
-    router.put('/:teamId/members/:memberId', [TeamsController, 'updateMember'])
-    router.post('/:teamId/invitations', [TeamInvitationsController, 'invite'])
-    router.put('/:teamId/invitations/:invitationId', [
-      TeamInvitationsController,
-      'updateInvitation',
-    ])
+    router.get('/', [MembersController, 'index'])
+    router.get('/invitations', [MembersController, 'invitations'])
+    router.put('/:memberId', [MembersController, 'updateMember'])
   })
-  .prefix('api/v1/teams')
+  .prefix('api/v1/members')
+  .use(middleware.auth())
+
+router
+  .group(() => {
+    router.post('/', [TeamInvitationsController, 'invite'])
+    router.put('/:invitationId', [TeamInvitationsController, 'updateInvitation'])
+  })
+  .prefix('api/v1/invitations')
   .use(middleware.auth())
 
 // Public team invitation routes

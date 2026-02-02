@@ -9,12 +9,12 @@ function TeamInvite(props: Emails['team-invite']) {
         Hi there,
       </EmailText>
       <EmailText>
-        {props.inviterName} invited you to join the team <strong>{props.teamName}</strong>.
+        {props.inviterName} invited you to join <strong>{props.teamName}</strong>.
       </EmailText>
       <EmailText>
-        Use the button below to join and create your password.
+        Use the button below to accept and create your password.
       </EmailText>
-      <EmailButton href={props.url}>Join team</EmailButton>
+      <EmailButton href={props.url}>Accept invite</EmailButton>
       <EmailText>
         If the button doesn&apos;t work, copy and paste this link into your browser:
       </EmailText>
