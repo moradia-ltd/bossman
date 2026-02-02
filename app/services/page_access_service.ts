@@ -1,5 +1,7 @@
 import TeamMember from '#models/team_member'
-import type { PageKey } from '#utils/page_access'
+import { PAGE_KEYS, type PageKey } from '#utils/page_access'
+
+const PAGE_KEYS_SET = new Set<string>(PAGE_KEYS)
 
 /**
  * Returns the allowed page keys for the user.
@@ -17,21 +19,13 @@ export async function getPageAccessForUser(userId: string): Promise<PageKey[] | 
 
   const set = new Set<PageKey>()
   for (const m of memberships) {
-    const pages = m.adminPages ?? null
+    const pages = m.allowedPages ?? null
     if (!pages?.length) continue
     for (const p of pages) {
-      const key = mapLegacyPageKey(p)
-      set.add(key)
+      if (PAGE_KEYS_SET.has(p)) set.add(p as PageKey)
     }
   }
 
   const merged = Array.from(set)
   return merged.length ? merged : null
-}
-
-function mapLegacyPageKey(value: string): PageKey {
-  if (value === 'admin_dashboard') return 'dashboard'
-  if (value === 'admin_teams') return 'teams'
-  if (value === 'admin_blog') return 'blog'
-  return value as PageKey
 }

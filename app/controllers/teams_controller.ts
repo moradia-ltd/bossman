@@ -86,7 +86,7 @@ export default class TeamsController {
       teamId: team.id,
       userId: freshUser.id,
       role: 'owner',
-      adminPages: null,
+      allowedPages: null,
       createdAt: now,
       updatedAt: now,
     })
@@ -161,7 +161,7 @@ export default class TeamsController {
           createdAt: m.createdAt.toISO() || '',
           fullName: m.user?.fullName || null,
           email: m.user?.email || null,
-          adminPages: m.adminPages ?? null,
+          allowedPages: m.allowedPages ?? null,
         })),
         invitations: pendingInvitations.map((inv) => ({
           id: inv.id,
@@ -169,7 +169,7 @@ export default class TeamsController {
           role: inv.role,
           createdAt: inv.createdAt.toISO() || '',
           invitedBy: inv.invitedBy?.fullName || inv.invitedBy?.email || null,
-          adminPages: inv.adminPages ?? null,
+          allowedPages: inv.allowedPages ?? null,
         })),
       },
     })
@@ -199,13 +199,13 @@ export default class TeamsController {
       .firstOrFail()
 
     const body = await request.validateUsing(updateMemberValidator)
-    if (body.adminPages !== undefined) {
-      const pages = Array.isArray(body.adminPages) ? body.adminPages : null
+    if (body.allowedPages !== undefined) {
+      const pages = Array.isArray(body.allowedPages) ? body.allowedPages : null
       const resolved = pages?.length ? [...pages] : null
       if (resolved && !resolved.includes('dashboard')) {
         resolved.unshift('dashboard')
       }
-      member.adminPages = resolved?.length ? resolved : null
+      member.allowedPages = resolved?.length ? resolved : null
       await member.save()
     }
 
@@ -213,7 +213,7 @@ export default class TeamsController {
       message: 'Member updated successfully',
       data: {
         id: member.id,
-        adminPages: member.adminPages ?? null,
+        allowedPages: member.allowedPages ?? null,
       },
     })
   }

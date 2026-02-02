@@ -21,7 +21,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
-type PageKey = 'dashboard' | 'teams' | 'blog'
+type PageKey =
+  | 'dashboard'
+  | 'teams'
+  | 'blog'
+  | 'orgs'
+  | 'leases'
+  | 'properties'
+  | 'pushNotifications'
+  | 'dbBackups'
 
 const PAGE_OPTIONS: Array<{
   key: PageKey
@@ -29,9 +37,14 @@ const PAGE_OPTIONS: Array<{
   description: string
   required?: boolean
 }> = [
-    { key: 'dashboard', label: 'Dashboard', description: 'Overview + activity', required: true },
-    { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
+    { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
     { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
+    { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
+    { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
+    { key: 'leases', label: 'Leases', description: 'Leases and tenancies' },
+    { key: 'properties', label: 'Properties', description: 'Properties and leaseable entities' },
+    { key: 'pushNotifications', label: 'Push notifications', description: 'Send and manage push notifications' },
+    { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
   ]
 
 interface TeamMemberRow {
@@ -40,7 +53,7 @@ interface TeamMemberRow {
   email: string | null
   role: string
   createdAt: string
-  adminPages: PageKey[] | null
+  allowedPages: PageKey[] | null
 }
 
 function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): PageKey[] {
@@ -57,7 +70,7 @@ interface InvitationRow {
   role: string
   createdAt: string
   invitedBy: string | null
-  adminPages: PageKey[] | null
+  allowedPages: PageKey[] | null
 }
 
 const memberColumns: Column<TeamMemberRow>[] = [
@@ -70,11 +83,11 @@ const memberColumns: Column<TeamMemberRow>[] = [
     cell: (row) => <span className='capitalize'>{row.role}</span>,
   },
   {
-    key: 'adminPages',
+    key: 'allowedPages',
     header: 'Page access',
     cell: (row) => {
-      if (!row.adminPages?.length) return <span className='text-sm text-muted-foreground'>All</span>
-      const label = row.adminPages
+      if (!row.allowedPages?.length) return <span className='text-sm text-muted-foreground'>All</span>
+      const label = row.allowedPages
         .map((k) => PAGE_OPTIONS.find((o) => o.key === k)?.label || k)
         .join(', ')
       return <span className='text-sm text-muted-foreground'>{label}</span>
@@ -126,14 +139,21 @@ export default function TeamsPage() {
     queryFn: async () => {
       const res = await api.get<{
         data: {
-          members: TeamMemberRow[]
+          members: Array<{
+            id: string
+            role: string
+            createdAt: string
+            fullName: string | null
+            email: string | null
+            allowedPages: PageKey[] | null
+          }>
           invitations: Array<{
             id: string
             email: string
             role: string
             createdAt: string
             invitedBy: string | null
-            adminPages: PageKey[] | null
+            allowedPages: PageKey[] | null
           }>
           meta: { currentPage: number; perPage: number; total: number; lastPage: number }
         }
@@ -155,26 +175,19 @@ export default function TeamsPage() {
       email: m.email || '—',
       role: m.role || 'member',
       createdAt: m.createdAt || '',
-      adminPages: (m.adminPages as PageKey[] | null) ?? null,
+      allowedPages: (m.allowedPages as PageKey[] | null) ?? null,
     }))
   }, [membersQuery.data?.members])
 
   const invitationRows = useMemo<InvitationRow[]>(() => {
-    return (membersQuery.data?.invitations ?? []).map((inv) => ({
-      id: inv.id,
-      email: inv.email,
-      role: inv.role,
-      createdAt: inv.createdAt,
-      invitedBy: inv.invitedBy,
-      adminPages: (inv.adminPages as PageKey[] | null) ?? null,
-    }))
+    return membersQuery.data?.invitations ?? []
   }, [membersQuery.data?.invitations])
 
   const inviteMutation = useMutation({
-    mutationFn: (payload: { teamId: string; email: string; adminPages: PageKey[] }) =>
+    mutationFn: (payload: { teamId: string; email: string; allowedPages: PageKey[] }) =>
       api.post(`/teams/${payload.teamId}/invitations`, {
         email: payload.email,
-        adminPages: payload.adminPages,
+        allowedPages: payload.allowedPages,
       }),
     onSuccess: async () => {
       setInviteEmail('')
@@ -198,9 +211,9 @@ export default function TeamsPage() {
   }
 
   const updateMemberMutation = useMutation({
-    mutationFn: async ({ memberId, adminPages }: { memberId: string; adminPages: PageKey[] }) => {
+    mutationFn: async ({ memberId, allowedPages }: { memberId: string; allowedPages: PageKey[] }) => {
       if (!dashboardTeam) throw new Error('No team')
-      await api.put(`/teams/${dashboardTeam.id}/members/${memberId}`, { adminPages })
+      await api.put(`/teams/${dashboardTeam.id}/members/${memberId}`, { allowedPages })
     },
     onSuccess: () => {
       setEditMember(null)
@@ -213,9 +226,9 @@ export default function TeamsPage() {
   })
 
   const updateInvitationMutation = useMutation({
-    mutationFn: async ({ invitationId, adminPages }: { invitationId: string; adminPages: PageKey[] }) => {
+    mutationFn: async ({ invitationId, allowedPages }: { invitationId: string; allowedPages: PageKey[] }) => {
       if (!dashboardTeam) throw new Error('No team')
-      await api.put(`/teams/${dashboardTeam.id}/invitations/${invitationId}`, { adminPages })
+      await api.put(`/teams/${dashboardTeam.id}/invitations/${invitationId}`, { allowedPages })
     },
     onSuccess: () => {
       setEditInvitation(null)
@@ -229,11 +242,11 @@ export default function TeamsPage() {
 
   const openEditMember = (row: TeamMemberRow) => {
     setEditMember(row)
-    setEditMemberPages(row.adminPages?.length ? [...row.adminPages] : PAGE_OPTIONS.map((o) => o.key))
+    setEditMemberPages(row.allowedPages?.length ? [...row.allowedPages] : PAGE_OPTIONS.map((o) => o.key))
   }
   const openEditInvitation = (inv: InvitationRow) => {
     setEditInvitation(inv)
-    setEditInvitationPages(inv.adminPages?.length ? [...inv.adminPages] : PAGE_OPTIONS.map((o) => o.key))
+    setEditInvitationPages(inv.allowedPages?.length ? [...inv.allowedPages] : PAGE_OPTIONS.map((o) => o.key))
   }
 
   const memberColumnsWithActions: Column<TeamMemberRow>[] = useMemo(
@@ -285,7 +298,7 @@ export default function TeamsPage() {
                 inviteMutation.mutate({
                   teamId: dashboardTeam.id,
                   email,
-                  adminPages: invitePages,
+                  allowedPages: invitePages,
                 })
               }}
               onSecondaryAction={() => {
@@ -376,11 +389,11 @@ export default function TeamsPage() {
                               <span className='capitalize'>{inv.role}</span>
                             </TableCell>
                             <TableCell>
-                              {!inv.adminPages?.length ? (
+                              {!inv.allowedPages?.length ? (
                                 <span className='text-sm text-muted-foreground'>All</span>
                               ) : (
                                 <span className='text-sm text-muted-foreground'>
-                                  {inv.adminPages
+                                  {inv.allowedPages
                                     .map((k) => PAGE_OPTIONS.find((o) => o.key === k)?.label || k)
                                     .join(', ')}
                                 </span>
@@ -474,7 +487,7 @@ export default function TeamsPage() {
             if (!editMember || !dashboardTeam) return
             updateMemberMutation.mutate({
               memberId: editMember.id,
-              adminPages: editMemberPages,
+              allowedPages: editMemberPages,
             })
           }}
           className='max-w-2xl'>
@@ -527,7 +540,7 @@ export default function TeamsPage() {
             if (!editInvitation || !dashboardTeam) return
             updateInvitationMutation.mutate({
               invitationId: editInvitation.id,
-              adminPages: editInvitationPages,
+              allowedPages: editInvitationPages,
             })
           }}
           className='max-w-2xl'>

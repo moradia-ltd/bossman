@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.string('user_id').notNullable().references('users.id').onDelete('CASCADE')
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
 
-      table.text('admin_pages').nullable()
+      table.json('allowed_pages').nullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

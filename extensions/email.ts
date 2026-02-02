@@ -69,5 +69,14 @@ declare module '@adonisjs/core/types' {
       joinedUserEmail: string
       joinedUserName: string
     }
+    'access-revoked': {
+      email: string
+      fullName?: string | null
+      reason: string
+    }
+    'access-restored': {
+      email: string
+      fullName?: string | null
+    }
   }
 }

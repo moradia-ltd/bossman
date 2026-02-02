@@ -3,6 +3,8 @@ import vine from '@vinejs/vine'
 import { DateTime } from 'luxon'
 import { worker } from '#boss/base'
 import AccountBan from '#models/account_ban'
+import User from '#models/user'
+import mailer from '#services/email_service'
 
 export const banUser = worker
   .createJob('ban-user')
@@ -28,9 +30,9 @@ export const banUser = worker
   .deadLetter('failed-ban-user')
 
 banUser.work(async (payload) => {
-  logger.info(`Ban user job for  userId=${payload.userId}, reason=${payload.reason}`)
+  logger.info(`Ban user job for userId=${payload.userId}, reason=${payload.reason}`)
 
-  const ban = await AccountBan.create(
+  await AccountBan.create(
     {
       userId: payload.userId,
       orgId: payload.orgId,
@@ -47,5 +49,18 @@ banUser.work(async (payload) => {
     },
     { connection: payload.connection },
   )
-  // TODO: perform actual ban (e.g. disable user/org in DB, revoke sessions)
+
+  const user = await User.query({ connection: payload.connection })
+    .where('id', payload.userId)
+    .first()
+  if (user?.email) {
+    await mailer.send({
+      type: 'access-revoked',
+      data: {
+        email: user.email,
+        fullName: user.fullName ?? null,
+        reason: payload.reason,
+      },
+    })
+  }
 })

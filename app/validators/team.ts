@@ -14,7 +14,7 @@ export const inviteToTeamValidator = vine.compile(
   vine.object({
     email,
     role: vine.enum(['owner', 'admin', 'member']).optional(),
-    adminPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
+    allowedPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
   }),
 )
 
@@ -35,12 +35,12 @@ export const acceptTeamInviteAuthedValidator = vine.compile(
 
 export const updateMemberValidator = vine.compile(
   vine.object({
-    adminPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
+    allowedPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
   }),
 )
 
 export const updateInvitationValidator = vine.compile(
   vine.object({
-    adminPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
+    allowedPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
   }),
 )

@@ -3,13 +3,6 @@ import type { ModelAttributes, ModelObject } from '@adonisjs/lucid/types/model'
 import type { DateTime } from 'luxon'
 
 export default class SuperBaseModel extends BaseModel {
-  /**
-   * We assign UUID primary keys in `beforeCreate`.
-   * Without this, Lucid may fallback to SQLite rowid (integers like 16),
-   * which breaks foreign keys expecting UUID strings.
-   */
-  static selfAssignPrimaryKey = true
-
   @column({ isPrimary: true })
   declare id: string
 

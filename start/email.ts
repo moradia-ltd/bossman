@@ -187,3 +187,31 @@ mailer.on({
       .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
   },
 })
+
+mailer.on({
+  type: 'access-revoked',
+  handler: async (message, data) => {
+    const AccessRevoked = await import('#emails/access-revoked').then((m) => m.default)
+    const html = await render(AccessRevoked(data))
+    message
+      .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))
+      .subject('Your access to Togetha has been revoked')
+      .to(data.email)
+      .html(html)
+      .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
+  },
+})
+
+mailer.on({
+  type: 'access-restored',
+  handler: async (message, data) => {
+    const AccessRestored = await import('#emails/access-restored').then((m) => m.default)
+    const html = await render(AccessRestored(data))
+    message
+      .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))
+      .subject('Your access to Togetha has been restored')
+      .to(data.email)
+      .html(html)
+      .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
+  },
+})

@@ -26,19 +26,24 @@ export default class TeamInvitation extends SuperBaseModel {
 
   /**
    * Allowed admin page keys for this invite (only used for admin teams).
-   * Stored as JSON text in DB.
+   * Stored as JSON in DB column allowed_pages.
    */
   @column({
+    columnName: 'allowed_pages',
     prepare: (value: string[] | null) => (Array.isArray(value) ? JSON.stringify(value) : null),
     consume: (value: unknown) => {
-      if (typeof value !== 'string' || !value) return null
-      try {
-        const parsed = JSON.parse(value)
-        if (!Array.isArray(parsed)) return null
-        return parsed.filter((v) => typeof v === 'string')
-      } catch {
-        return null
+      if (value == null) return null
+      if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string')
+      if (typeof value === 'string') {
+        try {
+          const parsed = JSON.parse(value)
+          if (!Array.isArray(parsed)) return null
+          return parsed.filter((v): v is string => typeof v === 'string')
+        } catch {
+          return null
+        }
       }
+      return null
     },
   })
   declare allowedPages: string[] | null

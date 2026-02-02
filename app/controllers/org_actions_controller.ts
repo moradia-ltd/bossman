@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { banUser } from '#boss/jobs/ban_user'
 import AccountBan from '#models/account_ban'
 import Org from '#models/org'
+import mailer from '#services/email_service'
 import { banUserValidator } from '#validators/org_action'
 
 export default class OrgActionsController {
@@ -46,7 +47,7 @@ export default class OrgActionsController {
   async unbanUser({ request, params, now, response }: HttpContext) {
     const { orgId } = params
     const connection = request.appEnv()
-    const org = await Org.query({ connection }).where('id', orgId).preload('owner').firstOrFail()
+    const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
 
     //find the most recent ban for the user
     const ban = await AccountBan.query({ connection })
@@ -57,6 +58,12 @@ export default class OrgActionsController {
     // update the ban to set the expiresAt to null
     ban?.merge({ expiresAt: null, removedAt: now, isBanActive: false })
     await ban.save()
+
+    await mailer.send({
+      type: 'access-restored',
+      data: { email: org.email, fullName: org.cleanName },
+    })
+
     return response.ok({ message: 'User unbanned successfully' })
   }
 }

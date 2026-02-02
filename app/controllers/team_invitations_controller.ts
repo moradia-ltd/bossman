@@ -22,6 +22,65 @@ function hashInviteToken(token: string) {
   return createHash('sha256').update(token).digest('hex')
 }
 
+type Trx = Awaited<ReturnType<typeof db.transaction>>
+
+async function loadInvitationByToken(trx: Trx, token: string) {
+  return TeamInvitation.query({ client: trx })
+    .where('token_hash', hashInviteToken(token))
+    .whereNull('accepted_at')
+    .preload('team')
+    .preload('invitedBy')
+    .first()
+}
+
+async function ensureTeamMember(
+  trx: Trx,
+  invitation: TeamInvitation,
+  userId: string,
+  now: DateTime,
+) {
+  const existing = await TeamMember.query({ client: trx })
+    .where('team_id', invitation.teamId)
+    .where('user_id', userId)
+    .first()
+  if (!existing) {
+    await TeamMember.create(
+      {
+        teamId: invitation.teamId,
+        userId,
+        role: invitation.role,
+        allowedPages: invitation.allowedPages ?? null,
+        createdAt: now,
+        updatedAt: now,
+      },
+      { client: trx },
+    )
+  }
+}
+
+async function notifyInviter(invitation: TeamInvitation, joiningUser: User) {
+  if (invitation.invitedByUserId) {
+    await notificationService.push({
+      userId: invitation.invitedByUserId,
+      title: 'Team invite accepted',
+      message: `${joiningUser.fullName || joiningUser.email} joined ${invitation.team.name}`,
+      type: 'success',
+    })
+  }
+  if (invitation.invitedBy?.email) {
+    await mailer.send({
+      type: 'team-joined',
+      data: {
+        email: invitation.invitedBy.email,
+        inviterName: invitation.invitedBy.fullName || invitation.invitedBy.email,
+        teamName: invitation.team.name,
+        joinedUserEmail: joiningUser.email,
+        joinedUserName: joiningUser.fullName || joiningUser.email,
+      },
+    })
+  }
+}
+
 export default class TeamInvitationsController {
   async joinPage({ auth, inertia, request }: HttpContext) {
     const token = request.qs().token
@@ -75,7 +134,7 @@ export default class TeamInvitationsController {
         role: invitation.role,
         invitedUserRole: invitation.invitedUserRole,
         teamKind: invitation.team.kind,
-        adminPages: invitation.adminPages ?? null,
+        allowedPages: invitation.allowedPages ?? null,
       },
       token,
       hasAccount: Boolean(existingUser),
@@ -87,7 +146,7 @@ export default class TeamInvitationsController {
   async invite({ auth, request, response, now, logger }: HttpContext) {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)
-    const { email, role, adminPages } = await request.validateUsing(inviteToTeamValidator)
+    const { email, role, allowedPages } = await request.validateUsing(inviteToTeamValidator)
 
     if (!user.emailVerified) {
       return response.forbidden({
@@ -125,9 +184,9 @@ export default class TeamInvitationsController {
 
     const normalizedEmail = email.toLowerCase().trim()
 
-    const resolvedAdminPages = (() => {
+    const resolvedAllowedPages = (() => {
       if (!isAdminTeam) return null
-      const raw = Array.isArray(adminPages) ? adminPages : []
+      const raw = Array.isArray(allowedPages) ? allowedPages : []
       const unique = Array.from(new Set(raw))
       // Always include the admin landing page so invitees don't get stuck.
       if (!unique.includes('dashboard')) unique.unshift('dashboard')
@@ -177,7 +236,7 @@ export default class TeamInvitationsController {
           email: normalizedEmail,
           role: role ?? 'member',
           invitedUserRole: 'admin',
-          adminPages: resolvedAdminPages,
+          allowedPages: resolvedAllowedPages,
           tokenHash,
           invitedByUserId: freshUser.id,
           expiresAt,
@@ -216,129 +275,46 @@ export default class TeamInvitationsController {
   }
 
   async accept({ auth, request, response, now }: HttpContext) {
-    const isAuthed = auth.isAuthenticated
     const trx = await db.transaction()
+    const rollback = async <T>(result: T) => {
+      await trx.rollback()
+      return result
+    }
 
     try {
+      const isAuthed = auth.isAuthenticated
+      let token: string
+      let guestPayload: { fullName: string; password: string } | null = null
+
       if (isAuthed) {
-        const user = auth.getUserOrFail()
-        const freshUser = await User.query({ client: trx }).where('email', user.email).firstOrFail()
-        const { token } = await request.validateUsing(acceptTeamInviteAuthedValidator)
-
-        const invitation = await TeamInvitation.query({ client: trx })
-          .where('token_hash', hashInviteToken(token))
-          .whereNull('accepted_at')
-          .preload('team')
-          .preload('invitedBy')
-          .first()
-
-        if (!invitation) {
-          await trx.rollback()
-          return response.badRequest({ error: 'Invite is invalid or has already been used.' })
-        }
-
-        if (invitation.expiresAt.toMillis() < DateTime.now().toMillis()) {
-          await trx.rollback()
-          return response.badRequest({ error: 'Invite has expired.' })
-        }
-
-        if (freshUser.email !== invitation.email) {
-          await trx.rollback()
-          return response.forbidden({
-            error: 'You must be logged in with the invited email address.',
-          })
-        }
-
-        const existingMember = await TeamMember.query({ client: trx })
-          .where('team_id', invitation.teamId)
-          .where('user_id', freshUser.id)
-          .first()
-
-        if (!existingMember) {
-          await TeamMember.create(
-            {
-              teamId: invitation.teamId,
-              userId: freshUser.id,
-              role: invitation.role,
-              adminPages: invitation.adminPages ?? null,
-              createdAt: now,
-              updatedAt: now,
-            },
-            { client: trx },
-          )
-        }
-
-        if (
-          invitation.invitedUserRole === 'admin' &&
-          (freshUser as unknown as { role?: string }).role !== 'admin'
-        ) {
-          await freshUser.merge({ role: 'admin' }).save()
-        }
-
-        await invitation.merge({ acceptedAt: now, acceptedByUserId: freshUser.id }).save()
-        await trx.commit()
-
-        // Notify inviter (email + in-app)
-        if (invitation.invitedByUserId) {
-          await notificationService.push({
-            userId: invitation.invitedByUserId,
-            title: 'Team invite accepted',
-            message: `${freshUser.fullName || freshUser.email} joined ${invitation.team.name}`,
-            type: 'success',
-          })
-        }
-
-        if (invitation.invitedBy?.email) {
-          await mailer.send({
-            type: 'team-joined',
-            data: {
-              email: invitation.invitedBy.email,
-              inviterName: invitation.invitedBy.fullName || invitation.invitedBy.email,
-              teamName: invitation.team.name,
-              joinedUserEmail: freshUser.email,
-              joinedUserName: freshUser.fullName || freshUser.email,
-            },
-          })
-        }
-
-        return response.ok({
-          message: 'You have joined the team.',
-          redirectTo: invitation.invitedUserRole === 'admin' ? '/dashboard' : '/teams',
-        })
+        ;({ token } = await request.validateUsing(acceptTeamInviteAuthedValidator))
+      } else {
+        const guest = await request.validateUsing(acceptTeamInviteGuestValidator)
+        token = guest.token
+        guestPayload = { fullName: guest.fullName, password: guest.password }
       }
 
-      // Guest flow: create account + accept invite
-      const { token, fullName, password } = await request.validateUsing(
-        acceptTeamInviteGuestValidator,
-      )
-
-      const invitation = await TeamInvitation.query({ client: trx })
-        .where('token_hash', hashInviteToken(token))
-        .whereNull('accepted_at')
-        .preload('team')
-        .preload('invitedBy')
-        .first()
-
+      const invitation = await loadInvitationByToken(trx, token)
       if (!invitation) {
-        await trx.rollback()
-        return response.badRequest({ error: 'Invite is invalid or has already been used.' })
+        return rollback(
+          response.badRequest({ error: 'Invite is invalid or has already been used.' }),
+        )
       }
-
       if (invitation.expiresAt.toMillis() < DateTime.now().toMillis()) {
-        await trx.rollback()
-        return response.badRequest({ error: 'Invite has expired.' })
+        return rollback(response.badRequest({ error: 'Invite has expired.' }))
       }
 
+      const { fullName, password } = guestPayload!
       const existingUser = await User.query({ client: trx })
         .where('email', invitation.email)
         .first()
       if (existingUser) {
-        await trx.rollback()
-        return response.conflict({
-          error: 'An account with this email already exists. Please log in to accept the invite.',
-        })
+        return rollback(
+          response.conflict({
+            error: 'An account with this email already exists. Please log in to accept the invite.',
+          }),
+        )
       }
-
       const newUser = await User.create(
         {
           fullName,
@@ -352,48 +328,24 @@ export default class TeamInvitationsController {
         { client: trx },
       )
 
-      await TeamMember.create(
-        {
-          teamId: invitation.teamId,
-          userId: newUser.id,
-          role: invitation.role,
-          adminPages: invitation.adminPages ?? null,
-          createdAt: now,
-          updatedAt: now,
-        },
-        { client: trx },
-      )
+      await ensureTeamMember(trx, invitation, newUser.id, now)
+      if (
+        invitation.invitedUserRole === 'admin' &&
+        (newUser as unknown as { role?: string }).role !== 'admin'
+      ) {
+        await newUser.merge({ role: 'admin' }).save()
+      }
 
       await invitation.merge({ acceptedAt: now, acceptedByUserId: newUser.id }).save()
       await trx.commit()
 
-      await auth.use('web').login(newUser)
-
-      // Notify inviter (email + in-app)
-      if (invitation.invitedByUserId) {
-        await notificationService.push({
-          userId: invitation.invitedByUserId,
-          title: 'Team invite accepted',
-          message: `${newUser.fullName || newUser.email} joined ${invitation.team.name}`,
-          type: 'success',
-        })
-      }
-
-      if (invitation.invitedBy?.email) {
-        await mailer.send({
-          type: 'team-joined',
-          data: {
-            email: invitation.invitedBy.email,
-            inviterName: invitation.invitedBy.fullName || invitation.invitedBy.email,
-            teamName: invitation.team.name,
-            joinedUserEmail: newUser.email,
-            joinedUserName: newUser.fullName || newUser.email,
-          },
-        })
-      }
+      if (!isAuthed) await auth.use('web').login(newUser)
+      await notifyInviter(invitation, newUser)
 
       return response.ok({
-        message: 'Account created and team joined successfully.',
+        message: isAuthed
+          ? 'You have joined the team.'
+          : 'Account created and team joined successfully.',
         redirectTo: invitation.invitedUserRole === 'admin' ? '/dashboard' : '/teams',
       })
     } catch (error) {
@@ -427,13 +379,13 @@ export default class TeamInvitationsController {
       .firstOrFail()
 
     const body = await request.validateUsing(updateInvitationValidator)
-    if (body.adminPages !== undefined) {
-      const pages = Array.isArray(body.adminPages) ? body.adminPages : null
+    if (body.allowedPages !== undefined) {
+      const pages = Array.isArray(body.allowedPages) ? body.allowedPages : null
       const resolved = pages?.length ? [...pages] : null
       if (resolved && !resolved.includes('dashboard')) {
         resolved.unshift('dashboard')
       }
-      invitation.adminPages = resolved?.length ? resolved : null
+      invitation.allowedPages = resolved?.length ? resolved : null
       await invitation.save()
     }
 
@@ -441,7 +393,7 @@ export default class TeamInvitationsController {
       message: 'Invitation updated successfully',
       data: {
         id: invitation.id,
-        adminPages: invitation.adminPages ?? null,
+        allowedPages: invitation.allowedPages ?? null,
       },
     })
   }
