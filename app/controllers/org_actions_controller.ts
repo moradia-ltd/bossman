@@ -51,7 +51,7 @@ export default class OrgActionsController {
 
     //find the most recent ban for the user
     const ban = await AccountBan.query({ connection })
-      .where('userId', org.owner.id)
+      .where('orgId', org.id)
       .orderBy('createdAt', 'desc')
       .firstOrFail()
 

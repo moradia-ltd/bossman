@@ -21,6 +21,7 @@ import {
   UsersRound,
 } from 'lucide-react'
 import type { RawUser } from '#types/model-types'
+import { startCase } from '#utils/functions'
 import { CommandPalette } from '@/components/command-palette'
 import { NotificationCenter } from '@/components/notifications/notification-center'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -260,6 +261,10 @@ export function Sidebar({ children }: SidebarProps) {
         )}
       </ScrollArea>
 
+      <div className='border-t p-3'>
+
+        <span className={`text-xs font-bold text-center text-${environment === 'prod' ? 'green' : 'red'}-500`}>{startCase(environment)} </span>
+      </div>
       {/* User section */}
       <div className='border-t p-3'>
         <DropdownMenu>
