@@ -2,13 +2,14 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Briefcase, Building2, FlaskConical, Plus, Star, User } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawOrg } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
+import { FilterSortBar } from '@/components/dashboard/filter-sort-bar'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
@@ -19,6 +20,19 @@ import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
+
+const ORGS_SORT_BY_OPTIONS = [
+  { value: 'name', label: 'Name' },
+  { value: 'owner_role', label: 'Type' },
+  { value: 'country', label: 'Country' },
+  { value: 'has_active_subscription', label: 'Subscription' },
+  { value: 'created_at', label: 'Created at' },
+]
+
+const ORGS_SORT_ORDER_OPTIONS = [
+  { value: 'desc' as const, label: 'Z–A' },
+  { value: 'asc' as const, label: 'A–Z' },
+]
 
 type OrgsStats = { total: number; landlords: number; agencies: number }
 
@@ -97,15 +111,131 @@ const columns: Column<RawOrg>[] = [
 
 interface OrgsIndexProps extends SharedProps {
   orgs: PaginatedResponse<RawOrg>
+  includeTestAccounts?: boolean
+  favouritesOnly?: boolean
+  ownerRole?: string | null
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
 }
 
-export default function OrgsIndex({ orgs }: OrgsIndexProps) {
-  const { changePage, changeRows, searchTable, query } = useInertiaParams({
+function toBool(v: unknown): boolean {
+  return v === true || v === 'true'
+}
+
+export default function OrgsIndex({
+  orgs,
+  includeTestAccounts: initialIncludeTestAccounts,
+  favouritesOnly: initialFavouritesOnly,
+  ownerRole: initialOwnerRole,
+  sortBy: initialSortBy,
+  sortOrder: initialSortOrder,
+}: OrgsIndexProps) {
+  const { changePage, changeRows, searchTable, query, updateQuery } = useInertiaParams({
     page: 1,
     perPage: 20,
     search: '',
+    includeTestAccounts: false,
+    favouritesOnly: false,
+    ownerRole: '',
+    sortBy: 'created_at',
+    sortOrder: 'desc',
   })
   const [selectedRows, setSelectedRows] = useState<string[]>([])
+
+  const includeTestAccounts =
+    toBool(query.includeTestAccounts) || toBool(initialIncludeTestAccounts)
+  const favouritesOnly = toBool(query.favouritesOnly) || toBool(initialFavouritesOnly)
+  const ownerRole =
+    query.ownerRole === 'landlord' || query.ownerRole === 'agency'
+      ? query.ownerRole
+      : initialOwnerRole === 'landlord' || initialOwnerRole === 'agency'
+        ? initialOwnerRole
+        : ''
+  const sortBy =
+    typeof query.sortBy === 'string' && query.sortBy
+      ? query.sortBy
+      : (initialSortBy ?? 'created_at')
+  const sortOrder =
+    query.sortOrder === 'asc' || query.sortOrder === 'desc'
+      ? query.sortOrder
+      : (initialSortOrder ?? 'desc')
+
+  const hasActiveFilters =
+    includeTestAccounts ||
+    favouritesOnly ||
+    ownerRole !== '' ||
+    sortBy !== 'created_at' ||
+    sortOrder !== 'desc'
+
+  const handleFilterChange = (updates: Record<string, string | boolean>) => {
+    updateQuery({ ...updates, page: 1 })
+  }
+
+  const clearAllFilters = () => {
+    updateQuery({
+      includeTestAccounts: false,
+      favouritesOnly: false,
+      ownerRole: '',
+      sortBy: 'created_at',
+      sortOrder: 'desc',
+      page: 1,
+    })
+  }
+
+  const filterSortFields = useMemo(
+    () => [
+      { type: 'switch' as const, key: 'includeTestAccounts', label: 'Include test accounts', value: includeTestAccounts },
+      { type: 'switch' as const, key: 'favouritesOnly', label: 'Favourites only', value: favouritesOnly },
+      {
+        type: 'select' as const,
+        key: 'ownerRole',
+        label: 'Type',
+        value: ownerRole,
+        options: [
+          { value: 'landlord', label: 'Landlord' },
+          { value: 'agency', label: 'Agency' },
+        ],
+        placeholder: 'All types',
+        triggerClassName: 'w-[140px] h-9',
+      },
+    ],
+    [includeTestAccounts, favouritesOnly, ownerRole],
+  )
+
+  const sortConfig = useMemo(
+    () => ({
+      sortBy,
+      sortByOptions: ORGS_SORT_BY_OPTIONS,
+      sortOrder,
+      sortOrderOptions: ORGS_SORT_ORDER_OPTIONS,
+      sortByTriggerClassName: 'w-[160px] h-9',
+      sortOrderTriggerClassName: 'w-[100px] h-9',
+    }),
+    [sortBy, sortOrder],
+  )
+
+  const activeChips = useMemo(() => {
+    const chips: { label: string; onRemove: () => void }[] = []
+    if (includeTestAccounts) {
+      chips.push({
+        label: 'Test accounts',
+        onRemove: () => handleFilterChange({ includeTestAccounts: false }),
+      })
+    }
+    if (favouritesOnly) {
+      chips.push({
+        label: 'Favourites only',
+        onRemove: () => handleFilterChange({ favouritesOnly: false }),
+      })
+    }
+    if (ownerRole) {
+      chips.push({
+        label: ownerRole.charAt(0).toUpperCase() + ownerRole.slice(1),
+        onRemove: () => handleFilterChange({ ownerRole: '' }),
+      })
+    }
+    return chips
+  }, [includeTestAccounts, favouritesOnly, ownerRole, handleFilterChange])
 
   const { data: stats } = useQuery({
     queryKey: ['orgs-stats'],
@@ -225,27 +355,37 @@ export default function OrgsIndex({ orgs }: OrgsIndexProps) {
         </SimpleGrid>
 
         <AppCard title='All customers' description={`${orgs.meta.total} total`}>
-          <DataTable
-            columns={columns}
-            data={orgs.data}
-            searchable
-            searchPlaceholder='Search by name or company...'
-            searchValue={String(query.search || '')}
-            onSearchChange={(value) => searchTable(String(value || ''))}
-            pagination={{
-              page: orgs.meta.currentPage,
-              pageSize: orgs.meta.perPage,
-              total: orgs.meta.total,
-              onPageChange: changePage,
-              onPageSizeChange: changeRows,
-            }}
-            emptyMessage='No customers found'
-            selectable
-            selectedRows={selectedRows}
-            onSelectionChange={setSelectedRows}
-            getRowId={(row) => String(row.id)}
-            bulkActions={bulkActions}
-          />
+          <div className='space-y-4'>
+            <FilterSortBar
+              filters={filterSortFields}
+              sort={sortConfig}
+              onFilterChange={handleFilterChange}
+              onClear={clearAllFilters}
+              hasActiveFilters={hasActiveFilters}
+              activeChips={activeChips}
+            />
+            <DataTable
+              columns={columns}
+              data={orgs.data}
+              searchable
+              searchPlaceholder='Search by name or company...'
+              searchValue={String(query.search || '')}
+              onSearchChange={(value) => searchTable(String(value || ''))}
+              pagination={{
+                page: orgs.meta.currentPage,
+                pageSize: orgs.meta.perPage,
+                total: orgs.meta.total,
+                onPageChange: changePage,
+                onPageSizeChange: changeRows,
+              }}
+              emptyMessage='No customers found'
+              selectable
+              selectedRows={selectedRows}
+              onSelectionChange={setSelectedRows}
+              getRowId={(row) => String(row.id)}
+              bulkActions={bulkActions}
+            />
+          </div>
         </AppCard>
       </div>
     </DashboardLayout>

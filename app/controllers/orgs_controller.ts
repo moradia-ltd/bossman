@@ -22,17 +22,40 @@ import { createCustomerUserValidator, updateOrgValidator } from '#validators/org
 export default class OrgsController {
   async index({ request, inertia }: HttpContext) {
     const params = await request.paginationQs()
+    const includeTestAccounts = params.includeTestAccounts === true
+    const favouritesOnly = params.favouritesOnly === true
+    const ownerRole =
+      params.ownerRole === 'landlord' || params.ownerRole === 'agency' ? params.ownerRole : null
+
+    const allowedSortColumns = [
+      'name',
+      'owner_role',
+      'country',
+      'has_active_subscription',
+      'created_at',
+    ] as const
+    const sortBy = allowedSortColumns.includes(params.sortBy as (typeof allowedSortColumns)[0])
+      ? params.sortBy
+      : 'created_at'
+    const sortOrder = params.sortOrder === 'asc' || params.sortOrder === 'desc' ? params.sortOrder : 'desc'
+
     const appEnv = request.appEnv()
     const orgs = await Org.query({ connection: appEnv })
-
-      .if(params.search, (q) => {
-        q.whereILike('name', `%${params.search}%`)
-      })
-      .sortBy(params.sortBy || 'created_at', params.sortOrder || 'desc')
-
+      .if(!includeTestAccounts, (q) => q.where('isTestAccount', false))
+      .if(favouritesOnly, (q) => q.where('isFavourite', true))
+      .if(ownerRole, (q) => q.where('owner_role', ownerRole!))
+      .if(params.search, (q) => q.whereILike('name', `%${params.search}%`))
+      .sortBy(sortBy, sortOrder)
       .paginate(params.page || 1, params.perPage || 20)
 
-    return inertia.render('orgs/index', { orgs })
+    return inertia.render('orgs/index', {
+      orgs,
+      includeTestAccounts,
+      favouritesOnly,
+      ownerRole,
+      sortBy,
+      sortOrder,
+    })
   }
 
   async stats({ request, response }: HttpContext) {
