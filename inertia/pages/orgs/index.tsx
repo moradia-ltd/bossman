@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Briefcase, Building2, FlaskConical, Plus, Star, User } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -78,12 +78,12 @@ const columns: Column<RawOrg>[] = [
   {
     key: 'isFavourite',
     header: 'Favourite',
-    width: 90,
+    width: 120,
     cell: (row) =>
       row.isFavourite ? (
-        <Badge variant='secondary' className='gap-1 w-fit'>
-          <Star className='h-3 w-3' />
-        </Badge>
+
+        <Star className='h-4 w-4 text-yellow-500' />
+
       ) : (
         <span className='text-muted-foreground text-sm'>—</span>
       ),
@@ -111,25 +111,10 @@ const columns: Column<RawOrg>[] = [
 
 interface OrgsIndexProps extends SharedProps {
   orgs: PaginatedResponse<RawOrg>
-  includeTestAccounts?: boolean
-  favouritesOnly?: boolean
-  ownerRole?: string | null
-  sortBy?: string
-  sortOrder?: 'asc' | 'desc'
+  stats: OrgsStats
 }
 
-function toBool(v: unknown): boolean {
-  return v === true || v === 'true'
-}
-
-export default function OrgsIndex({
-  orgs,
-  includeTestAccounts: initialIncludeTestAccounts,
-  favouritesOnly: initialFavouritesOnly,
-  ownerRole: initialOwnerRole,
-  sortBy: initialSortBy,
-  sortOrder: initialSortOrder,
-}: OrgsIndexProps) {
+export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
   const { changePage, changeRows, searchTable, query, updateQuery } = useInertiaParams({
     page: 1,
     perPage: 20,
@@ -142,30 +127,13 @@ export default function OrgsIndex({
   })
   const [selectedRows, setSelectedRows] = useState<string[]>([])
 
-  const includeTestAccounts =
-    toBool(query.includeTestAccounts) || toBool(initialIncludeTestAccounts)
-  const favouritesOnly = toBool(query.favouritesOnly) || toBool(initialFavouritesOnly)
-  const ownerRole =
-    query.ownerRole === 'landlord' || query.ownerRole === 'agency'
-      ? query.ownerRole
-      : initialOwnerRole === 'landlord' || initialOwnerRole === 'agency'
-        ? initialOwnerRole
-        : ''
-  const sortBy =
-    typeof query.sortBy === 'string' && query.sortBy
-      ? query.sortBy
-      : (initialSortBy ?? 'created_at')
-  const sortOrder =
-    query.sortOrder === 'asc' || query.sortOrder === 'desc'
-      ? query.sortOrder
-      : (initialSortOrder ?? 'desc')
-
+  const includeTestAccounts = query.includeTestAccounts === true
+  const favouritesOnly = query.favouritesOnly
+  const ownerRole = query.ownerRole
+  const sortBy = String(query.sortBy ?? 'created_at')
+  const sortOrder = query.sortOrder ?? 'desc'
   const hasActiveFilters =
-    includeTestAccounts ||
-    favouritesOnly ||
-    ownerRole !== '' ||
-    sortBy !== 'created_at' ||
-    sortOrder !== 'desc'
+    includeTestAccounts || favouritesOnly || !!ownerRole || sortBy !== 'created_at' || sortOrder !== 'desc'
 
   const handleFilterChange = (updates: Record<string, string | boolean>) => {
     updateQuery({ ...updates, page: 1 })
@@ -236,14 +204,6 @@ export default function OrgsIndex({
     }
     return chips
   }, [includeTestAccounts, favouritesOnly, ownerRole, handleFilterChange])
-
-  const { data: stats } = useQuery({
-    queryKey: ['orgs-stats'],
-    queryFn: async () => {
-      const res = await api.get<OrgsStats>('/orgs/stats')
-      return res.data
-    },
-  })
 
   const bulkMakeFavouriteMutation = useMutation({
     mutationFn: (orgIds: string[]) => api.post('/orgs/actions/bulk-make-favourite', { orgIds }),
@@ -337,19 +297,19 @@ export default function OrgsIndex({
           <StatCard
             title='Total'
             description='All customers'
-            value={formatNumber(stats?.total)}
+            value={formatNumber(stats.total)}
             icon={Building2}
           />
           <StatCard
             title='Landlords'
             description='Landlord-owned customers'
-            value={formatNumber(stats?.landlords)}
+            value={formatNumber(stats.landlords)}
             icon={User}
           />
           <StatCard
             title='Agencies'
             description='Agency-owned customers'
-            value={formatNumber(stats?.agencies)}
+            value={formatNumber(stats.agencies)}
             icon={Briefcase}
           />
         </SimpleGrid>
