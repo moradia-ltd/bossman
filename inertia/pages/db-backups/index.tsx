@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
-import { Plus, RotateCcw, Trash2 } from 'lucide-react'
+import { Download, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -64,26 +64,39 @@ const columns: Column<RawDbBackup>[] = [
   {
     key: 'actions',
     header: '',
-    width: 80,
+    width: 120,
     cell: (row) => (
-      <BaseDialog
-        title='Delete backup?'
-        description='This will remove the backup record and the file from storage. This action cannot be undone.'
-        trigger={
-          <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
-            aria-label='Delete backup'>
-            <Trash2 className='h-4 w-4' />
-          </Button>
-        }
-        primaryText='Delete'
-        primaryVariant='destructive'
-        secondaryText='Cancel'
-        onPrimaryAction={() => router.delete(`/db-backups/${row.id}`)}
-      />
+      <div className='flex items-center gap-1'>
+        <Button
+          type='button'
+          variant='ghost'
+          size='icon'
+          className='h-8 w-8'
+          aria-label='Download backup'
+          asChild>
+          <a href={`/db-backups/${row.id}/download`} download>
+            <Download className='h-4 w-4' />
+          </a>
+        </Button>
+        <BaseDialog
+          title='Delete backup?'
+          description='This will remove the backup record and the file from storage. This action cannot be undone.'
+          trigger={
+            <Button
+              type='button'
+              variant='ghost'
+              size='icon'
+              className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
+              aria-label='Delete backup'>
+              <Trash2 className='h-4 w-4' />
+            </Button>
+          }
+          primaryText='Delete'
+          primaryVariant='destructive'
+          secondaryText='Cancel'
+          onPrimaryAction={() => router.delete(`/db-backups/${row.id}`)}
+        />
+      </div>
     ),
   },
 ]

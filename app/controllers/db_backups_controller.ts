@@ -1,3 +1,4 @@
+import path from 'node:path'
 import type { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 import drive from '@adonisjs/drive/services/main'
@@ -32,6 +33,27 @@ export default class DbBackupsController {
         error: err instanceof Error ? err.message : String(err),
       })
     }
+  }
+
+  /** Download a backup file. */
+  async download({ params, request, response }: HttpContext) {
+    const appEnv = request.appEnv()
+    const backup = await DbBackup.query({ connection: appEnv }).where('id', params.id).firstOrFail()
+    const fileName = backup.fileName!
+    const r2 = drive.use('backup')
+    const exists = await r2.exists(fileName)
+    if (!exists) {
+      return response.notFound({ error: 'Backup file not found in storage' })
+    }
+    const contents = await r2.get(fileName)
+    if (!contents) {
+      return response.notFound({ error: 'Could not read backup file' })
+    }
+    const buffer = Buffer.isBuffer(contents) ? contents : Buffer.from(contents)
+    response
+      .header('Content-Type', 'application/sql')
+      .header('Content-Disposition', `attachment; filename="${fileName}"`)
+      .send(buffer)
   }
 
   /** API: restore a backup to the given database connection URL. */

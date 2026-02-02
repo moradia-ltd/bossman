@@ -70,6 +70,7 @@ router
     router.post('/push-notifications', [PushNotificationsController, 'store'])
     router.post('/push-notifications/:id/resend', [PushNotificationsController, 'resend'])
     router.get('/db-backups', [DbBackupsController, 'index'])
+    router.get('/db-backups/:id/download', [DbBackupsController, 'download'])
     router.post('/db-backups', [DbBackupsController, 'store'])
     router.delete('/db-backups/:id', [DbBackupsController, 'destroy'])
 
