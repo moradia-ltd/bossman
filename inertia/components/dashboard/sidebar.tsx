@@ -105,17 +105,25 @@ export function Sidebar({ children }: SidebarProps) {
   } = useSidebar()
   const pageAccess = (page.props as { pageAccess?: string[] | null }).pageAccess
 
+  /** Maps nav href to the page key used in pageAccess (must match backend PAGE_KEY_TO_PATH). */
+  const pathToPageKey = (href: string): string | null => {
+    const path = `/${String(href || '').replace(/^\/+/, '').replace(/\/+$/, '')}`
+    if (path === '/dashboard') return 'dashboard'
+    if (path.startsWith('/teams')) return 'teams'
+    if (path.startsWith('/blog/manage')) return 'blog'
+    if (path.startsWith('/orgs')) return 'orgs'
+    if (path.startsWith('/leases')) return 'leases'
+    if (path.startsWith('/properties')) return 'properties'
+    if (path.startsWith('/push-notifications')) return 'pushNotifications'
+    if (path.startsWith('/db-backups')) return 'dbBackups'
+    return null
+  }
+
   const canSeePage = (href: string) => {
+    if (href === '/settings') return true
+    const key = pathToPageKey(href)
+    if (key === null) return true
     if (!pageAccess) return true
-    const key = href.startsWith('/teams')
-      ? 'teams'
-      : href.startsWith('/blog/manage')
-        ? 'blog'
-        : href.startsWith('/push-notifications') || href.startsWith('/db-backups')
-          ? 'dashboard'
-          : href === '/dashboard'
-            ? 'dashboard'
-            : 'dashboard'
     return pageAccess.includes(key)
   }
 
