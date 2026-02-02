@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
 
       table.json('allowed_pages').nullable()
+      table.boolean('enabled_prod_access').defaultTo(false)
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
