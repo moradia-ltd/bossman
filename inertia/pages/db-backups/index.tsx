@@ -10,10 +10,10 @@ import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { AppCard } from '@/components/ui/app-card'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { AppCard } from '@/components/ui/app-card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { LoadingOverlay } from '@/components/ui/loading'
@@ -39,7 +39,7 @@ interface DbBackupsIndexProps extends SharedProps {
   backups: PaginatedResponse<RawDbBackup>
 }
 
-const columns: Column<RawDbBackup>[] = [
+const baseColumns: Column<RawDbBackup>[] = [
   {
     key: 'filePath',
     header: 'File path',
@@ -61,45 +61,13 @@ const columns: Column<RawDbBackup>[] = [
     width: 140,
     cell: (row) => timeAgo(row.createdAt ?? ''),
   },
-  {
-    key: 'actions',
-    header: '',
-    width: 120,
-    cell: (row) => (
-      <div className='flex items-center gap-1'>
-        <Button
-          type='button'
-          variant='ghost'
-          size='icon'
-          className='h-8 w-8'
-          aria-label='Download backup'
-          asChild>
-          <a href={`/db-backups/${row.id}/download`} download>
-            <Download className='h-4 w-4' />
-          </a>
-        </Button>
-        <BaseDialog
-          title='Delete backup?'
-          description='This will remove the backup record and the file from storage. This action cannot be undone.'
-          trigger={
-            <Button
-              type='button'
-              variant='ghost'
-              size='icon'
-              className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
-              aria-label='Delete backup'>
-              <Trash2 className='h-4 w-4' />
-            </Button>
-          }
-          primaryText='Delete'
-          primaryVariant='destructive'
-          secondaryText='Cancel'
-          onPrimaryAction={() => router.delete(`/db-backups/${row.id}`)}
-        />
-      </div>
-    ),
-  },
 ]
+
+function getFilenameFromContentDisposition(header: string | null): string | null {
+  if (!header) return null
+  const match = header.match(/filename="?([^";\n]+)"?/)
+  return match ? match[1].trim() : null
+}
 
 export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
   const { changePage, changeRows } = useInertiaParams({ page: 1, perPage: 20 })
@@ -107,6 +75,76 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
   const [restoreModalOpen, setRestoreModalOpen] = useState(false)
   const [restoreBackupId, setRestoreBackupId] = useState<string>('')
   const [restoreConnectionUrl, setRestoreConnectionUrl] = useState('')
+  const [downloadingId, setDownloadingId] = useState<number | null>(null)
+
+  const handleDownload = async (row: RawDbBackup) => {
+    setDownloadingId(row.id)
+    try {
+      const res = await fetch(`/db-backups/${row.id}/download`, { credentials: 'include' })
+      if (!res.ok) {
+        toast.error('Failed to download backup')
+        return
+      }
+      const blob = await res.blob()
+      const disposition = res.headers.get('Content-Disposition')
+      const filename =
+        getFilenameFromContentDisposition(disposition) ?? row.fileName ?? `backup-${row.id}.sql`
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      toast.success('Downloaded')
+    } catch {
+      toast.error('Failed to download backup')
+    } finally {
+      setDownloadingId(null)
+    }
+  }
+
+  const columns: Column<RawDbBackup>[] = [
+    ...baseColumns,
+    {
+      key: 'actions',
+      header: '',
+      width: 120,
+      cell: (row) => (
+        <div className='flex items-center gap-1'>
+          <Button
+            type='button'
+            variant='ghost'
+            size='icon'
+            className='h-8 w-8'
+            aria-label='Download backup'
+            disabled={downloadingId === row.id}
+            onClick={() => handleDownload(row)}>
+            <Download className='h-4 w-4' />
+          </Button>
+          <BaseDialog
+            title='Delete backup?'
+            description='This will remove the backup record and the file from storage. This action cannot be undone.'
+            trigger={
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
+                aria-label='Delete backup'>
+                <Trash2 className='h-4 w-4' />
+              </Button>
+            }
+            primaryText='Delete'
+            primaryVariant='destructive'
+            secondaryText='Cancel'
+            onPrimaryAction={() => router.delete(`/db-backups/${row.id}`)}
+          />
+        </div>
+      ),
+    },
+  ]
 
   const createBackupMutation = useMutation({
     mutationFn: () => api.post('/db-backups', {}),
@@ -156,9 +194,19 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
       <Head title='Backups' />
 
       <LoadingOverlay
-        text={createBackupMutation.isPending ? 'Creating backup...' : 'Restoring backup...'}
+        text={
+          downloadingId !== null
+            ? 'Downloading...'
+            : createBackupMutation.isPending
+              ? 'Creating backup...'
+              : 'Restoring backup...'
+        }
         className='z-[100]'
-        isLoading={createBackupMutation.isPending || restoreBackupMutation.isPending}
+        isLoading={
+          downloadingId !== null ||
+          createBackupMutation.isPending ||
+          restoreBackupMutation.isPending
+        }
       />
       <div className='space-y-6'>
         <PageHeader
@@ -202,10 +250,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
                         {backups.data.map((backup) => (
                           <SelectItem key={backup.id} value={String(backup.id)}>
                             {backup.fileName ?? backup.filePath ?? `Backup #${backup.id}`} (
-                            {backup.createdAt
-                              ? new Date(backup.createdAt).toLocaleString()
-                              : '—'}
-                            )
+                            {backup.createdAt ? new Date(backup.createdAt).toLocaleString() : '—'})
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -222,8 +267,8 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
                       className='font-mono text-sm'
                     />
                     <p className='text-xs text-muted-foreground'>
-                      PostgreSQL connection URL of the database to restore into. Existing data may be
-                      overwritten.
+                      PostgreSQL connection URL of the database to restore into. Existing data may
+                      be overwritten.
                     </p>
                   </div>
                 </Stack>
@@ -248,9 +293,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
           }
         />
 
-        <AppCard
-          title='Backups'
-          description={`${backups.meta.total} total`}>
+        <AppCard title='Backups' description={`${backups.meta.total} total`}>
           <DataTable
             columns={columns}
             data={backups.data}
