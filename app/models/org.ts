@@ -89,8 +89,8 @@ export default class Org extends SuperBaseModel {
   @column() declare stripeConnectId: string
 
   @column() declare customPaymentSchedule: ModelObject
-  @column() declare customRenewalDate: DateTime
-  @column() declare customExpiryDate: DateTime
+  @column() declare isFavourite: boolean
+  @column() declare isTestAccount: boolean
   @attachment({ preComputeUrl: false, folder: FileStoreRoutes.COMPANY_LOGOS })
   declare companyLogo: Attachment | null
   @attachment({ preComputeUrl: false, folder: FileStoreRoutes.COMPANY_FAVICONS })

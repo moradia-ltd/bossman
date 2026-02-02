@@ -3,7 +3,7 @@ import { banUser } from '#boss/jobs/ban_user'
 import AccountBan from '#models/account_ban'
 import Org from '#models/org'
 import mailer from '#services/email_service'
-import { banUserValidator } from '#validators/org_action'
+import { banUserValidator, bulkOrgIdsValidator } from '#validators/org_action'
 
 export default class OrgActionsController {
   async getBanStatus({ request, params, response }: HttpContext) {
@@ -65,5 +65,77 @@ export default class OrgActionsController {
     })
 
     return response.ok({ message: 'User unbanned successfully' })
+  }
+
+  async makeFavourite({ request, params, response }: HttpContext) {
+    const { orgId } = params
+    const connection = request.appEnv()
+    const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
+    org.isFavourite = true
+    await org.save()
+    return response.ok({ message: 'Marked as favourite', isFavourite: true })
+  }
+
+  async undoFavourite({ request, params, response }: HttpContext) {
+    const { orgId } = params
+    const connection = request.appEnv()
+    const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
+    org.isFavourite = false
+    await org.save()
+    return response.ok({ message: 'Removed from favourites', isFavourite: false })
+  }
+
+  async makeTestAccount({ request, params, response }: HttpContext) {
+    const { orgId } = params
+    const connection = request.appEnv()
+    const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
+    org.isTestAccount = true
+    await org.save()
+    return response.ok({ message: 'Marked as test account', isTestAccount: true })
+  }
+
+  async undoTestAccount({ request, params, response }: HttpContext) {
+    const { orgId } = params
+    const connection = request.appEnv()
+    const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
+    org.isTestAccount = false
+    await org.save()
+    return response.ok({ message: 'Removed test account flag', isTestAccount: false })
+  }
+
+  async bulkMakeFavourite({ request, response }: HttpContext) {
+    const connection = request.appEnv()
+    const { orgIds } = await request.validateUsing(bulkOrgIdsValidator)
+    const count = await Org.query({ connection })
+      .whereIn('id', orgIds)
+      .update({ isFavourite: true })
+    return response.ok({ message: `${count} org(s) marked as favourite`, updated: count })
+  }
+
+  async bulkUndoFavourite({ request, response }: HttpContext) {
+    const connection = request.appEnv()
+    const { orgIds } = await request.validateUsing(bulkOrgIdsValidator)
+    const count = await Org.query({ connection })
+      .whereIn('id', orgIds)
+      .update({ isFavourite: false })
+    return response.ok({ message: `${count} org(s) removed from favourites`, updated: count })
+  }
+
+  async bulkMakeTestAccount({ request, response }: HttpContext) {
+    const connection = request.appEnv()
+    const { orgIds } = await request.validateUsing(bulkOrgIdsValidator)
+    const count = await Org.query({ connection })
+      .whereIn('id', orgIds)
+      .update({ isTestAccount: true })
+    return response.ok({ message: `${count} org(s) marked as test account`, updated: count })
+  }
+
+  async bulkUndoTestAccount({ request, response }: HttpContext) {
+    const connection = request.appEnv()
+    const { orgIds } = await request.validateUsing(bulkOrgIdsValidator)
+    const count = await Org.query({ connection })
+      .whereIn('id', orgIds)
+      .update({ isTestAccount: false })
+    return response.ok({ message: `${count} org(s) removed test account flag`, updated: count })
   }
 }

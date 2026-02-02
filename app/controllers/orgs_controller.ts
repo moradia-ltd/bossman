@@ -363,12 +363,13 @@ export default class OrgsController {
     return response.ok({ data })
   }
 
-  async createInvoice({ params, inertia, request }: HttpContext) {
+  async createInvoice({ params, inertia, request, now }: HttpContext) {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
     const { total: activeLeasesCount } = await Lease.query({ connection: appEnv })
       .where('org_id', params.id)
       .where('status', 'active')
+      .where('end_date', '>=', now.toISODate()!)
       .getCount()
     return inertia.render('orgs/invoices/create', { org, activeLeasesCount })
   }

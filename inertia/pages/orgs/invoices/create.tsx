@@ -70,7 +70,7 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
     post(`/orgs/${orgId}/invoices`, { preserveScroll: true })
   }
 
-  const formError = typeof errors.error === 'string' ? errors.error : errors.description
+  const formError = typeof errors.description === 'string' ? errors.description : errors.description
 
   return (
     <DashboardLayout>

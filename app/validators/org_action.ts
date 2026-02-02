@@ -1,5 +1,11 @@
 import vine from '@vinejs/vine'
 
+export const bulkOrgIdsValidator = vine.compile(
+  vine.object({
+    orgIds: vine.array(vine.string()).minLength(1),
+  }),
+)
+
 export const banUserValidator = vine.compile(
   vine.object({
     reason: vine.string(),

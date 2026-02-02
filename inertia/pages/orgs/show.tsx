@@ -2,12 +2,13 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { Pencil, UserCheck, UserX } from 'lucide-react'
+import { FlaskConical, Pencil, Star, StarOff, UserCheck, UserX } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import * as Yup from 'yup'
 import type { RawOrg } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
+import { timeAgo } from '#utils/date'
 import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
 import { DashboardLayout } from '@/components/dashboard/layout'
@@ -24,6 +25,7 @@ import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+import { dateFormatter } from '@/lib/date'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 import { ActivitiesTab } from './components/activities-tab'
@@ -111,6 +113,50 @@ export default function OrgShow({ org }: OrgShowProps) {
     },
   })
 
+  const makeFavouriteMutation = useMutation({
+    mutationFn: () => api.post(`/orgs/${id}/actions/make-favourite`, {}),
+    onSuccess: () => {
+      router.reload()
+      toast.success('Marked as favourite.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update.')
+    },
+  })
+
+  const undoFavouriteMutation = useMutation({
+    mutationFn: () => api.post(`/orgs/${id}/actions/undo-favourite`, {}),
+    onSuccess: () => {
+      router.reload()
+      toast.success('Removed from favourites.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update.')
+    },
+  })
+
+  const makeTestAccountMutation = useMutation({
+    mutationFn: () => api.post(`/orgs/${id}/actions/make-test-account`, {}),
+    onSuccess: () => {
+      router.reload()
+      toast.success('Marked as test account.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update.')
+    },
+  })
+
+  const undoTestAccountMutation = useMutation({
+    mutationFn: () => api.post(`/orgs/${id}/actions/undo-test-account`, {}),
+    onSuccess: () => {
+      router.reload()
+      toast.success('Removed test account flag.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update.')
+    },
+  })
+
   const quickActions: QuickActionOption[] = [
     {
       title: 'Ban user',
@@ -125,6 +171,34 @@ export default function OrgShow({ org }: OrgShowProps) {
       icon: UserCheck,
       onClick: () => unbanUserMutation.mutate(),
       dontShowIf: !banStatus?.isBanned,
+    },
+    {
+      title: 'Make favourite',
+      description: 'Mark this org as a favourite.',
+      icon: Star,
+      onClick: () => makeFavouriteMutation.mutate(),
+      dontShowIf: org.isFavourite,
+    },
+    {
+      title: 'Undo favourite',
+      description: 'Remove favourite from this org.',
+      icon: StarOff,
+      onClick: () => undoFavouriteMutation.mutate(),
+      dontShowIf: !org.isFavourite,
+    },
+    {
+      title: 'Make test account',
+      description: 'Mark this org as a test account.',
+      icon: FlaskConical,
+      onClick: () => makeTestAccountMutation.mutate(),
+      dontShowIf: org.isTestAccount,
+    },
+    {
+      title: 'Undo test account',
+      description: 'Remove test account flag from this org.',
+      icon: FlaskConical,
+      onClick: () => undoTestAccountMutation.mutate(),
+      dontShowIf: !org.isTestAccount,
     },
   ]
 
@@ -282,9 +356,36 @@ export default function OrgShow({ org }: OrgShowProps) {
                     }
                   />
                 )}
+                {org.isFavourite && (
+                  <DetailRow
+                    label='Favourite'
+                    value={
+                      <Badge variant='secondary' className='w-fit gap-1'>
+                        <Star className='h-3 w-3' />
+                        Yes
+                      </Badge>
+                    }
+                  />
+                )}
+                {org.isTestAccount && (
+                  <DetailRow
+                    label='Test account'
+                    value={
+                      <Badge variant='outline' className='w-fit gap-1'>
+                        <FlaskConical className='h-3 w-3' />
+                        Yes
+                      </Badge>
+                    }
+                  />
+                )}
 
                 <DetailRow label='Creator email' value={String(org.creatorEmail)} />
+
                 <DetailRow label='Custom Plan' value={org.isOnCustomPlan ? 'Yes' : 'No'} />
+                <DetailRow
+                  label='Joined at'
+                  value={`${dateFormatter(org.createdAt)} (${timeAgo(org.createdAt)})`}
+                />
               </div>
             </AppCard>
 

@@ -1,7 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
-import { useQuery } from '@tanstack/react-query'
-import { Briefcase, Building2, Plus, User } from 'lucide-react'
+import { Head, Link, router } from '@inertiajs/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { Briefcase, Building2, FlaskConical, Plus, Star, User } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawOrg } from '#types/model-types'
 import { timeAgo } from '#utils/date'
@@ -10,11 +12,12 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
 type OrgsStats = { total: number; landlords: number; agencies: number }
@@ -59,6 +62,33 @@ const columns: Column<RawOrg>[] = [
       ),
   },
   {
+    key: 'isFavourite',
+    header: 'Favourite',
+    width: 90,
+    cell: (row) =>
+      row.isFavourite ? (
+        <Badge variant='secondary' className='gap-1 w-fit'>
+          <Star className='h-3 w-3' />
+        </Badge>
+      ) : (
+        <span className='text-muted-foreground text-sm'>—</span>
+      ),
+  },
+  {
+    key: 'isTestAccount',
+    header: 'Test',
+    width: 110,
+    cell: (row) =>
+      row.isTestAccount ? (
+        <Badge variant='outline' className='gap-1 w-fit'>
+          <FlaskConical className='h-3 w-3' />
+          Yes
+        </Badge>
+      ) : (
+        <span className='text-muted-foreground text-sm'>—</span>
+      ),
+  },
+  {
     key: 'createdAt',
     header: 'Created at',
     cell: (row) => timeAgo(row.createdAt ?? ''),
@@ -75,6 +105,7 @@ export default function OrgsIndex({ orgs }: OrgsIndexProps) {
     perPage: 20,
     search: '',
   })
+  const [selectedRows, setSelectedRows] = useState<string[]>([])
 
   const { data: stats } = useQuery({
     queryKey: ['orgs-stats'],
@@ -83,6 +114,77 @@ export default function OrgsIndex({ orgs }: OrgsIndexProps) {
       return res.data
     },
   })
+
+  const bulkMakeFavouriteMutation = useMutation({
+    mutationFn: (orgIds: string[]) => api.post('/orgs/actions/bulk-make-favourite', { orgIds }),
+    onSuccess: (_, orgIds) => {
+      toast.success(`${orgIds.length} org(s) marked as favourite`)
+      setSelectedRows([])
+      router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update')
+    },
+  })
+
+  const bulkUndoFavouriteMutation = useMutation({
+    mutationFn: (orgIds: string[]) => api.post('/orgs/actions/bulk-undo-favourite', { orgIds }),
+    onSuccess: (_, orgIds) => {
+      toast.success(`${orgIds.length} org(s) removed from favourites`)
+      setSelectedRows([])
+      router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update')
+    },
+  })
+
+  const bulkMakeTestAccountMutation = useMutation({
+    mutationFn: (orgIds: string[]) => api.post('/orgs/actions/bulk-make-test-account', { orgIds }),
+    onSuccess: (_, orgIds) => {
+      toast.success(`${orgIds.length} org(s) marked as test account`)
+      setSelectedRows([])
+      router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update')
+    },
+  })
+
+  const bulkUndoTestAccountMutation = useMutation({
+    mutationFn: (orgIds: string[]) => api.post('/orgs/actions/bulk-undo-test-account', { orgIds }),
+    onSuccess: (_, orgIds) => {
+      toast.success(`${orgIds.length} org(s) removed test account flag`)
+      setSelectedRows([])
+      router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update')
+    },
+  })
+
+  const bulkActions = [
+    {
+      label: 'Make favourite',
+      variant: 'outline' as const,
+      action: (ids: string[]) => bulkMakeFavouriteMutation.mutate(ids),
+    },
+    {
+      label: 'Undo favourite',
+      variant: 'outline' as const,
+      action: (ids: string[]) => bulkUndoFavouriteMutation.mutate(ids),
+    },
+    {
+      label: 'Make test account',
+      variant: 'outline' as const,
+      action: (ids: string[]) => bulkMakeTestAccountMutation.mutate(ids),
+    },
+    {
+      label: 'Undo test account',
+      variant: 'outline' as const,
+      action: (ids: string[]) => bulkUndoTestAccountMutation.mutate(ids),
+    },
+  ]
 
   return (
     <DashboardLayout>
@@ -122,25 +224,28 @@ export default function OrgsIndex({ orgs }: OrgsIndexProps) {
           />
         </SimpleGrid>
 
-        <AppCard
-          title='All customers'
-          description={`${orgs.meta.total} total`}>
+        <AppCard title='All customers' description={`${orgs.meta.total} total`}>
           <DataTable
-              columns={columns}
-              data={orgs.data}
-              searchable
-              searchPlaceholder='Search by name or company...'
-              searchValue={String(query.search || '')}
-              onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={{
-                page: orgs.meta.currentPage,
-                pageSize: orgs.meta.perPage,
-                total: orgs.meta.total,
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              }}
-              emptyMessage='No customers found'
-            />
+            columns={columns}
+            data={orgs.data}
+            searchable
+            searchPlaceholder='Search by name or company...'
+            searchValue={String(query.search || '')}
+            onSearchChange={(value) => searchTable(String(value || ''))}
+            pagination={{
+              page: orgs.meta.currentPage,
+              pageSize: orgs.meta.perPage,
+              total: orgs.meta.total,
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            }}
+            emptyMessage='No customers found'
+            selectable
+            selectedRows={selectedRows}
+            onSelectionChange={setSelectedRows}
+            getRowId={(row) => String(row.id)}
+            bulkActions={bulkActions}
+          />
         </AppCard>
       </div>
     </DashboardLayout>
