@@ -9,17 +9,17 @@ import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
 const columns: Column<RawActivity>[] = [
-  { key: 'summary', header: 'Summary', minWidth: 200, flex: 1 },
+  { key: 'summary', header: 'Summary', },
   {
     key: 'createdAt',
     header: 'Date',
-    width: 140,
+
     cell: (row) => (row.createdAt ? dateFormatter(row.createdAt) : '—'),
   },
   {
     key: 'isSystemAction',
     header: 'Source',
-    width: 90,
+
     cell: (row) =>
       row.isSystemAction ? (
         <Badge variant='secondary'>System</Badge>

@@ -169,6 +169,7 @@ router
     router.get('/', [TeamsController, 'index'])
     router.post('/', [TeamsController, 'store'])
     router.get('/:teamId/members', [TeamsController, 'members'])
+    router.get('/:teamId/invitations', [TeamsController, 'invitations'])
     router.put('/:teamId/members/:memberId', [TeamsController, 'updateMember'])
     router.post('/:teamId/invitations', [TeamInvitationsController, 'invite'])
     router.put('/:teamId/invitations/:invitationId', [

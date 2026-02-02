@@ -21,6 +21,7 @@ export const API_ROUTES = {
     '/user/settings',
     '/teams',
     '/teams/:teamId/members',
+    '/teams/:teamId/invitations',
     '/notifications',
     '/notifications/unread-count',
     '/audits',

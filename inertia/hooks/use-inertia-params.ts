@@ -9,7 +9,27 @@ function debounce<TArgs extends unknown[]>(fn: (...args: TArgs) => void, delay: 
   }
 }
 
-export const useInertiaParams = (initialQueryParams: QueryDefaults = {}, _only?: string[]) => {
+type QueryValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | (string | number | boolean | null | undefined)[]
+type QueryDefaults = Record<string, QueryValue>
+
+const defaultQueryParams: QueryDefaults = {
+  page: 1,
+  perPage: 10,
+  search: '',
+  startDate: '',
+  endDate: '',
+}
+
+export const useInertiaParams = (
+  initialQueryParams: QueryDefaults = defaultQueryParams,
+  _only?: string[],
+) => {
   const currentParams = getQueryParams(initialQueryParams) as ModelObject
 
   const changePage = (page: number) => updateSearchParams({ ...currentParams, page })
@@ -30,15 +50,6 @@ export const useInertiaParams = (initialQueryParams: QueryDefaults = {}, _only?:
     searchTable,
   }
 }
-
-type QueryValue =
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | (string | number | boolean | null | undefined)[]
-type QueryDefaults = Record<string, QueryValue>
 
 export function getQueryParams(defaults: QueryDefaults = {}): Record<string, QueryValue> {
   if (typeof window === 'undefined') return defaults

@@ -61,11 +61,6 @@ export default class TeamsController {
     const isAdmin = (user as { role?: string }).role === 'admin'
     const kind = body.kind === 'admin' && isAdmin ? 'admin' : 'user'
 
-    if (!user.emailVerified) {
-      return response.forbidden({
-        error: 'Please verify your email address before creating a team.',
-      })
-    }
     if (kind === 'admin') {
       return response.badRequest({
         error: 'Teams are managed from the teams page. Use /teams to invite members.',
@@ -122,7 +117,7 @@ export default class TeamsController {
       }
     }
 
-    const paginator = await TeamMember.query()
+    const members = await TeamMember.query()
       .where('teamId', teamId)
       .if(params.search, (q) => {
         q.whereHas('user', (uq) => {
@@ -137,32 +132,41 @@ export default class TeamsController {
       .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'asc')
       .paginate(params.page || 1, params.perPage || 10)
 
-    const members = paginator.all()
-    const meta = paginator.getMeta()
+    return response.ok(members)
+  }
+
+  async invitations({ auth, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const freshUser = await User.findByOrFail('email', user.email)
+    const teamId = request.param('teamId')
+
+    const team = await Team.findOrFail(teamId)
+    const isAdmin = (user as { role?: string }).role === 'admin'
+    if (team.kind === 'admin') {
+      if (!isAdmin) return response.forbidden({ error: 'Access required.' })
+      const allowed = await getPageAccessForUser(freshUser.id)
+      if (Array.isArray(allowed) && !allowed.includes('teams')) {
+        return response.forbidden({ error: 'You do not have access to teams.' })
+      }
+    } else {
+      const isMember = await TeamMember.query()
+        .where('teamId', teamId)
+        .where('userId', freshUser.id)
+        .first()
+
+      if (!isMember) {
+        return response.forbidden({ error: 'You do not have access to this team.' })
+      }
+    }
 
     const pendingInvitations = await TeamInvitation.query()
       .where('teamId', teamId)
       .whereNull('acceptedAt')
-      .if(params.search, (q) => q.whereILike('email', `%${params.search}%`))
       .preload('invitedBy')
       .orderBy('createdAt', 'desc')
 
     return response.ok({
       data: {
-        meta: {
-          currentPage: meta.currentPage,
-          perPage: meta.perPage,
-          total: meta.total,
-          lastPage: meta.lastPage,
-        },
-        members: members.map((m) => ({
-          id: m.id,
-          role: m.role,
-          createdAt: m.createdAt.toISO() || '',
-          fullName: m.user?.fullName || null,
-          email: m.user?.email || null,
-          allowedPages: m.allowedPages ?? null,
-        })),
         invitations: pendingInvitations.map((inv) => ({
           id: inv.id,
           email: inv.email,

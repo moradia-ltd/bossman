@@ -30,8 +30,13 @@ router
     router.get('/orgs/:id/properties', [OrgsController, 'properties'])
     router.get('/orgs/:id/activities', [OrgsController, 'activities'])
     router.get('/orgs/:id/invoices', [OrgsController, 'invoices'])
+
     router.get('/push-notifications/users', [PushNotificationsController, 'users'])
     router.post('/db-backups', [DbBackupsController, 'store'])
+
+    router.get('update-env', ({ request }) => {
+      return request.appEnv()
+    })
   })
   .prefix('api/v1')
   .use(middleware.auth())
