@@ -1,13 +1,12 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
-import type { FormikErrors } from 'formik'
 import { useFormik } from 'formik'
 import { IdCard, Scroll, Users } from 'lucide-react'
-import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingOverlay } from '@/components/ui'
 import { createStepperSteps, Stepper } from '@/components/ui/stepper'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
@@ -77,7 +76,7 @@ export default function OrgsCreate(props: OrgsCreateProps) {
   return (
     <DashboardLayout>
       <Head title='New customer' />
-
+      <LoadingOverlay isLoading={isPending} text='Creating customer...' />
       <div className='space-y-6'>
         <PageHeader
           backHref='/orgs'

@@ -25,14 +25,11 @@ export default class UsersController {
     // Handle email change
     if (body.email && body.email !== user.email) {
       // Check if email is already taken
-      const existingUser = await User.findBy('email', body.email)
-      if (existingUser && existingUser.id !== user.id) {
-        return response.conflict({ error: 'Email is already taken' })
-      }
-
-      // Check if pending email is already taken
-      const existingPendingUser = await User.findBy('pendingEmail', body.email)
-      if (existingPendingUser && existingPendingUser.id !== user.id) {
+      const existingUser = await User.query()
+        .where('email', body.email)
+        .orWhere('pendingEmail', body.email)
+        .first()
+      if (existingUser) {
         return response.conflict({ error: 'Email is already taken' })
       }
 

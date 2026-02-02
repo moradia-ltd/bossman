@@ -1,11 +1,14 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
+import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
+import { toast } from 'sonner'
 import * as Yup from 'yup'
 import type { RawOrg } from '#types/model-types'
-import { OnlyShowIf } from '@/components/ui'
+import { startCase } from '#utils/functions'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingOverlay, OnlyShowIf } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form_field'
@@ -20,16 +23,19 @@ import {
 } from '@/components/ui/select'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { Switch } from '@/components/ui/switch'
+import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
-import { toast } from 'sonner'
-import { startCase } from '#utils/functions'
 
 interface OrgsEditProps extends SharedProps {
   org: RawOrg
 }
 
 const ownerRoleOptions = [
-  { value: 'landlord', label: 'Landlord', description: 'Individual or entity that owns the property.' },
+  {
+    value: 'landlord',
+    label: 'Landlord',
+    description: 'Individual or entity that owns the property.',
+  },
   { value: 'agency', label: 'Agency', description: 'Manages properties on behalf of landlords.' },
 ]
 
@@ -97,8 +103,9 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
     country: org.country ?? '',
     ownerRole: (org.ownerRole as 'landlord' | 'agency') ?? 'landlord',
     isWhiteLabelEnabled: org.isWhiteLabelEnabled ?? false,
-    customPaymentSchedule: org.isOnCustomPlan && cps
-      ? {
+    customPaymentSchedule:
+      org.isOnCustomPlan && cps
+        ? {
           amount: Number(cps.amount) ?? 0,
           trialPeriodInDays: Number(cps.trialPeriodInDays) ?? 0,
           frequency: (cps.frequency as 'monthly' | 'quarterly' | 'yearly') ?? 'monthly',
@@ -107,9 +114,10 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
           planType: (cps.planType as 'normal' | 'custom') ?? 'custom',
           plan: (cps.plan as 'standard' | 'essential' | 'premium') ?? 'standard',
         }
-      : null,
-    customPlanFeatures: org.isOnCustomPlan && cpf
-      ? {
+        : null,
+    customPlanFeatures:
+      org.isOnCustomPlan && cpf
+        ? {
           propertyLimit: Number(cpf.propertyLimit) ?? 0,
           tenantLimit: Number(cpf.tenantLimit) ?? 0,
           storageLimit: Number(cpf.storageLimit) ?? 0,
@@ -122,7 +130,7 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
           aiInvocationLimit: Number(cpf.aiInvocationLimit) ?? 0,
           customTemplatesLimit: Number(cpf.customTemplatesLimit) ?? 0,
         }
-      : null,
+        : null,
     settings: {
       preferredCurrency: org.settings?.preferredCurrency ?? '',
       preferredTimezone: org.settings?.preferredTimezone ?? '',
@@ -149,29 +157,19 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit(values) {
-      const payload = {
-        name: values.name || undefined,
-        creatorEmail: values.creatorEmail || undefined,
-        companyName: values.companyName,
-        companyWebsite: values.companyWebsite || undefined,
-        companyEmail: values.companyEmail || undefined,
-        country: values.country,
-        ownerRole: values.ownerRole,
-        isWhiteLabelEnabled: values.isWhiteLabelEnabled,
-        customPaymentSchedule: values.customPaymentSchedule ?? undefined,
-        customPlanFeatures: values.customPlanFeatures ?? undefined,
-        settings: values.settings,
-      }
-      api
-        .put(`/orgs/${id}`, payload)
-        .then(() => {
-          toast.success('Organisation updated successfully.')
-          router.visit(`/orgs/${id}`)
-        })
-        .catch((err: { response?: { data?: { message?: string } } }) => {
-          const msg = err?.response?.data?.message ?? 'Failed to update organisation.'
-          toast.error(msg)
-        })
+
+      updateOrgMutation(values)
+    },
+  })
+
+  const { mutate: updateOrgMutation, isPending } = useMutation({
+    mutationFn: (values: EditOrgFormValues) => api.put(`/orgs/${id}`, values),
+    onSuccess: () => {
+      toast.success('Organisation updated successfully.')
+      router.visit(`/orgs/${id}`)
+    },
+    onError: (error: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(error) || 'Failed to update organisation.')
     },
   })
 
@@ -180,6 +178,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
   return (
     <DashboardLayout>
       <Head title={`Edit: ${cleanName}`} />
+      <LoadingOverlay isLoading={isPending} text='Updating organisation...' />
 
       <div className='space-y-6'>
         <PageHeader
@@ -191,7 +190,10 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
               <Button variant='outline' size='md' asChild>
                 <Link href={`/orgs/${id}`}>Cancel</Link>
               </Button>
-              <Button size='md' onClick={() => formik.handleSubmit()}>
+              <Button
+                size='md'
+                onClick={() => formik.handleSubmit()}
+                disabled={isPending}>
                 Save changes
               </Button>
             </div>
@@ -201,10 +203,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
         <form onSubmit={formik.handleSubmit} className='space-y-6'>
           <AppCard title='Organisation' description='Name, contact and type.'>
             <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={4}>
-              <FormField
-                label='Name'
-                htmlFor='name'
-                error={touched.name && errors.name}>
+              <FormField label='Name' htmlFor='name' error={touched.name && errors.name}>
                 <Input
                   id='name'
                   name='name'
@@ -219,10 +218,8 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 error={touched.creatorEmail && errors.creatorEmail}>
                 <Input
                   id='creatorEmail'
-                  name='creatorEmail'
                   type='email'
-                  value={values.creatorEmail}
-                  onChange={handleChange}
+                  {...formik.getFieldProps('creatorEmail')}
                   placeholder='creator@example.com'
                 />
               </FormField>
@@ -244,9 +241,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 error={touched.companyName && errors.companyName}>
                 <Input
                   id='companyName'
-                  name='companyName'
-                  value={values.companyName}
-                  onChange={handleChange}
+                  {...formik.getFieldProps('companyName')}
                   placeholder='Company name'
                 />
               </FormField>
@@ -256,10 +251,8 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 error={touched.companyWebsite && errors.companyWebsite}>
                 <Input
                   id='companyWebsite'
-                  name='companyWebsite'
                   type='url'
-                  value={values.companyWebsite}
-                  onChange={handleChange}
+                  {...formik.getFieldProps('companyWebsite')}
                   placeholder='https://example.com'
                 />
               </FormField>
@@ -269,10 +262,8 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 error={touched.companyEmail && errors.companyEmail}>
                 <Input
                   id='companyEmail'
-                  name='companyEmail'
                   type='email'
-                  value={values.companyEmail}
-                  onChange={handleChange}
+                  {...formik.getFieldProps('companyEmail')}
                   placeholder='hello@example.com'
                 />
               </FormField>
@@ -282,9 +273,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 error={touched.country && errors.country}>
                 <Input
                   id='country'
-                  name='country'
-                  value={values.country}
-                  onChange={handleChange}
+                  {...formik.getFieldProps('country')}
                   placeholder='e.g. United Kingdom'
                 />
               </FormField>
@@ -308,9 +297,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                   <Select
                     value={values.customPaymentSchedule!.frequency}
                     itemToStringLabel={(item) => startCase(item)}
-                    onValueChange={(v) =>
-                      setFieldValue('customPaymentSchedule.frequency', v)
-                    }>
+                    onValueChange={(v) => setFieldValue('customPaymentSchedule.frequency', v)}>
                     <SelectTrigger id='customPaymentSchedule.frequency'>
                       <SelectValue />
                     </SelectTrigger>
@@ -325,9 +312,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                   <Select
                     value={values.customPaymentSchedule!.currency}
                     itemToStringLabel={(item) => String(item).toUpperCase()}
-                    onValueChange={(v) =>
-                      setFieldValue('customPaymentSchedule.currency', v)
-                    }>
+                    onValueChange={(v) => setFieldValue('customPaymentSchedule.currency', v)}>
                     <SelectTrigger id='customPaymentSchedule.currency'>
                       <SelectValue />
                     </SelectTrigger>
@@ -341,7 +326,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <FormField label='Cost per tenancy' htmlFor='customPaymentSchedule.amount'>
                   <Input
                     id='customPaymentSchedule.amount'
-                    name='customPaymentSchedule.amount'
+                    {...formik.getFieldProps('customPaymentSchedule.amount')}
                     type='number'
                     min={0}
                     step={0.5}
@@ -354,20 +339,16 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                   htmlFor='customPaymentSchedule.trialPeriodInDays'>
                   <Input
                     id='customPaymentSchedule.trialPeriodInDays'
-                    name='customPaymentSchedule.trialPeriodInDays'
+                    {...formik.getFieldProps('customPaymentSchedule.trialPeriodInDays')}
                     type='number'
                     min={0}
-                    value={values.customPaymentSchedule!.trialPeriodInDays}
-                    onChange={handleChange}
                   />
                 </FormField>
                 <FormField label='Payment method' htmlFor='customPaymentSchedule.paymentMethod'>
                   <Select
                     value={values.customPaymentSchedule!.paymentMethod}
                     itemToStringLabel={(item) => startCase(String(item).replace('_', ' '))}
-                    onValueChange={(v) =>
-                      setFieldValue('customPaymentSchedule.paymentMethod', v)
-                    }>
+                    onValueChange={(v) => setFieldValue('customPaymentSchedule.paymentMethod', v)}>
                     <SelectTrigger id='customPaymentSchedule.paymentMethod'>
                       <SelectValue />
                     </SelectTrigger>
@@ -425,7 +406,9 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     onChange={handleChange}
                   />
                 </FormField>
-                <FormField label='e-Sign limit (per month)' htmlFor='customPlanFeatures.eSignDocsLimit'>
+                <FormField
+                  label='e-Sign limit (per month)'
+                  htmlFor='customPlanFeatures.eSignDocsLimit'>
                   <Input
                     id='customPlanFeatures.eSignDocsLimit'
                     name='customPlanFeatures.eSignDocsLimit'
@@ -435,7 +418,9 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     onChange={handleChange}
                   />
                 </FormField>
-                <FormField label='AI messages limit (per month)' htmlFor='customPlanFeatures.aiInvocationLimit'>
+                <FormField
+                  label='AI messages limit (per month)'
+                  htmlFor='customPlanFeatures.aiInvocationLimit'>
                   <Input
                     id='customPlanFeatures.aiInvocationLimit'
                     name='customPlanFeatures.aiInvocationLimit'
@@ -445,7 +430,9 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     onChange={handleChange}
                   />
                 </FormField>
-                <FormField label='Custom templates limit' htmlFor='customPlanFeatures.customTemplatesLimit'>
+                <FormField
+                  label='Custom templates limit'
+                  htmlFor='customPlanFeatures.customTemplatesLimit'>
                   <Input
                     id='customPlanFeatures.customTemplatesLimit'
                     name='customPlanFeatures.customTemplatesLimit'
@@ -455,7 +442,9 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     onChange={handleChange}
                   />
                 </FormField>
-                <FormField label='Activity log retention' htmlFor='customPlanFeatures.activityLogRetention'>
+                <FormField
+                  label='Activity log retention'
+                  htmlFor='customPlanFeatures.activityLogRetention'>
                   <Input
                     id='customPlanFeatures.activityLogRetention'
                     name='customPlanFeatures.activityLogRetention'
@@ -471,11 +460,11 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                   <Switch
                     id='customPlanFeatures.prioritySupport'
                     checked={values.customPlanFeatures!.prioritySupport}
-                    onCheckedChange={(v) =>
-                      setFieldValue('customPlanFeatures.prioritySupport', v)
-                    }
+                    onCheckedChange={(v) => setFieldValue('customPlanFeatures.prioritySupport', v)}
                   />
-                  <label htmlFor='customPlanFeatures.prioritySupport' className='text-sm font-medium'>
+                  <label
+                    htmlFor='customPlanFeatures.prioritySupport'
+                    className='text-sm font-medium'>
                     Priority support
                   </label>
                 </div>
@@ -487,7 +476,9 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                       setFieldValue('customPlanFeatures.depositProtection', v)
                     }
                   />
-                  <label htmlFor='customPlanFeatures.depositProtection' className='text-sm font-medium'>
+                  <label
+                    htmlFor='customPlanFeatures.depositProtection'
+                    className='text-sm font-medium'>
                     Deposit protection
                   </label>
                 </div>
@@ -499,7 +490,9 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                       setFieldValue('customPlanFeatures.advancedReporting', v)
                     }
                   />
-                  <label htmlFor='customPlanFeatures.advancedReporting' className='text-sm font-medium'>
+                  <label
+                    htmlFor='customPlanFeatures.advancedReporting'
+                    className='text-sm font-medium'>
                     Advanced reporting
                   </label>
                 </div>
@@ -540,9 +533,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <Switch
                   id='settings.weeklyDigest'
                   checked={values.settings.weeklyDigest}
-                  onCheckedChange={(checked) =>
-                    setFieldValue('settings.weeklyDigest', checked)
-                  }
+                  onCheckedChange={(checked) => setFieldValue('settings.weeklyDigest', checked)}
                 />
                 <label htmlFor='settings.weeklyDigest' className='text-sm font-medium'>
                   Weekly digest
@@ -552,9 +543,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <Switch
                   id='settings.monthlyDigest'
                   checked={values.settings.monthlyDigest}
-                  onCheckedChange={(checked) =>
-                    setFieldValue('settings.monthlyDigest', checked)
-                  }
+                  onCheckedChange={(checked) => setFieldValue('settings.monthlyDigest', checked)}
                 />
                 <label htmlFor='settings.monthlyDigest' className='text-sm font-medium'>
                   Monthly digest
@@ -576,9 +565,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <Switch
                   id='settings.enablePayments'
                   checked={values.settings.enablePayments}
-                  onCheckedChange={(checked) =>
-                    setFieldValue('settings.enablePayments', checked)
-                  }
+                  onCheckedChange={(checked) => setFieldValue('settings.enablePayments', checked)}
                 />
                 <label htmlFor='settings.enablePayments' className='text-sm font-medium'>
                   Enable payments
@@ -592,9 +579,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     setFieldValue('settings.notifications.leaseExpiry', checked)
                   }
                 />
-                <label
-                  htmlFor='settings.notifications.leaseExpiry'
-                  className='text-sm font-medium'>
+                <label htmlFor='settings.notifications.leaseExpiry' className='text-sm font-medium'>
                   Lease expiry notifications
                 </label>
               </div>

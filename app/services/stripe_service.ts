@@ -15,6 +15,13 @@ function getStripeKey(): string {
   return env.get('STRIPE_TEST_KEY')
 }
 
+const getAppUrl = () => {
+  if (app.inProduction) {
+    return 'https://app.togetha.co.uk'
+  }
+  return 'https://dev.togetha.co.uk'
+}
+
 const stripe = new Stripe(getStripeKey(), {
   apiVersion: '2026-01-28.clover',
 })
@@ -114,6 +121,7 @@ class StripeService {
 
     const ukPrice = 5
     const usAndEuPrice = 6
+    // calculate the amount off based on the currency and the amount
     const amountOff = data.currency === 'gbp' ? ukPrice - data.amount : usAndEuPrice - data.amount
     const amountOffCalculation = isMonthly
       ? amountOff * featureList.tenantLimit
@@ -159,7 +167,7 @@ class StripeService {
    * has been updated. Returns the session (with .url) so the customer can be emailed a link.
    */
   public static async createPriceUpdateSession(
-    org: Org
+    org: Org,
   ): Promise<Stripe.Response<Stripe.Checkout.Session> | null> {
     if (!org.paymentCustomerId || !org.customPaymentSchedule) {
       return null
@@ -216,7 +224,7 @@ class StripeService {
    */
   public static async createDraftInvoice(
     customerId: string,
-    options?: { description?: string }
+    options?: { description?: string },
   ): Promise<Stripe.Invoice> {
     const invoice = await stripe.invoices.create({
       customer: customerId,
@@ -232,7 +240,7 @@ class StripeService {
   public static async createInvoiceItem(
     customerId: string,
     invoiceId: string,
-    params: { amount: number; currency: string; description: string }
+    params: { amount: number; currency: string; description: string },
   ): Promise<Stripe.InvoiceItem> {
     const item = await stripe.invoiceItems.create({
       customer: customerId,
@@ -246,6 +254,3 @@ class StripeService {
 }
 
 export default StripeService
-function getAppUrl() {
-  return 'https://togetha.co.uk'
-}
