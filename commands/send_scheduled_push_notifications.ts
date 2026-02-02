@@ -5,22 +5,19 @@
  */
 import { BaseCommand } from '@adonisjs/core/ace'
 import PushNotification from '#models/push_notification'
-import {
-  resolveUserIds,
-  sendToRecipients,
-} from '#services/push_notification_service'
+import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
+import env from '#start/env'
 
 export default class SendScheduledPushNotifications extends BaseCommand {
   static commandName = 'push:send-scheduled'
-  static description =
-    'Send pending push notifications that are due (scheduled_at <= now)'
+  static description = 'Send pending push notifications that are due (scheduled_at <= now)'
 
   static options = {
     startApp: true,
   }
 
   async run() {
-    const appEnv = this.app.env.get('NODE_ENV') === 'production' ? 'prod' : 'dev'
+    const appEnv = env.get('NODE_ENV') === 'production' ? 'prod' : 'dev'
     const now = new Date().toISOString()
     const pending = await PushNotification.query({ connection: appEnv })
       .where('status', 'pending')
@@ -44,9 +41,7 @@ export default class SendScheduledPushNotifications extends BaseCommand {
           appEnv,
         )
         if (userIds.length === 0) {
-          await notification
-            .merge({ status: 'failed', errorMessage: 'No recipients' })
-            .save()
+          await notification.merge({ status: 'failed', errorMessage: 'No recipients' }).save()
           continue
         }
         await sendToRecipients(notification, userIds)

@@ -57,14 +57,20 @@ router
     router.get('/orgs/:id', [OrgsController, 'show'])
     router.get('/orgs/:id/invoices/create', [OrgsController, 'createInvoice'])
     router.post('/orgs/:id/invoices', [OrgsController, 'storeInvoice'])
-    router.get('/orgs/:id/invoices/:invoiceId/line-items/create', [OrgsController, 'createInvoiceLineItem'])
-    router.post('/orgs/:id/invoices/:invoiceId/line-items', [OrgsController, 'storeInvoiceLineItem'])
+    router.get('/orgs/:id/invoices/:invoiceId/line-items/create', [
+      OrgsController,
+      'createInvoiceLineItem',
+    ])
+    router.post('/orgs/:id/invoices/:invoiceId/line-items', [
+      OrgsController,
+      'storeInvoiceLineItem',
+    ])
     router.get('/push-notifications', [PushNotificationsController, 'index'])
     router.get('/push-notifications/create', [PushNotificationsController, 'create'])
     router.post('/push-notifications', [PushNotificationsController, 'store'])
     router.post('/push-notifications/:id/resend', [PushNotificationsController, 'resend'])
     router.get('/db-backups', [DbBackupsController, 'index'])
-    router.post('/db-backups', [DbBackupsController, 'create'])
+    router.post('/db-backups', [DbBackupsController, 'store'])
     router.delete('/db-backups/:id', [DbBackupsController, 'destroy'])
 
     router

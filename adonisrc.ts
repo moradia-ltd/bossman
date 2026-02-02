@@ -65,6 +65,7 @@ export default defineConfig({
     () => import('@adonisjs/cache/cache_provider'),
     () => import('@adonisjs/limiter/limiter_provider'),
     () => import('@stouder-io/adonis-auditing/auditing_provider'),
+    () => import('@adonisjs/otel/otel_provider')
   ],
 
   /*
