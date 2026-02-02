@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
-import { randomUUID } from 'node:crypto'
 import { DateTime } from 'luxon'
 import sessionService from '#services/session_service'
 
@@ -19,7 +18,7 @@ export default class SessionActivityMiddleware {
 
       // Backwards compat: if missing, attach a new device session id and create a row
       if (!deviceSessionId) {
-        deviceSessionId = randomUUID()
+        deviceSessionId = ctx.session.sessionId
         ctx.session.put('deviceSessionId', deviceSessionId)
         await sessionService.createOrUpdateSession({
           deviceSessionId,

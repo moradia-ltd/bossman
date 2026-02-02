@@ -41,7 +41,7 @@ export default class TeamInvitation extends SuperBaseModel {
       }
     },
   })
-  declare adminPages: string[] | null
+  declare allowedPages: string[] | null
 
   @column({ serializeAs: null })
   declare tokenHash: string

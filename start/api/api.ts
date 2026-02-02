@@ -5,6 +5,7 @@ const DashboardController = () => import('#controllers/dashboard_controller')
 const DbBackupsController = () => import('#controllers/db_backups_controller')
 const LeasesController = () => import('#controllers/leases_controller')
 const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
+const OrgActionsController = () => import('#controllers/org_actions_controller')
 const OrgsController = () => import('#controllers/orgs_controller')
 const PushNotificationsController = () => import('#controllers/push_notifications_controller')
 
@@ -21,6 +22,10 @@ router
     router.get('/orgs/stats', [OrgsController, 'stats'])
     router.post('/orgs', [OrgsController, 'store'])
     router.put('/orgs/:id', [OrgsController, 'update'])
+    router.post('/orgs/:orgId/actions/ban-user', [OrgActionsController, 'banUser'])
+    router.post('/orgs/:orgId/actions/unban-user', [OrgActionsController, 'unbanUser'])
+    router.get('/orgs/:orgId/ban-status', [OrgActionsController, 'getBanStatus'])
+
     router.get('/orgs/:id/leases', [OrgsController, 'leases'])
     router.get('/orgs/:id/properties', [OrgsController, 'properties'])
     router.get('/orgs/:id/activities', [OrgsController, 'activities'])

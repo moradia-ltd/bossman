@@ -1,6 +1,11 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
-import { Pause, Pencil } from 'lucide-react'
+import { Head, Link, router } from '@inertiajs/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useFormik } from 'formik'
+import { Pencil, UserCheck, UserX } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import * as Yup from 'yup'
 import type { RawOrg } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { startCase } from '#utils/functions'
@@ -8,57 +13,234 @@ import DetailRow from '@/components/dashboard/detail-row'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { type QuickActionOption, QuickActions } from '@/components/dashboard/quick-actions'
-import { OnlyShowIf, SimpleGrid } from '@/components/ui'
+import { DateTimePicker, OnlyShowIf, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { FormField } from '@/components/ui/form_field'
+import { Label } from '@/components/ui/label'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Textarea } from '@/components/ui/textarea'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
+import api from '@/lib/http'
 import { ActivitiesTab } from './components/activities-tab'
 import { InvoicesTab } from './components/invoices-tab'
 import { LeasesTab } from './components/leases-tab'
 import { PropertiesTab } from './components/properties-tab'
 
-const validTabs = ['details', 'leases', 'properties', 'activities', 'invoices'] as const
-type OrgTabValue = (typeof validTabs)[number]
-
 interface OrgShowProps extends SharedProps {
   org: RawOrg
-  invoices?: { data: import('./components/invoices-tab').RawOrgInvoice[] }
+
 }
 
-export default function OrgShow({ org, invoices }: OrgShowProps) {
+const banUserSchema = Yup.object({
+  reason: Yup.string().trim().required('Reason is required'),
+  isInstantSend: Yup.boolean(),
+  isTemporarilyPaused: Yup.boolean(),
+  banStartsAt: Yup.string().when('isInstantSend', {
+    is: false,
+    then: (schema) => schema.required('Start date is required when not banning immediately'),
+  }),
+  expiresAt: Yup.string().when('isTemporarilyPaused', {
+    is: true,
+    then: (schema) => schema.required('Expiry date is required for a temporary ban'),
+  }),
+})
+
+export default function OrgShow({ org, }: OrgShowProps) {
   const { query, updateQuery } = useInertiaParams()
   const qs = query as { tab?: string }
-  const currentTab =
-    qs.tab && validTabs.includes(qs.tab as OrgTabValue) ? qs.tab : ('details' as OrgTabValue)
+  const currentTab = qs.tab ?? 'details'
+  const [banUserSheetOpen, setBanUserSheetOpen] = useState(false)
+
 
   const id = String(org.id ?? '')
   const cleanName = String(org.cleanName ?? org.companyName ?? org.name ?? 'Organisation')
   const ownerRole = String(org.ownerRole ?? '—')
   const country = String(org.country ?? '—')
-  const hasActiveSubscription = Boolean(org.hasActiveSubscription)
+  const hasActiveSubscription = org?.hasActiveSubscription
+
+  const { data: banStatus, refetch: refetchBanStatus } = useQuery({
+    queryKey: ['org', id, 'ban-status'],
+    queryFn: () => api.get<{ isBanned: boolean }>(`/orgs/${id}/ban-status`),
+    select: (res) => res?.data,
+  })
 
   const handleTabChange = (value: string) => {
-    if (validTabs.includes(value as OrgTabValue)) {
-      updateQuery({ tab: value })
-    }
+    updateQuery({ tab: value })
   }
+
+
+  const { mutate: banUser, isPending: isBanning } = useMutation({
+    mutationFn: (values: typeof banUserFormik.values) => api.post(`/orgs/${id}/actions/ban-user`, values),
+    onSuccess: () => {
+      setBanUserSheetOpen(false)
+      banUserFormik.resetForm()
+      router.reload()
+      refetchBanStatus()
+      toast.success('User banned successfully.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to ban user.')
+    },
+  })
+
+  const banUserFormik = useFormik({
+    initialValues: {
+      reason: '',
+      isInstantSend: true,
+      isTemporarilyPaused: false,
+      banStartsAt: '',
+      expiresAt: '',
+    },
+    validationSchema: banUserSchema,
+    onSubmit: (values) => {
+      banUser(values)
+    },
+  })
+
+  const unbanUserMutation = useMutation({
+    mutationFn: () => api.post(`/orgs/${id}/actions/unban-user`, {}),
+    onSuccess: () => {
+      refetchBanStatus()
+      toast.success('User unbanned successfully.')
+    },
+    onError: (err: { response?: { data?: { message?: string } } }) => {
+      toast.error(err?.response?.data?.message ?? 'Failed to unban user.')
+    },
+  })
 
   const quickActions: QuickActionOption[] = [
     {
-      title: 'Pause account',
-      description: "Pause the org's account.",
-      icon: Pause,
-      onClick: () => {
-        console.log('Pause account')
-      },
+      title: 'Ban user',
+      description: 'Ban the org owner from the platform.',
+      icon: UserX,
+      onClick: () => setBanUserSheetOpen(true),
+      dontShowIf: banStatus?.isBanned,
+    },
+    {
+      title: 'Unban user',
+      description: 'Remove the ban from the org owner.',
+      icon: UserCheck,
+      onClick: () => unbanUserMutation.mutate(),
+      dontShowIf: !banStatus?.isBanned,
     },
   ]
 
   return (
     <DashboardLayout>
       <Head title={`Org: ${cleanName}`} />
+
+      <Sheet open={banUserSheetOpen} onOpenChange={setBanUserSheetOpen}>
+        <SheetContent side='right' className='w-full sm:max-w-md'>
+          <SheetHeader>
+            <SheetTitle>Ban user</SheetTitle>
+            <SheetDescription>
+              Ban the org owner for this organisation. Provide a reason and optionally schedule or
+              set an expiry.
+            </SheetDescription>
+          </SheetHeader>
+          <form onSubmit={banUserFormik.handleSubmit} className='mt-6 space-y-4'>
+            <FormField
+              label='Reason'
+              htmlFor='ban-reason'
+              required
+              error={banUserFormik.touched.reason ? banUserFormik.errors.reason : undefined}>
+              <Textarea
+                id='ban-reason'
+                name='reason'
+                value={banUserFormik.values.reason}
+                onChange={banUserFormik.handleChange}
+                onBlur={banUserFormik.handleBlur}
+                placeholder='e.g. Terms of service violation'
+                rows={3}
+                className='resize-none'
+              />
+            </FormField>
+            <div className='flex items-center justify-between gap-2'>
+              <Label htmlFor='ban-instant' className='text-sm font-medium'>
+                Ban immediately
+              </Label>
+              <Switch
+                id='ban-instant'
+                checked={banUserFormik.values.isInstantSend}
+                onCheckedChange={(checked) => banUserFormik.setFieldValue('isInstantSend', checked)}
+              />
+            </div>
+            {!banUserFormik.values.isInstantSend && (
+              <FormField
+                label='Ban starts at'
+                htmlFor='ban-starts-at'
+                error={
+                  banUserFormik.touched.banStartsAt ? banUserFormik.errors.banStartsAt : undefined
+                }>
+                <DateTimePicker
+                  id='ban-starts-at'
+                  value={banUserFormik.values.banStartsAt || undefined}
+                  onChange={(v) => banUserFormik.setFieldValue('banStartsAt', v ?? '')}
+                  placeholder='Pick date & time'
+                  clearable
+                />
+              </FormField>
+            )}
+            <div className='flex items-center justify-between gap-2'>
+              <Label htmlFor='ban-temporary' className='text-sm font-medium'>
+                Temporary ban (set expiry)
+              </Label>
+              <Switch
+                id='ban-temporary'
+                checked={banUserFormik.values.isTemporarilyPaused}
+                onCheckedChange={(checked) =>
+                  banUserFormik.setFieldValue('isTemporarilyPaused', checked)
+                }
+              />
+            </div>
+            {banUserFormik.values.isTemporarilyPaused && (
+              <FormField
+                label='Expires at'
+                htmlFor='ban-expires-at'
+                error={
+                  banUserFormik.touched.expiresAt ? banUserFormik.errors.expiresAt : undefined
+                }>
+                <DateTimePicker
+                  id='ban-expires-at'
+                  value={banUserFormik.values.expiresAt || undefined}
+                  onChange={(v) => banUserFormik.setFieldValue('expiresAt', v ?? '')}
+                  placeholder='Pick date & time'
+                  clearable
+                />
+              </FormField>
+            )}
+            <SheetFooter className='mt-6'>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => setBanUserSheetOpen(false)}>
+                Cancel
+              </Button>
+              <Button
+                type='submit'
+                variant='destructive'
+                isLoading={isBanning}
+                loadingText='Banning…'
+                disabled={isBanning}>
+                Ban user
+              </Button>
+            </SheetFooter>
+          </form>
+        </SheetContent>
+      </Sheet>
+
       <div className='space-y-6'>
         <PageHeader
           title={cleanName}
@@ -112,6 +294,16 @@ export default function OrgShow({ org, invoices }: OrgShowProps) {
                     </Badge>
                   }
                 />
+                {banStatus?.isBanned && (
+                  <DetailRow
+                    label='Account'
+                    value={
+                      <Badge variant='destructive' className='w-fit'>
+                        Banned
+                      </Badge>
+                    }
+                  />
+                )}
 
                 <DetailRow label='Creator email' value={String(org.creatorEmail)} />
                 <DetailRow label='Custom Plan' value={org.isOnCustomPlan ? 'Yes' : 'No'} />
@@ -255,7 +447,7 @@ export default function OrgShow({ org, invoices }: OrgShowProps) {
           </TabsContent>
 
           <TabsContent value='invoices' className='space-y-6'>
-            <InvoicesTab orgId={id} invoices={invoices?.data ?? []} />
+            <InvoicesTab orgId={id} />
           </TabsContent>
         </Tabs>
       </div>

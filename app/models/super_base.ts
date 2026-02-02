@@ -1,5 +1,4 @@
-import { randomUUID } from 'node:crypto'
-import { BaseModel, beforeCreate, beforeUpdate, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import type { ModelAttributes, ModelObject } from '@adonisjs/lucid/types/model'
 import type { DateTime } from 'luxon'
 
@@ -53,16 +52,5 @@ export default class SuperBaseModel extends BaseModel {
     // Update the model's specified field.
     // @ts-expect-error - We are dynamically accessing the field name here.
     this[fieldName] = mergedData
-  }
-
-  @beforeCreate()
-  public static assignId(model: SuperBaseModel) {
-    if (!model.id) model.id = randomUUID()
-  }
-
-  @beforeUpdate()
-  public static preventIdUpdate(model: SuperBaseModel) {
-    const originalId = (model as unknown as { $original?: { id?: string } }).$original?.id
-    if (originalId) model.id = originalId
   }
 }

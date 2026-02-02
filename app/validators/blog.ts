@@ -9,8 +9,8 @@ export const createBlogPostValidator = vine.compile(
     thumbnailUrl: vine.string().trim().maxLength(2048).trim().optional(),
     coverImageUrl: vine.string().trim().maxLength(2048).trim().optional(),
     categoryId: vine.string().trim().optional(),
-    tagIds: vine.array(vine.string().uuid()).optional(),
-    authorIds: vine.array(vine.string().uuid()),
+    tagIds: vine.array(vine.string()).optional(),
+    authorIds: vine.array(vine.string()),
     publish: vine.boolean().optional(),
   }),
 )
@@ -24,8 +24,8 @@ export const updateBlogPostValidator = vine.compile(
     thumbnailUrl: vine.string().trim().maxLength(2048).optional(),
     coverImageUrl: vine.string().trim().maxLength(2048).optional(),
     categoryId: vine.string().trim().optional(),
-    tagIds: vine.array(vine.string().uuid()).optional(),
-    authorIds: vine.array(vine.string().uuid()).optional(),
+    tagIds: vine.array(vine.string()).optional(),
+    authorIds: vine.array(vine.string()).optional(),
     publish: vine.boolean().optional(),
   }),
 )

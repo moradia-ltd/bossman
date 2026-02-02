@@ -59,8 +59,6 @@ export async function sendOneSignalPush(
   const apiKey = env.get('ONESIGNAL_API_KEY')
   const url = `${endpoint}?c=push`
 
-  console.log('apiKey', apiKey)
-
   const body: Record<string, unknown> = {
     app_id: appId,
     target_channel: 'push',
@@ -90,12 +88,12 @@ export async function sendOneSignalPush(
         Authorization: `Key ${apiKey}`,
       },
     })
+    console.log('data', data)
 
-    const errors = normalizeErrors(data.errors)
     return {
       id: data.id,
       recipients: data.recipients,
-      errors,
+      errors: normalizeErrors(data.errors),
     }
   } catch (err) {
     console.log('error sending push notification', normalizeErrors(err.response?.data))

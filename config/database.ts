@@ -1,9 +1,8 @@
-import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 import env from '#start/env'
 
 const dbConfig = defineConfig({
-  connection: 'sqlite',
+  connection: 'default',
 
   connections: {
     dev: {
@@ -16,11 +15,9 @@ const dbConfig = defineConfig({
       connection: env.get('PROD_DB'),
     },
 
-    sqlite: {
-      client: 'better-sqlite3',
-      connection: {
-        filename: app.tmpPath('db.sqlite3'),
-      },
+    default: {
+      client: 'pg',
+      connection: env.get('ADMIN_DB'),
       useNullAsDefault: true,
       migrations: {
         naturalSort: true,
