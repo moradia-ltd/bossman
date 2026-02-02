@@ -8,14 +8,8 @@ import { formatCurrency } from '#utils/currency'
 import { DataTable } from '@/components/dashboard/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+import { AppCard } from '@/components/ui/app-card'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
@@ -141,30 +135,26 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Invoices</CardTitle>
-          <CardDescription>Invoices for this organisation (from Stripe)</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DataTable
+      <AppCard
+        title='Invoices'
+        description='Invoices for this organisation (from Stripe)'>
+        <DataTable
             columns={columns}
             data={invoiceList}
             loading={isPending}
             emptyMessage='No invoices yet.'
           />
-        </CardContent>
-      </Card>
+      </AppCard>
 
-      <Sheet open={!!selectedInvoice} onOpenChange={(open) => !open && setSelectedInvoice(null)}>
-        <SheetContent side='right' className='w-full sm:max-w-md'>
-          {selectedInvoice && (
-            <>
-              <SheetHeader>
-                <SheetTitle>Invoice {selectedInvoice.number ?? selectedInvoice.id}</SheetTitle>
-                <SheetDescription>Invoice details from Stripe</SheetDescription>
-              </SheetHeader>
-              <div className='mt-6 space-y-4'>
+      <BaseSheet
+        open={!!selectedInvoice}
+        onOpenChange={(open) => !open && setSelectedInvoice(null)}
+        title={selectedInvoice ? `Invoice ${selectedInvoice.number ?? selectedInvoice.id}` : undefined}
+        description={selectedInvoice ? 'Invoice details from Stripe' : undefined}
+        side='right'
+        className='w-full sm:max-w-md'>
+        {selectedInvoice && (
+          <div className='space-y-4'>
                 <div className='flex justify-between text-sm'>
                   <span className='text-muted-foreground'>Status</span>
                   <Badge
@@ -247,10 +237,8 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
                   )}
                 </div>
               </div>
-            </>
-          )}
-        </SheetContent>
-      </Sheet>
+        )}
+      </BaseSheet>
     </>
   )
 }

@@ -4,7 +4,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawPayment } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { DataTable } from '@/components/dashboard/data-table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
@@ -63,13 +63,8 @@ export function PaymentsTab({ leaseId }: PaymentsTabProps) {
   const meta = data?.meta
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Payments</CardTitle>
-        <CardDescription>Payment history for this lease</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
+    <AppCard title='Payments' description='Payment history for this lease'>
+      <DataTable
           columns={columns}
           data={payments}
           loading={isPending}
@@ -89,7 +84,6 @@ export function PaymentsTab({ leaseId }: PaymentsTabProps) {
               : undefined
           }
         />
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }

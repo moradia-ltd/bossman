@@ -9,7 +9,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 
 interface BlogAdminIndexProps extends SharedProps {
@@ -122,13 +122,11 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
           }
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Posts</CardTitle>
-            <CardDescription>Search, paginate, and manage your posts.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
+        <AppCard
+          title='Posts'
+          description='Search, paginate, and manage your posts.'
+        >
+          <DataTable
               columns={columns}
               data={posts.data}
               searchable
@@ -144,8 +142,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
               }}
               emptyMessage='No posts found'
             />
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

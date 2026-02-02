@@ -1,20 +1,22 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card'
 
-interface AppCardProps {
+export interface AppCardProps {
   title: string
-  description: string
+  description?: string
   children: React.ReactNode
   className?: string
-
 }
-export function AppCard({ title, description, children, className, }: AppCardProps) {
+
+export function AppCard({ title, description, children, className }: AppCardProps) {
   return (
     <Card className={className}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        {description != null && description !== '' && (
+          <CardDescription>{description}</CardDescription>
+        )}
       </CardHeader>
-      <CardContent className={className}>{children}</CardContent>
+      <CardContent>{children}</CardContent>
     </Card>
   )
 }

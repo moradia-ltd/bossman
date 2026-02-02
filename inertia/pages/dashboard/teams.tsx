@@ -11,7 +11,7 @@ import { PageHeader } from '@/components/dashboard/page_header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { HStack } from '@/components/ui/hstack'
 import { Input } from '@/components/ui/input'
@@ -363,12 +363,9 @@ export default function TeamsPage() {
         {dashboardTeam ? (
           <>
             {invitationRows.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Pending invitations</CardTitle>
-                  <CardDescription>Invitations waiting for acceptance.</CardDescription>
-                </CardHeader>
-                <CardContent>
+              <AppCard
+                title='Pending invitations'
+                description='Invitations waiting for acceptance.'>
                   <div className='overflow-x-auto'>
                     <Table>
                       <TableHeader>
@@ -419,16 +416,12 @@ export default function TeamsPage() {
                       </TableBody>
                     </Table>
                   </div>
-                </CardContent>
-              </Card>
+              </AppCard>
             )}
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Team members</CardTitle>
-                <CardDescription>Members with page access.</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <AppCard
+              title='Team members'
+              description='Members with page access.'>
                 {membersQuery.isError ? (
                   <Alert variant='destructive'>
                     <AlertDescription>Failed to load team members.</AlertDescription>
@@ -462,8 +455,7 @@ export default function TeamsPage() {
                     emptyMessage='No members found'
                   />
                 )}
-              </CardContent>
-            </Card>
+            </AppCard>
           </>
         ) : null}
 

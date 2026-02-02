@@ -13,7 +13,7 @@ import { PageHeader } from '@/components/dashboard/page_header'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { LoadingOverlay } from '@/components/ui/loading'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
@@ -131,29 +131,22 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
           }
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Database className='h-5 w-5' />
-              Backups
-            </CardTitle>
-            <CardDescription>{backups.meta.total} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              columns={columns}
-              data={backups.data}
-              emptyMessage='No backups yet.'
-              pagination={{
-                page: backups.meta.currentPage,
-                pageSize: backups.meta.perPage,
-                total: backups.meta.total,
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              }}
-            />
-          </CardContent>
-        </Card>
+        <AppCard
+          title='Backups'
+          description={`${backups.meta.total} total`}>
+          <DataTable
+            columns={columns}
+            data={backups.data}
+            emptyMessage='No backups yet.'
+            pagination={{
+              page: backups.meta.currentPage,
+              pageSize: backups.meta.perPage,
+              total: backups.meta.total,
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            }}
+          />
+        </AppCard>
       </div>
     </DashboardLayout>
   )

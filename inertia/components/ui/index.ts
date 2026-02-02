@@ -16,6 +16,7 @@ export { Badge, badgeVariants } from './badge'
 export { BaseAlert, type BaseAlertProps } from './base-alert'
 export { BaseDialog, type BaseDialogProps } from './base-dialog'
 export { BaseModal, type BaseModalProps } from './base-modal'
+export { BaseSheet, type BaseSheetProps } from './base-sheet'
 export { Button, buttonVariants } from './button'
 export { Calendar } from './calendar'
 export {

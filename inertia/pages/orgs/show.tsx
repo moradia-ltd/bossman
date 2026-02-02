@@ -19,14 +19,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form_field'
 import { Label } from '@/components/ui/label'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
@@ -141,105 +134,94 @@ export default function OrgShow({ org, }: OrgShowProps) {
     <DashboardLayout>
       <Head title={`Org: ${cleanName}`} />
 
-      <Sheet open={banUserSheetOpen} onOpenChange={setBanUserSheetOpen}>
-        <SheetContent side='right' className='w-full sm:max-w-md'>
-          <SheetHeader>
-            <SheetTitle>Ban user</SheetTitle>
-            <SheetDescription>
-              Ban the org owner for this organisation. Provide a reason and optionally schedule or
-              set an expiry.
-            </SheetDescription>
-          </SheetHeader>
-          <form onSubmit={banUserFormik.handleSubmit} className='mt-6 space-y-4'>
+      <BaseSheet
+        open={banUserSheetOpen}
+        onOpenChange={setBanUserSheetOpen}
+        title='Ban user'
+        description='Ban the org owner for this organisation. Provide a reason and optionally schedule or set an expiry.'
+        side='right'
+        className='w-full sm:max-w-md'
+        primaryText='Ban user'
+        primaryVariant='destructive'
+        secondaryText='Cancel'
+        onSecondaryAction={() => setBanUserSheetOpen(false)}
+        isLoading={isBanning}
+        primaryDisabled={isBanning}
+        showFooter
+        showSecondary>
+        <form onSubmit={banUserFormik.handleSubmit} className='space-y-4'>
+          <FormField
+            label='Reason'
+            htmlFor='ban-reason'
+            required
+            error={banUserFormik.touched.reason ? banUserFormik.errors.reason : undefined}>
+            <Textarea
+              id='ban-reason'
+              name='reason'
+              value={banUserFormik.values.reason}
+              onChange={banUserFormik.handleChange}
+              onBlur={banUserFormik.handleBlur}
+              placeholder='e.g. Terms of service violation'
+              rows={3}
+              className='resize-none'
+            />
+          </FormField>
+          <div className='flex items-center justify-between gap-2'>
+            <Label htmlFor='ban-instant' className='text-sm font-medium'>
+              Ban immediately
+            </Label>
+            <Switch
+              id='ban-instant'
+              checked={banUserFormik.values.isInstantSend}
+              onCheckedChange={(checked) => banUserFormik.setFieldValue('isInstantSend', checked)}
+            />
+          </div>
+          {!banUserFormik.values.isInstantSend && (
             <FormField
-              label='Reason'
-              htmlFor='ban-reason'
-              required
-              error={banUserFormik.touched.reason ? banUserFormik.errors.reason : undefined}>
-              <Textarea
-                id='ban-reason'
-                name='reason'
-                value={banUserFormik.values.reason}
-                onChange={banUserFormik.handleChange}
-                onBlur={banUserFormik.handleBlur}
-                placeholder='e.g. Terms of service violation'
-                rows={3}
-                className='resize-none'
+              label='Ban starts at'
+              htmlFor='ban-starts-at'
+              error={
+                banUserFormik.touched.banStartsAt ? banUserFormik.errors.banStartsAt : undefined
+              }>
+              <DateTimePicker
+                id='ban-starts-at'
+                value={banUserFormik.values.banStartsAt || undefined}
+                onChange={(v) => banUserFormik.setFieldValue('banStartsAt', v ?? '')}
+                placeholder='Pick date & time'
+                clearable
               />
             </FormField>
-            <div className='flex items-center justify-between gap-2'>
-              <Label htmlFor='ban-instant' className='text-sm font-medium'>
-                Ban immediately
-              </Label>
-              <Switch
-                id='ban-instant'
-                checked={banUserFormik.values.isInstantSend}
-                onCheckedChange={(checked) => banUserFormik.setFieldValue('isInstantSend', checked)}
+          )}
+          <div className='flex items-center justify-between gap-2'>
+            <Label htmlFor='ban-temporary' className='text-sm font-medium'>
+              Temporary ban (set expiry)
+            </Label>
+            <Switch
+              id='ban-temporary'
+              checked={banUserFormik.values.isTemporarilyPaused}
+              onCheckedChange={(checked) =>
+                banUserFormik.setFieldValue('isTemporarilyPaused', checked)
+              }
+            />
+          </div>
+          {banUserFormik.values.isTemporarilyPaused && (
+            <FormField
+              label='Expires at'
+              htmlFor='ban-expires-at'
+              error={
+                banUserFormik.touched.expiresAt ? banUserFormik.errors.expiresAt : undefined
+              }>
+              <DateTimePicker
+                id='ban-expires-at'
+                value={banUserFormik.values.expiresAt || undefined}
+                onChange={(v) => banUserFormik.setFieldValue('expiresAt', v ?? '')}
+                placeholder='Pick date & time'
+                clearable
               />
-            </div>
-            {!banUserFormik.values.isInstantSend && (
-              <FormField
-                label='Ban starts at'
-                htmlFor='ban-starts-at'
-                error={
-                  banUserFormik.touched.banStartsAt ? banUserFormik.errors.banStartsAt : undefined
-                }>
-                <DateTimePicker
-                  id='ban-starts-at'
-                  value={banUserFormik.values.banStartsAt || undefined}
-                  onChange={(v) => banUserFormik.setFieldValue('banStartsAt', v ?? '')}
-                  placeholder='Pick date & time'
-                  clearable
-                />
-              </FormField>
-            )}
-            <div className='flex items-center justify-between gap-2'>
-              <Label htmlFor='ban-temporary' className='text-sm font-medium'>
-                Temporary ban (set expiry)
-              </Label>
-              <Switch
-                id='ban-temporary'
-                checked={banUserFormik.values.isTemporarilyPaused}
-                onCheckedChange={(checked) =>
-                  banUserFormik.setFieldValue('isTemporarilyPaused', checked)
-                }
-              />
-            </div>
-            {banUserFormik.values.isTemporarilyPaused && (
-              <FormField
-                label='Expires at'
-                htmlFor='ban-expires-at'
-                error={
-                  banUserFormik.touched.expiresAt ? banUserFormik.errors.expiresAt : undefined
-                }>
-                <DateTimePicker
-                  id='ban-expires-at'
-                  value={banUserFormik.values.expiresAt || undefined}
-                  onChange={(v) => banUserFormik.setFieldValue('expiresAt', v ?? '')}
-                  placeholder='Pick date & time'
-                  clearable
-                />
-              </FormField>
-            )}
-            <SheetFooter className='mt-6'>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={() => setBanUserSheetOpen(false)}>
-                Cancel
-              </Button>
-              <Button
-                type='submit'
-                variant='destructive'
-                isLoading={isBanning}
-                loadingText='Banning…'
-                disabled={isBanning}>
-                Ban user
-              </Button>
-            </SheetFooter>
-          </form>
-        </SheetContent>
-      </Sheet>
+            </FormField>
+          )}
+        </form>
+      </BaseSheet>
 
       <div className='space-y-6'>
         <PageHeader

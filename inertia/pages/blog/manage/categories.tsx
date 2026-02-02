@@ -6,7 +6,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Stack } from '@/components/ui/stack'
@@ -83,13 +83,8 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
           }
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>All categories</CardTitle>
-            <CardDescription>{categories.length} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
+        <AppCard title='All categories' description={`${categories.length} total`}>
+          <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -125,8 +120,7 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                 ) : null}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

@@ -5,7 +5,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { DataTable } from '@/components/dashboard/data-table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 import { StatusBadge } from '@/pages/leases/components/status'
@@ -25,7 +25,7 @@ const columns: Column<RawLease>[] = [
   {
     key: 'status',
     header: 'Status',
-    width: 110,
+    width: 140,
     cell: (row) => <StatusBadge status={row.status} />,
   },
   {
@@ -60,7 +60,7 @@ export function LeasesTab({ propertyId }: LeasesTabProps) {
     queryKey: ['property-leases', propertyId, page, perPage],
     queryFn: async () => {
       const res = await api.get<PaginatedResponse<RawLease>>(
-        `/properties/${propertyId}/leases`,
+        `/leaseable-entities/${propertyId}/leases`,
         { params: { page, perPage } },
       )
       return res.data
@@ -71,35 +71,30 @@ export function LeasesTab({ propertyId }: LeasesTabProps) {
   const meta = data?.meta
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Leases</CardTitle>
-        <CardDescription>
-          Leases for this property ({meta?.total ?? 0} total)
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
-          columns={columns}
-          data={leases}
-          loading={isPending}
-          emptyMessage='No leases for this leaseable entity.'
-          pagination={
-            meta
-              ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-              : undefined
-          }
-        />
-      </CardContent>
-    </Card>
+    <AppCard
+      title='Leases'
+      description={`Leases for this property (${meta?.total ?? 0} total)`}
+    >
+      <DataTable
+        columns={columns}
+        data={leases}
+        loading={isPending}
+        emptyMessage='No leases for this leaseable entity.'
+        pagination={
+          meta
+            ? {
+              page: meta.currentPage,
+              pageSize: meta.perPage,
+              total: meta.total,
+              onPageChange: setPage,
+              onPageSizeChange: (size) => {
+                setPerPage(size)
+                setPage(1)
+              },
+            }
+            : undefined
+        }
+      />
+    </AppCard>
   )
 }

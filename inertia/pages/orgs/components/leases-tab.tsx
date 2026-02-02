@@ -5,7 +5,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { DataTable } from '@/components/dashboard/data-table'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 import { StatusBadge } from '@/pages/leases/components/status'
@@ -70,13 +70,8 @@ export function LeasesTab({ orgId }: LeasesTabProps) {
   const meta = data?.meta
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Leases</CardTitle>
-        <CardDescription>Leases for this organisation</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
+    <AppCard title='Leases' description='Leases for this organisation'>
+      <DataTable
           columns={columns}
           data={leases}
           loading={isPending}
@@ -96,7 +91,6 @@ export function LeasesTab({ orgId }: LeasesTabProps) {
               : undefined
           }
         />
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }

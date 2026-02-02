@@ -13,7 +13,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import type { ChartConfig } from '@/components/ui/chart'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import api from '@/lib/http'
@@ -146,13 +146,10 @@ export default function DashboardIndex(_props: DashboardIndexProps) {
           config={activityChartConfig}
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent activity</CardTitle>
-            <CardDescription>Latest activity across the platform.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
+        <AppCard
+          title='Recent activity'
+          description='Latest activity across the platform.'>
+          <DataTable
               columns={activityColumns}
               data={activities}
               loading={activityLoading}
@@ -172,8 +169,7 @@ export default function DashboardIndex(_props: DashboardIndexProps) {
                   : undefined
               }
             />
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

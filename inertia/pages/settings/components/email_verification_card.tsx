@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
@@ -25,15 +25,11 @@ export function EmailVerificationCard({ emailVerified = false }: EmailVerificati
   })
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Email Verification</CardTitle>
-        <CardDescription>
-          Verify your email address to secure your account and enable all features.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className='flex items-center justify-between gap-4'>
+    <AppCard
+      title='Email Verification'
+      description='Verify your email address to secure your account and enable all features.'
+    >
+      <div className='flex items-center justify-between gap-4'>
           <div>
             <p className='text-sm font-medium'>
               Email Status:{' '}
@@ -62,8 +58,7 @@ export function EmailVerificationCard({ emailVerified = false }: EmailVerificati
             </Button>
           ) : null}
         </div>
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }
 

@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -52,13 +52,11 @@ export function PasswordTab() {
   const isFormDisabled = !user?.emailVerified
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Change Password</CardTitle>
-        <CardDescription>Update your password to keep your account secure.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        {!user?.emailVerified && (
+    <AppCard
+      title='Change Password'
+      description='Update your password to keep your account secure.'
+    >
+      {!user?.emailVerified && (
           <div className='rounded-lg border-destructive/50 text-destructive border p-4 mb-4'>
             <p className='text-sm'>
               <strong>Email verification required:</strong> Please verify your email address before
@@ -116,7 +114,6 @@ export function PasswordTab() {
             Update Password
           </Button>
         </form>
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }

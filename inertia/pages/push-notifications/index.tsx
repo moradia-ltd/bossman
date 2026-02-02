@@ -9,7 +9,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 
@@ -168,29 +168,22 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
           }
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Bell className='h-5 w-5' />
-              Notifications
-            </CardTitle>
-            <CardDescription>{notifications.meta.total} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              columns={columns}
-              data={notifications.data}
-              emptyMessage='No push notifications yet.'
-              pagination={{
-                page: notifications.meta.currentPage,
-                pageSize: notifications.meta.perPage,
-                total: notifications.meta.total,
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              }}
-            />
-          </CardContent>
-        </Card>
+        <AppCard
+          title='Notifications'
+          description={`${notifications.meta.total} total`}>
+          <DataTable
+            columns={columns}
+            data={notifications.data}
+            emptyMessage='No push notifications yet.'
+            pagination={{
+              page: notifications.meta.currentPage,
+              pageSize: notifications.meta.perPage,
+              total: notifications.meta.total,
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            }}
+          />
+        </AppCard>
       </div>
     </DashboardLayout>
   )

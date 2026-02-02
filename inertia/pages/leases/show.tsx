@@ -8,7 +8,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { type QuickActionOption, QuickActions } from '@/components/dashboard/quick-actions'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { dateFormatter } from '@/lib/date'
 import { ActivityTab } from './components/activity-tab'
@@ -94,13 +94,10 @@ export default function LeaseShow({ lease }: LeaseShowProps) {
           </TabsList>
 
           <TabsContent value='details' className='space-y-6'>
-            <Card>
-              <CardHeader>
-                <CardTitle>Lease information</CardTitle>
-                <CardDescription>Details and identifiers</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+            <AppCard
+              title='Lease information'
+              description='Details and identifiers'>
+              <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
                   <DetailRow label='Status' value={<StatusBadge status={status} />} />
                   <DetailRow
                     label='Rent'
@@ -123,9 +120,8 @@ export default function LeaseShow({ lease }: LeaseShowProps) {
                   {propertyName && <DetailRow label='Property' value={propertyName} />}
 
 
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </AppCard>
           </TabsContent>
 
           <TabsContent value='payments' className='space-y-6'>

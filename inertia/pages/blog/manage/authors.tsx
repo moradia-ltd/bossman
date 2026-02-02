@@ -6,7 +6,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { SimpleGrid } from '@/components/ui/simplegrid'
@@ -94,13 +94,8 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
           }
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>All authors</CardTitle>
-            <CardDescription>{authors.length} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
+        <AppCard title='All authors' description={`${authors.length} total`}>
+          <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -138,8 +133,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                 ) : null}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

@@ -6,7 +6,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Stack } from '@/components/ui/stack'
@@ -73,13 +73,8 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
           }
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>All tags</CardTitle>
-            <CardDescription>{tags.length} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
+        <AppCard title='All tags' description={`${tags.length} total`}>
+          <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -115,8 +110,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
                 ) : null}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

@@ -10,7 +10,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { Stack } from '@/components/ui'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
@@ -100,12 +100,8 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
           />
         </SimpleGrid>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>All leases</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DataTable
+        <AppCard title='All leases'>
+          <DataTable
               columns={columns}
               data={leases.data}
               searchable
@@ -121,8 +117,7 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
               }}
               emptyMessage='No leases found'
             />
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

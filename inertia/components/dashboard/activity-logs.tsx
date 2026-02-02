@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { Activity, Clock, FileEdit, Plus, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { AppCard } from '@/components/ui/app-card'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loading } from '@/components/ui/loading'
 import { timeAgo } from '@/lib/date'
@@ -49,32 +50,28 @@ export function ActivityLogs() {
 
   if (isLoading) {
     return (
-      <Card className='col-span-3'>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Your recent account activity</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Loading variant='skeleton' type='list' count={5} />
-        </CardContent>
-      </Card>
+      <AppCard
+        className='col-span-3'
+        title='Recent Activity'
+        description='Your recent account activity'
+      >
+        <Loading variant='skeleton' type='list' count={5} />
+      </AppCard>
     )
   }
 
   if (error || !data?.audits || data.audits.length === 0) {
     return (
-      <Card className='col-span-3'>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Your recent account activity</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className='flex flex-col items-center justify-center py-8 text-center'>
-            <Activity className='h-12 w-12 text-muted-foreground mb-4 opacity-50' />
-            <p className='text-sm text-muted-foreground'>No recent activity</p>
-          </div>
-        </CardContent>
-      </Card>
+      <AppCard
+        className='col-span-3'
+        title='Recent Activity'
+        description='Your recent account activity'
+      >
+        <div className='flex flex-col items-center justify-center py-8 text-center'>
+          <Activity className='h-12 w-12 text-muted-foreground mb-4 opacity-50' />
+          <p className='text-sm text-muted-foreground'>No recent activity</p>
+        </div>
+      </AppCard>
     )
   }
 

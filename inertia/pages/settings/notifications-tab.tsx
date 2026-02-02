@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/seperator'
 import { Switch } from '@/components/ui/switch'
@@ -62,12 +62,11 @@ export function NotificationsTab() {
   })
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Notification Preferences</CardTitle>
-        <CardDescription>Manage how you receive notifications and updates.</CardDescription>
-      </CardHeader>
-      <CardContent className='space-y-6'>
+    <AppCard
+      title='Notification Preferences'
+      description='Manage how you receive notifications and updates.'
+    >
+      <div className='space-y-6'>
         <div className='flex items-center justify-between'>
           <div className='space-y-0.5'>
             <Label htmlFor='email-notifications'>Email Notifications</Label>
@@ -132,7 +131,7 @@ export function NotificationsTab() {
             }}
           />
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </AppCard>
   )
 }

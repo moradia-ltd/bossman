@@ -4,7 +4,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
@@ -52,13 +52,8 @@ export function ActivityTab({ leaseId }: ActivityTabProps) {
   const meta = data?.meta
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Activity</CardTitle>
-        <CardDescription>Recent activity for this lease</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
+    <AppCard title='Activity' description='Recent activity for this lease'>
+      <DataTable
           columns={columns}
           data={activity}
           loading={isPending}
@@ -78,7 +73,6 @@ export function ActivityTab({ leaseId }: ActivityTabProps) {
               : undefined
           }
         />
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }

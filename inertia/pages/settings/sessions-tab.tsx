@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { Button } from '@/components/ui/button'
+import { AppCard } from '@/components/ui/app-card'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingCard } from '@/components/ui/loading'
 import { dateTimeFormatter } from '@/lib/date'
@@ -85,17 +86,14 @@ export function SessionsTab() {
 
   if (error || !data?.sessions) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Active Sessions</CardTitle>
-          <CardDescription>Manage your active sessions across different devices</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Alert variant='destructive'>
-            <AlertDescription>Failed to load sessions. Please try again.</AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
+      <AppCard
+        title='Active Sessions'
+        description='Manage your active sessions across different devices'
+      >
+        <Alert variant='destructive'>
+          <AlertDescription>Failed to load sessions. Please try again.</AlertDescription>
+        </Alert>
+      </AppCard>
     )
   }
 

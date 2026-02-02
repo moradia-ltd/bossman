@@ -11,7 +11,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { HStack } from '@/components/ui/hstack'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -200,15 +200,11 @@ export default function TeamsIndex() {
         </HStack>
 
         {!hasTeams && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Create a team</CardTitle>
-              <CardDescription>
-                Teams let you collaborate with others inside the platform.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={createTeamFormik.handleSubmit} className='max-w-md'>
+          <AppCard
+            title='Create a team'
+            description='Teams let you collaborate with others inside the platform.'
+          >
+            <form onSubmit={createTeamFormik.handleSubmit} className='max-w-md'>
                 <Stack spacing={4}>
                   <div className='space-y-2'>
                     <Label htmlFor='name'>Team name</Label>
@@ -227,18 +223,15 @@ export default function TeamsIndex() {
                     Create team
                   </Button>
                 </Stack>
-              </form>
-            </CardContent>
-          </Card>
+            </form>
+          </AppCard>
         )}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Team</CardTitle>
-            {hasTeams ? <CardDescription>Select a team and invite members.</CardDescription> : null}
-          </CardHeader>
-          <CardContent>
-            {teamsQuery.isLoading ? (
+        <AppCard
+          title='Team'
+          description={hasTeams ? 'Select a team and invite members.' : undefined}
+        >
+          {teamsQuery.isLoading ? (
               <div className='text-sm text-muted-foreground'>Loading teams…</div>
             ) : teamsQuery.isError ? (
               <Alert variant='destructive'>
@@ -308,17 +301,14 @@ export default function TeamsIndex() {
                 You don&apos;t have any teams yet. Create one above to get started.
               </div>
             )}
-          </CardContent>
-        </Card>
+        </AppCard>
 
         {selectedTeam && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Team members</CardTitle>
-              <CardDescription>Members in {selectedTeam.name}.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {membersQuery.isError ? (
+          <AppCard
+            title='Team members'
+            description={`Members in ${selectedTeam.name}.`}
+          >
+            {membersQuery.isError ? (
                 <Alert variant='destructive'>
                   <AlertDescription>Failed to load team members.</AlertDescription>
                 </Alert>
@@ -351,8 +341,7 @@ export default function TeamsIndex() {
                   emptyMessage='No members found'
                 />
               )}
-            </CardContent>
-          </Card>
+            </AppCard>
         )}
       </div>
     </DashboardLayout>

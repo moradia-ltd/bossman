@@ -3,8 +3,8 @@ import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
+import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
@@ -41,7 +41,7 @@ export function ActivityTab({ propertyId }: ActivityTabProps) {
     queryKey: ['property-activity', propertyId, page, perPage],
     queryFn: async () => {
       const res = await api.get<PaginatedResponse<RawActivity>>(
-        `/properties/${propertyId}/activity`,
+        `/leaseable-entities/${propertyId}/activity`,
         { params: { page, perPage } },
       )
       return res.data
@@ -52,33 +52,27 @@ export function ActivityTab({ propertyId }: ActivityTabProps) {
   const meta = data?.meta
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Activity</CardTitle>
-        <CardDescription>Recent activity for this property</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
-          columns={columns}
-          data={activity}
-          loading={isPending}
-          emptyMessage='No activity yet.'
-          pagination={
-            meta
-              ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-              : undefined
-          }
-        />
-      </CardContent>
-    </Card>
+    <AppCard title='Activity' description='Recent activity for this property'>
+      <DataTable
+        columns={columns}
+        data={activity}
+        loading={isPending}
+        emptyMessage='No activity yet.'
+        pagination={
+          meta
+            ? {
+              page: meta.currentPage,
+              pageSize: meta.perPage,
+              total: meta.total,
+              onPageChange: setPage,
+              onPageSizeChange: (size) => {
+                setPerPage(size)
+                setPage(1)
+              },
+            }
+            : undefined
+        }
+      />
+    </AppCard>
   )
 }

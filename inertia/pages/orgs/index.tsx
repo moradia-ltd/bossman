@@ -12,7 +12,7 @@ import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import api from '@/lib/http'
@@ -122,13 +122,10 @@ export default function OrgsIndex({ orgs }: OrgsIndexProps) {
           />
         </SimpleGrid>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>All customers</CardTitle>
-            <CardDescription>{orgs.meta.total} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
+        <AppCard
+          title='All customers'
+          description={`${orgs.meta.total} total`}>
+          <DataTable
               columns={columns}
               data={orgs.data}
               searchable
@@ -144,8 +141,7 @@ export default function OrgsIndex({ orgs }: OrgsIndexProps) {
               }}
               emptyMessage='No customers found'
             />
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

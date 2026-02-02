@@ -10,7 +10,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
@@ -107,13 +107,11 @@ export default function LeaseableEntitiesIndex({ leaseableEntities }: LeaseableE
           />
         </SimpleGrid>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>All properties</CardTitle>
-            <CardDescription>{leaseableEntities.meta.total} total</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
+        <AppCard
+          title='All properties'
+          description={`${leaseableEntities.meta.total} total`}
+        >
+          <DataTable
               columns={columns}
               data={leaseableEntities.data}
               searchable
@@ -129,8 +127,7 @@ export default function LeaseableEntitiesIndex({ leaseableEntities }: LeaseableE
               }}
               emptyMessage='No properties found'
             />
-          </CardContent>
-        </Card>
+        </AppCard>
       </div>
     </DashboardLayout>
   )

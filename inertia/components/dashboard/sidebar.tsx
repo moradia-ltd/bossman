@@ -38,7 +38,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useEnvironment } from '@/hooks/use-environment'
 import { useSidebar } from '@/hooks/use-sidebar'
@@ -373,17 +373,17 @@ export function Sidebar({ children }: SidebarProps) {
 
       {/* Mobile Sidebar Sheet */}
       {isMobile && (
-        <Sheet open={isMobileMenuOpen} onOpenChange={closeMobileMenu}>
-          <SheetContent
-            side='left'
-            className='w-64 p-0 bg-sidebar'
-            style={{
-              backgroundColor: 'var(--sidebar-background)',
-              color: 'var(--sidebar-foreground)',
-            }}>
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
+        <BaseSheet
+          open={isMobileMenuOpen}
+          onOpenChange={closeMobileMenu}
+          side='left'
+          className='w-64 p-0 bg-sidebar'
+          contentStyle={{
+            backgroundColor: 'var(--sidebar-background)',
+            color: 'var(--sidebar-foreground)',
+          }}>
+          <SidebarContent />
+        </BaseSheet>
       )}
 
       {/* Main content */}
