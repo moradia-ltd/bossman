@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id').notNullable()
 
       table.text('user_type').nullable()
-      table.uuid('user_id').nullable()
+      table.string('user_id').nullable()
 
       table.text('event').notNullable()
 

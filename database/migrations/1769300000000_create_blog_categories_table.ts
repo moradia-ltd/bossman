@@ -5,10 +5,7 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table
-        .uuid('id')
-        .primary()
-        .defaultTo(this.db.rawQuery('(lower(hex(randomblob(16))))').knexQuery)
+      table.text('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
 
       table.string('name').notNullable()
       table.string('slug').notNullable().unique()
@@ -23,4 +20,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

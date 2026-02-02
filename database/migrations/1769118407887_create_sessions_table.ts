@@ -5,8 +5,8 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary()
-      table.uuid('user_id').notNullable().references('id').inTable('users').onDelete('CASCADE')
+      table.string('id').primary()
+      table.string('user_id').notNullable().references('users.id').onDelete('CASCADE')
       table.string('ip_address', 45).nullable() // IPv6 can be up to 45 chars
       table.text('user_agent').nullable()
       table.string('device_type').nullable() // mobile, desktop, tablet
@@ -17,9 +17,6 @@ export default class extends BaseSchema {
       table.timestamp('last_activity').notNullable()
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
-
-      table.index('user_id')
-      table.index('last_activity')
     })
   }
 

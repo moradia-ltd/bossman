@@ -1,30 +1,30 @@
-import { BaseSchema } from "@adonisjs/lucid/schema";
+import { BaseSchema } from '@adonisjs/lucid/schema';
 
 export default class extends BaseSchema {
-	public async up() {
-		this.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+  public async up() {
+    this.schema.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
 
-		//enables for better text indexing and allows for similarity func
-		//    SELECT * FROM artists
-		//    WHERE SIMILARITY(name,'Claud Monay') > 0.4 ;
-		// visit https://www.freecodecamp.org/news/fuzzy-string-matching-with-postgresql/
-		this.schema.raw("CREATE EXTENSION IF NOT EXISTS  pg_trgm;");
+    //enables for better text indexing and allows for similarity func
+    //    SELECT * FROM artists
+    //    WHERE SIMILARITY(name,'Claud Monay') > 0.4 ;
+    // visit https://www.freecodecamp.org/news/fuzzy-string-matching-with-postgresql/
+    this.schema.raw('CREATE EXTENSION IF NOT EXISTS  pg_trgm;');
 
-		// enables for geospatial queries
-		this.schema.raw("CREATE EXTENSION postgis;");
+    // enables for geospatial queries
+    // this.schema.raw('CREATE EXTENSION postgis;')
 
-		// to generate short ids
-		this.schema.raw('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
+    // to generate short ids
+    this.schema.raw('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
 
-		// enhances fuzzy matching
-		/**
+    // enhances fuzzy matching
+    /**
     SELECT * FROM artists
     WHERE nationality IN ('American', 'British')
     AND SOUNDEX(name) = SOUNDEX('Damian Hurst');
     */
-		this.schema.raw("CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;");
+    this.schema.raw('CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;');
 
-		this.schema.raw(`CREATE OR REPLACE FUNCTION nanoid(size int DEFAULT 12, alphabet text DEFAULT '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    this.schema.raw(`CREATE OR REPLACE FUNCTION nanoid(size int DEFAULT 12, alphabet text DEFAULT '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
             RETURNS text
             LANGUAGE plpgsql volatile
         AS
@@ -59,11 +59,11 @@ export default class extends BaseSchema {
                 end loop;
             END
         $$;`);
-	}
+  }
 
-	public async down() {
-		this.schema.raw('DROP EXTENSION IF EXISTS "uuid-ossp"');
-		this.schema.raw("DROP EXTENSION IF EXISTS pg_trgm;");
-		this.schema.raw("DROP EXTENSION IF EXISTS fuzzystrmatch;");
-	}
+  public async down() {
+    this.schema.raw('DROP EXTENSION IF EXISTS "uuid-ossp"');
+    this.schema.raw('DROP EXTENSION IF EXISTS pg_trgm;');
+    this.schema.raw('DROP EXTENSION IF EXISTS fuzzystrmatch;');
+  }
 }

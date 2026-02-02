@@ -5,7 +5,7 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary()
+      table.string('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
       table.string('target_type', 32).notNullable() // all, all_landlords, all_tenants, all_agencies, specific
       table.json('target_user_ids').nullable() // when target_type = specific (json for SQLite compat)
       table.string('title').notNullable()

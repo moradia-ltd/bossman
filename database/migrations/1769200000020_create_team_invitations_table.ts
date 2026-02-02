@@ -5,30 +5,20 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table
-        .uuid('id')
-        .primary()
-        .defaultTo(this.db.rawQuery('(lower(hex(randomblob(16))))').knexQuery)
-
-      table.uuid('team_id').notNullable().index()
+      table.string('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
+      table.string('team_id').notNullable().references('teams.id').onDelete('CASCADE')
       table.string('email').notNullable().index()
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
-
-      // Store a hash of the invite token (never store the raw token)
       table.string('token_hash').notNullable().unique()
-
-      table.uuid('invited_by_user_id').notNullable().index()
+      table.string('invited_by_user_id').notNullable().references('users.id').onDelete('CASCADE')
       table.timestamp('expires_at').notNullable()
-
       table.timestamp('accepted_at').nullable()
-      table.uuid('accepted_by_user_id').nullable().index()
+      table.string('accepted_by_user_id').nullable().references('users.id').onDelete('SET NULL')
+      table.string('invited_user_role').notNullable().defaultTo('normal_user').index()
 
+      table.json('allowed_pages').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
-
-      table.foreign('team_id').references('id').inTable('teams').onDelete('CASCADE')
-      table.foreign('invited_by_user_id').references('id').inTable('users').onDelete('CASCADE')
-      table.foreign('accepted_by_user_id').references('id').inTable('users').onDelete('SET NULL')
     })
   }
 
@@ -36,4 +26,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

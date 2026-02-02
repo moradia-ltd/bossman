@@ -5,18 +5,15 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table
-        .uuid('id')
-        .primary()
-        .defaultTo(this.db.rawQuery('(lower(hex(randomblob(16))))').knexQuery)
-
-      table.uuid('blog_post_id').notNullable().index()
-      table.uuid('blog_author_id').notNullable().index()
+      table.text('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
+      table.string('blog_post_id').notNullable()
+      table.string('blog_author_id').notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
+    })
 
-      table.unique(['blog_post_id', 'blog_author_id'])
+    this.schema.alterTable(this.tableName, (table) => {
       table.foreign('blog_post_id').references('id').inTable('blog_posts').onDelete('CASCADE')
       table.foreign('blog_author_id').references('id').inTable('blog_authors').onDelete('CASCADE')
     })
@@ -26,4 +23,3 @@ export default class extends BaseSchema {
     this.schema.dropTable(this.tableName)
   }
 }
-

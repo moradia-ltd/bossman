@@ -5,23 +5,16 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table
-        .uuid('id')
-        .primary()
-        .defaultTo(this.db.rawQuery('(lower(hex(randomblob(16))))').knexQuery)
+      table.string('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
 
-      table.uuid('team_id').notNullable().index()
-      table.uuid('user_id').notNullable().index()
+      table.string('team_id').notNullable().references('teams.id').onDelete('CASCADE')
+      table.string('user_id').notNullable().references('users.id').onDelete('CASCADE')
       table.string('role').notNullable().defaultTo('member') // owner, admin, member
 
       table.text('admin_pages').nullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
-
-      table.unique(['team_id', 'user_id'])
-      table.foreign('team_id').references('id').inTable('teams').onDelete('CASCADE')
-      table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE')
     })
   }
 

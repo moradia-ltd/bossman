@@ -5,11 +5,9 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table
-        .uuid('id')
-        .primary()
-        .defaultTo(this.db.rawQuery('(lower(hex(randomblob(16))))').knexQuery)
-      table.uuid('user_id').notNullable().index()
+      table.string('id').defaultTo(this.raw('nanoid()')).primary().unique().notNullable()
+      table.string('user_id').references('users.id').onDelete('CASCADE')
+
       table.string('title').notNullable()
       table.text('message').notNullable()
       table.string('type').notNullable().defaultTo('info') // info, success, warning, error
@@ -19,8 +17,6 @@ export default class extends BaseSchema {
       table.json('data').nullable() // Additional metadata
       table.timestamp('created_at')
       table.timestamp('updated_at')
-
-      table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE')
     })
   }
 
