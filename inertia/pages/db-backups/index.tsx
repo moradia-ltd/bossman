@@ -3,6 +3,7 @@ import { Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { Database, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawDbBackup } from '#types/model-types'
 import { timeAgo } from '#utils/date'
@@ -15,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingOverlay } from '@/components/ui/loading'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
 function formatFileSize(bytes: number): string {
@@ -28,13 +30,12 @@ interface DbBackupsIndexProps extends SharedProps {
 }
 
 const columns: Column<RawDbBackup>[] = [
-
   {
     key: 'filePath',
     header: 'File path',
     cell: (row) => (
       <span className='font-mono text-sm' title={row.filePath ?? undefined}>
-        {row.filePath ?? '—'}
+        {row.fileName ?? '—'}
       </span>
     ),
   },
@@ -84,7 +85,11 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
   const createBackupMutation = useMutation({
     mutationFn: () => api.post('/db-backups', {}),
     onSuccess: () => {
+      toast.success('Backup created')
       router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to create backup')
     },
   })
 
@@ -97,7 +102,11 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
     <DashboardLayout>
       <Head title='Backups' />
 
-      <LoadingOverlay text='Creating backup...' className='z-[100]' isLoading={createBackupMutation.isPending} />
+      <LoadingOverlay
+        text='Creating backup...'
+        className='z-[100]'
+        isLoading={createBackupMutation.isPending}
+      />
       <div className='space-y-6'>
         <PageHeader
           title='Backups'
