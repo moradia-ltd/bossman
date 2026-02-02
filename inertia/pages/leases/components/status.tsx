@@ -1,18 +1,19 @@
 import { AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
+//  if active green, if pending yellow, if terminated red, if inactive grey
 function StatusBadge({ status }: { status: string }) {
   switch (status) {
     case 'active':
       return (
-        <Badge variant='default' className='gap-1'>
+        <Badge variant='success' className='gap-1'>
           <CheckCircle className='h-3 w-3' />
           Active
         </Badge>
       )
     case 'pending':
       return (
-        <Badge variant='secondary' className='gap-1'>
+        <Badge variant='warning' className='gap-1'>
           <AlertCircle className='h-3 w-3' />
           Pending
         </Badge>

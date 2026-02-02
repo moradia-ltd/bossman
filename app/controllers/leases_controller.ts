@@ -12,7 +12,7 @@ export default class LeasesController {
     const leases = await Lease.query({ connection: appEnv })
       .preload('tenants', (q) => q.select('id', 'name', 'email'))
       .preload('org', (q) => q.select('id', 'name', 'creatorEmail'))
-      .orderBy('startDate', 'desc')
+
       .withPagination(params)
 
     return inertia.render('leases/index', { leases })
@@ -20,6 +20,7 @@ export default class LeasesController {
 
   async stats({ response, request }: HttpContext) {
     const appEnv = request.appEnv()
+    console.log('🚀 ~ LeasesController ~ stats ~ appEnv:', appEnv)
     const result = await db.connection(appEnv).rawQuery(`
       SELECT
         COUNT(*) AS total,

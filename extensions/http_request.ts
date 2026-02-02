@@ -6,8 +6,10 @@ import { validateQueryParams } from '#utils/vine'
 type AppEnv = 'dev' | 'prod'
 
 Request.macro('appEnv', function (this: Request): AppEnv {
+  const fromSession = (this as Request & { _appEnv?: string })._appEnv
+  if (fromSession === 'dev' || fromSession === 'prod') return fromSession
   const headers = this.headers()
-  const appEnv = headers['appEnv'] || 'dev'
+  const appEnv = headers['app-env'] || headers['appenv'] || 'dev'
   return appEnv as AppEnv
 })
 

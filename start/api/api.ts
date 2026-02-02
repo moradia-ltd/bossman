@@ -1,4 +1,5 @@
 import router from '@adonisjs/core/services/router'
+import vine from '@vinejs/vine'
 import { middleware } from '#start/kernel'
 
 const DashboardController = () => import('#controllers/dashboard_controller')
@@ -35,8 +36,19 @@ router
     router.post('/db-backups', [DbBackupsController, 'store'])
     router.post('/db-backups/:id/restore', [DbBackupsController, 'restore'])
 
-    router.get('update-env', ({ request }) => {
-      return request.appEnv()
+    router.get('update-env', ({ session, response }) => {
+      const appEnv = (session.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev'
+      return response.ok({ appEnv })
+    })
+    router.put('update-env', async ({ request, session, response }) => {
+      const updateEnvValidator = vine.compile(
+        vine.object({
+          appEnv: vine.enum(['dev', 'prod'] as const),
+        }),
+      )
+      const { appEnv } = await request.validateUsing(updateEnvValidator)
+      session.put('appEnv', appEnv)
+      return response.ok({ message: 'Environment updated successfully', appEnv })
     })
   })
   .prefix('api/v1')

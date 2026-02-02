@@ -16,10 +16,10 @@ import { type QuickActionOption, QuickActions } from '@/components/dashboard/qui
 import { DateTimePicker, OnlyShowIf, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form_field'
 import { Label } from '@/components/ui/label'
-import { BaseSheet } from '@/components/ui/base-sheet'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
@@ -33,7 +33,6 @@ import { PropertiesTab } from './components/properties-tab'
 
 interface OrgShowProps extends SharedProps {
   org: RawOrg
-
 }
 
 const banUserSchema = Yup.object({
@@ -50,12 +49,11 @@ const banUserSchema = Yup.object({
   }),
 })
 
-export default function OrgShow({ org, }: OrgShowProps) {
+export default function OrgShow({ org }: OrgShowProps) {
   const { query, updateQuery } = useInertiaParams()
   const qs = query as { tab?: string }
   const currentTab = qs.tab ?? 'details'
   const [banUserSheetOpen, setBanUserSheetOpen] = useState(false)
-
 
   const id = String(org.id ?? '')
   const cleanName = String(org.cleanName ?? org.companyName ?? org.name ?? 'Organisation')
@@ -73,9 +71,9 @@ export default function OrgShow({ org, }: OrgShowProps) {
     updateQuery({ tab: value })
   }
 
-
   const { mutate: banUser, isPending: isBanning } = useMutation({
-    mutationFn: (values: typeof banUserFormik.values) => api.post(`/orgs/${id}/actions/ban-user`, values),
+    mutationFn: (values: typeof banUserFormik.values) =>
+      api.post(`/orgs/${id}/actions/ban-user`, values),
     onSuccess: () => {
       setBanUserSheetOpen(false)
       banUserFormik.resetForm()
@@ -208,9 +206,7 @@ export default function OrgShow({ org, }: OrgShowProps) {
             <FormField
               label='Expires at'
               htmlFor='ban-expires-at'
-              error={
-                banUserFormik.touched.expiresAt ? banUserFormik.errors.expiresAt : undefined
-              }>
+              error={banUserFormik.touched.expiresAt ? banUserFormik.errors.expiresAt : undefined}>
               <DateTimePicker
                 id='ban-expires-at'
                 value={banUserFormik.values.expiresAt || undefined}
@@ -343,28 +339,28 @@ export default function OrgShow({ org, }: OrgShowProps) {
                   <DetailRow
                     label='Cost per tenant'
                     value={formatCurrency(
-                      org.customPaymentSchedule.amount,
-                      org.customPaymentSchedule.currency,
+                      org.customPaymentSchedule?.amount,
+                      org.customPaymentSchedule?.currency,
                     )}
                   />
                   <DetailRow
                     label='Trial period'
-                    value={org.customPaymentSchedule.trialPeriodInDays}
+                    value={org.customPaymentSchedule?.trialPeriodInDays}
                   />
                   <DetailRow
                     label='Frequency'
-                    value={startCase(org.customPaymentSchedule.frequency)}
+                    value={startCase(org.customPaymentSchedule?.frequency)}
                   />
-                  {org.customPaymentSchedule.promoCode && (
+                  {org.customPaymentSchedule?.promoCode && (
                     <DetailRow label='Promo code' value={org.customPaymentSchedule.promoCode} />
                   )}
-                  <DetailRow label='Promo code' value={org.customPaymentSchedule.promoCode} />
+                  <DetailRow label='Promo code' value={org.customPaymentSchedule?.promoCode} />
                 </SimpleGrid>
               </AppCard>
 
               <AppCard title='Pages' description='Enabled sections for this customer'>
                 <SimpleGrid cols={3}>
-                  {org.pages.orgPages.map((page: { label: string; isEnabled: boolean }) => (
+                  {org?.pages?.orgPages.map((page: { label: string; isEnabled: boolean }) => (
                     <DetailRow
                       key={page.label}
                       label={page.label}

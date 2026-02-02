@@ -3,8 +3,8 @@ import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
-import { Badge } from '@/components/ui/badge'
 import { AppCard } from '@/components/ui/app-card'
+import { Badge } from '@/components/ui/badge'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
@@ -13,7 +13,6 @@ interface ActivityTabProps {
 }
 
 const columns: Column<RawActivity>[] = [
-
   { key: 'summary', header: 'Summary', minWidth: 200, flex: 1 },
   {
     key: 'createdAt',
@@ -54,25 +53,25 @@ export function ActivityTab({ leaseId }: ActivityTabProps) {
   return (
     <AppCard title='Activity' description='Recent activity for this lease'>
       <DataTable
-          columns={columns}
-          data={activity}
-          loading={isPending}
-          emptyMessage='No activity yet.'
-          pagination={
-            meta
-              ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-              : undefined
-          }
-        />
+        columns={columns}
+        data={activity}
+        loading={isPending}
+        emptyMessage='No activity yet.'
+        pagination={
+          meta
+            ? {
+              page: meta.currentPage,
+              pageSize: meta.perPage,
+              total: meta.total,
+              onPageChange: setPage,
+              onPageSizeChange: (size) => {
+                setPerPage(size)
+                setPage(1)
+              },
+            }
+            : undefined
+        }
+      />
     </AppCard>
   )
 }

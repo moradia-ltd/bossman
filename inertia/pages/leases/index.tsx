@@ -5,6 +5,7 @@ import { AlertCircle, CheckCircle, FileText, XCircle } from 'lucide-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
+import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -52,6 +53,18 @@ const columns: Column<RawLease>[] = [
     header: 'Rent',
     cell: (row) => formatCurrency(row.rentAmount, row.currency) || '—',
   },
+  {
+    key: 'Org',
+    header: 'Org',
+    width: 130,
+    cell: (row) => <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>{row.org.cleanName}</Link>,
+  },
+  {
+    key: 'Created At',
+    header: 'Created At',
+    width: 130,
+    cell: (row) => timeAgo(row.createdAt),
+  },
 ]
 
 export default function LeasesIndex({ leases }: LeasesIndexProps) {
@@ -61,14 +74,11 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
     search: '',
   })
 
-
-
   const { data: stats } = useQuery({
     queryKey: ['leases-stats2'],
     queryFn: async () => await api.get<Stats>('/leases/stats'),
     select: (data) => data?.data,
   })
-
 
   return (
     <DashboardLayout>
@@ -96,27 +106,26 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
             description='Ended leases'
             value={stats?.expired}
             icon={XCircle}
-
           />
         </SimpleGrid>
 
         <AppCard title='All leases'>
           <DataTable
-              columns={columns}
-              data={leases.data}
-              searchable
-              searchPlaceholder='Search by name...'
-              searchValue={String(query.search || '')}
-              onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={{
-                page: leases.meta.currentPage,
-                pageSize: leases.meta.perPage,
-                total: leases.meta.total,
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              }}
-              emptyMessage='No leases found'
-            />
+            columns={columns}
+            data={leases.data}
+            searchable
+            searchPlaceholder='Search by name...'
+            searchValue={String(query.search || '')}
+            onSearchChange={(value) => searchTable(String(value || ''))}
+            pagination={{
+              page: leases.meta.currentPage,
+              pageSize: leases.meta.perPage,
+              total: leases.meta.total,
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            }}
+            emptyMessage='No leases found'
+          />
         </AppCard>
       </div>
     </DashboardLayout>

@@ -136,7 +136,7 @@ ModelQueryBuilder.macro(
   function (this: ModelQueryBuilder, data: QueryParams, searchTable?: string) {
     return this.betweenCreatedDates(data.startDate, data.endDate)
       .search(data.search, searchTable || '')
-      .sortBy(data.sortBy, data.sortOrder)
+      .sortBy(data.sortBy || 'created_at', data.sortOrder || 'desc')
       .paginate(data.page || 1, data.perPage || 10)
   },
 )

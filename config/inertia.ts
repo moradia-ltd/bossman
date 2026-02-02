@@ -15,6 +15,7 @@ const inertiaConfig = defineConfig({
    */
   sharedData: {
     user: (ctx) => ctx.inertia.always(() => ctx.auth?.user),
+    appEnv: (ctx) => (ctx.session.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev',
     pageAccess: (ctx) =>
       ctx.inertia.always(async () => {
         const user = ctx.auth?.user as { id?: string; role?: string } | undefined
