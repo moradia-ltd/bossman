@@ -33,6 +33,7 @@ router
 
     router.get('/push-notifications/users', [PushNotificationsController, 'users'])
     router.post('/db-backups', [DbBackupsController, 'store'])
+    router.post('/db-backups/:id/restore', [DbBackupsController, 'restore'])
 
     router.get('update-env', ({ request }) => {
       return request.appEnv()

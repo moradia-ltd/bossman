@@ -34,6 +34,32 @@ export default class DbBackupsController {
     }
   }
 
+  /** API: restore a backup to the given database connection URL. */
+  async restore({ params, request, response, logger }: HttpContext) {
+    const appEnv = request.appEnv()
+    const backupId = Number(params.id)
+    if (Number.isNaN(backupId)) {
+      return response.badRequest({ error: 'Invalid backup ID' })
+    }
+    const body = request.body() as { connectionUrl?: string }
+    const connectionUrl = typeof body.connectionUrl === 'string' ? body.connectionUrl.trim() : ''
+    if (!connectionUrl) {
+      return response.badRequest({ error: 'Connection URL is required' })
+    }
+    const backupService = new BackupService()
+    try {
+      logger.info(`Restoring backup ${backupId} to target database...`)
+      await backupService.restore(backupId, connectionUrl, appEnv)
+      return response.ok({ success: true, message: 'Restore completed successfully' })
+    } catch (err) {
+      logger.error(err)
+      return response.badRequest({
+        success: false,
+        error: err instanceof Error ? err.message : String(err),
+      })
+    }
+  }
+
   async destroy({ params, response, request }: HttpContext) {
     const appEnv = request.appEnv()
     const backup = await DbBackup.query({ connection: appEnv }).where('id', params.id).firstOrFail()

@@ -29,6 +29,7 @@ export const API_ROUTES = {
     '/orgs/:orgId/actions/ban-user',
     '/orgs/:orgId/actions/unban-user',
     '/db-backups',
+    '/db-backups/:id/restore',
     '/auth/login',
     '/auth/forgot-password',
     '/auth/reset-password',

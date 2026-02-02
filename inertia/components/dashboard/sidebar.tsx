@@ -24,6 +24,7 @@ import type { RawUser } from '#types/model-types'
 import { CommandPalette } from '@/components/command-palette'
 import { NotificationCenter } from '@/components/notifications/notification-center'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -38,7 +39,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { BaseSheet } from '@/components/ui/base-sheet'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useEnvironment } from '@/hooks/use-environment'
 import { useSidebar } from '@/hooks/use-sidebar'
@@ -107,7 +107,9 @@ export function Sidebar({ children }: SidebarProps) {
 
   /** Maps nav href to the page key used in pageAccess (must match backend PAGE_KEY_TO_PATH). */
   const pathToPageKey = (href: string): string | null => {
-    const path = `/${String(href || '').replace(/^\/+/, '').replace(/\/+$/, '')}`
+    const path = `/${String(href || '')
+      .replace(/^\/+/, '')
+      .replace(/\/+$/, '')}`
     if (path === '/dashboard') return 'dashboard'
     if (path.startsWith('/teams')) return 'teams'
     if (path.startsWith('/blog/manage')) return 'blog'
@@ -247,7 +249,7 @@ export function Sidebar({ children }: SidebarProps) {
             {effectiveNavSections.flatMap((s) => s.items).map(renderItem)}
           </nav>
         ) : (
-          <nav className='space-y-1'>
+          <nav className='space-y-1 px-4'>
             {effectiveNavSections.map((section) => (
               <div key={section.label}>
                 <SectionLabel>{section.label}</SectionLabel>

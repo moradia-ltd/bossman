@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
-import { Database, Plus, Trash2 } from 'lucide-react'
+import { Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -14,7 +14,17 @@ import { BaseDialog } from '@/components/ui/base-dialog'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
 import { AppCard } from '@/components/ui/app-card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { LoadingOverlay } from '@/components/ui/loading'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Stack } from '@/components/ui/stack'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
@@ -81,6 +91,9 @@ const columns: Column<RawDbBackup>[] = [
 export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
   const { changePage, changeRows } = useInertiaParams({ page: 1, perPage: 20 })
   const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [restoreModalOpen, setRestoreModalOpen] = useState(false)
+  const [restoreBackupId, setRestoreBackupId] = useState<string>('')
+  const [restoreConnectionUrl, setRestoreConnectionUrl] = useState('')
 
   const createBackupMutation = useMutation({
     mutationFn: () => api.post('/db-backups', {}),
@@ -93,9 +106,36 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
     },
   })
 
+  const restoreBackupMutation = useMutation({
+    mutationFn: ({ backupId, connectionUrl }: { backupId: number; connectionUrl: string }) =>
+      api.post(`/db-backups/${backupId}/restore`, { connectionUrl }),
+    onSuccess: () => {
+      toast.success('Restore completed successfully')
+      setRestoreModalOpen(false)
+      setRestoreBackupId('')
+      setRestoreConnectionUrl('')
+      router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to restore backup')
+    },
+  })
+
   const handleCreateBackup = () => {
     setCreateModalOpen(false)
     createBackupMutation.mutate()
+  }
+
+  const handleRestore = () => {
+    const backupId = Number(restoreBackupId)
+    if (!restoreBackupId || Number.isNaN(backupId) || !restoreConnectionUrl.trim()) {
+      toast.error('Select a backup and enter a connection URL')
+      return
+    }
+    restoreBackupMutation.mutate({
+      backupId,
+      connectionUrl: restoreConnectionUrl.trim(),
+    })
   }
 
   return (
@@ -103,31 +143,95 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
       <Head title='Backups' />
 
       <LoadingOverlay
-        text='Creating backup...'
+        text={createBackupMutation.isPending ? 'Creating backup...' : 'Restoring backup...'}
         className='z-[100]'
-        isLoading={createBackupMutation.isPending}
+        isLoading={createBackupMutation.isPending || restoreBackupMutation.isPending}
       />
       <div className='space-y-6'>
         <PageHeader
           title='Backups'
           description='View database backup history.'
           actions={
-            <BaseModal
-              open={createModalOpen}
-              onOpenChange={setCreateModalOpen}
-              title='Create backup?'
-              description='This will create a new database backup and upload it to storage. This may take a moment. Continue?'
-              trigger={
-                <Button type='button' variant='default'>
-                  <Plus className='mr-2 h-4 w-4' />
-                  Create
-                </Button>
-              }
-              primaryText='Create backup'
-              secondaryText='Cancel'
-              onPrimaryAction={handleCreateBackup}
-              isLoading={createBackupMutation.isPending}
-            />
+            <div className='flex items-center gap-2'>
+              <BaseModal
+                open={restoreModalOpen}
+                onOpenChange={(open) => {
+                  setRestoreModalOpen(open)
+                  if (!open) {
+                    setRestoreBackupId('')
+                    setRestoreConnectionUrl('')
+                  }
+                }}
+                title='Restore backup'
+                description='Choose a backup and the database connection URL to restore it to. This will overwrite the target database.'
+                trigger={
+                  <Button type='button' variant='outline'>
+                    <RotateCcw className='mr-2 h-4 w-4' />
+                    Restore
+                  </Button>
+                }
+                primaryText='Restore'
+                secondaryText='Cancel'
+                onPrimaryAction={handleRestore}
+                isLoading={restoreBackupMutation.isPending}
+                primaryDisabled={!restoreBackupId || !restoreConnectionUrl.trim()}>
+                <Stack spacing={4}>
+                  <div className='space-y-2'>
+                    <Label htmlFor='restore-backup'>Backup</Label>
+                    <Select
+                      value={restoreBackupId}
+                      onValueChange={(value) => setRestoreBackupId(value ?? '')}
+                      id='restore-backup'>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder='Select a backup to restore' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {backups.data.map((backup) => (
+                          <SelectItem key={backup.id} value={String(backup.id)}>
+                            {backup.fileName ?? backup.filePath ?? `Backup #${backup.id}`} (
+                            {backup.createdAt
+                              ? new Date(backup.createdAt).toLocaleString()
+                              : '—'}
+                            )
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className='space-y-2'>
+                    <Label htmlFor='restore-connection-url'>Connection URL</Label>
+                    <Input
+                      id='restore-connection-url'
+                      type='url'
+                      placeholder='postgresql://user:password@host:5432/dbname'
+                      value={restoreConnectionUrl}
+                      onChange={(e) => setRestoreConnectionUrl(e.target.value)}
+                      className='font-mono text-sm'
+                    />
+                    <p className='text-xs text-muted-foreground'>
+                      PostgreSQL connection URL of the database to restore into. Existing data may be
+                      overwritten.
+                    </p>
+                  </div>
+                </Stack>
+              </BaseModal>
+              <BaseModal
+                open={createModalOpen}
+                onOpenChange={setCreateModalOpen}
+                title='Create backup?'
+                description='This will create a new database backup and upload it to storage. This may take a moment. Continue?'
+                trigger={
+                  <Button type='button' variant='default'>
+                    <Plus className='mr-2 h-4 w-4' />
+                    Create
+                  </Button>
+                }
+                primaryText='Create backup'
+                secondaryText='Cancel'
+                onPrimaryAction={handleCreateBackup}
+                isLoading={createBackupMutation.isPending}
+              />
+            </div>
           }
         />
 
