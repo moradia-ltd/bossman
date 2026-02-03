@@ -18,10 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Switch } from '@/components/ui/switch'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
 export type PageKey =
+  | 'analytics'
   | 'dashboard'
   | 'teams'
   | 'blog'
@@ -38,6 +40,7 @@ export const PAGE_OPTIONS: Array<{
   required?: boolean
 }> = [
   { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
+  { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
   { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
   { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
   { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
@@ -64,24 +67,32 @@ export interface InvitationRow {
   email: string
   role: string
   createdAt: string
-  invitedBy: string | null
+  invitedBy?: { fullName?: string | null; email?: string | null } | null
   allowedPages: PageKey[] | null
+  enableProdAccess: boolean
 }
 
 export function TeamInvitationsInviteButton() {
   const queryClient = useQueryClient()
   const [inviteEmail, setInviteEmail] = useState('')
   const [invitePages, setInvitePages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
+  const [enableProdAccess, setEnableProdAccess] = useState(true)
 
   const inviteMutation = useMutation({
-    mutationFn: (payload: { email: string; allowedPages: PageKey[] }) =>
+    mutationFn: (payload: {
+      email: string
+      allowedPages: PageKey[]
+      enableProdAccess: boolean
+    }) =>
       api.post('/invitations', {
         email: payload.email,
         allowedPages: payload.allowedPages,
+        enableProdAccess: payload.enableProdAccess,
       }),
     onSuccess: async () => {
       setInviteEmail('')
       setInvitePages(PAGE_OPTIONS.map((o) => o.key))
+      setEnableProdAccess(true)
       toast.success('Invite sent successfully')
       await queryClient.invalidateQueries({
         queryKey: ['dashboard-invitations'],
@@ -123,11 +134,13 @@ export function TeamInvitationsInviteButton() {
         inviteMutation.mutate({
           email,
           allowedPages: invitePages,
+          enableProdAccess,
         })
       }}
       onSecondaryAction={() => {
         setInviteEmail('')
         setInvitePages(PAGE_OPTIONS.map((o) => o.key))
+        setEnableProdAccess(true)
       }}
       className='max-w-2xl'>
       <Stack spacing={4}>
@@ -139,6 +152,20 @@ export function TeamInvitationsInviteButton() {
             placeholder='staff@company.com'
             value={inviteEmail}
             onChange={(e) => setInviteEmail(e.target.value)}
+          />
+        </div>
+
+        <div className='flex items-center justify-between rounded-lg border border-border p-3'>
+          <div>
+            <Label htmlFor='inviteProdAccess'>Enabled Prod access</Label>
+            <p className='text-xs text-muted-foreground'>
+              If off, the invited member will only be able to access the dev database, not production.
+            </p>
+          </div>
+          <Switch
+            id='inviteProdAccess'
+            checked={enableProdAccess}
+            onCheckedChange={setEnableProdAccess}
           />
         </div>
 
@@ -178,22 +205,14 @@ export function TeamInvitations() {
   const [editInvitationPages, setEditInvitationPages] = useState<PageKey[]>(
     PAGE_OPTIONS.map((o) => o.key),
   )
+  const [editEnableProdAccess, setEditEnableProdAccess] = useState(true)
 
   const invitationsQuery = useQuery({
     queryKey: ['dashboard-invitations'],
     queryFn: async () => {
-      const res = await api.get<{
-        data: {
-          invitations: Array<{
-            id: string
-            email: string
-            role: string
-            createdAt: string
-            invitedBy: string | null
-            allowedPages: PageKey[] | null
-          }>
-        }
-      }>('/members/invitations')
+      const res = await api.get<{ data: { invitations: InvitationRow[] } }>(
+        '/members/invitations',
+      )
       return res.data.data
     },
   })
@@ -204,11 +223,16 @@ export function TeamInvitations() {
     mutationFn: async ({
       invitationId,
       allowedPages,
+      enableProdAccess,
     }: {
       invitationId: string
       allowedPages: PageKey[]
+      enableProdAccess: boolean
     }) => {
-      await api.put(`/invitations/${invitationId}`, { allowedPages })
+      await api.put(`/invitations/${invitationId}`, {
+        allowedPages,
+        enableProdAccess,
+      })
     },
     onSuccess: () => {
       setEditInvitation(null)
@@ -225,6 +249,7 @@ export function TeamInvitations() {
     setEditInvitationPages(
       inv.allowedPages?.length ? [...inv.allowedPages] : PAGE_OPTIONS.map((o) => o.key),
     )
+    setEditEnableProdAccess(inv.enableProdAccess ?? true)
   }
 
   return (
@@ -240,6 +265,7 @@ export function TeamInvitations() {
                   <TableHead>Email</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Page access</TableHead>
+                  <TableHead>Prod access</TableHead>
                   <TableHead>Invited by</TableHead>
                   <TableHead>Invited</TableHead>
                   <TableHead className='w-10' />
@@ -264,7 +290,10 @@ export function TeamInvitations() {
                       )}
                     </TableCell>
                     <TableCell className='text-muted-foreground'>
-                      {inv.invitedBy || '—'}
+                      {inv.enableProdAccess ? 'Yes' : 'Dev only'}
+                    </TableCell>
+                    <TableCell className='text-muted-foreground'>
+                      {inv.invitedBy?.fullName ?? inv.invitedBy?.email ?? '—'}
                     </TableCell>
                     <TableCell className='text-muted-foreground'>
                       {inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : '—'}
@@ -306,10 +335,24 @@ export function TeamInvitations() {
           updateInvitationMutation.mutate({
             invitationId: editInvitation.id,
             allowedPages: editInvitationPages,
+            enableProdAccess: editEnableProdAccess,
           })
         }}
         className='max-w-2xl'>
         <Stack spacing={4}>
+          <div className='flex items-center justify-between rounded-lg border border-border p-3'>
+            <div>
+              <Label htmlFor='editProdAccess'>Enabled Prod access</Label>
+              <p className='text-xs text-muted-foreground'>
+                If off, this member will only access the dev database, not production.
+              </p>
+            </div>
+            <Switch
+              id='editProdAccess'
+              checked={editEnableProdAccess}
+              onCheckedChange={setEditEnableProdAccess}
+            />
+          </div>
           <div className='space-y-2'>
             <Label>Page access</Label>
             <div className='grid gap-2 rounded-lg border border-border p-3'>

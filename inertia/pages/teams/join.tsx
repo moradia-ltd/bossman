@@ -14,9 +14,10 @@ import api from '@/lib/http'
 interface JoinTeamProps {
   invitation: null | {
     email: string
-    teamName: string
-    inviterName: string
     role: string
+    invitedUserRole: string
+    allowedPages: string[] | null
+    invitedBy?: { fullName?: string | null; email?: string | null } | null
   }
   token?: string
   hasAccount?: boolean
@@ -67,7 +68,7 @@ export default function JoinTeam(props: JoinTeamProps) {
             <CardDescription>
               {canShowInvite ? (
                 <>
-                  You were invited to join <strong>{props.invitation?.teamName ?? INVITE_CONTEXT_NAME}</strong>
+                  You were invited to join <strong>{INVITE_CONTEXT_NAME}</strong>
                 </>
               ) : (
                 'Use your invite link to accept the invitation.'
@@ -87,7 +88,8 @@ export default function JoinTeam(props: JoinTeamProps) {
                   <span className='font-medium text-foreground'>Invited email:</span> {props.invitation?.email}
                 </div>
                 <div>
-                  <span className='font-medium text-foreground'>Invited by:</span> {props.invitation?.inviterName}
+                  <span className='font-medium text-foreground'>Invited by:</span>{' '}
+                  {props.invitation?.invitedBy?.fullName ?? props.invitation?.invitedBy?.email ?? 'Someone'}
                 </div>
               </div>
             )}
@@ -127,7 +129,7 @@ export default function JoinTeam(props: JoinTeamProps) {
                 isLoading={acceptMutation.isPending}
                 loadingText='Joining…'
                 onClick={() => acceptMutation.mutate({ token: props.token })}>
-                Join {props.invitation?.teamName ?? INVITE_CONTEXT_NAME}
+                Join {INVITE_CONTEXT_NAME}
               </Button>
             )}
 
@@ -175,7 +177,7 @@ export default function JoinTeam(props: JoinTeamProps) {
                 </div>
 
                 <Button type='submit' className='w-full' isLoading={acceptMutation.isPending} loadingText='Joining…'>
-                  Create account & join {props.invitation?.teamName ?? INVITE_CONTEXT_NAME}
+                  Create account & join {INVITE_CONTEXT_NAME}
                 </Button>
 
                 <div className='text-center text-sm text-muted-foreground'>

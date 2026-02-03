@@ -19,7 +19,7 @@ export default class TeamMember extends SuperBaseModel {
   declare role: TeamRole
 
   @column()
-  declare enabledProdAccess: boolean
+  declare enableProdAccess: boolean
 
   /**
    * Allowed admin page keys for this member.

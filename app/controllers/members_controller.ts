@@ -57,14 +57,7 @@ export default class MembersController {
 
     return response.ok({
       data: {
-        invitations: pendingInvitations.map((inv) => ({
-          id: inv.id,
-          email: inv.email,
-          role: inv.role,
-          createdAt: inv.createdAt.toISO() || '',
-          invitedBy: inv.invitedBy?.fullName || inv.invitedBy?.email || null,
-          allowedPages: inv.allowedPages ?? null,
-        })),
+        invitations: pendingInvitations,
       },
     })
   }
@@ -92,15 +85,15 @@ export default class MembersController {
         resolved.unshift('dashboard')
       }
       member.allowedPages = resolved?.length ? resolved : null
-      await member.save()
     }
+    if (body.enableProdAccess !== undefined) {
+      member.enableProdAccess = body.enableProdAccess
+    }
+    await member.save()
 
     return response.ok({
       message: 'Member updated successfully',
-      data: {
-        id: member.id,
-        allowedPages: member.allowedPages ?? null,
-      },
+      data: member,
     })
   }
 }

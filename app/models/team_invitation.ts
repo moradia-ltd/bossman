@@ -20,6 +20,9 @@ export default class TeamInvitation extends SuperBaseModel {
   @column()
   declare invitedUserRole: 'admin'
 
+  @column({})
+  declare enableProdAccess: boolean
+
   /**
    * Allowed admin page keys for this invite.
    * Stored as JSON in DB column allowed_pages.

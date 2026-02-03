@@ -38,6 +38,7 @@ async function ensureMember(trx: Trx, invitation: TeamInvitation, userId: string
         userId,
         role: invitation.role,
         allowedPages: invitation.allowedPages ?? null,
+        enableProdAccess: invitation.enableProdAccess ?? true,
         createdAt: now,
         updatedAt: now,
       },
@@ -114,15 +115,7 @@ export default class TeamInvitationsController {
     const isAuthedAsInvitee = Boolean(authedUser && authedUser.email === invitation.email)
 
     return inertia.render('teams/join', {
-      invitation: {
-        email: invitation.email,
-        teamName: 'the dashboard',
-        inviterName: invitation.invitedBy?.fullName || invitation.invitedBy?.email || 'Someone',
-        role: invitation.role,
-        invitedUserRole: invitation.invitedUserRole,
-        teamKind: 'admin',
-        allowedPages: invitation.allowedPages ?? null,
-      },
+      invitation,
       token,
       hasAccount: Boolean(existingUser),
       isAuthed: auth.isAuthenticated,
@@ -133,10 +126,10 @@ export default class TeamInvitationsController {
   async invite({ auth, request, response, now, logger }: HttpContext) {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)
-    const { email, role, allowedPages } = await request.validateUsing(inviteToTeamValidator)
+    const { email, role, allowedPages, enableProdAccess } =
+      await request.validateUsing(inviteToTeamValidator)
 
-    const isAdmin = (user as { role?: string }).role === 'admin'
-    if (!isAdmin) {
+    if (!user.isAdminOrSuperAdmin) {
       return response.forbidden({ error: 'Access required to invite users.' })
     }
     const allowed = await getPageAccessForUser(freshUser.id)
@@ -187,6 +180,7 @@ export default class TeamInvitationsController {
           role: role ?? 'member',
           invitedUserRole: 'admin',
           allowedPages: resolvedAllowedPages,
+          enableProdAccess: enableProdAccess ?? true,
           tokenHash,
           invitedByUserId: freshUser.id,
           expiresAt,
@@ -325,15 +319,15 @@ export default class TeamInvitationsController {
         resolved.unshift('dashboard')
       }
       invitation.allowedPages = resolved?.length ? resolved : null
-      await invitation.save()
     }
+    if (body.enableProdAccess !== undefined) {
+      invitation.enableProdAccess = body.enableProdAccess
+    }
+    await invitation.save()
 
     return response.ok({
       message: 'Invitation updated successfully',
-      data: {
-        id: invitation.id,
-        allowedPages: invitation.allowedPages ?? null,
-      },
+      data: invitation,
     })
   }
 }
