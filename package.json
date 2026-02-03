@@ -121,7 +121,8 @@
     "yup": "^1.7.1"
   },
   "optionalDependencies": {
-    "@swc/core-linux-x64-gnu": "^1.2.160"
+    "@swc/core-linux-x64-gnu": "^1.2.160",
+    "@rollup/rollup-linux-x64-gnu": "^4.57.1"
   },
   "hotHook": {
     "boundaries": [
