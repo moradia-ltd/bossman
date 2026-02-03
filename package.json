@@ -9,7 +9,7 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "start": "node build/bin/server.js",
+    "start": "ENV_PATH=../ node build/bin/server.js",
     "build": "node ace build",
     "dev": "node ace serve --hmr",
     "test": "node ace test",

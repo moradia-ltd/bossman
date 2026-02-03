@@ -24,6 +24,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
+  /** Set to false only if production is served over HTTP (e.g. behind proxy without HTTPS). Prefer using HTTPS. */
+  SESSION_SECURE: Env.schema.boolean.optional(),
   FROM_EMAIL: Env.schema.string.optional(),
   REPLY_TO_EMAIL: Env.schema.string.optional(),
 
@@ -88,5 +90,5 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   APP_NAME: Env.schema.string(),
   APP_VERSION: Env.schema.string(),
-  APP_ENV: Env.schema.enum(['development', 'staging', 'production'] as const)
+  APP_ENV: Env.schema.enum(['development', 'staging', 'production'] as const),
 })

@@ -12,7 +12,7 @@ import transmit from '@adonisjs/transmit/services/main'
 import AutoSwagger from 'adonis-autoswagger'
 import swagger from '#config/swagger'
 import { middleware } from './kernel.js'
-import { throttle } from './limiter.js'
+import { loginThrottle, throttle } from './limiter.js'
 import './api/api.js'
 
 const AuthController = () => import('#controllers/auth_controller')
@@ -99,9 +99,9 @@ router
       })
       .prefix('blog/manage')
   })
-  .use([middleware.auth(), middleware.appRole(), middleware.pageAccess()])
+  .use([middleware.auth(), middleware.pageAccess(), middleware.appRole()])
 
-// Guest routes
+// Guest routes (web login uses server redirect so session cookie is set in same navigation)
 router
   .group(() => {
     router.on('/login').renderInertia('login')

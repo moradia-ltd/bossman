@@ -6,7 +6,7 @@ import { PAGE_KEY_TO_PATH, requiredPageKeyForPath } from '#utils/page_access'
 export default class PageAccessMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const user = ctx.auth.user
-    const hasAppRole = user && (user as { role?: string }).role === 'admin'
+    const hasAppRole = user?.role === 'admin' || user?.role === 'super_admin'
 
     if (!hasAppRole || !user) return next()
 
