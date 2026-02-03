@@ -8,5 +8,5 @@ export const cleanUp = worker
   .deadLetter('failed-cleanup')
 
 cleanUp.work((payload) => {
-  console.log(`Cleaning up ${payload.database} (job ${payload.id})`)
+  console.log(`Cleaning up ${payload.database} (job ${payload.id} at ${new Date().toISOString()})`)
 })

@@ -89,6 +89,16 @@ export default class MembersController {
     if (body.enableProdAccess !== undefined) {
       member.enableProdAccess = body.enableProdAccess
     }
+    if (body.dataAccessMode !== undefined) {
+      member.dataAccessMode = body.dataAccessMode
+    }
+    if (body.allowedLeaseableEntityIds !== undefined) {
+      member.allowedLeaseableEntityIds =
+        body.allowedLeaseableEntityIds?.length ? body.allowedLeaseableEntityIds : null
+    }
+    if (body.allowedLeaseIds !== undefined) {
+      member.allowedLeaseIds = body.allowedLeaseIds?.length ? body.allowedLeaseIds : null
+    }
     await member.save()
 
     return response.ok({

@@ -48,6 +48,7 @@ router
   .group(() => {
     router.get('/dashboard', [DashboardController, 'index'])
     router.get('/teams', [TeamsPageController, 'index'])
+    router.get('/teams/members/:id', [TeamsPageController, 'show'])
     router.get('/leases', [LeasesController, 'index'])
     router.get('/leases/:id', [LeasesController, 'show'])
     router.get('/properties', [LeaseableEntitiesController, 'index'])

@@ -31,6 +31,9 @@ export const updateMemberValidator = vine.compile(
   vine.object({
     allowedPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
     enableProdAccess: vine.boolean().optional(),
+    dataAccessMode: vine.enum(['all', 'selected']).optional(),
+    allowedLeaseableEntityIds: vine.array(vine.string()).optional(),
+    allowedLeaseIds: vine.array(vine.string()).optional(),
   }),
 )
 

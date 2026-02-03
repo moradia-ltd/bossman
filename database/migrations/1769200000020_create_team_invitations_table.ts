@@ -14,7 +14,7 @@ export default class extends BaseSchema {
       table.timestamp('accepted_at').nullable()
       table.string('accepted_by_user_id').nullable().references('users.id').onDelete('SET NULL')
       table.string('invited_user_role').notNullable().defaultTo('normal_user').index()
-
+      table.boolean('enable_prod_access').defaultTo(true)
       table.json('allowed_pages').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')

@@ -270,10 +270,7 @@ export default class TeamInvitationsController {
       )
 
       await ensureMember(trx, invitation, newUser.id, now)
-      if (
-        invitation.invitedUserRole === 'admin' &&
-        (newUser as unknown as { role?: string }).role !== 'admin'
-      ) {
+      if (invitation.invitedUserRole === 'admin' && !newUser.isAdminOrSuperAdmin) {
         await newUser.merge({ role: 'admin' }).save()
       }
 

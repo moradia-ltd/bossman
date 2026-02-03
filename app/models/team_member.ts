@@ -21,6 +21,52 @@ export default class TeamMember extends SuperBaseModel {
   @column()
   declare enableProdAccess: boolean
 
+  /** Data access: 'all' = full access; 'selected' = only allowed properties/leases */
+  @column()
+  declare dataAccessMode: 'all' | 'selected'
+
+  /** When dataAccessMode is 'selected', only these property (leaseable entity) IDs are visible. */
+  @column({
+    columnName: 'allowed_leaseable_entity_ids',
+    prepare: (value: string[] | null) => (Array.isArray(value) ? JSON.stringify(value) : null),
+    consume: (value: unknown) => {
+      if (value == null) return null
+      if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string')
+      if (typeof value === 'string') {
+        try {
+          const parsed = JSON.parse(value)
+          if (!Array.isArray(parsed)) return null
+          return parsed.filter((v): v is string => typeof v === 'string')
+        } catch {
+          return null
+        }
+      }
+      return null
+    },
+  })
+  declare allowedLeaseableEntityIds: string[] | null
+
+  /** When dataAccessMode is 'selected', only these lease IDs are visible. */
+  @column({
+    columnName: 'allowed_lease_ids',
+    prepare: (value: string[] | null) => (Array.isArray(value) ? JSON.stringify(value) : null),
+    consume: (value: unknown) => {
+      if (value == null) return null
+      if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string')
+      if (typeof value === 'string') {
+        try {
+          const parsed = JSON.parse(value)
+          if (!Array.isArray(parsed)) return null
+          return parsed.filter((v): v is string => typeof v === 'string')
+        } catch {
+          return null
+        }
+      }
+      return null
+    },
+  })
+  declare allowedLeaseIds: string[] | null
+
   /**
    * Allowed admin page keys for this member.
    * Stored as JSON in DB column allowed_pages.

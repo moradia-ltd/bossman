@@ -3,18 +3,30 @@ import db from '@adonisjs/lucid/services/db'
 import Activity from '#models/activity'
 import Lease from '#models/lease'
 import Payment from '#models/payment'
+import { getDataAccessForUser } from '#services/data_access_service'
 
 export default class LeasesController {
-  async index({ request, inertia }: HttpContext) {
+  async index({ auth, request, inertia }: HttpContext) {
     const params = await request.paginationQs()
-
     const appEnv = request.appEnv()
-    const leases = Lease.query({ connection: appEnv })
+
+    const baseQuery = Lease.query({ connection: appEnv })
       .preload('tenants', (q) => q.select('id', 'name', 'email'))
       .preload('org', (q) => q.select('id', 'name', 'creatorEmail', 'isTestAccount'))
       .whereHas('org', (q) => q.where('is_test_account', false))
-      .withPagination(params)
 
+    const userId = auth.user?.id
+    const dataAccess =
+      userId !== undefined ? await getDataAccessForUser(userId) : null
+    if (dataAccess?.mode === 'selected' && dataAccess.allowedLeaseIds !== null) {
+      if (dataAccess.allowedLeaseIds.length === 0) {
+        baseQuery.whereRaw('1 = 0')
+      } else {
+        baseQuery.whereIn('id', dataAccess.allowedLeaseIds)
+      }
+    }
+
+    const leases = baseQuery.withPagination(params)
     return inertia.render('leases/index', { leases: inertia.defer(async () => leases) })
   }
 
@@ -33,9 +45,19 @@ export default class LeasesController {
     return response.ok(counts)
   }
 
-  async show({ params, inertia, request }: HttpContext) {
+  async show({ auth, params, inertia, request, response }: HttpContext) {
     const appEnv = request.appEnv()
     const lease = await Lease.query({ connection: appEnv }).where('id', params.id).firstOrFail()
+
+    const userId = auth.user?.id
+    const dataAccess =
+      userId !== undefined ? await getDataAccessForUser(userId) : null
+    if (dataAccess?.mode === 'selected' && dataAccess.allowedLeaseIds?.length) {
+      if (!dataAccess.allowedLeaseIds.includes(lease.id)) {
+        return response.forbidden()
+      }
+    }
+
     return inertia.render('leases/show', { lease })
   }
 

@@ -4,7 +4,7 @@ import type { NextFn } from '@adonisjs/core/types/http'
 export default class AppRoleMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const user = ctx.auth.user
-    const hasAppRole = user?.role === 'admin' || user?.role === 'super_admin'
+    const hasAppRole = user?.isAdminOrSuperAdmin
 
     if (!hasAppRole) {
       if (ctx.request.url().startsWith('/api/')) {

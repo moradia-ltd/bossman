@@ -60,11 +60,10 @@ interface NavSection {
 
 const appNavSections: NavSection[] = [
   {
-    label: 'App',
+    label: 'Togetha',
     items: [
       { title: 'Analytics', href: '/analytics', icon: <BarChart3 className='h-4 w-4' /> },
       { title: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='h-4 w-4' /> },
-      { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
       { title: 'Leases', href: '/leases', icon: <FileText className='h-4 w-4' /> },
       {
         title: 'Properties',
@@ -72,22 +71,37 @@ const appNavSections: NavSection[] = [
         icon: <Layers className='h-4 w-4' />,
       },
       { title: 'Customers', href: '/orgs', icon: <Building2 className='h-4 w-4' /> },
+
+
+    ],
+  },
+]
+
+
+const adminNavSections: NavSection[] = [
+  {
+    label: 'Admin',
+    items: [
       {
         title: 'Push notifications',
         href: '/push-notifications',
         icon: <Bell className='h-4 w-4' />,
       },
-      {
-        title: 'Backups',
-        href: '/db-backups',
-        icon: <Database className='h-4 w-4' />,
-      },
+      { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
+      { title: 'Backups', href: '/db-backups', icon: <Database className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
-      { title: 'Settings', href: '/settings', icon: <Settings className='h-4 w-4' /> },
-    ],
-  },
+    ]
+  }
 ]
 
+const settingsNavSections: NavSection[] = [
+  {
+    label: 'Settings',
+    items: [
+      { title: 'Preferences', href: '/settings', icon: <Settings className='h-4 w-4' /> },
+    ]
+  }
+]
 interface SidebarProps {
   children?: React.ReactNode
 }
@@ -133,7 +147,12 @@ export function Sidebar({ children }: SidebarProps) {
     return pageAccess.includes(key)
   }
 
-  const effectiveNavSections: NavSection[] = appNavSections.map((section) => ({
+  const allNavSections: NavSection[] = [
+    ...appNavSections,
+    ...adminNavSections,
+    ...settingsNavSections,
+  ]
+  const effectiveNavSections: NavSection[] = allNavSections.map((section) => ({
     ...section,
     items: section.items.filter((item) => item.href === '/settings' || canSeePage(item.href)),
   }))
@@ -256,7 +275,7 @@ export function Sidebar({ children }: SidebarProps) {
           <nav className='space-y-1 px-6'>
             {effectiveNavSections.map((section) => (
               <div key={section.label}>
-                {/* <SectionLabel>{section.label}</SectionLabel> */}
+                <SectionLabel>{section.label}</SectionLabel>
                 <div className='space-y-1'>{section.items.map(renderItem)}</div>
               </div>
             ))}

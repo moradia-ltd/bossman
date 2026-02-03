@@ -1,7 +1,8 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head } from '@inertiajs/react'
+import { Link } from '@inertiajs/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Pencil } from 'lucide-react'
+import { Pencil, Settings } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -119,13 +120,21 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
         key: 'actions',
         header: '',
         cell: (row) => (
-          <Button
-            variant='ghost'
-            size='icon'
-            aria-label='Edit page access'
-            onClick={() => openEditMember(row)}>
-            <Pencil className='h-4 w-4' />
-          </Button>
+          <div className='flex items-center gap-1'>
+            <Link
+              href={`/teams/members/${row.id}`}
+              className='inline-flex items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground h-9 w-9'
+              aria-label='Member settings'>
+              <Settings className='h-4 w-4' />
+            </Link>
+            <Button
+              variant='ghost'
+              size='icon'
+              aria-label='Edit page access'
+              onClick={() => openEditMember(row)}>
+              <Pencil className='h-4 w-4' />
+            </Button>
+          </div>
         ),
       },
     ],

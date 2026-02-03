@@ -3,18 +3,33 @@ import db from '@adonisjs/lucid/services/db'
 import Activity from '#models/activity'
 import Lease from '#models/lease'
 import LeaseableEntity from '#models/leaseable_entity'
+import { getDataAccessForUser } from '#services/data_access_service'
 
 export default class LeaseableEntitiesController {
-  async index({ request, inertia }: HttpContext) {
+  async index({ auth, request, inertia }: HttpContext) {
     const params = await request.paginationQs()
     const appEnv = request.appEnv()
-    const leaseableEntities = await LeaseableEntity.query({ connection: appEnv })
+
+    const baseQuery = LeaseableEntity.query({ connection: appEnv })
       .preload('org', (q) => q.select('id', 'name', 'creatorEmail'))
       .whereIn('type', ['standalone', 'block'])
       .orderBy('address', 'asc')
-      .withPagination(params)
 
-    return inertia.render('properties/index', { leaseableEntities: inertia.defer(async () => leaseableEntities) })
+    const userId = auth.user?.id
+    const dataAccess =
+      userId !== undefined ? await getDataAccessForUser(userId) : null
+    if (dataAccess?.mode === 'selected' && dataAccess.allowedLeaseableEntityIds !== null) {
+      if (dataAccess.allowedLeaseableEntityIds.length === 0) {
+        baseQuery.whereRaw('1 = 0')
+      } else {
+        baseQuery.whereIn('id', dataAccess.allowedLeaseableEntityIds)
+      }
+    }
+
+    const leaseableEntities = baseQuery.withPagination(params)
+    return inertia.render('properties/index', {
+      leaseableEntities: inertia.defer(async () => leaseableEntities),
+    })
   }
 
   async stats({ request, response }: HttpContext) {
@@ -31,12 +46,21 @@ export default class LeaseableEntitiesController {
     return response.ok(data)
   }
 
-  async show({ params, inertia, request, response }: HttpContext) {
+  async show({ auth, params, inertia, request, response }: HttpContext) {
     const appEnv = request.appEnv()
     const entity = await LeaseableEntity.query({ connection: appEnv })
       .where('id', params.id)
       .first()
     if (!entity) return response.notFound({ message: 'Property not found' })
+
+    const userId = auth.user?.id
+    const dataAccess =
+      userId !== undefined ? await getDataAccessForUser(userId) : null
+    if (dataAccess?.mode === 'selected' && dataAccess.allowedLeaseableEntityIds?.length) {
+      if (!dataAccess.allowedLeaseableEntityIds.includes(entity.id)) {
+        return response.forbidden()
+      }
+    }
 
     return inertia.render('properties/show', { property: entity })
   }
