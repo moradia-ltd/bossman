@@ -37,7 +37,8 @@ export default class OrgsController {
     const sortBy = allowedSortColumns.includes(params.sortBy as (typeof allowedSortColumns)[0])
       ? params.sortBy
       : 'created_at'
-    const sortOrder = params.sortOrder === 'asc' || params.sortOrder === 'desc' ? params.sortOrder : 'desc'
+    const sortOrder =
+      params.sortOrder === 'asc' || params.sortOrder === 'desc' ? params.sortOrder : 'desc'
 
     const appEnv = request.appEnv()
     const baseQuery = Org.query({ connection: appEnv })
@@ -219,6 +220,7 @@ export default class OrgsController {
           frequency: payload.customPaymentSchedule.frequency,
           customerId: customer!.id,
           isTrial: payload.customPaymentSchedule.trialPeriodInDays > 0,
+          connection: appEnv,
         })
         logger.info(`Subscription created for ${user.name} with id ${subscription?.id}`)
       }
