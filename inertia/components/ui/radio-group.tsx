@@ -11,6 +11,7 @@ export interface RadioGroupOption {
 }
 
 export interface RadioGroupProps {
+
   /** Gap between options (e.g. 2 = gap-2) */
   spacing?: number
   /** Options to render (selection is by option.value) */
