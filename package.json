@@ -59,7 +59,7 @@
     "shadcn": "^3.7.0",
     "ts-node-maintained": "^10.9.5",
     "typescript": "~5.8",
-    "vite": "^6.3.5"
+    "vite": "^7.3.1"
   },
   "dependencies": {
     "@adonisjs/auth": "^9.5.1",
@@ -122,7 +122,8 @@
   },
   "optionalDependencies": {
     "@swc/core-linux-x64-gnu": "^1.2.160",
-    "@rollup/rollup-linux-x64-gnu": "^4.57.1"
+    "@rollup/rollup-linux-x64-gnu": "^4.57.1",
+    "lightningcss.linux-x64-gnu.node": "^1.20.2"
   },
   "hotHook": {
     "boundaries": [
