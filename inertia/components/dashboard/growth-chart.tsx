@@ -179,7 +179,59 @@ function daysInRange(startDate: string, endDate: string): string[] {
   return days
 }
 
+const WEEKLY_VIEW_DAYS_THRESHOLD = 31 // above this use weekly until monthly
 const MONTHLY_VIEW_DAYS_THRESHOLD = 90
+
+/** Monday = 1, Sunday = 0. Get Monday on or before d. */
+function getMonday(d: Date): Date {
+  const copy = new Date(d)
+  const day = copy.getDay()
+  const diff = copy.getDate() - day + (day === 0 ? -6 : 1)
+  copy.setDate(diff)
+  return copy
+}
+
+function weeksInRange(startDate: string, endDate: string): { weekKey: string; label: string; start: string; end: string }[] {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const weeks: { weekKey: string; label: string; start: string; end: string }[] = []
+  const monday = new Date(getMonday(start))
+  while (monday <= end) {
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+    const rangeStart = monday < start ? start : monday
+    const rangeEnd = sunday > end ? end : sunday
+    const startStr = rangeStart.toISOString().slice(0, 10)
+    const endStr = rangeEnd.toISOString().slice(0, 10)
+    weeks.push({
+      weekKey: startStr,
+      label: `Week of ${monday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+      start: startStr,
+      end: endStr,
+    })
+    monday.setDate(monday.getDate() + 7)
+  }
+  return weeks
+}
+
+function buildWeeklyChartData(
+  startDate: string,
+  endDate: string,
+  data: { date: string; count: number }[],
+): { date: string; label: string; count: number; startDate: string; endDate: string }[] {
+  const weeks = weeksInRange(startDate, endDate)
+  const byDate = new Map<string, number>()
+  for (const d of data) byDate.set(d.date.slice(0, 10), d.count)
+  return weeks.map(({ weekKey, label, start, end }) => {
+    let count = 0
+    const d = new Date(start)
+    while (d <= new Date(end)) {
+      count += byDate.get(d.toISOString().slice(0, 10)) ?? 0
+      d.setDate(d.getDate() + 1)
+    }
+    return { date: weekKey, label, count, startDate: start, endDate: end }
+  })
+}
 
 function monthsInRange(startDate: string, endDate: string): { monthKey: string; label: string; start: string; end: string }[] {
   const start = new Date(startDate)
@@ -244,10 +296,12 @@ export function AnalyticsGrowthChart({
     const start = new Date(startDate)
     const end = new Date(endDate)
     const daysCount = Math.round((end.getTime() - start.getTime()) / 86400000) + 1
-    const useMonthly = daysCount > MONTHLY_VIEW_DAYS_THRESHOLD
 
-    if (useMonthly) {
+    if (daysCount > MONTHLY_VIEW_DAYS_THRESHOLD) {
       return buildMonthlyChartData(startDate, endDate, data)
+    }
+    if (daysCount > WEEKLY_VIEW_DAYS_THRESHOLD) {
+      return buildWeeklyChartData(startDate, endDate, data)
     }
 
     const days = daysInRange(startDate, endDate)

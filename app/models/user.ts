@@ -30,7 +30,7 @@ export default class User extends compose(SuperBaseModel, AuthFinder) {
   declare email: string
 
   @column()
-  declare role: 'admin'
+  declare role: 'super_admin' | 'admin' | 'normal_user'
 
   @column()
   declare pendingEmail: string | null

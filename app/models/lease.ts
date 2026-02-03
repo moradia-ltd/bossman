@@ -1,7 +1,5 @@
 import { compose } from '@adonisjs/core/helpers'
-import logger from '@adonisjs/core/services/logger'
 import {
-  afterCreate,
   afterDelete,
   afterSave,
   beforeSave,

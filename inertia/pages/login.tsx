@@ -20,11 +20,12 @@ interface LoginValues {
 }
 
 interface LoginProps {
+  isDev: boolean
   errors: {
     message: string
   }
 }
-export default function Login({ errors }: LoginProps) {
+export default function Login({ errors, isDev }: LoginProps) {
   const { mutate: loginMutation, isPending } = useMutation({
     mutationFn: (values: LoginValues) => api.post('/auth/login', values),
     onSuccess: (response) => {
@@ -46,8 +47,8 @@ export default function Login({ errors }: LoginProps) {
 
   const formik = useFormik<LoginValues>({
     initialValues: {
-      email: 'admin@test.com',
-      password: 'password',
+      email: isDev ? 'kenneth@togetha.co.uk' : '',
+      password: isDev ? 'password' : '',
       remember: false,
     },
     onSubmit: (values) => loginMutation(values),

@@ -253,10 +253,10 @@ export function Sidebar({ children }: SidebarProps) {
             {effectiveNavSections.flatMap((s) => s.items).map(renderItem)}
           </nav>
         ) : (
-          <nav className='space-y-1 px-4'>
+          <nav className='space-y-1 px-6'>
             {effectiveNavSections.map((section) => (
               <div key={section.label}>
-                <SectionLabel>{section.label}</SectionLabel>
+                {/* <SectionLabel>{section.label}</SectionLabel> */}
                 <div className='space-y-1'>{section.items.map(renderItem)}</div>
               </div>
             ))}
@@ -264,7 +264,7 @@ export function Sidebar({ children }: SidebarProps) {
         )}
       </ScrollArea>
 
-      <div className='border-t p-3'>
+      <div className='border-t p-3 text-center'>
 
         <span className={`text-xs font-bold text-center text-${environment === 'prod' ? 'green' : 'red'}-500`}>{startCase(environment)} </span>
       </div>

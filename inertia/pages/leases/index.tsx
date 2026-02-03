@@ -6,6 +6,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { timeAgo } from '#utils/date'
+import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -57,7 +58,11 @@ const columns: Column<RawLease>[] = [
     key: 'Org',
     header: 'Org',
     width: 130,
-    cell: (row) => <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>{row.org.cleanName}</Link>,
+    cell: (row) => (
+      <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>
+        {row.org.cleanName}
+      </Link>
+    ),
   },
   {
     key: 'Created At',
@@ -87,24 +92,29 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
         <PageHeader title='Leases' description='All leases for your organisation.' />
 
         <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={4}>
-          <StatCard title='Total' description='All leases' value={stats?.total} icon={FileText} />
+          <StatCard
+            title='Total'
+            description='All leases'
+            value={formatNumber(stats?.total)}
+            icon={FileText}
+          />
           <StatCard
             title='Active'
             description='Currently active'
-            value={stats?.active}
+            value={formatNumber(stats?.active)}
             icon={CheckCircle}
             iconClassName='h-4 w-4 text-green-600'
           />
           <StatCard
             title='Pending'
             description='Awaiting completion'
-            value={stats?.pending}
+            value={formatNumber(stats?.pending)}
             icon={AlertCircle}
           />
           <StatCard
             title='Expired'
             description='Ended leases'
-            value={stats?.expired}
+            value={formatNumber(stats?.expired)}
             icon={XCircle}
           />
         </SimpleGrid>
