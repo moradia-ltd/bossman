@@ -1,12 +1,14 @@
+import { compose } from '@adonisjs/core/helpers'
 import { belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { Auditable } from '@stouder-io/adonis-auditing'
 import type { DateTime } from 'luxon'
 import SuperBaseModel from './super_base.js'
 import User from './user.js'
 
 export type TeamRole = 'owner' | 'admin' | 'member'
 
-export default class TeamMember extends SuperBaseModel {
+export default class TeamMember extends compose(SuperBaseModel, Auditable) {
   static table = 'team_members'
 
   @column({ isPrimary: true })
@@ -98,6 +100,14 @@ export default class TeamMember extends SuperBaseModel {
     },
   })
   declare allowedPages: string[] | null
+
+  /** When set, access is revoked at this time by a scheduled job. Leave empty for no expiry. */
+  @column.dateTime({ columnName: 'expires_at', serializeAs: 'expiresAt' })
+  declare expiresAt: DateTime | null
+
+  /** Set by job when expires_at is reached; member no longer has access. */
+  @column.dateTime({ columnName: 'revoked_at', serializeAs: 'revokedAt' })
+  declare revokedAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -1,5 +1,7 @@
-import type { DateTime } from 'luxon'
+import { compose } from '@adonisjs/core/helpers'
 import { column } from '@adonisjs/lucid/orm'
+import { Auditable } from '@stouder-io/adonis-auditing'
+import type { DateTime } from 'luxon'
 import SuperBaseModel from './super_base.js'
 
 export type PushNotificationTargetType =
@@ -11,7 +13,7 @@ export type PushNotificationTargetType =
 
 export type PushNotificationStatus = 'pending' | 'sent' | 'failed' | 'cancelled'
 
-export default class PushNotification extends SuperBaseModel {
+export default class PushNotification extends compose(SuperBaseModel, Auditable) {
   @column({ isPrimary: true })
   declare id: string
 

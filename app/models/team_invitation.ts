@@ -1,11 +1,13 @@
+import { compose } from '@adonisjs/core/helpers'
 import { belongsTo, column, computed } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { Auditable } from '@stouder-io/adonis-auditing'
 import { DateTime } from 'luxon'
 import SuperBaseModel from './super_base.js'
 import type { TeamRole } from './team_member.js'
 import User from './user.js'
 
-export default class TeamInvitation extends SuperBaseModel {
+export default class TeamInvitation extends compose(SuperBaseModel, Auditable) {
   static table = 'team_invitations'
 
   @column({ isPrimary: true })

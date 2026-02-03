@@ -1,7 +1,9 @@
+import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
+import { Auditable } from '@stouder-io/adonis-auditing'
 import type { DateTime } from 'luxon'
 
-export default class DbBackup extends BaseModel {
+export default class DbBackup extends compose(BaseModel, Auditable) {
   @column({ isPrimary: true }) declare id: number
 
   @column() declare filePath: string | null
