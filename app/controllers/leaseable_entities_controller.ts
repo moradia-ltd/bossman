@@ -14,7 +14,7 @@ export default class LeaseableEntitiesController {
       .orderBy('address', 'asc')
       .withPagination(params)
 
-    return inertia.render('properties/index', { leaseableEntities })
+    return inertia.render('properties/index', { leaseableEntities: inertia.defer(async () => leaseableEntities) })
   }
 
   async stats({ request, response }: HttpContext) {

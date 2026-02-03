@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
+import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { Building2, Home, MapPin } from 'lucide-react'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -9,8 +9,9 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
-import { Badge } from '@/components/ui/badge'
+import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
+import { Badge } from '@/components/ui/badge'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
@@ -73,7 +74,6 @@ export default function LeaseableEntitiesIndex({ leaseableEntities }: LeaseableE
       return res.data
     },
   })
-  console.log('🚀 ~ LeaseableEntitiesIndex ~ stats:', stats)
 
   return (
     <DashboardLayout>
@@ -107,27 +107,28 @@ export default function LeaseableEntitiesIndex({ leaseableEntities }: LeaseableE
           />
         </SimpleGrid>
 
-        <AppCard
-          title='All properties'
-          description={`${leaseableEntities.meta.total} total`}
-        >
-          <DataTable
+        <Deferred data='leaseableEntities' fallback={<LoadingSkeleton type='table' />}>
+          <AppCard
+            title='All properties'
+            description={`${leaseableEntities?.meta?.total ?? 0} total`}>
+            <DataTable
               columns={columns}
-              data={leaseableEntities.data}
+              data={leaseableEntities?.data ?? []}
               searchable
               searchPlaceholder='Search by address...'
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
               pagination={{
-                page: leaseableEntities.meta.currentPage,
-                pageSize: leaseableEntities.meta.perPage,
-                total: leaseableEntities.meta.total,
+                page: leaseableEntities?.meta?.currentPage ?? 1,
+                pageSize: leaseableEntities?.meta?.perPage ?? 20,
+                total: leaseableEntities?.meta?.total ?? 0,
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               }}
               emptyMessage='No properties found'
             />
-        </AppCard>
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

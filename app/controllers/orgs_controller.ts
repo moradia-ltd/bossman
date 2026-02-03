@@ -62,7 +62,7 @@ export default class OrgsController {
       agencies: agenciesResult.total,
     }
 
-    return inertia.render('orgs/index', { orgs, stats })
+    return inertia.render('orgs/index', { orgs: inertia.defer(async () => orgs), stats })
   }
 
   async stats({ request, response }: HttpContext) {

@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router } from '@inertiajs/react'
+import { Deferred, Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { Download, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { useState } from 'react'
@@ -16,6 +16,7 @@ import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { LoadingSkeleton } from '@/components/ui'
 import { LoadingOverlay } from '@/components/ui/loading'
 import {
   Select,
@@ -247,7 +248,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
                         <SelectValue placeholder='Select a backup to restore' />
                       </SelectTrigger>
                       <SelectContent>
-                        {backups.data.map((backup) => (
+                        {(backups?.data ?? []).map((backup) => (
                           <SelectItem key={backup.id} value={String(backup.id)}>
                             {backup.fileName ?? backup.filePath ?? `Backup #${backup.id}`} (
                             {backup.createdAt ? new Date(backup.createdAt).toLocaleString() : '—'})
@@ -293,20 +294,22 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
           }
         />
 
-        <AppCard title='Backups' description={`${backups.meta.total} total`}>
-          <DataTable
-            columns={columns}
-            data={backups.data}
-            emptyMessage='No backups yet.'
-            pagination={{
-              page: backups.meta.currentPage,
-              pageSize: backups.meta.perPage,
-              total: backups.meta.total,
-              onPageChange: changePage,
-              onPageSizeChange: changeRows,
-            }}
-          />
-        </AppCard>
+        <Deferred data="backups" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='Backups' description={`${backups?.meta?.total ?? 0} total`}>
+            <DataTable
+              columns={columns}
+              data={backups?.data ?? []}
+              emptyMessage='No backups yet.'
+              pagination={{
+                page: backups?.meta?.currentPage ?? 1,
+                pageSize: backups?.meta?.perPage ?? 20,
+                total: backups?.meta?.total ?? 0,
+                onPageChange: changePage,
+                onPageSizeChange: changeRows,
+              }}
+            />
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

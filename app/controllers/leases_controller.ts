@@ -9,13 +9,13 @@ export default class LeasesController {
     const params = await request.paginationQs()
 
     const appEnv = request.appEnv()
-    const leases = await Lease.query({ connection: appEnv })
+    const leases = Lease.query({ connection: appEnv })
       .preload('tenants', (q) => q.select('id', 'name', 'email'))
       .preload('org', (q) => q.select('id', 'name', 'creatorEmail', 'isTestAccount'))
       .whereHas('org', (q) => q.where('is_test_account', false))
       .withPagination(params)
 
-    return inertia.render('leases/index', { leases })
+    return inertia.render('leases/index', { leases: inertia.defer(async () => leases) })
   }
 
   async stats({ response, request }: HttpContext) {

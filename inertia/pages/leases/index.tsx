@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
+import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { AlertCircle, CheckCircle, FileText, XCircle } from 'lucide-react'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -11,7 +11,7 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
-import { Stack } from '@/components/ui'
+import { LoadingSkeleton, Stack } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
@@ -88,6 +88,7 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
   return (
     <DashboardLayout>
       <Head title='Leases' />
+
       <div className='space-y-6'>
         <PageHeader title='Leases' description='All leases for your organisation.' />
 
@@ -119,24 +120,27 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
           />
         </SimpleGrid>
 
-        <AppCard title='All leases'>
-          <DataTable
-            columns={columns}
-            data={leases.data}
-            searchable
-            searchPlaceholder='Search by name...'
-            searchValue={String(query.search || '')}
-            onSearchChange={(value) => searchTable(String(value || ''))}
-            pagination={{
-              page: leases.meta.currentPage,
-              pageSize: leases.meta.perPage,
-              total: leases.meta.total,
-              onPageChange: changePage,
-              onPageSizeChange: changeRows,
-            }}
-            emptyMessage='No leases found'
-          />
-        </AppCard>
+        <Deferred data="leases" fallback={<LoadingSkeleton type='table' />}>
+
+          <AppCard title='All leases'>
+            <DataTable
+              columns={columns}
+              data={leases?.data}
+              searchable
+              searchPlaceholder='Search by name...'
+              searchValue={String(query.search || '')}
+              onSearchChange={(value) => searchTable(String(value || ''))}
+              pagination={{
+                page: leases?.meta.currentPage,
+                pageSize: leases?.meta.perPage,
+                total: leases?.meta.total,
+                onPageChange: changePage,
+                onPageSizeChange: changeRows,
+              }}
+              emptyMessage='No leases found'
+            />
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

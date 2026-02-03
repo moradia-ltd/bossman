@@ -1,5 +1,6 @@
-import { Head } from '@inertiajs/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { SharedProps } from '@adonisjs/inertia/types'
+import { Deferred, Head } from '@inertiajs/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Pencil } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -9,7 +10,7 @@ import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
@@ -66,20 +67,23 @@ const memberColumns: Column<RawTeamMember>[] = [
   { key: 'createdAt', header: 'Joined', cell: (row) => timeAgo(row.createdAt) },
 ]
 
-export default function TeamsPage() {
+interface TeamsPageProps extends SharedProps {
+  members?: PaginatedResponse<RawTeamMember>
+}
+
+export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
   const queryClient = useQueryClient()
-  const { query, changePage, changeRows, searchTable } = useInertiaParams()
+  const { query, changePage, changeRows, searchTable } = useInertiaParams({
+    page: 1,
+    perPage: 10,
+    search: '',
+    sortBy: 'createdAt',
+    sortOrder: 'asc',
+  })
   const [editMember, setEditMember] = useState<RawTeamMember | null>(null)
   const [editMemberPages, setEditMemberPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
 
-  const { data: members, isError, isPending } = useQuery({
-    queryKey: ['dashboard-members', query],
-    queryFn: () =>
-      api.get<PaginatedResponse<RawTeamMember>>('/members', {
-        params: query,
-      }),
-    select: (res) => res.data,
-  })
+  const members = membersProp
 
   const updateMemberMutation = useMutation({
     mutationFn: async ({
@@ -140,18 +144,14 @@ export default function TeamsPage() {
 
         <TeamInvitations />
 
-        <AppCard title='Members' description='Users with dashboard access.'>
-          {isError ? (
-            <Alert variant='destructive'>
-              <AlertDescription>Failed to load members.</AlertDescription>
-            </Alert>
-          ) : (
+        <Deferred data="members" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='Members' description='Users with dashboard access.'>
             <DataTable
               columns={memberColumnsWithActions}
               data={members?.data ?? []}
               searchable
               searchPlaceholder='Search members...'
-              searchValue={query.search}
+              searchValue={String(query.search ?? '')}
               onSearchChange={(value) => {
                 searchTable(value)
                 changePage(1)
@@ -170,11 +170,10 @@ export default function TeamsPage() {
                     }
                   : undefined
               }
-              loading={isPending}
               emptyMessage='No members found'
             />
-          )}
-        </AppCard>
+          </AppCard>
+        </Deferred>
 
         {/* Edit member page access modal */}
         <BaseModal

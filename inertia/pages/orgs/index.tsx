@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router } from '@inertiajs/react'
+import { Deferred, Head, Link, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { Briefcase, Building2, FlaskConical, Plus, Star, User } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -13,6 +13,7 @@ import { FilterSortBar } from '@/components/dashboard/filter-sort-bar'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -314,39 +315,41 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
           />
         </SimpleGrid>
 
-        <AppCard title='All customers' description={`${orgs.meta.total} total`}>
-          <div className='space-y-4'>
-            <FilterSortBar
-              filters={filterSortFields}
-              sort={sortConfig}
-              onFilterChange={handleFilterChange}
-              onClear={clearAllFilters}
-              hasActiveFilters={hasActiveFilters}
-              activeChips={activeChips}
-            />
-            <DataTable
-              columns={columns}
-              data={orgs.data}
-              searchable
-              searchPlaceholder='Search by name or company...'
-              searchValue={String(query.search || '')}
-              onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={{
-                page: orgs.meta.currentPage,
-                pageSize: orgs.meta.perPage,
-                total: orgs.meta.total,
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              }}
-              emptyMessage='No customers found'
-              selectable
-              selectedRows={selectedRows}
-              onSelectionChange={setSelectedRows}
-              getRowId={(row) => String(row.id)}
-              bulkActions={bulkActions}
-            />
-          </div>
-        </AppCard>
+        <Deferred data="orgs" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='All customers' description={`${orgs?.meta?.total ?? 0} total`}>
+            <div className='space-y-4'>
+              <FilterSortBar
+                filters={filterSortFields}
+                sort={sortConfig}
+                onFilterChange={handleFilterChange}
+                onClear={clearAllFilters}
+                hasActiveFilters={hasActiveFilters}
+                activeChips={activeChips}
+              />
+              <DataTable
+                columns={columns}
+                data={orgs?.data ?? []}
+                searchable
+                searchPlaceholder='Search by name or company...'
+                searchValue={String(query.search || '')}
+                onSearchChange={(value) => searchTable(String(value || ''))}
+                pagination={{
+                  page: orgs?.meta?.currentPage ?? 1,
+                  pageSize: orgs?.meta?.perPage ?? 20,
+                  total: orgs?.meta?.total ?? 0,
+                  onPageChange: changePage,
+                  onPageSizeChange: changeRows,
+                }}
+                emptyMessage='No customers found'
+                selectable
+                selectedRows={selectedRows}
+                onSelectionChange={setSelectedRows}
+                getRowId={(row) => String(row.id)}
+                bulkActions={bulkActions}
+              />
+            </div>
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

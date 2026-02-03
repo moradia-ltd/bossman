@@ -10,11 +10,10 @@ export default class DbBackupsController {
     const params = await request.paginationQs()
     const appEnv = request.appEnv()
     const backups = await DbBackup.query({ connection: appEnv })
-
       .orderBy('createdAt', 'desc')
       .paginate(params.page ?? 1, params.perPage ?? 20)
 
-    return inertia.render('db-backups/index', { backups })
+    return inertia.render('db-backups/index', { backups: inertia.defer(async () => backups) })
   }
 
   /** API: create a new backup. Returns JSON. */
