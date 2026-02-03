@@ -8,6 +8,7 @@ export const PAGE_KEYS = [
   'properties',
   'pushNotifications',
   'dbBackups',
+  'logs',
 ] as const
 
 export type PageKey = (typeof PAGE_KEYS)[number]
@@ -22,6 +23,7 @@ export const PAGE_KEY_TO_PATH: Record<PageKey, string> = {
   properties: '/properties',
   pushNotifications: '/push-notifications',
   dbBackups: '/db-backups',
+  logs: '/logs',
 }
 
 export function requiredPageKeyForPath(pathname: string): PageKey {
@@ -38,6 +40,7 @@ export function requiredPageKeyForPath(pathname: string): PageKey {
   if (path.startsWith('/properties')) return 'properties'
   if (path.startsWith('/push-notifications')) return 'pushNotifications'
   if (path.startsWith('/db-backups')) return 'dbBackups'
+  if (path.startsWith('/logs')) return 'logs'
 
   return 'dashboard'
 }

@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
-import { format } from 'date-fns'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { format } from 'date-fns'
 import { FileText, Layers } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -74,8 +74,7 @@ export default function MemberShow({ member }: MemberShowProps) {
   })
 
   const updateMutation = useMutation({
-    mutationFn: (payload: UpdateMemberPayload) =>
-      api.put(`/members/${member.id}`, payload),
+    mutationFn: (payload: UpdateMemberPayload) => api.put(`/members/${member.id}`, payload),
     onSuccess: () => {
       toast.success('Data access updated')
       router.reload()
@@ -261,6 +260,7 @@ export default function MemberShow({ member }: MemberShowProps) {
               description='Optional. Leave empty for no time limit. After this time the member will see no properties or leases.'>
               <DateTimePicker
                 id='member-data-access-expires-at'
+
                 value={
                   dataAccessExpiresAt
                     ? format(new Date(dataAccessExpiresAt), "yyyy-MM-dd'T'HH:mm")
@@ -282,4 +282,3 @@ export default function MemberShow({ member }: MemberShowProps) {
     </DashboardLayout>
   )
 }
-

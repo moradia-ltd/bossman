@@ -32,7 +32,7 @@ export default class TeamsPageController {
       .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'asc')
       .paginate(params.page || 1, params.perPage || 10)
 
-    return inertia.render('dashboard/teams', { members: inertia.defer(async () => members) })
+    return inertia.render('teams/index', { members: inertia.defer(async () => members) })
   }
 
   async show({ auth, params, inertia, request, response }: HttpContext) {

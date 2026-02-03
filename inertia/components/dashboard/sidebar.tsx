@@ -20,6 +20,7 @@ import {
   Settings,
   Sun,
   UsersRound,
+  ScrollText,
 } from 'lucide-react'
 import type { RawUser } from '#types/model-types'
 import { startCase } from '#utils/functions'
@@ -89,6 +90,7 @@ const adminNavSections: NavSection[] = [
       },
       { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
       { title: 'Backups', href: '/db-backups', icon: <Database className='h-4 w-4' /> },
+      { title: 'Logs', href: '/logs', icon: <ScrollText className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
     ]
   }

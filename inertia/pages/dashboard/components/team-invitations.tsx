@@ -32,6 +32,7 @@ export type PageKey =
   | 'properties'
   | 'pushNotifications'
   | 'dbBackups'
+  | 'logs'
 
 export const PAGE_OPTIONS: Array<{
   key: PageKey
@@ -52,6 +53,7 @@ export const PAGE_OPTIONS: Array<{
     description: 'Send and manage push notifications',
   },
   { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
+  { key: 'logs', label: 'Logs', description: 'View audit events across the app' },
 ]
 
 export function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): PageKey[] {

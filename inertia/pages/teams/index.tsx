@@ -1,6 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head } from '@inertiajs/react'
-import { Link } from '@inertiajs/react'
+import { Deferred, Head, Link, router } from '@inertiajs/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Pencil, Settings } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -104,6 +103,7 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
       setEditMember(null)
       toast.success('Member updated')
       queryClient.invalidateQueries({ queryKey: ['dashboard-members'] })
+      router.reload()
     },
     onError: (err: ServerErrorResponse) => {
       toast.error(serverErrorResponder(err) || 'Failed to update member')
@@ -113,7 +113,9 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
   const openEditMember = (row: RawTeamMember) => {
     setEditMember(row)
     setEditMemberPages(
-      row.allowedPages?.length ? [...(row.allowedPages as PageKey[])] : PAGE_OPTIONS.map((o) => o.key),
+      row.allowedPages?.length
+        ? [...(row.allowedPages as PageKey[])]
+        : PAGE_OPTIONS.map((o) => o.key),
     )
     setEditEnableProdAccess(row.enableProdAccess ?? true)
   }
@@ -134,7 +136,8 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
             </Link>
             <Button
               variant='ghost'
-              size='icon'
+              size='xs'
+
               aria-label='Edit page access'
               onClick={() => openEditMember(row)}>
               <Pencil className='h-4 w-4' />
@@ -158,7 +161,7 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
 
         <TeamInvitations />
 
-        <Deferred data="members" fallback={<LoadingSkeleton type='table' />}>
+        <Deferred data='members' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='Members' description='Users with dashboard access.'>
             <DataTable
               columns={memberColumnsWithActions}
@@ -173,15 +176,15 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
               pagination={
                 members?.meta
                   ? {
-                      page: members.meta.currentPage,
-                      pageSize: members.meta.perPage,
-                      total: members.meta.total,
-                      onPageChange: (p) => changePage(p),
-                      onPageSizeChange: (pageSize) => {
-                        changeRows(pageSize)
-                        changePage(1)
-                      },
-                    }
+                    page: members.meta.currentPage,
+                    pageSize: members.meta.perPage,
+                    total: members.meta.total,
+                    onPageChange: (p) => changePage(p),
+                    onPageSizeChange: (pageSize) => {
+                      changeRows(pageSize)
+                      changePage(1)
+                    },
+                  }
                   : undefined
               }
               emptyMessage='No members found'
