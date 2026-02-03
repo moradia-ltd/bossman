@@ -9,7 +9,7 @@ export default class TeamsPageController {
     const freshUser = await User.findByOrFail('email', user.email)
     const params = await request.paginationQs()
 
-    const isAdmin = (user as { role?: string }).role === 'admin'
+    const isAdmin = user.isAdminOrSuperAdmin
     if (!isAdmin) {
       return response.forbidden({ error: 'Access required.' })
     }

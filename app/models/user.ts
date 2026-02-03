@@ -3,7 +3,7 @@ import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 import { compose } from '@adonisjs/core/helpers'
 import hash from '@adonisjs/core/services/hash'
-import { column, hasMany } from '@adonisjs/lucid/orm'
+import { column, computed, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { type Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
@@ -31,6 +31,11 @@ export default class User extends compose(SuperBaseModel, AuthFinder) {
 
   @column()
   declare role: 'super_admin' | 'admin' | 'normal_user'
+
+  @computed()
+  public get isAdminOrSuperAdmin() {
+    return this.role === 'admin' || this.role === 'super_admin'
+  }
 
   @column()
   declare pendingEmail: string | null

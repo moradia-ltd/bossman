@@ -304,7 +304,7 @@ export default class TeamInvitationsController {
     const freshUser = await User.findByOrFail('email', user.email)
     const invitationId = request.param('invitationId')
 
-    if ((user as { role?: string }).role !== 'admin') {
+    if (!user.isAdminOrSuperAdmin) {
       return response.forbidden({ error: 'Access required.' })
     }
     const allowed = await getPageAccessForUser(freshUser.id)

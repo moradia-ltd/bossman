@@ -11,7 +11,7 @@ export default class MembersController {
     const freshUser = await User.findByOrFail('email', user.email)
     const params = await request.paginationQs()
 
-    const isAdmin = (user as { role?: string }).role === 'admin'
+    const isAdmin = user.isAdminOrSuperAdmin
     if (!isAdmin) {
       return response.forbidden({ error: 'Access required.' })
     }
@@ -41,7 +41,7 @@ export default class MembersController {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)
 
-    const isAdmin = (user as { role?: string }).role === 'admin'
+    const isAdmin = user.isAdminOrSuperAdmin
     if (!isAdmin) {
       return response.forbidden({ error: 'Access required.' })
     }
@@ -74,7 +74,7 @@ export default class MembersController {
     const freshUser = await User.findByOrFail('email', user.email)
     const memberId = request.param('memberId')
 
-    if ((user as { role?: string }).role !== 'admin') {
+    if (!user.isAdminOrSuperAdmin) {
       return response.forbidden({ error: 'Access required.' })
     }
     const allowed = await getPageAccessForUser(freshUser.id)

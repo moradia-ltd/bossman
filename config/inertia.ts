@@ -19,9 +19,9 @@ const inertiaConfig = defineConfig({
     isDev: () => env.get('NODE_ENV') === 'development',
     pageAccess: (ctx) =>
       ctx.inertia.always(async () => {
-        const user = ctx.auth?.user as { id?: string; role?: string } | undefined
+        const user = ctx.auth?.user
         if (!user?.id) return null
-        if (user.role !== 'admin') return null
+        if (!user.isAdminOrSuperAdmin) return null
         return await getPageAccessForUser(user.id)
       }),
     nodeEnv: () => env.get('NODE_ENV'),
