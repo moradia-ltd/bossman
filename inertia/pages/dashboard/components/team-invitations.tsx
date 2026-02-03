@@ -10,6 +10,7 @@ import { HStack } from '@/components/ui/hstack'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Stack } from '@/components/ui/stack'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -18,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Switch } from '@/components/ui/switch'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
@@ -40,21 +40,21 @@ export const PAGE_OPTIONS: Array<{
   description: string
   required?: boolean
 }> = [
-  { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
-  { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
-  { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
-  { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
-  { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
-  { key: 'leases', label: 'Leases', description: 'Leases and tenancies' },
-  { key: 'properties', label: 'Properties', description: 'Properties and leaseable entities' },
-  {
-    key: 'pushNotifications',
-    label: 'Push notifications',
-    description: 'Send and manage push notifications',
-  },
-  { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
-  { key: 'logs', label: 'Logs', description: 'View audit events across the app' },
-]
+    { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
+    { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
+    { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
+    { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
+    { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
+    { key: 'leases', label: 'Leases', description: 'Leases and tenancies' },
+    { key: 'properties', label: 'Properties', description: 'Properties and leaseable entities' },
+    {
+      key: 'pushNotifications',
+      label: 'Push notifications',
+      description: 'Send and manage push notifications',
+    },
+    { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
+    { key: 'logs', label: 'Logs', description: 'View audit events across the app' },
+  ]
 
 export function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): PageKey[] {
   const set = new Set(pages)
@@ -81,11 +81,7 @@ export function TeamInvitationsInviteButton() {
   const [enableProdAccess, setEnableProdAccess] = useState(true)
 
   const inviteMutation = useMutation({
-    mutationFn: (payload: {
-      email: string
-      allowedPages: PageKey[]
-      enableProdAccess: boolean
-    }) =>
+    mutationFn: (payload: { email: string; allowedPages: PageKey[]; enableProdAccess: boolean }) =>
       api.post('/invitations', {
         email: payload.email,
         allowedPages: payload.allowedPages,
@@ -161,7 +157,8 @@ export function TeamInvitationsInviteButton() {
           <div>
             <Label htmlFor='inviteProdAccess'>Enabled Prod access</Label>
             <p className='text-xs text-muted-foreground'>
-              If off, the invited member will only be able to access the dev database, not production.
+              If off, the invited member will only be able to access the dev database, not
+              production.
             </p>
           </div>
           <Switch
@@ -212,9 +209,7 @@ export function TeamInvitations() {
   const invitationsQuery = useQuery({
     queryKey: ['dashboard-invitations'],
     queryFn: async () => {
-      const res = await api.get<{ data: { invitations: InvitationRow[] } }>(
-        '/members/invitations',
-      )
+      const res = await api.get<{ data: { invitations: InvitationRow[] } }>('/members/invitations')
       return res.data.data
     },
   })
@@ -257,9 +252,7 @@ export function TeamInvitations() {
   return (
     <>
       {invitationRows.length > 0 && (
-        <AppCard
-          title='Pending invitations'
-          description='Invitations waiting for acceptance.'>
+        <AppCard title='Pending invitations' description='Invitations waiting for acceptance.'>
           <div className='overflow-x-auto'>
             <Table>
               <TableHeader>
@@ -367,9 +360,7 @@ export function TeamInvitations() {
                       checked={checked}
                       disabled={disabled}
                       onCheckedChange={(v) =>
-                        setEditInvitationPages((prev) =>
-                          togglePageInSet(prev, opt.key, v === true),
-                        )
+                        setEditInvitationPages((prev) => togglePageInSet(prev, opt.key, v === true))
                       }
                     />
                     <div className='min-w-0'>

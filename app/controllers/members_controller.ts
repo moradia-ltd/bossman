@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 import Lease from '#models/lease'
 import LeaseableEntity from '#models/leaseable_entity'
 import TeamInvitation from '#models/team_invitation'
@@ -6,7 +7,6 @@ import TeamMember from '#models/team_member'
 import User from '#models/user'
 import { getPageAccessForUser } from '#services/page_access_service'
 import { updateMemberValidator } from '#validators/team'
-import { DateTime } from 'luxon'
 
 export default class MembersController {
   async index({ auth, request, response }: HttpContext) {
@@ -136,14 +136,16 @@ export default class MembersController {
       member.dataAccessMode = p === 'selected' || l === 'selected' ? 'selected' : 'all'
     }
     if (body.allowedLeaseableEntityIds !== undefined) {
-      member.allowedLeaseableEntityIds =
-        body.allowedLeaseableEntityIds?.length ? body.allowedLeaseableEntityIds : null
+      member.allowedLeaseableEntityIds = body.allowedLeaseableEntityIds?.length
+        ? body.allowedLeaseableEntityIds
+        : null
     }
     if (body.allowedLeaseIds !== undefined) {
       member.allowedLeaseIds = body.allowedLeaseIds?.length ? body.allowedLeaseIds : null
     }
     if (body.dataAccessExpiresAt !== undefined) {
-      const trimmed = typeof body.dataAccessExpiresAt === 'string' ? body.dataAccessExpiresAt.trim() : ''
+      const trimmed =
+        typeof body.dataAccessExpiresAt === 'string' ? body.dataAccessExpiresAt.trim() : ''
       const parsed = trimmed ? DateTime.fromISO(trimmed) : null
       member.dataAccessExpiresAt = parsed?.isValid ? parsed : null
     }

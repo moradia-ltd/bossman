@@ -253,14 +253,14 @@ export default function MemberShow({ member }: MemberShowProps) {
             </TabsContent>
           </Tabs>
 
-          <div className='mt-6 space-y-4'>
+          <div className='mt-6 space-y-4 max-w-md'>
             <FormField
               label='Access to properties & leases expires at'
               htmlFor='member-data-access-expires-at'
               description='Optional. Leave empty for no time limit. After this time the member will see no properties or leases.'>
               <DateTimePicker
-                id='member-data-access-expires-at'
-
+                placeholder='No time limit'
+                clearable
                 value={
                   dataAccessExpiresAt
                     ? format(new Date(dataAccessExpiresAt), "yyyy-MM-dd'T'HH:mm")
@@ -269,8 +269,7 @@ export default function MemberShow({ member }: MemberShowProps) {
                 onChange={(value) =>
                   setDataAccessExpiresAt(value ? new Date(value).toISOString() : '')
                 }
-                placeholder='No time limit'
-                clearable
+
               />
             </FormField>
             <Button onClick={handleSave} isLoading={updateMutation.isPending} loadingText='Saving…'>

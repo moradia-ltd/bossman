@@ -9,8 +9,8 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { LoadingSkeleton } from '@/components/ui'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { SimpleGrid } from '@/components/ui/simplegrid'
@@ -65,8 +65,8 @@ interface LeaseableEntitiesIndexProps extends SharedProps {
 
 export default function LeaseableEntitiesIndex({
   leaseableEntities,
-  dataAccessExpired = false,
-  dataAccessExpiredAt = null,
+  dataAccessExpired,
+  dataAccessExpiredAt,
 }: LeaseableEntitiesIndexProps) {
   const { changePage, changeRows, searchTable, query } = useInertiaParams({
     page: 1,
@@ -97,9 +97,7 @@ export default function LeaseableEntitiesIndex({
             <AlertTitle>Access expired</AlertTitle>
             <AlertDescription>
               Your access to properties and leases expired
-              {dataAccessExpiredAt
-                ? ` on ${dateFormatter(dataAccessExpiredAt)}. `
-                : '. '}
+              {dataAccessExpiredAt ? ` on ${dateFormatter(dataAccessExpiredAt)}. ` : '. '}
               Contact your administrator to restore access.
             </AlertDescription>
           </Alert>
