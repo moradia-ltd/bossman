@@ -37,6 +37,7 @@ class ApiClient {
 
 const api = new ApiClient({
   baseURL: '/api/v1',
+  withCredentials: true, // send session cookie with requests (required for auth in production)
   headers: {
     'X-Device-Type': 'web',
     Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
