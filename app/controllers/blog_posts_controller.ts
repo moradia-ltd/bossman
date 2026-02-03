@@ -20,7 +20,7 @@ export default class BlogPostsController {
       .sortBy(params.sortBy || 'publishedAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 12)
 
-    return inertia.render('blog/index', { posts })
+    return inertia.render('blog/index', { posts: inertia.defer(async () => posts) })
   }
 
   async show({ params, inertia, response }: HttpContext) {
@@ -51,7 +51,7 @@ export default class BlogPostsController {
       .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 10)
 
-    return inertia.render('blog/manage/index', { posts })
+    return inertia.render('blog/manage/index', { posts: inertia.defer(async () => posts) })
   }
 
   async create({ inertia }: HttpContext) {

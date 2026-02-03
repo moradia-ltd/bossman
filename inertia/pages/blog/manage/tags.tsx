@@ -1,9 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Deferred, Head, router, useForm } from '@inertiajs/react'
 import { Plus, Trash2 } from 'lucide-react'
 import type { RawBlogTag } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingSkeleton } from '@/components/ui'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
 import { AppCard } from '@/components/ui/app-card'
@@ -13,7 +14,7 @@ import { Stack } from '@/components/ui/stack'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface BlogAdminTagsProps extends SharedProps {
-  tags: RawBlogTag[]
+  tags?: RawBlogTag[]
 }
 
 export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
@@ -73,8 +74,9 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
           }
         />
 
-        <AppCard title='All tags' description={`${tags.length} total`}>
-          <Table>
+        <Deferred data="tags" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='All tags' description={`${(tags ?? []).length} total`}>
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -83,7 +85,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tags.map((t) => (
+                {(tags ?? []).map((t) => (
                   <TableRow key={t.id}>
                     <TableCell className='font-medium'>{t.name}</TableCell>
                     <TableCell className='text-muted-foreground'>/{t.slug}</TableCell>
@@ -101,7 +103,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
                     </TableCell>
                   </TableRow>
                 ))}
-                {!tags.length ? (
+                {!(tags ?? []).length ? (
                   <TableRow>
                     <TableCell colSpan={3} className='text-center text-muted-foreground'>
                       No tags yet.
@@ -110,7 +112,8 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
                 ) : null}
               </TableBody>
             </Table>
-        </AppCard>
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

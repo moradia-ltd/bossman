@@ -1,9 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Deferred, Head, router, useForm } from '@inertiajs/react'
 import { Plus, Trash2 } from 'lucide-react'
 import type { RawBlogAuthor } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingSkeleton } from '@/components/ui'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
 import { AppCard } from '@/components/ui/app-card'
@@ -15,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminAuthorsProps extends SharedProps {
-  authors: RawBlogAuthor[]
+  authors?: RawBlogAuthor[]
 }
 
 export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
@@ -94,8 +95,9 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
           }
         />
 
-        <AppCard title='All authors' description={`${authors.length} total`}>
-          <Table>
+        <Deferred data="authors" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='All authors' description={`${(authors ?? []).length} total`}>
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -105,7 +107,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {authors.map((a) => (
+                {(authors ?? []).map((a) => (
                   <TableRow key={a.id}>
                     <TableCell className='font-medium'>{a.name}</TableCell>
                     <TableCell className='text-muted-foreground'>/{a.slug}</TableCell>
@@ -124,7 +126,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                     </TableCell>
                   </TableRow>
                 ))}
-                {!authors.length ? (
+                {!(authors ?? []).length ? (
                   <TableRow>
                     <TableCell colSpan={4} className='text-center text-muted-foreground'>
                       No authors yet.
@@ -133,7 +135,8 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                 ) : null}
               </TableBody>
             </Table>
-        </AppCard>
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

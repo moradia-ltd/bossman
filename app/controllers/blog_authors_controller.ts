@@ -5,7 +5,7 @@ import { createBlogAuthorValidator } from '#validators/blog'
 export default class BlogAuthorsController {
   async index({ inertia }: HttpContext) {
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
-    return inertia.render('blog/manage/authors', { authors })
+    return inertia.render('blog/manage/authors', { authors: inertia.defer(async () => authors) })
   }
 
   async store({ request, response }: HttpContext) {

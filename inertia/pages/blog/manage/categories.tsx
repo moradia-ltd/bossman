@@ -1,9 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router, useForm } from '@inertiajs/react'
+import { Deferred, Head, router, useForm } from '@inertiajs/react'
 import { Plus, Trash2 } from 'lucide-react'
 import type { RawBlogCategory } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingSkeleton } from '@/components/ui'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
 import { AppCard } from '@/components/ui/app-card'
@@ -14,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminCategoriesProps extends SharedProps {
-  categories: RawBlogCategory[]
+  categories?: RawBlogCategory[]
 }
 
 export default function BlogAdminCategories({ categories }: BlogAdminCategoriesProps) {
@@ -83,8 +84,9 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
           }
         />
 
-        <AppCard title='All categories' description={`${categories.length} total`}>
-          <Table>
+        <Deferred data="categories" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='All categories' description={`${(categories ?? []).length} total`}>
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -93,7 +95,7 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {categories.map((c) => (
+                {(categories ?? []).map((c) => (
                   <TableRow key={c.id}>
                     <TableCell className='font-medium'>{c.name}</TableCell>
                     <TableCell className='text-muted-foreground'>/{c.slug}</TableCell>
@@ -111,7 +113,7 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                     </TableCell>
                   </TableRow>
                 ))}
-                {!categories.length ? (
+                {!(categories ?? []).length ? (
                   <TableRow>
                     <TableCell colSpan={3} className='text-center text-muted-foreground'>
                       No categories yet.
@@ -120,7 +122,8 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                 ) : null}
               </TableBody>
             </Table>
-        </AppCard>
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )

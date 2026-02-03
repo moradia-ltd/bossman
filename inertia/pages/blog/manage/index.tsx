@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router } from '@inertiajs/react'
+import { Deferred, Head, Link, router } from '@inertiajs/react'
 import { Edit, Plus, Tags, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -7,13 +7,14 @@ import type { RawBlogPost } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingSkeleton } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { AppCard } from '@/components/ui/app-card'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 
 interface BlogAdminIndexProps extends SharedProps {
-  posts: PaginatedResponse<RawBlogPost>
+  posts?: PaginatedResponse<RawBlogPost>
 }
 
 function isPublished(post: RawBlogPost) {
@@ -122,27 +123,29 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
           }
         />
 
-        <AppCard
-          title='Posts'
-          description='Search, paginate, and manage your posts.'
-        >
-          <DataTable
+        <Deferred data="posts" fallback={<LoadingSkeleton type='table' />}>
+          <AppCard
+            title='Posts'
+            description='Search, paginate, and manage your posts.'
+          >
+            <DataTable
               columns={columns}
-              data={posts.data}
+              data={posts?.data ?? []}
               searchable
               searchPlaceholder='Search posts...'
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
               pagination={{
-                page: posts.meta.currentPage,
-                pageSize: posts.meta.perPage,
-                total: posts.meta.total,
+                page: posts?.meta?.currentPage ?? 1,
+                pageSize: posts?.meta?.perPage ?? 10,
+                total: posts?.meta?.total ?? 0,
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               }}
               emptyMessage='No posts found'
             />
-        </AppCard>
+          </AppCard>
+        </Deferred>
       </div>
     </DashboardLayout>
   )
