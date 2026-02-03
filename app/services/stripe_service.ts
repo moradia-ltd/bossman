@@ -76,13 +76,15 @@ class StripeService {
     frequency,
     customerId,
     isTrial,
+    connection,
   }: {
     plan: string
     frequency: string
     customerId: string
     isTrial: boolean
+    connection: string
   }) {
-    const subPlan = await SubscriptionPlan.query()
+    const subPlan = await SubscriptionPlan.query({ connection })
       .where({ name: isTrial ? 'standard' : plan, billingFrequency: frequency })
       .firstOrFail()
 
