@@ -5,10 +5,10 @@ import type { RawSession } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { Button } from '@/components/ui/button'
-import { AppCard } from '@/components/ui/app-card'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoadingCard } from '@/components/ui/loading'
 import { dateTimeFormatter } from '@/lib/date'
@@ -88,8 +88,7 @@ export function SessionsTab() {
     return (
       <AppCard
         title='Active Sessions'
-        description='Manage your active sessions across different devices'
-      >
+        description='Manage your active sessions across different devices'>
         <Alert variant='destructive'>
           <AlertDescription>Failed to load sessions. Please try again.</AlertDescription>
         </Alert>
@@ -176,7 +175,9 @@ export function SessionsTab() {
                 header: 'Started',
                 cell: (row: SessionRow) => (
                   <div className='text-sm text-muted-foreground'>
-                    {dateTimeFormatter(row.createdAt, 'long')}
+                    {row?.createdAt
+                      ? dateTimeFormatter(row.createdAt, 'long')
+                      : '—'}
                   </div>
                 ),
               },

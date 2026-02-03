@@ -32,10 +32,17 @@ export function timeRemaining(start_date: string | Date, end_date: string | Date
   return duration.toHuman({ unitDisplay: 'long' })
 }
 
-export function timeAgo(date: DateTime | string | Date): string {
-  if (typeof date === 'string') return DateTime.fromISO(date).toRelative() ?? ''
-  if (date instanceof Date) return DateTime.fromJSDate(date).toRelative() ?? ''
-  return date.toRelative() ?? ''
+export function timeAgo(date: DateTime | string | Date | null | undefined): string {
+  if (date === null || date === undefined) return '—'
+  if (typeof date === 'string') {
+    const dt = DateTime.fromISO(date)
+    return dt.isValid ? dt.toRelative() ?? '—' : '—'
+  }
+  if (date instanceof Date) {
+    const dt = DateTime.fromJSDate(date)
+    return dt.isValid ? dt.toRelative() ?? '—' : '—'
+  }
+  return date.isValid ? date.toRelative() ?? '—' : '—'
 }
 
 export function hasDateExpired(date: DateTime): boolean {
