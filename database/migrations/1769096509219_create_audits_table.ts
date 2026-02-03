@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.text('event').notNullable()
 
       table.text('auditable_type').notNullable()
-      table.integer('auditable_id').notNullable()
+      table.string('auditable_id').notNullable()
 
       table.jsonb('old_values').nullable()
       table.jsonb('new_values').nullable()

@@ -6,6 +6,7 @@ import TeamMember from '#models/team_member'
 import User from '#models/user'
 import { getPageAccessForUser } from '#services/page_access_service'
 import { updateMemberValidator } from '#validators/team'
+import { DateTime } from 'luxon'
 
 export default class MembersController {
   async index({ auth, request, response }: HttpContext) {
@@ -140,6 +141,11 @@ export default class MembersController {
     }
     if (body.allowedLeaseIds !== undefined) {
       member.allowedLeaseIds = body.allowedLeaseIds?.length ? body.allowedLeaseIds : null
+    }
+    if (body.dataAccessExpiresAt !== undefined) {
+      const trimmed = typeof body.dataAccessExpiresAt === 'string' ? body.dataAccessExpiresAt.trim() : ''
+      const parsed = trimmed ? DateTime.fromISO(trimmed) : null
+      member.dataAccessExpiresAt = parsed?.isValid ? parsed : null
     }
     await member.save()
 

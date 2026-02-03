@@ -1,5 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
+import { format } from 'date-fns'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { FileText, Layers } from 'lucide-react'
 import { useState } from 'react'
@@ -12,6 +13,8 @@ import { SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DateTimePicker } from '@/components/ui/date-time-picker'
+import { FormField } from '@/components/ui/form_field'
 import { Label } from '@/components/ui/label'
 import { RadioGroup } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
@@ -29,10 +32,13 @@ const accessModeOptions = [
 ]
 
 interface UpdateMemberPayload {
+  enableProdAccess: boolean
   propertiesAccessMode: 'all' | 'selected'
   leasesAccessMode: 'all' | 'selected'
   allowedLeaseableEntityIds: string[]
   allowedLeaseIds: string[]
+  /** Optional time limit on access to properties & leases; empty = no limit. */
+  dataAccessExpiresAt: string
 }
 export default function MemberShow({ member }: MemberShowProps) {
   const [activeTab, setActiveTab] = useState<'properties' | 'leases'>('properties')
@@ -48,7 +54,10 @@ export default function MemberShow({ member }: MemberShowProps) {
   const [selectedLeaseIds, setSelectedLeaseIds] = useState<Set<string>>(
     new Set(member.allowedLeaseIds ?? []),
   )
-
+  const [enableProdAccess, setEnableProdAccess] = useState(member.enableProdAccess ?? true)
+  const [dataAccessExpiresAt, setDataAccessExpiresAt] = useState<string>(
+    member.dataAccessExpiresAt ? new Date(member.dataAccessExpiresAt).toISOString() : '',
+  )
 
   const { data: optionsData, isLoading: optionsLoading } = useQuery({
     queryKey: ['members', 'data-access-options'],
@@ -96,10 +105,12 @@ export default function MemberShow({ member }: MemberShowProps) {
 
   const handleSave = () => {
     updateMutation.mutate({
+      enableProdAccess,
       propertiesAccessMode,
       leasesAccessMode,
       allowedLeaseableEntityIds: Array.from(selectedPropertyIds),
       allowedLeaseIds: Array.from(selectedLeaseIds),
+      dataAccessExpiresAt: dataAccessExpiresAt.trim() || '',
     })
   }
 
@@ -126,7 +137,19 @@ export default function MemberShow({ member }: MemberShowProps) {
               value={member.role ? member.role.charAt(0).toUpperCase() + member.role.slice(1) : '—'}
             />
           </SimpleGrid>
-
+          <div className='mt-6 flex items-center justify-between rounded-lg border border-border p-3'>
+            <div>
+              <Label htmlFor='member-prod-access'>Enable Prod access</Label>
+              <p className='text-xs text-muted-foreground'>
+                If off, this member can only access the dev database, not production.
+              </p>
+            </div>
+            <Switch
+              id='member-prod-access'
+              checked={enableProdAccess}
+              onCheckedChange={setEnableProdAccess}
+            />
+          </div>
         </AppCard>
 
         <AppCard
@@ -231,7 +254,25 @@ export default function MemberShow({ member }: MemberShowProps) {
             </TabsContent>
           </Tabs>
 
-          <div className='mt-6'>
+          <div className='mt-6 space-y-4'>
+            <FormField
+              label='Access to properties & leases expires at'
+              htmlFor='member-data-access-expires-at'
+              description='Optional. Leave empty for no time limit. After this time the member will see no properties or leases.'>
+              <DateTimePicker
+                id='member-data-access-expires-at'
+                value={
+                  dataAccessExpiresAt
+                    ? format(new Date(dataAccessExpiresAt), "yyyy-MM-dd'T'HH:mm")
+                    : ''
+                }
+                onChange={(value) =>
+                  setDataAccessExpiresAt(value ? new Date(value).toISOString() : '')
+                }
+                placeholder='No time limit'
+                clearable
+              />
+            </FormField>
             <Button onClick={handleSave} isLoading={updateMutation.isPending} loadingText='Saving…'>
               Save data access
             </Button>

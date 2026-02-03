@@ -36,6 +36,8 @@ export const updateMemberValidator = vine.compile(
     leasesAccessMode: vine.enum(['all', 'selected']).optional(),
     allowedLeaseableEntityIds: vine.array(vine.string()).optional(),
     allowedLeaseIds: vine.array(vine.string()).optional(),
+    /** Optional time limit on access to properties & leases; empty = no limit. */
+    dataAccessExpiresAt: vine.string().optional(),
   }),
 )
 

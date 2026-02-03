@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { Building2, Home, MapPin } from 'lucide-react'
+import { AlertCircle, Building2, Home, MapPin } from 'lucide-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLeaseableEntity } from '#types/model-types'
 import { formatNumber } from '#utils/functions'
@@ -9,6 +9,7 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
@@ -58,9 +59,15 @@ type LeaseableEntitiesStats = { total: number; vacant: number; occupied: number 
 
 interface LeaseableEntitiesIndexProps extends SharedProps {
   leaseableEntities: PaginatedResponse<RawLeaseableEntity>
+  dataAccessExpired?: boolean
+  dataAccessExpiredAt?: string | null
 }
 
-export default function LeaseableEntitiesIndex({ leaseableEntities }: LeaseableEntitiesIndexProps) {
+export default function LeaseableEntitiesIndex({
+  leaseableEntities,
+  dataAccessExpired = false,
+  dataAccessExpiredAt = null,
+}: LeaseableEntitiesIndexProps) {
   const { changePage, changeRows, searchTable, query } = useInertiaParams({
     page: 1,
     perPage: 20,
@@ -83,6 +90,20 @@ export default function LeaseableEntitiesIndex({ leaseableEntities }: LeaseableE
           title='Properties'
           description='Standalone properties and blocks of properties available for lease.'
         />
+
+        {dataAccessExpired && (
+          <Alert variant='destructive'>
+            <AlertCircle className='h-4 w-4' />
+            <AlertTitle>Access expired</AlertTitle>
+            <AlertDescription>
+              Your access to properties and leases expired
+              {dataAccessExpiredAt
+                ? ` on ${dateFormatter(dataAccessExpiredAt)}. `
+                : '. '}
+              Contact your administrator to restore access.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <SimpleGrid cols={{ base: 1, md: 3 }} spacing={4}>
           <StatCard

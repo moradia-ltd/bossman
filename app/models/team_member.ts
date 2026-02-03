@@ -56,6 +56,10 @@ export default class TeamMember extends compose(SuperBaseModel, Auditable) {
   })
   declare allowedLeaseableEntityIds: string[] | null
 
+  /** Optional: after this time, access to properties and leases is treated as expired (member sees none). */
+  @column.dateTime({ columnName: 'data_access_expires_at', serializeAs: 'dataAccessExpiresAt' })
+  declare dataAccessExpiresAt: DateTime | null
+
   /** When leasesAccessMode is 'selected', only these lease IDs are visible. */
   @column({
     columnName: 'allowed_lease_ids',
@@ -100,14 +104,6 @@ export default class TeamMember extends compose(SuperBaseModel, Auditable) {
     },
   })
   declare allowedPages: string[] | null
-
-  /** When set, access is revoked at this time by a scheduled job. Leave empty for no expiry. */
-  @column.dateTime({ columnName: 'expires_at', serializeAs: 'expiresAt' })
-  declare expiresAt: DateTime | null
-
-  /** Set by job when expires_at is reached; member no longer has access. */
-  @column.dateTime({ columnName: 'revoked_at', serializeAs: 'revokedAt' })
-  declare revokedAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

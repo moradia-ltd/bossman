@@ -27,7 +27,11 @@ export default class LeasesController {
     }
 
     const leases = baseQuery.withPagination(params)
-    return inertia.render('leases/index', { leases: inertia.defer(async () => leases) })
+    return inertia.render('leases/index', {
+      leases: inertia.defer(async () => leases),
+      dataAccessExpired: dataAccess?.dataAccessExpired ?? false,
+      dataAccessExpiredAt: dataAccess?.dataAccessExpiredAt ?? null,
+    })
   }
 
   async stats({ response, request }: HttpContext) {

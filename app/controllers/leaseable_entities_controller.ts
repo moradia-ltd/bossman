@@ -29,6 +29,8 @@ export default class LeaseableEntitiesController {
     const leaseableEntities = baseQuery.withPagination(params)
     return inertia.render('properties/index', {
       leaseableEntities: inertia.defer(async () => leaseableEntities),
+      dataAccessExpired: dataAccess?.dataAccessExpired ?? false,
+      dataAccessExpiredAt: dataAccess?.dataAccessExpiredAt ?? null,
     })
   }
 

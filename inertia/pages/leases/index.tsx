@@ -11,6 +11,7 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { LoadingSkeleton, Stack } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
@@ -21,6 +22,8 @@ import { StatusBadge } from './components/status'
 
 interface LeasesIndexProps extends SharedProps {
   leases: PaginatedResponse<RawLease>
+  dataAccessExpired?: boolean
+  dataAccessExpiredAt?: string | null
 }
 
 type Stats = { total: number; active: number; pending: number; expired: number }
@@ -72,7 +75,11 @@ const columns: Column<RawLease>[] = [
   },
 ]
 
-export default function LeasesIndex({ leases }: LeasesIndexProps) {
+export default function LeasesIndex({
+  leases,
+  dataAccessExpired = false,
+  dataAccessExpiredAt = null,
+}: LeasesIndexProps) {
   const { changePage, changeRows, searchTable, query } = useInertiaParams({
     page: 1,
     perPage: 20,
@@ -91,6 +98,20 @@ export default function LeasesIndex({ leases }: LeasesIndexProps) {
 
       <div className='space-y-6'>
         <PageHeader title='Leases' description='All leases for your organisation.' />
+
+        {dataAccessExpired && (
+          <Alert variant='destructive'>
+            <AlertCircle className='h-4 w-4' />
+            <AlertTitle>Access expired</AlertTitle>
+            <AlertDescription>
+              Your access to properties and leases expired
+              {dataAccessExpiredAt
+                ? ` on ${dateFormatter(dataAccessExpiredAt)}. `
+                : '. '}
+              Contact your administrator to restore access.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={4}>
           <StatCard
