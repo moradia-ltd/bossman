@@ -18,14 +18,22 @@ export default class TeamMember extends SuperBaseModel {
   @column()
   declare role: TeamRole
 
-  @column()
+  @column({ columnName: 'enable_prod_access', serializeAs: 'enableProdAccess' })
   declare enableProdAccess: boolean
 
-  /** Data access: 'all' = full access; 'selected' = only allowed properties/leases */
+  /** Data access: 'all' = full access; 'selected' = only allowed properties/leases (legacy, prefer per-resource modes). */
   @column()
   declare dataAccessMode: 'all' | 'selected'
 
-  /** When dataAccessMode is 'selected', only these property (leaseable entity) IDs are visible. */
+  /** Properties access: 'all' or 'selected'. When 'selected', only allowedLeaseableEntityIds are visible. */
+  @column()
+  declare propertiesAccessMode: 'all' | 'selected'
+
+  /** Leases access: 'all' or 'selected'. When 'selected', only allowedLeaseIds are visible. */
+  @column()
+  declare leasesAccessMode: 'all' | 'selected'
+
+  /** When propertiesAccessMode is 'selected', only these property (leaseable entity) IDs are visible. */
   @column({
     columnName: 'allowed_leaseable_entity_ids',
     prepare: (value: string[] | null) => (Array.isArray(value) ? JSON.stringify(value) : null),
@@ -46,7 +54,7 @@ export default class TeamMember extends SuperBaseModel {
   })
   declare allowedLeaseableEntityIds: string[] | null
 
-  /** When dataAccessMode is 'selected', only these lease IDs are visible. */
+  /** When leasesAccessMode is 'selected', only these lease IDs are visible. */
   @column({
     columnName: 'allowed_lease_ids',
     prepare: (value: string[] | null) => (Array.isArray(value) ? JSON.stringify(value) : null),

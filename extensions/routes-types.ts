@@ -21,6 +21,7 @@ export const API_ROUTES = {
     '/user/settings',
     '/members',
     '/members/invitations',
+    '/members/data-access-options',
     '/notifications',
     '/notifications/unread-count',
     '/audits',

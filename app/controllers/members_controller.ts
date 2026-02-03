@@ -1,4 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import Lease from '#models/lease'
+import LeaseableEntity from '#models/leaseable_entity'
 import TeamInvitation from '#models/team_invitation'
 import TeamMember from '#models/team_member'
 import User from '#models/user'
@@ -62,6 +64,35 @@ export default class MembersController {
     })
   }
 
+  async dataAccessOptions({ auth, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const freshUser = await User.findByOrFail('email', user.email)
+
+    if (!user.isAdminOrSuperAdmin) {
+      return response.forbidden({ error: 'Access required.' })
+    }
+    const allowed = await getPageAccessForUser(freshUser.id)
+    if (Array.isArray(allowed) && !allowed.includes('teams')) {
+      return response.forbidden({ error: 'You do not have access to manage teams.' })
+    }
+
+    const appEnv = request.appEnv()
+    const [leaseableEntities, leases] = await Promise.all([
+      LeaseableEntity.query({ connection: appEnv })
+        .whereIn('type', ['standalone', 'block'])
+        .select('id', 'address')
+        .orderBy('address', 'asc'),
+      Lease.query({ connection: appEnv }).select('id', 'name').orderBy('name', 'asc'),
+    ])
+
+    return response.ok({
+      data: {
+        leaseableEntities: leaseableEntities.map((e) => ({ id: e.id, address: e.address })),
+        leases: leases.map((l) => ({ id: l.id, name: l.name })),
+      },
+    })
+  }
+
   async updateMember({ auth, request, response }: HttpContext) {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)
@@ -91,6 +122,17 @@ export default class MembersController {
     }
     if (body.dataAccessMode !== undefined) {
       member.dataAccessMode = body.dataAccessMode
+    }
+    if (body.propertiesAccessMode !== undefined) {
+      member.propertiesAccessMode = body.propertiesAccessMode
+    }
+    if (body.leasesAccessMode !== undefined) {
+      member.leasesAccessMode = body.leasesAccessMode
+    }
+    if (body.propertiesAccessMode !== undefined || body.leasesAccessMode !== undefined) {
+      const p = body.propertiesAccessMode ?? member.propertiesAccessMode ?? 'all'
+      const l = body.leasesAccessMode ?? member.leasesAccessMode ?? 'all'
+      member.dataAccessMode = p === 'selected' || l === 'selected' ? 'selected' : 'all'
     }
     if (body.allowedLeaseableEntityIds !== undefined) {
       member.allowedLeaseableEntityIds =

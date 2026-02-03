@@ -1,45 +1,46 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router } from '@inertiajs/react'
-import { useMutation } from '@tanstack/react-query'
-import { ArrowLeft } from 'lucide-react'
+import { Head, router } from '@inertiajs/react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { FileText, Layers } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { RawTeamMember } from '#types/model-types'
+import DetailRow from '@/components/dashboard/detail-row'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { RadioGroup, type RadioGroupOption } from '@/components/ui/radio-group'
-import { Stack } from '@/components/ui/stack'
+import { RadioGroup } from '@/components/ui/radio-group'
+import { Switch } from '@/components/ui/switch'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
 interface MemberShowProps extends SharedProps {
   member: RawTeamMember
-  dataAccessOptions: {
-    leaseableEntities: Array<{ id: string; address: string }>
-    leases: Array<{ id: string; name: string }>
-  }
 }
 
-const dataAccessModeOptions: RadioGroupOption[] = [
-  {
-    value: 'all',
-    label: 'All',
-    description: 'Member can see all properties and leases',
-  },
-  {
-    value: 'selected',
-    label: 'Selected',
-    description: 'Member can only see the properties and leases you choose below',
-  },
+const accessModeOptions = [
+  { value: 'all', label: 'All', description: 'Member can see all' },
+  { value: 'selected', label: 'Selected', description: 'Member can only see items you choose' },
 ]
 
-export default function MemberShow({ member, dataAccessOptions }: MemberShowProps) {
-  const [dataAccessMode, setDataAccessMode] = useState<'all' | 'selected'>(
-    member.dataAccessMode ?? 'all',
+interface UpdateMemberPayload {
+  propertiesAccessMode: 'all' | 'selected'
+  leasesAccessMode: 'all' | 'selected'
+  allowedLeaseableEntityIds: string[]
+  allowedLeaseIds: string[]
+}
+export default function MemberShow({ member }: MemberShowProps) {
+  const [activeTab, setActiveTab] = useState<'properties' | 'leases'>('properties')
+  const [propertiesAccessMode, setPropertiesAccessMode] = useState<'all' | 'selected'>(
+    member.propertiesAccessMode ?? member.dataAccessMode ?? 'all',
+  )
+  const [leasesAccessMode, setLeasesAccessMode] = useState<'all' | 'selected'>(
+    member.leasesAccessMode ?? member.dataAccessMode ?? 'all',
   )
   const [selectedPropertyIds, setSelectedPropertyIds] = useState<Set<string>>(
     new Set(member.allowedLeaseableEntityIds ?? []),
@@ -48,18 +49,24 @@ export default function MemberShow({ member, dataAccessOptions }: MemberShowProp
     new Set(member.allowedLeaseIds ?? []),
   )
 
+
+  const { data: optionsData, isLoading: optionsLoading } = useQuery({
+    queryKey: ['members', 'data-access-options'],
+    queryFn: async () => {
+      const res = await api.get<{
+        data: {
+          leaseableEntities: Array<{ id: string; address: string }>
+          leases: Array<{ id: string; name: string }>
+        }
+      }>('/members/data-access-options')
+      return res.data.data
+    },
+    enabled: propertiesAccessMode === 'selected' || leasesAccessMode === 'selected',
+  })
+
   const updateMutation = useMutation({
-    mutationFn: (payload: {
-      dataAccessMode: 'all' | 'selected'
-      allowedLeaseableEntityIds: string[]
-      allowedLeaseIds: string[]
-    }) =>
-      api.put(`/members/${member.id}`, {
-        dataAccessMode: payload.dataAccessMode,
-        allowedLeaseableEntityIds:
-          payload.dataAccessMode === 'selected' ? payload.allowedLeaseableEntityIds : [],
-        allowedLeaseIds: payload.dataAccessMode === 'selected' ? payload.allowedLeaseIds : [],
-      }),
+    mutationFn: (payload: UpdateMemberPayload) =>
+      api.put(`/members/${member.id}`, payload),
     onSuccess: () => {
       toast.success('Data access updated')
       router.reload()
@@ -89,14 +96,16 @@ export default function MemberShow({ member, dataAccessOptions }: MemberShowProp
 
   const handleSave = () => {
     updateMutation.mutate({
-      dataAccessMode,
+      propertiesAccessMode,
+      leasesAccessMode,
       allowedLeaseableEntityIds: Array.from(selectedPropertyIds),
       allowedLeaseIds: Array.from(selectedLeaseIds),
     })
   }
 
   const displayName = member.user?.fullName || member.user?.email || 'Member'
-  const isSelected = dataAccessMode === 'selected'
+  const leaseableEntities = optionsData?.leaseableEntities ?? []
+  const leases = optionsData?.leases ?? []
 
   return (
     <DashboardLayout>
@@ -108,103 +117,128 @@ export default function MemberShow({ member, dataAccessOptions }: MemberShowProp
           backHref='/teams'
         />
 
+        <AppCard title='Member' description='Team member details'>
+          <SimpleGrid cols={4}>
+            <DetailRow label='Name' value={member.user?.fullName ?? '—'} />
+            <DetailRow label='Email' value={member.user?.email ?? '—'} />
+            <DetailRow
+              label='Role'
+              value={member.role ? member.role.charAt(0).toUpperCase() + member.role.slice(1) : '—'}
+            />
+          </SimpleGrid>
 
-
-        <AppCard title='Member' description='Basic info'>
-          <Stack spacing={3}>
-            <div>
-              <span className='text-sm text-muted-foreground'>Email</span>
-              <p className='font-medium'>{member.user?.email ?? '—'}</p>
-            </div>
-            <div>
-              <span className='text-sm text-muted-foreground'>Role</span>
-              <p className='font-medium capitalize'>{member.role ?? '—'}</p>
-            </div>
-          </Stack>
         </AppCard>
 
         <AppCard
           title='Data access'
-          description='Choose whether this member can see all customer data or only selected properties and leases.'>
-          <Stack spacing={4}>
-            <div className='space-y-3'>
-              <Label>Access level</Label>
-              <RadioGroup
-                value={dataAccessMode}
-                onChange={(v) => setDataAccessMode(v as 'all' | 'selected')}
-                options={dataAccessModeOptions}
-                cols={2}
-              />
-            </div>
+          description='Choose All or Selected for each tab. When Selected, pick which items this member can access.'>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'properties' | 'leases')}>
+            <TabsList className='grid w-full grid-cols-2 max-w-md'>
+              <TabsTrigger value='properties' className='flex items-center gap-2'>
+                <Layers className='h-4 w-4' />
+                Properties
+              </TabsTrigger>
+              <TabsTrigger value='leases' className='flex items-center gap-2'>
+                <FileText className='h-4 w-4' />
+                Leases
+              </TabsTrigger>
+            </TabsList>
 
-            {isSelected && (
-              <>
+            <TabsContent value='properties' className='mt-6 space-y-4'>
+              <div className='space-y-3'>
+                <Label>Properties access</Label>
+                <RadioGroup
+                  value={propertiesAccessMode}
+                  onChange={(v) => setPropertiesAccessMode(v as 'all' | 'selected')}
+                  options={accessModeOptions}
+                  cols={2}
+                />
+              </div>
+              {propertiesAccessMode === 'selected' && (
                 <div className='space-y-2'>
-                  <Label>Properties (leaseable entities)</Label>
+                  <Label>Select properties</Label>
                   <p className='text-xs text-muted-foreground'>
-                    Select which properties this member can access.
+                    Choose which properties this member can access.
                   </p>
-                  <div className='max-h-48 overflow-y-auto rounded-lg border border-border p-3 space-y-2'>
-                    {dataAccessOptions.leaseableEntities.length === 0 ? (
+                  <div className='rounded-lg border border-border p-3 max-h-64 overflow-y-auto'>
+                    {optionsLoading ? (
+                      <p className='text-sm text-muted-foreground'>Loading properties…</p>
+                    ) : leaseableEntities.length === 0 ? (
                       <p className='text-sm text-muted-foreground'>No properties found.</p>
                     ) : (
-                      dataAccessOptions.leaseableEntities.map((e) => (
-                        <div
-                          key={e.id}
-                          className='flex items-center gap-2 cursor-pointer hover:bg-muted/50 rounded p-1 -m-1'>
-                          <Checkbox
-                            id={`prop-${e.id}`}
-                            checked={selectedPropertyIds.has(e.id)}
-                            onCheckedChange={(v) => toggleProperty(e.id, v === true)}
-                          />
+                      <div className='space-y-1.5'>
+                        {leaseableEntities.map((e) => (
                           <label
+                            key={e.id}
                             htmlFor={`prop-${e.id}`}
-                            className='text-sm truncate cursor-pointer flex-1'>
-                            {e.address || e.id}
+                            className='flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-muted/50'>
+                            <Checkbox
+                              id={`prop-${e.id}`}
+                              checked={selectedPropertyIds.has(e.id)}
+                              onCheckedChange={(v) => toggleProperty(e.id, v === true)}
+                            />
+                            <span className='text-sm truncate'>{e.address || e.id}</span>
                           </label>
-                        </div>
-                      ))
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
+              )}
+            </TabsContent>
 
+            <TabsContent value='leases' className='mt-6 space-y-4'>
+              <div className='space-y-3'>
+                <Label>Leases access</Label>
+                <RadioGroup
+                  value={leasesAccessMode}
+                  onChange={(v) => setLeasesAccessMode(v as 'all' | 'selected')}
+                  options={accessModeOptions}
+                  cols={2}
+                />
+              </div>
+              {leasesAccessMode === 'selected' && (
                 <div className='space-y-2'>
-                  <Label>Leases</Label>
+                  <Label>Select leases</Label>
                   <p className='text-xs text-muted-foreground'>
-                    Select which leases this member can access.
+                    Choose which leases this member can access.
                   </p>
-                  <div className='max-h-48 overflow-y-auto rounded-lg border border-border p-3 space-y-2'>
-                    {dataAccessOptions.leases.length === 0 ? (
+                  <div className='rounded-lg border border-border p-3 max-h-64 overflow-y-auto'>
+                    {optionsLoading ? (
+                      <p className='text-sm text-muted-foreground'>Loading leases…</p>
+                    ) : leases.length === 0 ? (
                       <p className='text-sm text-muted-foreground'>No leases found.</p>
                     ) : (
-                      dataAccessOptions.leases.map((l) => (
-                        <div
-                          key={l.id}
-                          className='flex items-center gap-2 cursor-pointer hover:bg-muted/50 rounded p-1 -m-1'>
-                          <Checkbox
-                            id={`lease-${l.id}`}
-                            checked={selectedLeaseIds.has(l.id)}
-                            onCheckedChange={(v) => toggleLease(l.id, v === true)}
-                          />
+                      <div className='space-y-1.5'>
+                        {leases.map((l) => (
                           <label
+                            key={l.id}
                             htmlFor={`lease-${l.id}`}
-                            className='text-sm truncate cursor-pointer flex-1'>
-                            {l.name || l.id}
+                            className='flex items-center gap-2 cursor-pointer rounded px-2 py-1.5 hover:bg-muted/50'>
+                            <Checkbox
+                              id={`lease-${l.id}`}
+                              checked={selectedLeaseIds.has(l.id)}
+                              onCheckedChange={(v) => toggleLease(l.id, v === true)}
+                            />
+                            <span className='text-sm truncate'>{l.name || l.id}</span>
                           </label>
-                        </div>
-                      ))
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
-              </>
-            )}
+              )}
+            </TabsContent>
+          </Tabs>
 
+          <div className='mt-6'>
             <Button onClick={handleSave} isLoading={updateMutation.isPending} loadingText='Saving…'>
               Save data access
             </Button>
-          </Stack>
+          </div>
         </AppCard>
       </div>
     </DashboardLayout>
   )
 }
+

@@ -8,17 +8,17 @@ import { getDataAccessForUser } from '#services/data_access_service'
 export default class LeasesController {
   async index({ auth, request, inertia }: HttpContext) {
     const params = await request.paginationQs()
-    const appEnv = request.appEnv()
+    const userId = auth.user?.id
+    const dataAccess =
+      userId !== undefined ? await getDataAccessForUser(userId) : null
+    const appEnv = dataAccess?.effectiveAppEnv ?? request.appEnv()
 
     const baseQuery = Lease.query({ connection: appEnv })
       .preload('tenants', (q) => q.select('id', 'name', 'email'))
       .preload('org', (q) => q.select('id', 'name', 'creatorEmail', 'isTestAccount'))
       .whereHas('org', (q) => q.where('is_test_account', false))
 
-    const userId = auth.user?.id
-    const dataAccess =
-      userId !== undefined ? await getDataAccessForUser(userId) : null
-    if (dataAccess?.mode === 'selected' && dataAccess.allowedLeaseIds !== null) {
+    if (dataAccess?.leasesMode === 'selected' && dataAccess.allowedLeaseIds !== null) {
       if (dataAccess.allowedLeaseIds.length === 0) {
         baseQuery.whereRaw('1 = 0')
       } else {
@@ -46,13 +46,13 @@ export default class LeasesController {
   }
 
   async show({ auth, params, inertia, request, response }: HttpContext) {
-    const appEnv = request.appEnv()
-    const lease = await Lease.query({ connection: appEnv }).where('id', params.id).firstOrFail()
-
     const userId = auth.user?.id
     const dataAccess =
       userId !== undefined ? await getDataAccessForUser(userId) : null
-    if (dataAccess?.mode === 'selected' && dataAccess.allowedLeaseIds?.length) {
+    const appEnv = dataAccess?.effectiveAppEnv ?? request.appEnv()
+    const lease = await Lease.query({ connection: appEnv }).where('id', params.id).firstOrFail()
+
+    if (dataAccess?.leasesMode === 'selected' && dataAccess.allowedLeaseIds?.length) {
       if (!dataAccess.allowedLeaseIds.includes(lease.id)) {
         return response.forbidden()
       }

@@ -19,6 +19,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { HStack } from '@/components/ui/hstack'
 import { Label } from '@/components/ui/label'
 import { Stack } from '@/components/ui/stack'
+import { Switch } from '@/components/ui/switch'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
@@ -83,6 +84,7 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
   })
   const [editMember, setEditMember] = useState<RawTeamMember | null>(null)
   const [editMemberPages, setEditMemberPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
+  const [editEnableProdAccess, setEditEnableProdAccess] = useState(true)
 
   const members = membersProp
 
@@ -90,11 +92,13 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
     mutationFn: async ({
       memberId,
       allowedPages,
+      enableProdAccess,
     }: {
       memberId: string
       allowedPages: string[]
+      enableProdAccess: boolean
     }) => {
-      await api.put(`/members/${memberId}`, { allowedPages })
+      await api.put(`/members/${memberId}`, { allowedPages, enableProdAccess })
     },
     onSuccess: () => {
       setEditMember(null)
@@ -111,6 +115,7 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
     setEditMemberPages(
       row.allowedPages?.length ? [...(row.allowedPages as PageKey[])] : PAGE_OPTIONS.map((o) => o.key),
     )
+    setEditEnableProdAccess(row.enableProdAccess ?? true)
   }
 
   const memberColumnsWithActions: Column<RawTeamMember>[] = useMemo(
@@ -205,10 +210,24 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
             updateMemberMutation.mutate({
               memberId: editMember.id,
               allowedPages: editMemberPages,
+              enableProdAccess: editEnableProdAccess,
             })
           }}
           className='max-w-2xl'>
           <Stack spacing={4}>
+            <div className='flex items-center justify-between rounded-lg border border-border p-3'>
+              <div>
+                <Label htmlFor='edit-member-prod-access'>Enable Prod access</Label>
+                <p className='text-xs text-muted-foreground'>
+                  If off, this member can only access the dev database, not production.
+                </p>
+              </div>
+              <Switch
+                id='edit-member-prod-access'
+                checked={editEnableProdAccess}
+                onCheckedChange={setEditEnableProdAccess}
+              />
+            </div>
             <div className='space-y-2'>
               <Label>Page access</Label>
               <div className='grid gap-2 rounded-lg border border-border p-3'>

@@ -172,6 +172,7 @@ router
   .group(() => {
     router.get('/', [MembersController, 'index'])
     router.get('/invitations', [MembersController, 'invitations'])
+    router.get('/data-access-options', [MembersController, 'dataAccessOptions'])
     router.put('/:memberId', [MembersController, 'updateMember'])
   })
   .prefix('api/v1/members')

@@ -22,7 +22,7 @@ export function FormField({
   children,
 }: FormFieldProps) {
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-2 mb-2', className)}>
       <div className='space-y-1'>
         <Label htmlFor={htmlFor}>
           {label}

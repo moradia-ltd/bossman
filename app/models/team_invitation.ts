@@ -20,7 +20,7 @@ export default class TeamInvitation extends SuperBaseModel {
   @column()
   declare invitedUserRole: 'admin'
 
-  @column()
+  @column({ columnName: 'enable_prod_access', serializeAs: 'enableProdAccess' })
   declare enableProdAccess: boolean
 
   /**

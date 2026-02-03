@@ -1,14 +1,14 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-
+import { format } from 'date-fns'
 import { useState } from 'react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
-
-import { Checkbox } from '@/components/ui/checkbox'
+import { DateTimePicker } from '@/components/ui/date-time-picker'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -92,15 +92,61 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
         />
 
         <form onSubmit={handleSubmit} className='space-y-6'>
-          <AppCard title='Audience' description='Who should receive this notification?'>
+          <AppCard title='Content' description='What should the notification say?'>
+            <FormField label='Title' htmlFor='title' required error={errors.title}>
+              <Input
+                id='title'
+                value={data.title}
+                onChange={(e) => setData('title', e.target.value)}
+                placeholder='Notification title'
+                required
+              />
+            </FormField>
+            <FormField
+              label='Description'
+              htmlFor='description'
+              required
+              error={errors.description}>
+              <Textarea
+                id='description'
+                value={data.description}
+                onChange={(e) => setData('description', e.target.value)}
+                placeholder='Notification body text'
+                rows={3}
+                required
+              />
+            </FormField>
+            <SimpleGrid cols={2}>
+              <FormField label='Image URL' htmlFor='imageUrl' error={errors.imageUrl}>
+                <Input
+                  id='imageUrl'
+                  type='url'
+                  value={data.imageUrl}
+                  onChange={(e) => setData('imageUrl', e.target.value)}
+                  placeholder='https://example.com/image.jpg (optional)'
+                />
+              </FormField>
+              <FormField label='URL' htmlFor='url' error={errors.url}>
+                <Input
+                  id='url'
+                  type='url'
+                  value={data.url}
+                  onChange={(e) => setData('url', e.target.value)}
+                  placeholder='https://... (optional, opens when tapped)'
+                />
+              </FormField>
+            </SimpleGrid>
+
+            <Label className='mt-4'>Audience</Label>
             <RadioGroup
               spacing={2}
+              cols={5}
               options={targetTypeOptions}
               value={data.targetType}
               onChange={(value) => setData('targetType', value as typeof data.targetType)}
             />
             {data.targetType === 'specific' && (
-              <div className='space-y-2'>
+              <div className='space-y-2 my-2'>
                 <Label>Select users</Label>
                 <Input
                   placeholder='Search by name or email...'
@@ -141,50 +187,6 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
             )}
           </AppCard>
 
-          <AppCard title='Content' description='What should the notification say?'>
-            <FormField label='Title' htmlFor='title' required error={errors.title}>
-              <Input
-                id='title'
-                value={data.title}
-                onChange={(e) => setData('title', e.target.value)}
-                placeholder='Notification title'
-                required
-              />
-            </FormField>
-            <FormField
-              label='Description'
-              htmlFor='description'
-              required
-              error={errors.description}>
-              <Textarea
-                id='description'
-                value={data.description}
-                onChange={(e) => setData('description', e.target.value)}
-                placeholder='Notification body text'
-                rows={3}
-                required
-              />
-            </FormField>
-            <FormField label='Image URL' htmlFor='imageUrl' error={errors.imageUrl}>
-              <Input
-                id='imageUrl'
-                type='url'
-                value={data.imageUrl}
-                onChange={(e) => setData('imageUrl', e.target.value)}
-                placeholder='https://example.com/image.jpg (optional)'
-              />
-            </FormField>
-            <FormField label='URL' htmlFor='url' error={errors.url}>
-              <Input
-                id='url'
-                type='url'
-                value={data.url}
-                onChange={(e) => setData('url', e.target.value)}
-                placeholder='https://... (optional, opens when tapped)'
-              />
-            </FormField>
-          </AppCard>
-
           <AppCard title='When to send' description='Send now or schedule for later.'>
             <div className='flex flex-wrap gap-4'>
               <label className='flex cursor-pointer items-center gap-2'>
@@ -216,16 +218,14 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
             </div>
             {data.sendAt && (
               <FormField label='Send at (local time)' htmlFor='sendAt'>
-                <Input
+                <DateTimePicker
                   id='sendAt'
-                  type='datetime-local'
-                  value={data.sendAt.slice(0, 16)}
-                  onChange={(e) =>
-                    setData(
-                      'sendAt',
-                      e.target.value ? new Date(e.target.value).toISOString() : '',
-                    )
+                  value={data.sendAt ? format(new Date(data.sendAt), "yyyy-MM-dd'T'HH:mm") : ''}
+                  onChange={(value) =>
+                    setData('sendAt', value ? new Date(value).toISOString() : '')
                   }
+                  placeholder='Pick date & time'
+                  clearable
                 />
               </FormField>
             )}
