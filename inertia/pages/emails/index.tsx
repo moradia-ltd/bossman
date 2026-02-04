@@ -182,7 +182,7 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
       return res.data
     },
   })
-  console.log("🚀 ~ EmailsIndex ~ emailsList:", emailsList)
+
 
   const emailDetailQuery = useQuery({
     queryKey: ['emails', selectedEmailId],
@@ -255,7 +255,7 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
 
         <AppCard
           title='Sent emails'
-          description='Cursor-based pagination. Use Next/Previous to browse.'>
+          description='Browse sent emails.'>
           <div className='space-y-4'>
             {emailsListLoading ? (
               <LoadingSkeleton type='table' />
