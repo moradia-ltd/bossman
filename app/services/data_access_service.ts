@@ -41,7 +41,7 @@ export async function getDataAccessForUser(userId: string): Promise<DataAccessFi
       allowedLeaseIds: [],
       effectiveAppEnv,
       dataAccessExpired: true,
-      dataAccessExpiredAt: membership.dataAccessExpiresAt.toISO(),
+      dataAccessExpiredAt: membership.dataAccessExpiresAt?.toISO() ?? undefined,
     }
   }
 
