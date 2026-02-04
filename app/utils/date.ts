@@ -32,17 +32,34 @@ export function timeRemaining(start_date: string | Date, end_date: string | Date
   return duration.toHuman({ unitDisplay: 'long' })
 }
 
+/**
+ * Normalize date strings that use a space instead of T, or shorthand offset (+00 vs +00:00).
+ * e.g. "2026-02-03 11:32:08.294728+00" -> "2026-02-03T11:32:08.294728+00:00"
+ */
+function normalizeDateString(s: string): string {
+  let normalized = s.trim()
+  if (/^\d{4}-\d{2}-\d{2} \d/.test(normalized)) {
+    normalized = normalized.replace(' ', 'T')
+  }
+  const tzMatch = normalized.match(/([+-])(\d{2})(?::(\d{2}))?$/)
+  if (tzMatch && tzMatch[2] !== undefined && tzMatch[3] === undefined) {
+    normalized = normalized.replace(/([+-])(\d{2})$/, '$1$2:00')
+  }
+  return normalized
+}
+
 export function timeAgo(date: DateTime | string | Date | null | undefined): string {
   if (date === null || date === undefined) return '—'
   if (typeof date === 'string') {
-    const dt = DateTime.fromISO(date)
-    return dt.isValid ? dt.toRelative() ?? '—' : '—'
+    const normalized = normalizeDateString(date)
+    const dt = DateTime.fromISO(normalized, { setZone: true })
+    return dt.isValid ? (dt.toRelative() ?? '—') : '—'
   }
   if (date instanceof Date) {
     const dt = DateTime.fromJSDate(date)
-    return dt.isValid ? dt.toRelative() ?? '—' : '—'
+    return dt.isValid ? (dt.toRelative() ?? '—') : '—'
   }
-  return date.isValid ? date.toRelative() ?? '—' : '—'
+  return date.isValid ? (date.toRelative() ?? '—') : '—'
 }
 
 export function hasDateExpired(date: DateTime): boolean {

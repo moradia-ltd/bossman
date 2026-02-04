@@ -37,6 +37,7 @@ const PushNotificationsController = () => import('#controllers/push_notification
 const AnalyticsController = () => import('#controllers/analytics_controller')
 const DbBackupsController = () => import('#controllers/db_backups_controller')
 const LogsPageController = () => import('#controllers/logs_page_controller')
+const EmailsPageController = () => import('#controllers/emails_page_controller')
 
 router.on('/').renderInertia('home')
 router.on('/home').renderInertia('home')
@@ -76,6 +77,8 @@ router
     router.get('/db-backups', [DbBackupsController, 'index'])
     router.get('/db-backups/:id/download', [DbBackupsController, 'download'])
     router.get('/logs', [LogsPageController, 'index'])
+    router.get('/emails', [EmailsPageController, 'index'])
+    router.get('/emails/:id', [EmailsPageController, 'show'])
     router.post('/db-backups', [DbBackupsController, 'store'])
     router.delete('/db-backups/:id', [DbBackupsController, 'destroy'])
 

@@ -1,7 +1,9 @@
 
 export const API_ROUTES = {
-  GET: ['/dashboard/stats',
+  GET: [    '/dashboard/stats',
     '/dashboard/activity',
+    '/emails',
+    '/emails/:id',
     '/leases/stats',
     '/leases/:id/payments',
     '/leases/:id/activity',

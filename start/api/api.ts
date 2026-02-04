@@ -5,6 +5,7 @@ import { middleware } from '#start/kernel'
 const AnalyticsController = () => import('#controllers/analytics_controller')
 const DashboardController = () => import('#controllers/dashboard_controller')
 const DbBackupsController = () => import('#controllers/db_backups_controller')
+const EmailsController = () => import('#controllers/emails_controller')
 const LeasesController = () => import('#controllers/leases_controller')
 const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
 const OrgActionsController = () => import('#controllers/org_actions_controller')
@@ -54,6 +55,9 @@ router
     router.get('/push-notifications/users', [PushNotificationsController, 'users'])
     router.post('/db-backups', [DbBackupsController, 'store'])
     router.post('/db-backups/:id/restore', [DbBackupsController, 'restore'])
+
+    router.get('/emails', [EmailsController, 'index'])
+    router.get('/emails/:id', [EmailsController, 'show'])
 
     router.get('update-env', ({ session, response }) => {
       const appEnv = (session.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev'

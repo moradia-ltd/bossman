@@ -3,8 +3,7 @@ import { DateTime } from 'luxon'
 
 type DateInput = string | Date
 
-type DateFormat = 'iso' | 'short' | 'long' | 'us' | 'basic'
-
+type DateFormat = 'iso' | 'short' | 'long' | 'us' | 'basic' | 'basicWithTime'
 /**
  * Formats a date according to the specified format type
  * @param date - The date to format (string or Date object)
@@ -52,6 +51,7 @@ export function dateFormatter(date: DateInput, formatType: DateFormat = 'short')
     long: 'd MMMM yyyy', // 1 January 2024
     us: 'dd/MM/yyyy', // 01/01/2024 (European format)
     basic: 'yyyy-MM-dd', // 2024-01-01
+    basicWithTime: 'd MMM yyyy HH:mm', // 1 Jan 2024 14:30
   }
 
   return format(dateObj, formatMap[formatType])
@@ -82,6 +82,7 @@ export function dateTimeFormatter(date: DateInput, formatType: DateFormat = 'sho
     long: "d MMMM yyyy 'at' HH:mm", // 1 January 2024 at 14:30
     us: 'dd/MM/yyyy HH:mm', // 01/01/2024 14:30 (European format)
     basic: 'yyyy-MM-dd HH:mm:ss', // 2024-01-01 14:30:00
+    basicWithTime: 'd MMM yyyy HH:mm', // 1 Jan 2024 14:30
   }
 
   return format(dateObj, formatMap[formatType])
