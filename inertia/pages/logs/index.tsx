@@ -3,12 +3,13 @@ import { Deferred, Head } from '@inertiajs/react'
 import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
+import { startCase } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
-import { BaseSheet } from '@/components/ui/base-sheet'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
@@ -45,32 +46,25 @@ interface LogsIndexProps extends SharedProps {
 function buildColumns(onView: (row: RawAudit) => void): Column<RawAudit>[] {
   return [
     {
-      key: 'id',
-      header: 'ID',
-      width: 80,
-      cell: (row) => <span className='font-mono text-sm text-muted-foreground'>{row.id}</span>,
+      key: 'auditableType',
+      header: 'Model',
+      width: 160,
+      cell: (row) => <span className='font-mono text-sm'>{startCase(row.auditableType)}</span>,
     },
     {
       key: 'event',
       header: 'Event',
       width: 100,
-      cell: (row) => <span className='capitalize font-medium'>{row.event ?? row.event}</span>,
+      cell: (row) => <span className='capitalize font-medium'>{startCase(row.event)}</span>,
     },
-    {
-      key: 'auditableType',
-      header: 'Model',
-      width: 160,
-      cell: (row) => (
-        <span className='font-mono text-sm'>{row.auditableType ?? row.auditable_type ?? '—'}</span>
-      ),
-    },
+
     {
       key: 'auditableId',
       header: 'Record ID',
       width: 140,
       cell: (row) => (
         <span className='font-mono text-xs text-muted-foreground truncate block max-w-[120px]'>
-          {String(row.auditableId ?? row.auditable_id ?? '—')}
+          {String(row.auditableId)}
         </span>
       ),
     },
@@ -80,7 +74,7 @@ function buildColumns(onView: (row: RawAudit) => void): Column<RawAudit>[] {
       width: 120,
       cell: (row) => (
         <span className='font-mono text-xs text-muted-foreground'>
-          {row.userId ?? row.user_id ?? '—'}
+          {row.userId}
         </span>
       ),
     },
@@ -127,11 +121,13 @@ function AuditDetailContent({ audit }: { audit: RawAudit }) {
           {String(audit.auditableId ?? audit.auditable_id ?? '—')}
         </dd>
         <dt className='text-muted-foreground'>User ID</dt>
-        <dd className='font-mono text-muted-foreground'>
-          {audit.userId ?? audit.user_id ?? '—'}
-        </dd>
+        <dd className='font-mono text-muted-foreground'>{audit.userId ?? audit.user_id ?? '—'}</dd>
         <dt className='text-muted-foreground'>When</dt>
-        <dd>{audit.createdAt ?? audit.created_at ? dateFormatter(audit.createdAt ?? audit.created_at!) : '—'}</dd>
+        <dd>
+          {(audit.createdAt ?? audit.created_at)
+            ? dateFormatter(audit.createdAt ?? audit.created_at!)
+            : '—'}
+        </dd>
       </dl>
       {oldV != null && Object.keys(oldV).length > 0 && (
         <div>
@@ -207,15 +203,15 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
                 pagination={
                   audits?.meta
                     ? {
-                        page: audits.meta.currentPage,
-                        pageSize: audits.meta.perPage,
-                        total: audits.meta.total,
-                        onPageChange: changePage,
-                        onPageSizeChange: (pageSize) => {
-                          changeRows(pageSize)
-                          changePage(1)
-                        },
-                      }
+                      page: audits.meta.currentPage,
+                      pageSize: audits.meta.perPage,
+                      total: audits.meta.total,
+                      onPageChange: changePage,
+                      onPageSizeChange: (pageSize) => {
+                        changeRows(pageSize)
+                        changePage(1)
+                      },
+                    }
                     : undefined
                 }
                 emptyMessage='No audit events found'
