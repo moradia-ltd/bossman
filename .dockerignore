@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Build output (we build inside the image)
+build
+
+# Git and IDE
+.git
+.gitignore
+.cursor
+*.md
+!README.md
+
+# Env and secrets (inject at runtime)
+.env
+.env.*
+!.env.example
+
+# Tests and dev
+tests
+coverage
+.nyc_output
+*.test.ts
+*.spec.ts
+
+# Misc
+.DS_Store
+*.log
+backups
+storage/app/*
+!storage/app/.gitkeep
+
+# Optional: exclude inertia source if build embeds assets (Adonis build typically bundles what’s needed)
+# inertia
