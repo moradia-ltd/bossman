@@ -1,3 +1,4 @@
+import '@japa/assert'
 import { test } from '@japa/runner'
 import pluralize from 'pluralize'
 import { formatCurrency } from './currency.js'
@@ -62,7 +63,10 @@ test.group('Utility Functions', () => {
     assert.equal(result.yearlyRent, 12000)
     assert.equal(result.actualAmount, 1000)
 
-    assert.throws(() => rentBreakdown(1000, 'invalid' as any), 'Invalid frequency: invalid')
+    assert.throws(
+      () => rentBreakdown(1000, 'invalid' as 'monthly' | 'quarterly' | 'yearly'),
+      'Invalid frequency: invalid',
+    )
   })
 
   test('formatCurrency', ({ assert }) => {

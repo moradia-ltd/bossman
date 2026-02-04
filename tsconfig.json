@@ -47,6 +47,8 @@
   "exclude": [
     "inertia",
     "node_modules",
-    "./build"
+    "./build",
+    "bin/test.ts",
+    "**/*.test.ts"
   ]
 }
