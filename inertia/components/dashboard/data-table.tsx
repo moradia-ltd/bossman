@@ -369,7 +369,7 @@ export function DataTable<T extends { id?: string | number }>({
           )}
           {filterable && (
             <Popover open={filtersDisclosure.isOpen} onOpenChange={filtersDisclosure.onOpenChange}>
-              <PopoverTrigger asChild>
+              <PopoverTrigger >
                 <Button variant='outline' size='sm' leftIcon={<Filter className='h-4 w-4' />}>
                   Filters
                   {Object.keys(filters).length > 0 && (
