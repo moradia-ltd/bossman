@@ -1,7 +1,7 @@
 import logger from '@adonisjs/core/services/logger'
-import type { DateTime } from 'luxon'
 import vine from '@vinejs/vine'
 import type { Infer } from '@vinejs/vine/types'
+import type { DateTime } from 'luxon'
 import boss from '#services/boss_service'
 
 type VineSchema = Parameters<typeof vine.validate>[0]['schema']
@@ -31,7 +31,9 @@ export interface JobDefinition<T = object> {
 export interface TypedBuilder<Schema extends VineSchema> {
   retry(options: RetryOptions): TypedBuilder<Schema>
   deadLetter(queueName: string): TypedBuilder<Schema>
-  work(handler: (payload: Infer<Schema> & { id: string }) => void | Promise<void>): TypedBuilder<Schema>
+  work(
+    handler: (payload: Infer<Schema> & { id: string }) => void | Promise<void>,
+  ): TypedBuilder<Schema>
   schedule(data: Infer<Schema>, when?: ScheduleWhen): Promise<string | null>
   scheduleCron(cron: string, data: Infer<Schema>): Promise<void>
 }
@@ -88,12 +90,7 @@ function createJob(name: string) {
             deadLetter: definition.deadLetterQueue,
           }
           if (when === undefined) return boss.send(definition.name, validated, options)
-          return boss.sendAfter(
-            definition.name,
-            validated,
-            options,
-            normalizeWhen(when),
-          )
+          return boss.sendAfter(definition.name, validated, options, normalizeWhen(when))
         },
         async scheduleCron(cron: string, data: Infer<Schema>) {
           const validated = definition.inputSchema

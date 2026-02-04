@@ -9,5 +9,5 @@ import schedules from './schedules.js'
 export async function registerCrons(): Promise<void> {
   await worker.ensureStarted()
 
-  await cleanUp.scheduleCron(schedules.EVERY_MINUTE, { database: 'main' })
+  // await cleanUp.scheduleCron(schedules.EV/ERY_MINUTE, { database: 'main' })
 }
