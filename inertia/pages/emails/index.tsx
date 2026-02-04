@@ -29,7 +29,7 @@ type ResendEmailListItem = {
   from: string
   created_at: string
   subject: string
-  last_event: string
+  last_event: 'delivered' | 'failed' | 'scheduled' | 'sending' | 'sent' | 'bounced' | 'opened' | 'clicked' | 'complained'
   bcc: string[] | null
   cc: string[] | null
   reply_to: string | null
@@ -70,7 +70,7 @@ const emailColumns: Column<ResendEmailListItem>[] = [
     header: 'To',
     cell: (row) => (
       <span
-        className='text-sm text-muted-foreground truncate block max-w-[180px]'
+        className='text-sm text-muted-foreground truncate block max-w-[200px]'
         title={row.to?.join(', ')}>
         {Array.isArray(row.to) ? row.to.join(', ') : '—'}
       </span>
@@ -81,7 +81,7 @@ const emailColumns: Column<ResendEmailListItem>[] = [
     key: 'subject',
     header: 'Subject',
     cell: (row) => (
-      <span className='font-medium truncate block' title={row.subject}>
+      <span className='font-medium truncate block max-w-[340px]' title={row.subject}>
         {row.subject ?? '—'}
       </span>
     ),
@@ -169,7 +169,7 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
     router.visit('/emails')
   }
 
-  const { data: emailsList, isLoading: emailsListLoading, isError: emailsListError } = useQuery({
+  const { data: emailsList, isLoading: emailsListLoading, } = useQuery({
     queryKey: ['emails', 'list', limit, cursor.after, cursor.before],
     queryFn: async () => {
       const res = await api.get<ResendListResponse>('/emails', {

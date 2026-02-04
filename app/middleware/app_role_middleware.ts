@@ -12,7 +12,7 @@ export default class AppRoleMiddleware {
       }
       // Redirect to home, not /login — user is authenticated; redirecting to /login
       // would trigger guest middleware to send them back here and cause a loop.
-      return ctx.response.redirect('/')
+      return ctx.response.redirect('/login')
     }
 
     return next()

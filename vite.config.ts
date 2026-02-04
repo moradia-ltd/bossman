@@ -17,7 +17,7 @@ export default defineConfig({
     }),
   ],
   server: {
-    allowedHosts: ['starter-template-96pc.onrender.com'],
+    allowedHosts: ['starter-template-96pc.onrender.com', 'togetha.outray.app'],
   },
   resolve: {
     alias: {
