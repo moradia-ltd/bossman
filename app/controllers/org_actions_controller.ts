@@ -103,6 +103,18 @@ export default class OrgActionsController {
     return response.ok({ message: 'Removed test account flag', isTestAccount: false })
   }
 
+  async toggleSalesAccount({ request, params, response }: HttpContext) {
+    const { orgId } = params
+    const connection = request.appEnv()
+    const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
+    org.isSalesOrg = !org.isSalesOrg
+    await org.save()
+    return response.ok({
+      message: org.isSalesOrg ? 'Marked as sales account' : 'Removed sales account flag',
+      isSalesOrg: org.isSalesOrg,
+    })
+  }
+
   async bulkMakeFavourite({ request, response }: HttpContext) {
     const connection = request.appEnv()
     const { orgIds } = await request.validateUsing(bulkOrgIdsValidator)

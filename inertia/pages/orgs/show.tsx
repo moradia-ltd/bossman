@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { FlaskConical, Pencil, Star, StarOff, UserCheck, UserX } from 'lucide-react'
+import { FlaskConical, Pencil, Star, StarOff, Store, UserCheck, UserX } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import * as Yup from 'yup'
@@ -157,6 +157,21 @@ export default function OrgShow({ org }: OrgShowProps) {
     },
   })
 
+  const toggleSalesAccountMutation = useMutation({
+    mutationFn: () =>
+      api.post<{ message: string; isSalesOrg: boolean }>(
+        `/orgs/${id}/actions/toggle-sales-account`,
+        {},
+      ),
+    onSuccess: (res) => {
+      router.reload()
+      toast.success(res?.data?.message ?? 'Updated.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to update.')
+    },
+  })
+
   const quickActions: QuickActionOption[] = [
     {
       title: 'Ban user',
@@ -199,6 +214,20 @@ export default function OrgShow({ org }: OrgShowProps) {
       icon: FlaskConical,
       onClick: () => undoTestAccountMutation.mutate(),
       dontShowIf: !org.isTestAccount,
+    },
+    {
+      title: 'Make sales account',
+      description: 'Mark this org as a sales account.',
+      icon: Store,
+      onClick: () => toggleSalesAccountMutation.mutate(),
+      dontShowIf: org.isSalesOrg,
+    },
+    {
+      title: 'Undo sales account',
+      description: 'Remove sales account flag from this org.',
+      icon: Store,
+      onClick: () => toggleSalesAccountMutation.mutate(),
+      dontShowIf: !org.isSalesOrg,
     },
   ]
 
@@ -373,6 +402,17 @@ export default function OrgShow({ org }: OrgShowProps) {
                     value={
                       <Badge variant='outline' className='w-fit gap-1'>
                         <FlaskConical className='h-3 w-3' />
+                        Yes
+                      </Badge>
+                    }
+                  />
+                )}
+                {org.isSalesOrg && (
+                  <DetailRow
+                    label='Sales account'
+                    value={
+                      <Badge variant='secondary' className='w-fit gap-1'>
+                        <Store className='h-3 w-3' />
                         Yes
                       </Badge>
                     }

@@ -41,6 +41,7 @@ router
     router.post('/orgs/:orgId/actions/undo-favourite', [OrgActionsController, 'undoFavourite'])
     router.post('/orgs/:orgId/actions/make-test-account', [OrgActionsController, 'makeTestAccount'])
     router.post('/orgs/:orgId/actions/undo-test-account', [OrgActionsController, 'undoTestAccount'])
+    router.post('/orgs/:orgId/actions/toggle-sales-account', [OrgActionsController, 'toggleSalesAccount'])
     router.post('/orgs/actions/bulk-make-favourite', [OrgActionsController, 'bulkMakeFavourite'])
     router.post('/orgs/actions/bulk-undo-favourite', [OrgActionsController, 'bulkUndoFavourite'])
     router.post('/orgs/actions/bulk-make-test-account', [OrgActionsController, 'bulkMakeTestAccount'])
