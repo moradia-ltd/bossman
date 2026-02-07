@@ -24,6 +24,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory'] as const),
+  LOOPS_API_KEY: Env.schema.string(),
   /** Set to false only if production is served over HTTP (e.g. behind proxy without HTTPS). Prefer using HTTPS. */
   SESSION_SECURE: Env.schema.boolean.optional(),
   FROM_EMAIL: Env.schema.string.optional(),

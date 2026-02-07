@@ -21,7 +21,6 @@ export default class UserListener {
   }
 
   public async userDeleted({ user }: EventsList['user:deleted']) {
-    //TODO: delete from newsletter
     // Delete all remember me tokens
     await db.from('remember_me_tokens').where('tokenable_id', user.id).delete()
     // Delete all access tokens

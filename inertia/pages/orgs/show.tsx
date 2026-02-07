@@ -35,6 +35,7 @@ import { PropertiesTab } from './components/properties-tab'
 
 interface OrgShowProps extends SharedProps {
   org: RawOrg
+  isLoopsUser: boolean
 }
 
 const banUserSchema = Yup.object({
@@ -51,7 +52,7 @@ const banUserSchema = Yup.object({
   }),
 })
 
-export default function OrgShow({ org }: OrgShowProps) {
+export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
   const { query, updateQuery } = useInertiaParams()
   const qs = query as { tab?: string }
   const currentTab = qs.tab ?? 'details'
@@ -418,6 +419,14 @@ export default function OrgShow({ org }: OrgShowProps) {
                     }
                   />
                 )}
+                <DetailRow
+                  label='Loops user'
+                  value={
+                    <Badge variant={isLoopsUser ? 'default' : 'secondary'} className='w-fit'>
+                      {isLoopsUser ? 'Yes' : 'No'}
+                    </Badge>
+                  }
+                />
 
                 <DetailRow label='Creator email' value={String(org.creatorEmail)} />
 

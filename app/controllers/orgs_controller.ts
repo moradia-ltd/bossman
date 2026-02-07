@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import emitter from '@adonisjs/core/services/emitter'
 import logger from '@adonisjs/core/services/logger'
 import db from '@adonisjs/lucid/services/db'
+import axios from 'axios'
 import type Stripe from 'stripe'
 import Activity from '#models/activity'
 import Agency from '#models/agency'
@@ -13,6 +14,7 @@ import SubscriptionPlan from '#models/subscription_plan'
 import TogethaTeam from '#models/togetha_teams'
 import TogethaUser from '#models/togetha_user'
 import mailer from '#services/email_service'
+import { LoopService } from '#services/loop_service'
 import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
 import StripeService from '#services/stripe_service'
@@ -258,7 +260,19 @@ export default class OrgsController {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
 
-    return inertia.render('orgs/show', { org })
+    let isLoopsUser = false
+    const creatorEmail = org.creatorEmail?.trim()
+
+    const loopService = new LoopService()
+    try {
+      const loopUser = await loopService.findUser(creatorEmail)
+      console.log('loopUser', loopUser)
+      isLoopsUser = Boolean(loopUser)
+    } catch (error) {
+      console.log('error', error)
+    }
+
+    return inertia.render('orgs/show', { org, isLoopsUser })
   }
 
   async edit({ params, inertia, request }: HttpContext) {
