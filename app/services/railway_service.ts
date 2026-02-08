@@ -179,26 +179,27 @@ export class RailwayApiService {
     return (data.deployments?.edges ?? []).map((e) => e.node)
   }
 
-  async getDeploymentRuntimeLogs(deploymentId: string): Promise<RailwayRuntimeLog[]> {
+  async getDeploymentRuntimeLogs(deploymentId: string, limit: number = 500): Promise<RailwayRuntimeLog[]> {
     const data = await this.graphql<{
-      deploymentLogs: { edges: Array<{ node: RailwayRuntimeLog }> }
+      deploymentLogs: Array<{ message: string; severity?: string; timestamp: string }>
     }>(
       `
-      query deploymentLogs($deploymentId: String!) {
-        deploymentLogs(deploymentId: $deploymentId, type: RUNTIME) {
-          edges {
-            node {
-              message
-              timestamp
-              level
-            }
-          }
+      query deploymentLogs($deploymentId: String!, $limit: Int) {
+        deploymentLogs(deploymentId: $deploymentId, limit: $limit) {
+          message
+          severity
+          timestamp
         }
       }
     `,
-      { deploymentId },
+      { deploymentId, limit },
     )
-    return (data.deploymentLogs?.edges ?? []).map((e) => e.node)
+    const logs = data.deploymentLogs ?? []
+    return logs.map((log) => ({
+      message: log.message,
+      timestamp: log.timestamp,
+      level: log.severity ?? undefined,
+    }))
   }
 
   async deploymentRestart(deploymentId: string): Promise<boolean> {

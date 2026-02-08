@@ -1,5 +1,4 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import User from '#models/user'
 import { getPageAccessForUser } from '#services/page_access_service'
 import { RailwayApiService } from '#services/railway_service'
 
@@ -18,7 +17,8 @@ async function ensureServersAccess(ctx: HttpContext) {
 
 export default class RailwayController {
   async projects(ctx: HttpContext) {
-    await ensureServersAccess(ctx)
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
 
     const service = new RailwayApiService()
     try {
@@ -32,7 +32,8 @@ export default class RailwayController {
   }
 
   async project(ctx: HttpContext) {
-    await ensureServersAccess(ctx)
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -47,7 +48,8 @@ export default class RailwayController {
   }
 
   async deployments(ctx: HttpContext) {
-    await ensureServersAccess(ctx)
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
     const { params, request, response } = ctx
     const environmentId = request.qs().environmentId as string | undefined
     const projectId = (request.qs().projectId as string | undefined) ?? ''
@@ -71,7 +73,8 @@ export default class RailwayController {
   }
 
   async deploymentLogs(ctx: HttpContext) {
-    await ensureServersAccess(ctx)
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -85,7 +88,8 @@ export default class RailwayController {
   }
 
   async deploymentRestart(ctx: HttpContext) {
-    await ensureServersAccess(ctx)
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -99,7 +103,8 @@ export default class RailwayController {
   }
 
   async deploymentRedeploy(ctx: HttpContext) {
-    await ensureServersAccess(ctx)
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
