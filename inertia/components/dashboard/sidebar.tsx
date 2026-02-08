@@ -18,6 +18,7 @@ import {
   Newspaper,
   PanelLeftOpen,
   PanelRightOpen,
+  Server,
   Settings,
   Sun,
   UsersRound,
@@ -91,6 +92,7 @@ const adminNavSections: NavSection[] = [
       },
       { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
       { title: 'Backups', href: '/db-backups', icon: <Database className='h-4 w-4' /> },
+      { title: 'Servers', href: '/servers', icon: <Server className='h-4 w-4' /> },
       { title: 'Logs', href: '/logs', icon: <ScrollText className='h-4 w-4' /> },
       { title: 'Emails', href: '/emails', icon: <Mail className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
@@ -142,6 +144,7 @@ export function Sidebar({ children }: SidebarProps) {
     if (path.startsWith('/db-backups')) return 'dbBackups'
     if (path.startsWith('/logs')) return 'logs'
     if (path.startsWith('/emails')) return 'emails'
+    if (path.startsWith('/servers')) return 'servers'
     return null
   }
 

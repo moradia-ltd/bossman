@@ -10,6 +10,7 @@ export const PAGE_KEYS = [
   'dbBackups',
   'logs',
   'emails',
+  'servers',
 ] as const
 
 export type PageKey = (typeof PAGE_KEYS)[number]
@@ -26,6 +27,7 @@ export const PAGE_KEY_TO_PATH: Record<PageKey, string> = {
   dbBackups: '/db-backups',
   logs: '/logs',
   emails: '/emails',
+  servers: '/servers',
 }
 
 export function requiredPageKeyForPath(pathname: string): PageKey {
@@ -44,6 +46,7 @@ export function requiredPageKeyForPath(pathname: string): PageKey {
   if (path.startsWith('/db-backups')) return 'dbBackups'
   if (path.startsWith('/logs')) return 'logs'
   if (path.startsWith('/emails')) return 'emails'
+  if (path.startsWith('/servers')) return 'servers'
 
   return 'dashboard'
 }

@@ -11,6 +11,7 @@ const LeaseableEntitiesController = () => import('#controllers/leaseable_entitie
 const OrgActionsController = () => import('#controllers/org_actions_controller')
 const OrgsController = () => import('#controllers/orgs_controller')
 const PushNotificationsController = () => import('#controllers/push_notifications_controller')
+const RailwayController = () => import('#controllers/railway_controller')
 
 router
   .group(() => {
@@ -59,6 +60,13 @@ router
 
     router.get('/emails', [EmailsController, 'index'])
     router.get('/emails/:id', [EmailsController, 'show'])
+
+    router.get('/railway/projects', [RailwayController, 'projects'])
+    router.get('/railway/projects/:id', [RailwayController, 'project'])
+    router.get('/railway/services/:serviceId/deployments', [RailwayController, 'deployments'])
+    router.get('/railway/deployments/:id/logs/runtime', [RailwayController, 'deploymentLogs'])
+    router.post('/railway/deployments/:id/restart', [RailwayController, 'deploymentRestart'])
+    router.post('/railway/deployments/:id/redeploy', [RailwayController, 'deploymentRedeploy'])
 
     router.get('update-env', ({ session, response }) => {
       const appEnv = (session.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev'

@@ -6,7 +6,3 @@ export const cleanUp = worker
   .input(vine.object({ database: vine.string() }))
   .retry({ limit: 10, backoff: true, delay: 10 })
   .deadLetter('failed-cleanup')
-
-cleanUp.work((payload) => {
-  console.log(`Cleaning up ${payload.database} (job ${payload.id} at ${new Date().toISOString()})`)
-})
