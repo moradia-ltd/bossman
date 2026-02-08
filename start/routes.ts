@@ -79,6 +79,7 @@ router
     router.get('/db-backups/:id/download', [DbBackupsController, 'download'])
     router.get('/logs', [LogsPageController, 'index'])
     router.get('/servers', [ServersController, 'index'])
+    router.get('/servers/:projectId', [ServersController, 'show'])
     router.get('/emails', [EmailsPageController, 'index'])
     router.get('/emails/:id', [EmailsPageController, 'show'])
     router.post('/db-backups', [DbBackupsController, 'store'])
