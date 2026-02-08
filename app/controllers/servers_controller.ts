@@ -8,9 +8,6 @@ export default class ServersController {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)
 
-    if (!user.isAdminOrSuperAdmin) {
-      return response.forbidden()
-    }
     const allowed = await getPageAccessForUser(freshUser.id)
     if (Array.isArray(allowed) && !allowed.includes('servers')) {
       return response.forbidden()
@@ -24,20 +21,15 @@ export default class ServersController {
     })
   }
 
-  async show({ params, auth, inertia, response }: HttpContext) {
+  async show({ params, request, auth, inertia, response }: HttpContext) {
     const user = auth.getUserOrFail()
-    const freshUser = await User.findByOrFail('email', user.email)
 
-    if (!user.isAdminOrSuperAdmin) {
-      return response.forbidden()
-    }
-    const allowed = await getPageAccessForUser(freshUser.id)
-    if (Array.isArray(allowed) && !allowed.includes('servers')) {
-      return response.forbidden()
-    }
+    await getPageAccessForUser(user.id)
 
     const projectId = params.projectId
+    const projectName = request.input('name') as string | undefined
     return inertia.render('servers/project-show', {
+      projectName: projectName ?? null,
       project: inertia.defer(async () => {
         const railway = new RailwayApiService()
         return railway.getProject(projectId)

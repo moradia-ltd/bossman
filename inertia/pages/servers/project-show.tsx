@@ -51,11 +51,13 @@ interface RailwayLog {
 }
 
 interface ProjectShowProps extends SharedProps {
+  projectName?: string | null
   project?: RailwayProjectDetail | null
 }
 
-export default function ServersProjectShow({ project }: ProjectShowProps) {
+export default function ServersProjectShow({ projectName, project }: ProjectShowProps) {
   const safeProject = project ?? null
+  const displayName = safeProject?.name ?? projectName ?? 'Project'
   const queryClient = useQueryClient()
   const [deploymentsSheetOpen, setDeploymentsSheetOpen] = useState(false)
   const [logsSheetOpen, setLogsSheetOpen] = useState(false)
@@ -158,21 +160,19 @@ export default function ServersProjectShow({ project }: ProjectShowProps) {
 
   return (
     <DashboardLayout>
-      <Head title={safeProject ? `Project: ${safeProject.name}` : 'Project'} />
+      <Head title={`Project: ${displayName}`} />
 
       <div className='space-y-6'>
         <PageHeader
-          title={safeProject?.name ?? 'Project'}
+          title={displayName}
           backHref='/servers'
-          description={
-            safeProject?.description ?? (safeProject === null ? 'Project not found.' : undefined)
-          }
+
         />
 
         <Deferred data='project' fallback={<LoadingSkeleton type='list' />}>
           {safeProject === null ? (
             <AppCard
-              title='Project not found'
+              title={projectName ? `${projectName} not found` : 'Project not found'}
               description='This Railway project may not exist or you may not have access.'>
               <p className='text-muted-foreground'>
                 <Link href='/servers' className='text-primary hover:underline'>

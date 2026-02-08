@@ -39,7 +39,9 @@ export default function ServersIndex({ projects = [] }: ServersIndexProps) {
             className='space-y-6'>
             <div className='grid gap-5 sm:grid-cols-2 xl:grid-cols-3'>
               {projects.map((project) => (
-                <Link key={project.id} href={`/servers/${project.id}`}>
+                <Link
+                  key={project.id}
+                  href={`/servers/${project.id}?name=${encodeURIComponent(project.name)}`}>
                   <Card
                     className='group relative overflow-hidden border-border bg-card transition-all duration-200 hover:border-primary/30 hover:shadow-md'>
                     <div className='flex w-full flex-col items-stretch gap-4 p-5 text-left'>
