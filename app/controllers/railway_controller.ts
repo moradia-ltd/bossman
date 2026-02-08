@@ -3,12 +3,10 @@ import { getPageAccessForUser } from '#services/page_access_service'
 import { RailwayApiService } from '#services/railway_service'
 
 async function ensureServersAccess(ctx: HttpContext) {
-  const user = ctx.auth.getUserOrFail()
-  if (!user.isAdminOrSuperAdmin) {
-    return ctx.response.forbidden()
-  }
+  const userId = ctx.auth.user?.id
+  if (userId === undefined) return ctx.response.forbidden()
 
-  const allowed = await getPageAccessForUser(user.id)
+  const allowed = await getPageAccessForUser(String(userId))
   if (Array.isArray(allowed) && !allowed.includes('servers')) {
     return ctx.response.forbidden()
   }
@@ -17,8 +15,7 @@ async function ensureServersAccess(ctx: HttpContext) {
 
 export default class RailwayController {
   async projects(ctx: HttpContext) {
-    const err = await ensureServersAccess(ctx)
-    if (err) return err
+    await ensureServersAccess(ctx)
 
     const service = new RailwayApiService()
     try {
@@ -32,8 +29,8 @@ export default class RailwayController {
   }
 
   async project(ctx: HttpContext) {
-    const err = await ensureServersAccess(ctx)
-    if (err) return err
+    await ensureServersAccess(ctx)
+
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -48,8 +45,8 @@ export default class RailwayController {
   }
 
   async deployments(ctx: HttpContext) {
-    const err = await ensureServersAccess(ctx)
-    if (err) return err
+    await ensureServersAccess(ctx)
+
     const { params, request, response } = ctx
     const environmentId = request.qs().environmentId as string | undefined
     const projectId = (request.qs().projectId as string | undefined) ?? ''
