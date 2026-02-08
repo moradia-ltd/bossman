@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { EmptyState } from '@/components/ui/empty-state'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import api from '@/lib/http'
 import { useRealTimeClient } from '@/lib/transmit'
@@ -153,7 +154,12 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
         </div>
         <ScrollArea className='h-96'>
           {notifications.length === 0 ? (
-            <div className='p-8 text-center text-sm text-muted-foreground'>No notifications</div>
+            <EmptyState
+              icon={Bell}
+              title='No notifications'
+              description="You're all caught up."
+              className='py-8'
+            />
           ) : (
             <div className='divide-y'>
               {notifications.map((notification) => (

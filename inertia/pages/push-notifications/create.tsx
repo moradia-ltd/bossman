@@ -2,6 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
+import { UserX } from 'lucide-react'
 import { useState } from 'react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -174,9 +175,18 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
                       </label>
                     ))}
                     {users.length === 0 && (
-                      <p className='py-4 text-center text-sm text-muted-foreground'>
-                        {userSearch ? 'No users match your search.' : 'Loading users...'}
-                      </p>
+                      userSearch ? (
+                        <EmptyState
+                          icon={UserX}
+                          title='No users match your search'
+                          description='Try a different search term.'
+                          className='py-6'
+                        />
+                      ) : (
+                        <p className='py-4 text-center text-sm text-muted-foreground'>
+                          Loading users...
+                        </p>
+                      )
                     )}
                   </div>
                 </ScrollArea>

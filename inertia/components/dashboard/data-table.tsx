@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react'
 import {
   ChevronLeft,
   ChevronRight,
@@ -28,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { EmptyState } from '@/components/ui/empty-state'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { cn } from '@/lib/utils'
 
@@ -81,6 +83,8 @@ interface DataTableProps<T extends { id?: string | number }> {
   onRowClick?: (row: T) => void
   loading?: boolean
   emptyMessage?: string
+  emptyIcon?: LucideIcon
+  emptyDescription?: string
   // Bulk selection props
   selectable?: boolean
   selectedRows?: string[]
@@ -111,6 +115,8 @@ export function DataTable<T extends { id?: string | number }>({
   onRowClick,
   loading,
   emptyMessage = 'No data available',
+  emptyIcon,
+  emptyDescription,
   selectable = false,
   selectedRows = [],
   onSelectionChange,
@@ -548,8 +554,17 @@ export function DataTable<T extends { id?: string | number }>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length + (selectable ? 1 : 0)}
-                  className='h-24 text-center'>
-                  {emptyMessage}
+                  className='text-center'>
+                  {emptyIcon || emptyDescription ? (
+                    <EmptyState
+                      icon={emptyIcon}
+                      title={emptyMessage}
+                      description={emptyDescription}
+                      className='py-12'
+                    />
+                  ) : (
+                    <span className='text-muted-foreground'>{emptyMessage}</span>
+                  )}
                 </TableCell>
               </TableRow>
             ) : (
@@ -601,8 +616,19 @@ export function DataTable<T extends { id?: string | number }>({
             <div className='h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent' />
           </div>
         ) : filteredData.length === 0 ? (
-          <div className='text-center h-24 flex items-center justify-center rounded-md border border-border'>
-            {emptyMessage}
+          <div className='rounded-md border border-border overflow-hidden'>
+            {emptyIcon || emptyDescription ? (
+              <EmptyState
+                icon={emptyIcon}
+                title={emptyMessage}
+                description={emptyDescription}
+                className='py-12'
+              />
+            ) : (
+              <div className='text-center h-24 flex items-center justify-center text-muted-foreground'>
+                {emptyMessage}
+              </div>
+            )}
           </div>
         ) : (
           filteredData.map((row) => {

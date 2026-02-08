@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { FileText, Layers } from 'lucide-react'
+import { FileText, Home, Layers } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { RawTeamMember } from '#types/model-types'
@@ -11,6 +11,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
+import { EmptyState } from '@/components/ui/empty-state'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
@@ -186,7 +187,12 @@ export default function MemberShow({ member }: MemberShowProps) {
                     {optionsLoading ? (
                       <p className='text-sm text-muted-foreground'>Loading properties…</p>
                     ) : leaseableEntities.length === 0 ? (
-                      <p className='text-sm text-muted-foreground'>No properties found.</p>
+                      <EmptyState
+                        icon={Home}
+                        title='No properties found'
+                        description='No properties available to assign.'
+                        className='py-6'
+                      />
                     ) : (
                       <div className='space-y-1.5'>
                         {leaseableEntities.map((e) => (
@@ -229,7 +235,12 @@ export default function MemberShow({ member }: MemberShowProps) {
                     {optionsLoading ? (
                       <p className='text-sm text-muted-foreground'>Loading leases…</p>
                     ) : leases.length === 0 ? (
-                      <p className='text-sm text-muted-foreground'>No leases found.</p>
+                      <EmptyState
+                        icon={FileText}
+                        title='No leases found'
+                        description='No leases available to assign.'
+                        className='py-6'
+                      />
                     ) : (
                       <div className='space-y-1.5'>
                         {leases.map((l) => (

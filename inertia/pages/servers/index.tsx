@@ -1,12 +1,13 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
-import { Box, Calendar, ChevronRight, Server } from 'lucide-react'
+import { Calendar, ChevronRight, Server } from 'lucide-react'
+import pluralize from 'pluralize'
 import { timeAgo } from '#utils/date'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Card } from '@/components/ui/card'
-import { LoadingSkeleton } from '@/components/ui'
 
 interface RailwayProject {
   id: string
@@ -21,7 +22,6 @@ interface ServersIndexProps extends SharedProps {
 }
 
 export default function ServersIndex({ projects = [] }: ServersIndexProps) {
-
   return (
     <DashboardLayout>
       <Head title='Servers' />
@@ -35,15 +35,14 @@ export default function ServersIndex({ projects = [] }: ServersIndexProps) {
         <Deferred data='projects' fallback={<LoadingSkeleton type='list' />}>
           <AppCard
             title='Projects'
-            description={`${projects.length} project${projects.length === 1 ? '' : 's'} on Railway`}
+            description={`${pluralize('project', projects.length)} on Railway`}
             className='space-y-6'>
             <div className='grid gap-5 sm:grid-cols-2 xl:grid-cols-3'>
               {projects.map((project) => (
                 <Link
                   key={project.id}
                   href={`/servers/${project.id}?name=${encodeURIComponent(project.name)}`}>
-                  <Card
-                    className='group relative overflow-hidden border-border bg-card transition-all duration-200 hover:border-primary/30 hover:shadow-md'>
+                  <Card className='group relative overflow-hidden border-border bg-card transition-all duration-200 hover:border-primary/30 hover:shadow-md'>
                     <div className='flex w-full flex-col items-stretch gap-4 p-5 text-left'>
                       <div className='flex items-start justify-between gap-3'>
                         <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary ring-1 ring-primary/20'>
@@ -73,13 +72,12 @@ export default function ServersIndex({ projects = [] }: ServersIndexProps) {
               ))}
             </div>
             {projects.length === 0 && (
-              <div className='flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16 text-center'>
-                <Box className='mb-3 h-12 w-12 text-muted-foreground' />
-                <p className='font-medium text-foreground'>No projects found</p>
-                <p className='mt-1 text-sm text-muted-foreground'>
-                  Add a project on Railway or check your API key.
-                </p>
-              </div>
+              <EmptyState
+                icon={Server}
+                title='No projects found'
+                description='Add a project on Railway or check your API key.'
+                className='rounded-lg border border-dashed border-border bg-muted/30'
+              />
             )}
           </AppCard>
         </Deferred>

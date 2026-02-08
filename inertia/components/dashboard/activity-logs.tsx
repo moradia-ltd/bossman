@@ -4,6 +4,7 @@ import { Activity, Clock, FileEdit, Plus, Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { AppCard } from '@/components/ui/app-card'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { EmptyState } from '@/components/ui/empty-state'
 import { Loading } from '@/components/ui/loading'
 import { timeAgo } from '@/lib/date'
 import api from '@/lib/http'
@@ -67,10 +68,11 @@ export function ActivityLogs() {
         title='Recent Activity'
         description='Your recent account activity'
       >
-        <div className='flex flex-col items-center justify-center py-8 text-center'>
-          <Activity className='h-12 w-12 text-muted-foreground mb-4 opacity-50' />
-          <p className='text-sm text-muted-foreground'>No recent activity</p>
-        </div>
+        <EmptyState
+          icon={Activity}
+          title='No recent activity'
+          description='Your account activity will appear here.'
+        />
       </AppCard>
     )
   }

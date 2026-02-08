@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Mail } from 'lucide-react'
 import { useState } from 'react'
 import type { Column } from '#types/extra'
 import { timeAgo } from '#utils/date'
@@ -11,6 +11,7 @@ import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
+import { EmptyState } from '@/components/ui/empty-state'
 import {
   Table,
   TableBody,
@@ -19,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { dateFormatter, dateTimeFormatter } from '@/lib/date'
+import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
 /** Resend list item (snake_case from API). */
@@ -274,10 +275,13 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
                   <TableBody>
                     {data.length === 0 ? (
                       <TableRow>
-                        <TableCell
-                          colSpan={columnsWithClick.length}
-                          className='text-center text-muted-foreground py-8'>
-                          No emails found
+                        <TableCell colSpan={columnsWithClick.length} className='text-center'>
+                          <EmptyState
+                            icon={Mail}
+                            title='No emails found'
+                            description='Emails sent via Resend will appear here.'
+                            className='py-12'
+                          />
                         </TableCell>
                       </TableRow>
                     ) : (

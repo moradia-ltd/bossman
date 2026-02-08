@@ -4,9 +4,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ChevronRight, Loader2, RefreshCw, RotateCcw, Server, Terminal } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { timeAgo } from '#utils/date'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
-import { LoadingSkeleton } from '@/components/ui'
+import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { BaseSheet } from '@/components/ui/base-sheet'
@@ -35,13 +36,25 @@ interface RailwayProjectDetail {
   environments: RailwayEnvironment[]
 }
 
+interface RailwayDeploymentMeta {
+  commitMessage?: string
+  [key: string]: unknown
+}
+
 interface RailwayDeployment {
   id: string
   status: string
   createdAt: string
-  meta: string | null
+  meta: string | RailwayDeploymentMeta | null
   canRedeploy: boolean
   canRollback: boolean
+}
+
+function deploymentTitle(d: RailwayDeployment): string {
+  const m = d.meta
+  if (typeof m === 'string' && m) return m
+  if (m && typeof m === 'object' && typeof m.commitMessage === 'string') return m.commitMessage
+  return `Deployment ${timeAgo(d.createdAt)}`
 }
 
 interface RailwayLog {
@@ -163,23 +176,21 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
       <Head title={`Project: ${displayName}`} />
 
       <div className='space-y-6'>
-        <PageHeader
-          title={displayName}
-          backHref='/servers'
-
-        />
+        <PageHeader title={displayName} backHref='/servers' />
 
         <Deferred data='project' fallback={<LoadingSkeleton type='list' />}>
           {safeProject === null ? (
-            <AppCard
+            <EmptyState
+              icon={Server}
               title={projectName ? `${projectName} not found` : 'Project not found'}
-              description='This Railway project may not exist or you may not have access.'>
-              <p className='text-muted-foreground'>
+              description='This Railway project may not exist or you may not have access.'
+              action={
                 <Link href='/servers' className='text-primary hover:underline'>
                   Back to Servers
                 </Link>
-              </p>
-            </AppCard>
+              }
+              className='rounded-lg border border-dashed border-border bg-muted/30'
+            />
           ) : safeProject ? (
             <AppCard
               title='Services'
@@ -210,13 +221,12 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                   ))}
                 </div>
               ) : (
-                <div className='flex flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 py-16 text-center'>
-                  <Server className='mb-3 h-12 w-12 text-muted-foreground' />
-                  <p className='font-medium text-foreground'>No services</p>
-                  <p className='mt-1 text-sm text-muted-foreground'>
-                    This project has no services yet.
-                  </p>
-                </div>
+                <EmptyState
+                  icon={Server}
+                  title='No services'
+                  description='This project has no services yet.'
+                  className='rounded-lg border border-dashed border-border bg-muted/30'
+                />
               )}
             </AppCard>
           ) : null}
@@ -236,89 +246,85 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
             <Loader2 className='h-10 w-10 animate-spin text-primary' />
           </div>
         ) : deployments.length > 0 ? (
-          <div className='h-[60vh] min-h-0 overflow-hidden'>
-            <ScrollArea className='h-full'>
-              <div className='space-y-3 pr-2'>
-                {deployments.map((d, index) => (
-                  <Card
-                    key={d.id}
-                    className='overflow-hidden border-border bg-card transition-colors hover:border-primary/25'>
-                    <div
-                      className={`border-l-4 ${d.status === 'SUCCESS'
-                        ? 'border-l-green-500'
-                        : d.status === 'FAILED' || d.status === 'CRASHED'
-                          ? 'border-l-destructive'
-                          : 'border-l-amber-500'
-                        }`}>
-                      <div className='flex flex-col gap-3 p-4'>
-                        <div className='flex flex-wrap items-center justify-between gap-2'>
-                          <div className='flex min-w-0 flex-wrap items-center gap-2'>
-                            <Badge variant={statusColor(d.status)} className='shrink-0 capitalize'>
-                              {d.status.toLowerCase()}
+          <div className='min-h-0 overflow-hidden'>
+
+            <div className='space-y-3 pr-2'>
+              {deployments.map((d, index) => (
+                <Card
+                  key={d.id}
+                  className='overflow-hidden border-border bg-card transition-colors hover:border-primary/25'>
+                  <div
+                    className={`border-l-4 ${d.status === 'SUCCESS'
+                      ? 'border-l-green-500'
+                      : d.status === 'FAILED' || d.status === 'CRASHED'
+                        ? 'border-l-destructive'
+                        : 'border-l-amber-500'
+                      }`}>
+                    <div className='flex flex-col gap-3 p-4'>
+                      <p className='text-sm font-medium text-foreground truncate' title={deploymentTitle(d)}>
+                        {deploymentTitle(d)}
+                      </p>
+                      <div className='flex flex-wrap items-center justify-between gap-2'>
+                        <div className='flex min-w-0 flex-wrap items-center gap-2'>
+                          <Badge variant={statusColor(d.status)} className='shrink-0 capitalize'>
+                            {d.status.toLowerCase()}
+                          </Badge>
+                          {index === 0 && (
+                            <Badge variant='secondary' className='shrink-0'>
+                              Latest
                             </Badge>
-                            {index === 0 && (
-                              <Badge variant='secondary' className='shrink-0'>
-                                Latest
-                              </Badge>
-                            )}
-                            <span className='text-xs text-muted-foreground'>
-                              {new Date(d.createdAt).toLocaleString()}
-                            </span>
-                          </div>
+                          )}
+                          <span className='text-xs text-muted-foreground'>
+                            {timeAgo(d.createdAt)}
+                          </span>
+                        </div>
+                        {index === 0 && (
                           <div className='flex shrink-0 gap-2'>
                             <Button
                               variant='outline'
-                              size='sm'
-                              className='gap-1.5'
+                              size='xs'
+                              leftIcon={<RotateCcw className='h-3.5 w-3.5' />}
                               onClick={() => restartMutation.mutate(d.id)}
-                              disabled={restartMutation.isPending}>
-                              {restartMutation.isPending ? (
-                                <Loader2 className='h-3.5 w-3.5 animate-spin' />
-                              ) : (
-                                <RotateCcw className='h-3.5 w-3.5' />
-                              )}
+                              disabled={restartMutation.isPending}
+                              isLoading={restartMutation.isPending}
+                              loadingText='Restarting…'>
                               Restart
                             </Button>
                             <Button
                               variant='outline'
-                              size='sm'
-                              className='gap-1.5'
+                              size='xs'
+                              leftIcon={<RefreshCw className='h-3.5 w-3.5' />}
                               onClick={() => redeployMutation.mutate(d.id)}
-                              disabled={
-                                redeployMutation.isPending || (!d.canRedeploy && index !== 0)
-                              }>
-                              {redeployMutation.isPending ? (
-                                <Loader2 className='h-3.5 w-3.5 animate-spin' />
-                              ) : (
-                                <RefreshCw className='h-3.5 w-3.5' />
-                              )}
+                              disabled={redeployMutation.isPending || !d.canRedeploy}
+                              isLoading={redeployMutation.isPending}
+                              loadingText='Redeploying…'>
                               Redeploy
                             </Button>
                           </div>
-                        </div>
-                        <Button
-                          variant='secondary'
-                          size='sm'
-                          className='w-full justify-start gap-2 bg-muted/60'
-                          onClick={() => openDeploymentLogs(d.id)}>
-                          <Terminal className='h-4 w-4 shrink-0' />
-                          View runtime logs
-                        </Button>
+                        )}
                       </div>
+                      <Button
+                        variant='secondary'
+                        size='sm'
+                        className='w-full justify-start gap-2 bg-muted/60'
+                        onClick={() => openDeploymentLogs(d.id)}>
+                        <Terminal className='h-4 w-4 shrink-0' />
+                        View runtime logs
+                      </Button>
                     </div>
-                  </Card>
-                ))}
-              </div>
-            </ScrollArea>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
           </div>
         ) : (
-          <div className='flex min-h-[200px] flex-col items-center justify-center py-12 text-center'>
-            <RefreshCw className='mb-3 h-12 w-12 text-muted-foreground' />
-            <p className='font-medium text-foreground'>No deployments</p>
-            <p className='mt-1 text-sm text-muted-foreground'>
-              No deployments for this service yet.
-            </p>
-          </div>
+          <EmptyState
+            icon={RefreshCw}
+            title='No deployments'
+            description='No deployments for this service yet.'
+            className='min-h-[200px] py-12'
+          />
         )}
       </BaseSheet>
 
@@ -358,7 +364,12 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                     ))}
                   </div>
                 ) : (
-                  <p className='py-6 text-center text-zinc-500'>No runtime logs.</p>
+                  <EmptyState
+                    icon={Terminal}
+                    title='No runtime logs'
+                    description='Logs will appear when the service is running.'
+                    className='py-6 [&_h3]:text-zinc-400 [&_p]:text-zinc-500 [&_.bg-muted]:bg-white/5'
+                  />
                 )}
               </div>
             </ScrollArea>
