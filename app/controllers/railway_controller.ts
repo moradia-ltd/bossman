@@ -8,8 +8,8 @@ async function ensureServersAccess(ctx: HttpContext) {
   if (!user.isAdminOrSuperAdmin) {
     return ctx.response.forbidden()
   }
-  const freshUser = await User.findByOrFail('email', user.email)
-  const allowed = await getPageAccessForUser(freshUser.id)
+
+  const allowed = await getPageAccessForUser(user.id)
   if (Array.isArray(allowed) && !allowed.includes('servers')) {
     return ctx.response.forbidden()
   }
@@ -18,8 +18,8 @@ async function ensureServersAccess(ctx: HttpContext) {
 
 export default class RailwayController {
   async projects(ctx: HttpContext) {
-    const forbid = await ensureServersAccess(ctx)
-    if (forbid) return forbid
+    await ensureServersAccess(ctx)
+
     const service = new RailwayApiService()
     try {
       const projects = await service.listProjects()
@@ -32,8 +32,7 @@ export default class RailwayController {
   }
 
   async project(ctx: HttpContext) {
-    const forbid = await ensureServersAccess(ctx)
-    if (forbid) return forbid
+    await ensureServersAccess(ctx)
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -48,8 +47,7 @@ export default class RailwayController {
   }
 
   async deployments(ctx: HttpContext) {
-    const forbid = await ensureServersAccess(ctx)
-    if (forbid) return forbid
+    await ensureServersAccess(ctx)
     const { params, request, response } = ctx
     const environmentId = request.qs().environmentId as string | undefined
     const projectId = (request.qs().projectId as string | undefined) ?? ''
@@ -73,8 +71,7 @@ export default class RailwayController {
   }
 
   async deploymentLogs(ctx: HttpContext) {
-    const forbid = await ensureServersAccess(ctx)
-    if (forbid) return forbid
+    await ensureServersAccess(ctx)
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -88,8 +85,7 @@ export default class RailwayController {
   }
 
   async deploymentRestart(ctx: HttpContext) {
-    const forbid = await ensureServersAccess(ctx)
-    if (forbid) return forbid
+    await ensureServersAccess(ctx)
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {
@@ -103,8 +99,7 @@ export default class RailwayController {
   }
 
   async deploymentRedeploy(ctx: HttpContext) {
-    const forbid = await ensureServersAccess(ctx)
-    if (forbid) return forbid
+    await ensureServersAccess(ctx)
     const { params, response } = ctx
     const service = new RailwayApiService()
     try {

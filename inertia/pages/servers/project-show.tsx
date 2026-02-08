@@ -1,24 +1,17 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  ChevronRight,
-  Loader2,
-  RefreshCw,
-  RotateCcw,
-  Server,
-  Terminal,
-} from 'lucide-react'
+import { ChevronRight, Loader2, RefreshCw, RotateCcw, Server, Terminal } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
+import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { LoadingSkeleton } from '@/components/ui'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
@@ -178,7 +171,9 @@ export default function ServersProjectShow({ project }: ProjectShowProps) {
 
         <Deferred data='project' fallback={<LoadingSkeleton type='list' />}>
           {safeProject === null ? (
-            <AppCard title='Project not found' description='This Railway project may not exist or you may not have access.'>
+            <AppCard
+              title='Project not found'
+              description='This Railway project may not exist or you may not have access.'>
               <p className='text-muted-foreground'>
                 <Link href='/servers' className='text-primary hover:underline'>
                   Back to Servers
@@ -249,13 +244,12 @@ export default function ServersProjectShow({ project }: ProjectShowProps) {
                     key={d.id}
                     className='overflow-hidden border-border bg-card transition-colors hover:border-primary/25'>
                     <div
-                      className={`border-l-4 ${
-                        d.status === 'SUCCESS'
-                          ? 'border-l-green-500'
-                          : d.status === 'FAILED' || d.status === 'CRASHED'
-                            ? 'border-l-destructive'
-                            : 'border-l-amber-500'
-                      }`}>
+                      className={`border-l-4 ${d.status === 'SUCCESS'
+                        ? 'border-l-green-500'
+                        : d.status === 'FAILED' || d.status === 'CRASHED'
+                          ? 'border-l-destructive'
+                          : 'border-l-amber-500'
+                        }`}>
                       <div className='flex flex-col gap-3 p-4'>
                         <div className='flex flex-wrap items-center justify-between gap-2'>
                           <div className='flex min-w-0 flex-wrap items-center gap-2'>
