@@ -205,11 +205,11 @@ export class RailwayApiService {
   async deploymentRestart(deploymentId: string): Promise<boolean> {
     const data = await this.graphql<{ deploymentRestart: boolean }>(
       `
-      mutation deploymentRestart($deploymentId: String!) {
-        deploymentRestart(deploymentId: $deploymentId)
+      mutation deploymentRestart($id: String!) {
+        deploymentRestart(id: $id)
       }
     `,
-      { deploymentId },
+      { id: deploymentId },
     )
     return data.deploymentRestart === true
   }
@@ -217,11 +217,11 @@ export class RailwayApiService {
   async deploymentRedeploy(deploymentId: string): Promise<string | null> {
     const data = await this.graphql<{ deploymentRedeploy: string | null }>(
       `
-      mutation deploymentRedeploy($deploymentId: String!) {
-        deploymentRedeploy(deploymentId: $deploymentId)
+      mutation deploymentRedeploy($id: String!) {
+        deploymentRedeploy(id: $id)
       }
     `,
-      { deploymentId },
+      { id: deploymentId },
     )
     return data.deploymentRedeploy
   }

@@ -2,6 +2,8 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ChevronRight, Loader2, RefreshCw, RotateCcw, Server, Terminal } from 'lucide-react'
+
+import { RuntimeLogsSheet } from './components/runtime-logs-sheet'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { timeAgo } from '#utils/date'
@@ -13,7 +15,6 @@ import { Badge } from '@/components/ui/badge'
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
@@ -57,12 +58,6 @@ function deploymentTitle(d: RailwayDeployment): string {
   return `Deployment ${timeAgo(d.createdAt)}`
 }
 
-interface RailwayLog {
-  message: string
-  timestamp: string
-  level?: string
-}
-
 interface ProjectShowProps extends SharedProps {
   projectName?: string | null
   project?: RailwayProjectDetail | null
@@ -94,18 +89,6 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
       return res.data ?? []
     },
     enabled: !!selectedService && deploymentsSheetOpen,
-  })
-
-  const { data: logs = [], isLoading: logsLoading } = useQuery({
-    queryKey: ['railway', 'deployment-logs', selectedDeploymentId],
-    queryFn: async () => {
-      if (!selectedDeploymentId) return []
-      const res = await api.get<RailwayLog[]>(
-        `/railway/deployments/${selectedDeploymentId}/logs/runtime`,
-      )
-      return res.data ?? []
-    },
-    enabled: !!selectedDeploymentId && logsSheetOpen,
   })
 
   const restartMutation = useMutation({
@@ -328,54 +311,11 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
         )}
       </BaseSheet>
 
-      {/* Runtime logs sheet */}
-      <BaseSheet
+      <RuntimeLogsSheet
         open={logsSheetOpen}
         onOpenChange={setLogsSheetOpen}
-        title='Runtime logs'
-        description='Most recent runtime output for this deployment.'
-        side='right'
-        className='w-full sm:max-w-2xl'>
-        {logsLoading ? (
-          <div className='flex min-h-[200px] items-center justify-center py-12'>
-            <Loader2 className='h-10 w-10 animate-spin text-primary' />
-          </div>
-        ) : (
-          <div className='h-[70vh] min-h-0 overflow-hidden'>
-            <ScrollArea className='h-full'>
-              <div className='rounded-lg border border-border bg-[#0d1117] p-4 font-mono text-[13px] shadow-inner'>
-                <div className='mb-3 flex items-center gap-2 border-b border-white/10 pb-2'>
-                  <span className='h-2.5 w-2.5 rounded-full bg-emerald-500' />
-                  <span className='text-xs uppercase tracking-wider text-zinc-500'>
-                    Runtime output
-                  </span>
-                </div>
-                {logs.length > 0 ? (
-                  <div className='space-y-0.5'>
-                    {logs.map((log, i) => (
-                      <div
-                        key={`${log.timestamp ?? ''}-${i}`}
-                        className='flex gap-3 rounded py-1.5 pl-1 hover:bg-white/5'>
-                        <span className='shrink-0 select-none text-zinc-500'>
-                          {log.timestamp ? new Date(log.timestamp).toISOString() : '—'}
-                        </span>
-                        <span className='min-w-0 break-words text-zinc-300'>{log.message}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <EmptyState
-                    icon={Terminal}
-                    title='No runtime logs'
-                    description='Logs will appear when the service is running.'
-                    className='py-6 [&_h3]:text-zinc-400 [&_p]:text-zinc-500 [&_.bg-muted]:bg-white/5'
-                  />
-                )}
-              </div>
-            </ScrollArea>
-          </div>
-        )}
-      </BaseSheet>
+        deploymentId={selectedDeploymentId}
+      />
     </DashboardLayout>
   )
 }

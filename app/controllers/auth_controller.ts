@@ -39,7 +39,7 @@ export default class AuthController {
   async logout({ auth, response, session }: HttpContext) {
     await auth.use('web').logout()
     session.forget('deviceSessionId')
-    return response.redirect('/')
+    return response.redirect('/login')
   }
 
   async forgotPassword({ request, response, logger, mailer }: HttpContext) {

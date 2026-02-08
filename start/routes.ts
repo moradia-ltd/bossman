@@ -40,8 +40,9 @@ const LogsPageController = () => import('#controllers/logs_page_controller')
 const EmailsPageController = () => import('#controllers/emails_page_controller')
 const ServersController = () => import('#controllers/servers_controller')
 
-router.on('/').renderInertia('home')
-router.on('/home').renderInertia('home')
+router.get('/', async ({ auth, response }) => {
+  return auth.user ? response.redirect('/dashboard') : response.redirect('/login')
+})
 
 /**
  * Authenticated app pages (dashboard, teams, blog management).
