@@ -26,6 +26,11 @@ const stripe = new Stripe(getStripeKey(), {
   apiVersion: '2026-01-28.clover',
 })
 
+interface Customer {
+  email: string
+  name: string
+  togethaUserId: string
+}
 class StripeService {
   public static async getSubscription(subscriptionId: string) {
     const subscription = await stripe.subscriptions.retrieve(subscriptionId)
@@ -36,27 +41,7 @@ class StripeService {
     return stripe.balance.retrieve()
   }
 
-  getCustomers({ limit = 10 }) {
-    return stripe.customers.list({ limit })
-  }
-
-  getSubscriptions({ limit = 10 }) {
-    return stripe.subscriptions.list({
-      limit,
-      status: 'active',
-      expand: ['data.customer'],
-    })
-  }
-
-  public static async createCustomer({
-    email,
-    name,
-    togethaUserId,
-  }: {
-    email: string
-    name: string
-    togethaUserId: string
-  }) {
+  public static async createCustomer({ email, name, togethaUserId }: Customer) {
     try {
       const customer = await stripe.customers.create({
         email,
@@ -206,6 +191,11 @@ class StripeService {
       featureList: featureListPayload,
     })
     return session
+  }
+  static async createPrice(data: Stripe.PriceCreateParams, env: 'dev' | 'prod') {
+    const productId = env === 'prod' ? 'prod_Twz5vY3ayNdo3Z' : 'prod_TwythEksEkJ3Jc'
+    const price = await stripe.prices.create({ product: productId, ...data })
+    return price
   }
 
   public async viewInvoices(orgId: string, env: string) {

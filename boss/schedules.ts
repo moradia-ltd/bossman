@@ -1,6 +1,7 @@
 export default {
   EVERY_MINUTE: '* * * * *',
   EVERY_HOUR: '0 * * * *',
+  EVERY_6_HOURS: '0 */6 * * *',
   EVERY_DAY: '0 0 * * *',
   EVERY_MIDNIGHT: '0 0 * * *',
   EVERY_WEEK: '0 0 * * 0',

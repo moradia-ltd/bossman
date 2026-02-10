@@ -39,6 +39,7 @@ const DbBackupsController = () => import('#controllers/db_backups_controller')
 const LogsPageController = () => import('#controllers/logs_page_controller')
 const EmailsPageController = () => import('#controllers/emails_page_controller')
 const ServersController = () => import('#controllers/servers_controller')
+const AddonsController = () => import('#controllers/addons_controller')
 
 router.get('/', async ({ auth, response }) => {
   return auth.user ? response.redirect('/dashboard') : response.redirect('/login')
@@ -81,6 +82,9 @@ router
     router.get('/logs', [LogsPageController, 'index'])
     router.get('/servers', [ServersController, 'index'])
     router.get('/servers/:projectId', [ServersController, 'show'])
+    router.get('/addons', [AddonsController, 'index'])
+    router.get('/addons/create', [AddonsController, 'create'])
+    router.post('/addons', [AddonsController, 'store'])
     router.get('/emails', [EmailsPageController, 'index'])
     router.get('/emails/:id', [EmailsPageController, 'show'])
     router.post('/db-backups', [DbBackupsController, 'store'])

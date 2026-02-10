@@ -1,5 +1,5 @@
 import { worker } from '#boss/base'
-import { cleanUp } from '#boss/jobs/clean_up'
+import { backup } from '#boss/jobs/backup'
 import schedules from './schedules.js'
 
 /**
@@ -9,5 +9,5 @@ import schedules from './schedules.js'
 export async function registerCrons(): Promise<void> {
   await worker.ensureStarted()
 
-  // await cleanUp.scheduleCron(schedules.EV/ERY_MINUTE, { database: 'main' })
+  await backup.scheduleCron(schedules.EVERY_6_HOURS, { database: 'prod' })
 }

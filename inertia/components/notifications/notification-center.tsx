@@ -81,25 +81,19 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
 
   // Mark as read mutation
   const { mutate: markAsReadMutation } = useMutation({
-    mutationFn: async (notificationId: string) => {
-      await api.post('/notifications/mark-as-read', { notificationId })
-    },
+    mutationFn: (notificationId: string) => api.post('/notifications/mark-as-read', { notificationId }),
     onSuccess: () => refetchNotifications(),
   })
 
   // Mark all as read mutation
   const { mutate: markAllAsReadMutation } = useMutation({
-    mutationFn: async () => {
-      await api.post('/notifications/mark-all-as-read')
-    },
+    mutationFn: () => api.post('/notifications/mark-all-as-read'),
     onSuccess: () => refetchNotifications(),
   })
 
   // Delete notification mutation
   const { mutate: deleteNotificationMutation } = useMutation({
-    mutationFn: async (notificationId: string) => {
-      await api.delete(`/notifications/${notificationId}`)
-    },
+    mutationFn: (notificationId: string) => api.delete(`/notifications/${notificationId}`),
     onSuccess: () => refetchNotifications(),
   })
 

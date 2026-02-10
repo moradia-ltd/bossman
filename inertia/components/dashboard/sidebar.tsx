@@ -18,6 +18,7 @@ import {
   Newspaper,
   PanelLeftOpen,
   PanelRightOpen,
+  Package,
   Server,
   Settings,
   Sun,
@@ -96,6 +97,7 @@ const adminNavSections: NavSection[] = [
       { title: 'Logs', href: '/logs', icon: <ScrollText className='h-4 w-4' /> },
       { title: 'Emails', href: '/emails', icon: <Mail className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
+      { title: 'Addons', href: '/addons', icon: <Package className='h-4 w-4' /> },
     ]
   }
 ]
@@ -145,6 +147,7 @@ export function Sidebar({ children }: SidebarProps) {
     if (path.startsWith('/logs')) return 'logs'
     if (path.startsWith('/emails')) return 'emails'
     if (path.startsWith('/servers')) return 'servers'
+    if (path.startsWith('/addons')) return 'addons'
     return null
   }
 
