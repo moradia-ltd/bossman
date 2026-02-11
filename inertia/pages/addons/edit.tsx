@@ -123,7 +123,7 @@ export default function AddonsEdit({ addon }: AddonsEditProps) {
           </AppCard>
 
           <AppCard title='Price' description='Price and billing type for this addon.'>
-            <div className='grid gap-4 md:grid-cols-2'>
+            <div className='grid gap-4 md:grid-cols-3'>
               <FormField label='Billing type' htmlFor='billingType' error={errors.billingType}>
                 <Select
                   itemToStringLabel={(item) => startCase(item)}

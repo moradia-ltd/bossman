@@ -117,7 +117,7 @@ export default function AddonsCreate(_props: AddonsCreateProps) {
           </AppCard>
 
           <AppCard title='Price' description='Set the price for this addon on the same page.'>
-            <div className='grid gap-4 md:grid-cols-2'>
+            <div className='grid gap-4 md:grid-cols-3'>
               <FormField
                 label='Billing type'
                 htmlFor='billingType'
