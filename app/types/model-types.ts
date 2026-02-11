@@ -2,6 +2,7 @@ import type { BelongsTo, HasMany, HasOne, ManyToMany } from '@adonisjs/lucid/typ
 
 import type { DateTime } from 'luxon'
 import type Activity from '#models/activity'
+import type Addon from '#models/addon'
 import type BlogAuthor from '#models/blog_author'
 import type BlogCategory from '#models/blog_category'
 import type BlogPost from '#models/blog_post'
@@ -72,3 +73,4 @@ export type RawPayment = ExtractModelType<Payment>
 export type RawActivity = ExtractModelType<Activity>
 export type RawOrg = ExtractModelType<Org>
 export type RawDbBackup = ExtractModelType<DbBackup>
+export type RawAddon = ExtractModelType<Addon>

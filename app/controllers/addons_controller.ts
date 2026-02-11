@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Addon from '#models/addon'
 import StripeService from '#services/stripe_service'
-import { createAddonValidator } from '#validators/addon'
+import { createAddonValidator, updateAddonValidator } from '#validators/addon'
 
 export default class AddonsController {
   async index({ inertia, request }: HttpContext) {
@@ -37,6 +37,36 @@ export default class AddonsController {
       env,
     )
     await Addon.create({ ...payload, stripePriceId: price.id }, { connection: env })
+
+    return response.redirect(`/addons`)
+  }
+
+  async edit({ params, request, inertia, response }: HttpContext) {
+    const env = request.appEnv()
+    const addon = await Addon.find(params.id, { connection: env })
+    if (!addon) return response.notFound()
+    return inertia.render('addons/edit', { addon })
+  }
+
+  async update({ params, request, response }: HttpContext) {
+    const env = request.appEnv()
+    const addon = await Addon.find(params.id, { connection: env })
+    if (!addon) return response.notFound()
+
+    const payload = await request.validateUsing(updateAddonValidator)
+
+    addon.merge({
+      name: payload.name,
+      shortDescription: payload.shortDescription ?? addon.shortDescription ?? null,
+      longDescription: payload.longDescription ?? addon.longDescription ?? null,
+      priceAmount: payload.priceAmount ?? addon.priceAmount ?? null,
+      priceCurrency: payload.priceCurrency ?? addon.priceCurrency ?? null,
+      billingType: payload.billingType ?? addon.billingType,
+      features: payload.features ?? addon.features ?? null,
+      isActive: payload.isActive ?? addon.isActive,
+      sortOrder: payload.sortOrder ?? addon.sortOrder,
+    })
+    await addon.save()
 
     return response.redirect(`/addons`)
   }

@@ -1,5 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
+import type { RawAddon } from '#types/model-types'
 import { startCase } from '#utils/functions'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -18,26 +19,27 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-interface AddonsCreateProps extends SharedProps { }
+interface AddonsEditProps extends SharedProps {
+  addon: RawAddon
+}
 
 const BILLING_OPTIONS = [
   { value: 'one_off', label: 'One-off' },
   { value: 'recurring_monthly', label: 'Recurring (monthly)' },
   { value: 'recurring_yearly', label: 'Recurring (yearly)' },
-  // { value: 'usage', label: 'Usage-based' },
 ] as const
 
-export default function AddonsCreate(_props: AddonsCreateProps) {
-  const { data, setData, post, processing, errors } = useForm({
-    name: '',
-    shortDescription: '',
-    longDescription: '',
-    priceAmount: '',
-    priceCurrency: 'GBP',
-    billingType: 'one_off' as const,
-    features: [] as string[],
-    isActive: true,
-    sortOrder: 0,
+export default function AddonsEdit({ addon }: AddonsEditProps) {
+  const { data, setData, put, processing, errors } = useForm({
+    name: addon.name,
+    shortDescription: addon.shortDescription ?? '',
+    longDescription: addon.longDescription ?? '',
+    priceAmount: addon.priceAmount ?? '',
+    priceCurrency: (addon.priceCurrency ?? 'GBP') as 'GBP' | 'USD' | 'EUR',
+    billingType: addon.billingType,
+    features: (addon.features ?? []) as string[],
+    isActive: addon.isActive,
+    sortOrder: addon.sortOrder,
   })
 
   const addFeature = () => {
@@ -59,34 +61,38 @@ export default function AddonsCreate(_props: AddonsCreateProps) {
 
   return (
     <DashboardLayout>
-      <Head title='New addon' />
+      <Head title={`Edit ${addon.name}`} />
 
       <div className='space-y-6'>
         <PageHeader
           backHref='/addons'
-          title='New addon'
-          description='Create an addon and set its price on this page.'
+          title={`Edit ${addon.name}`}
+          description='Update addon details and price. Slug is generated from the name.'
         />
 
         <form
           onSubmit={(e) => {
             e.preventDefault()
-            post('/addons', { preserveScroll: true })
+            put(`/addons/${addon.id}`, { preserveScroll: true })
           }}
           className='space-y-6'>
           <AppCard
             title='Details'
             description='Name and descriptions. Slug is generated automatically from the name.'>
             <div className='grid gap-4 md:grid-cols-2'>
-              <FormField label='Name' htmlFor='name' required error={errors.name}>
-                <Input
-                  id='name'
-                  value={data.name}
-                  onChange={(e) => setData('name', e.target.value)}
-                  placeholder='e.g. Extra storage'
-                  required
-                />
-              </FormField>
+              <div>
+                <FormField label='Name' htmlFor='name' required error={errors.name}>
+                  <Input
+                    id='name'
+                    value={data.name}
+                    onChange={(e) => setData('name', e.target.value)}
+                    placeholder='e.g. Extra storage'
+                    required
+                  />
+                </FormField>
+
+                <p className='text-xs text-muted-foreground '>Slug: /{addon.slug}</p>
+              </div>
 
               <FormField
                 label='Short description'
@@ -109,20 +115,16 @@ export default function AddonsCreate(_props: AddonsCreateProps) {
                   id='longDescription'
                   value={data.longDescription}
                   onChange={(e) => setData('longDescription', e.target.value)}
-                  rows={3}
+                  rows={5}
                   placeholder='Full description (optional)'
                 />
               </FormField>
             </div>
           </AppCard>
 
-          <AppCard title='Price' description='Set the price for this addon on the same page.'>
+          <AppCard title='Price' description='Price and billing type for this addon.'>
             <div className='grid gap-4 md:grid-cols-2'>
-              <FormField
-                label='Billing type'
-                htmlFor='billingType'
-                required
-                error={errors.billingType}>
+              <FormField label='Billing type' htmlFor='billingType' error={errors.billingType}>
                 <Select
                   itemToStringLabel={(item) => startCase(item)}
                   value={data.billingType}
@@ -226,8 +228,8 @@ export default function AddonsCreate(_props: AddonsCreateProps) {
               type='submit'
               disabled={processing}
               isLoading={processing}
-              loadingText='Creating…'>
-              Create addon
+              loadingText='Saving…'>
+              Save changes
             </Button>
             <Button type='button' variant='outline' asChild>
               <Link href='/addons'>Cancel</Link>

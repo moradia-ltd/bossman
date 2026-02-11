@@ -5,19 +5,6 @@ import type { DateTime } from 'luxon'
 import Addon from './addon.js'
 import Org from './org.js'
 
-//  table.string('id').defaultTo(this.raw('nanoid()')).primary().unique()
-// table.string('org_id').notNullable().references('id').inTable('orgs').onDelete('CASCADE')
-// table.string('add_on_id').notNullable().references('id').inTable('add_ons').onDelete('CASCADE')
-// table.string('status').notNullable() // active | cancelled | expired
-// table.string('stripe_subscription_item_id').nullable()
-// table.string('stripe_subscription_id').nullable()
-// table.integer('quantity').defaultTo(1).notNullable()
-// table.integer('usage_value').nullable() // e.g. remaining SMS credits
-// table.timestamp('starts_at', { useTz: true }).nullable()
-// table.timestamp('ends_at', { useTz: true }).nullable()
-// table.jsonb('metadata').nullable()
-// table.timestamp('created_at', { useTz: true })
-// table.timestamp('updated_at', { useTz: true })
 export default class OrgAddOn extends BaseModel {
   @column({ isPrimary: true })
   declare id: string

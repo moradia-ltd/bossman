@@ -85,6 +85,8 @@ router
     router.get('/addons', [AddonsController, 'index'])
     router.get('/addons/create', [AddonsController, 'create'])
     router.post('/addons', [AddonsController, 'store'])
+    router.get('/addons/:id/edit', [AddonsController, 'edit'])
+    router.put('/addons/:id', [AddonsController, 'update'])
     router.get('/emails', [EmailsPageController, 'index'])
     router.get('/emails/:id', [EmailsPageController, 'show'])
     router.post('/db-backups', [DbBackupsController, 'store'])
