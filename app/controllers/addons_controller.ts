@@ -7,6 +7,7 @@ export default class AddonsController {
   async index({ inertia, request }: HttpContext) {
     const env = request.appEnv()
 
+    console.log({ env })
     const addons = await Addon.query({ connection: env })
       .orderBy('sort_order', 'asc')
       .orderBy('name', 'asc')
@@ -29,10 +30,10 @@ export default class AddonsController {
         ...(payload.billingType === 'one_off'
           ? {}
           : {
-              recurring: {
-                interval: payload.billingType === 'recurring_monthly' ? 'month' : 'year',
-              },
-            }),
+            recurring: {
+              interval: payload.billingType === 'recurring_monthly' ? 'month' : 'year',
+            },
+          }),
       },
       env,
     )
@@ -54,19 +55,8 @@ export default class AddonsController {
     if (!addon) return response.notFound()
 
     const payload = await request.validateUsing(updateAddonValidator)
+    await addon.merge(payload).save()
 
-    addon.merge({
-      name: payload.name,
-      shortDescription: payload.shortDescription ?? addon.shortDescription ?? null,
-      longDescription: payload.longDescription ?? addon.longDescription ?? null,
-      priceAmount: payload.priceAmount ?? addon.priceAmount ?? null,
-      priceCurrency: payload.priceCurrency ?? addon.priceCurrency ?? null,
-      billingType: payload.billingType ?? addon.billingType,
-      features: payload.features ?? addon.features ?? null,
-      isActive: payload.isActive ?? addon.isActive,
-      sortOrder: payload.sortOrder ?? addon.sortOrder,
-    })
-    await addon.save()
 
     return response.redirect(`/addons`)
   }

@@ -1,4 +1,4 @@
-import path from 'node:path'
+
 import type { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 import drive from '@adonisjs/drive/services/main'
