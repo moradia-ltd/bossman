@@ -4,7 +4,6 @@ import type { DateTime } from 'luxon'
 
 export default class Addon extends BaseModel {
 
-  static table = 'add_ons'
   @column({ isPrimary: true })
   declare id: string
 
