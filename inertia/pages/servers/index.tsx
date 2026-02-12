@@ -54,13 +54,7 @@ export default function ServersIndex({ projects = [] }: ServersIndexProps) {
                         <h3 className='truncate text-base font-semibold tracking-tight text-foreground'>
                           {project.name}
                         </h3>
-                        {project.description ? (
-                          <p className='line-clamp-2 text-sm text-muted-foreground'>
-                            {project.description}
-                          </p>
-                        ) : (
-                          <p className='text-sm italic text-muted-foreground'>No description</p>
-                        )}
+
                       </div>
                       <div className='flex items-center gap-2 text-xs text-muted-foreground'>
                         <Calendar className='h-3.5 w-3.5 shrink-0' />

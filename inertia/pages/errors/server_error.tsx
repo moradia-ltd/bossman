@@ -56,13 +56,13 @@ export default function ServerError({ error }: ServerErrorProps) {
               leftIcon={<RefreshCw className='h-4 w-4' />}>
               Try Again
             </Button>
-            <Button
+            {/*<Button
               variant='outline'
-              onClick={() => router.visit(-1 as unknown as string)}
+              onClick={() => location.back}
               className='w-full sm:w-auto'
               leftIcon={<ArrowLeft className='h-4 w-4' />}>
               Go Back
-            </Button>
+            </Button>*/}
             <a href='/'>
               <Button className='w-full sm:w-auto' leftIcon={<Home className='h-4 w-4' />}>
                 Back to Home
