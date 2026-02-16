@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card'
 
 export interface AppCardProps {
-  title: string
+  title: React.ReactNode
   description?: string
   children: React.ReactNode
   className?: string

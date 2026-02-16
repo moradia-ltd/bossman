@@ -4,6 +4,7 @@ import {
   Bell,
   Building2,
   ChevronsUpDown,
+  ClipboardCheck,
   Database,
   FileText,
   Globe,
@@ -16,14 +17,14 @@ import {
   Menu,
   Moon,
   Newspaper,
+  Package,
   PanelLeftOpen,
   PanelRightOpen,
-  Package,
+  ScrollText,
   Server,
   Settings,
   Sun,
   UsersRound,
-  ScrollText,
 } from 'lucide-react'
 import type { RawUser } from '#types/model-types'
 import { startCase } from '#utils/functions'
@@ -98,6 +99,7 @@ const adminNavSections: NavSection[] = [
       { title: 'Emails', href: '/emails', icon: <Mail className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
       { title: 'Addons', href: '/addons', icon: <Package className='h-4 w-4' /> },
+      { title: 'QA Testing', href: '/qa-testing', icon: <ClipboardCheck className='h-4 w-4' /> },
     ]
   }
 ]
@@ -148,6 +150,7 @@ export function Sidebar({ children }: SidebarProps) {
     if (path.startsWith('/emails')) return 'emails'
     if (path.startsWith('/servers')) return 'servers'
     if (path.startsWith('/addons')) return 'addons'
+    if (path.startsWith('/qa-testing')) return 'qaTesting'
     return null
   }
 
