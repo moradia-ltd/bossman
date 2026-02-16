@@ -68,6 +68,7 @@ export async function sendToRecipients(
       .save()
     logger.info({ id, status: success ? 'sent' : 'failed' }, 'push-notification: done')
   } catch (err) {
+    logger.error({ id, err }, 'push-notification: error')
     await notification
       .merge({
         status: 'failed',

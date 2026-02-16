@@ -1,16 +1,20 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
+
 import PushNotification from '#models/push_notification'
 import TogethaUser from '#models/togetha_user'
-import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
+import {
+  resolveUserIds,
+  sendToRecipients,
+} from '#services/push_notification_service'
 import { storePushNotificationValidator } from '#validators/push_notification'
 
 export default class PushNotificationsController {
   async users({ request, response }: HttpContext) {
     const appEnv = request.appEnv()
     const search = request.qs().search as string | undefined
-    const users = await TogethaUser.query({ connection: appEnv })
+    const users = TogethaUser.query({ connection: appEnv })
       .select('id', 'name', 'email', 'landlordId', 'agencyId', 'tenantId')
       .orderBy('name', 'asc')
       .if(search, (q) => q.whereILike('name', `%${search}%`).orWhereILike('email', `%${search}%`))
@@ -71,7 +75,11 @@ export default class PushNotificationsController {
       return response.badRequest({ errors: { targetUserIds: ['Select at least one user'] } })
     }
     try {
-      const userIds = await resolveUserIds(payload.targetType, payload.targetUserIds, appEnv)
+      const userIds = await resolveUserIds(
+        payload.targetType,
+        payload.targetUserIds,
+        appEnv,
+      )
       const sendNow = !payload.sendAt
 
       const notification = await PushNotification.create({

@@ -31,9 +31,7 @@ interface OneSignalApiResponse {
 /**
  * Normalize OneSignal errors (can be array or object) into Record<string, string>.
  */
-function normalizeErrors(
-  errors: Record<string, string> | string[] | undefined,
-): Record<string, string> | undefined {
+function normalizeErrors(errors: Record<string, string> | string[] | undefined): Record<string, string> | undefined {
   if (!errors) return undefined
   if (Array.isArray(errors)) {
     const msg = errors.length > 0 ? errors.join('; ') : 'Unknown error'
@@ -54,10 +52,18 @@ function normalizeErrors(
 export async function sendOneSignalPush(
   options: OneSignalSendOptions,
 ): Promise<OneSignalSendResult> {
-  const endpoint = env.get('ONESIGNAL_API_ENDPOINT')
-  const appId = env.get('ONESIGNAL_APP_ID')
-  const apiKey = env.get('ONESIGNAL_API_KEY')
-  const url = `${endpoint}?c=push`
+  const endpoint = String(env.get('ONESIGNAL_API_ENDPOINT')).trim()
+  const appId = String(env.get('ONESIGNAL_APP_ID')).trim()
+  const apiKey = String(env.get('ONESIGNAL_API_KEY')).trim()
+
+  if (!apiKey || apiKey === 'ONESIGNAL_API_KEY' || apiKey.length < 10) {
+    return {
+      errors: {
+        request:
+          'Invalid or missing ONESIGNAL_API_KEY. Set your App API Key in .env (Settings > Keys & IDs in OneSignal dashboard, create an App API Key).',
+      },
+    }
+  }
 
   const body: Record<string, unknown> = {
     app_id: appId,
@@ -79,24 +85,37 @@ export async function sendOneSignalPush(
   }
 
   if (options.url) body.url = options.url
+
   if (options.sendAfter) body.send_after = options.sendAfter
 
   try {
-    const { data } = await axios.post<OneSignalApiResponse>(url, body, {
+    const { data } = await axios.post<OneSignalApiResponse>(endpoint, body, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Key ${apiKey}`,
       },
     })
-    console.log('data', data)
 
+    const errors = normalizeErrors(data.errors)
     return {
       id: data.id,
       recipients: data.recipients,
-      errors: normalizeErrors(data.errors),
+      errors,
     }
   } catch (err) {
-    console.log('error sending push notification', normalizeErrors(err.response?.data))
-    throw err
+    if (axios.isAxiosError(err) && err.response?.data) {
+      const data = err.response.data as OneSignalApiResponse
+      const errors = normalizeErrors(data.errors)
+      return {
+        errors: errors ?? {
+          request: err.response.statusText || String(err.response.status),
+        },
+      }
+    }
+    return {
+      errors: {
+        request: err instanceof Error ? err.message : 'Request failed',
+      },
+    }
   }
 }

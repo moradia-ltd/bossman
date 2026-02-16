@@ -8,6 +8,7 @@ export const storePushNotificationValidator = vine.compile(
     description: vine.string().trim().minLength(1),
     imageUrl: vine.string().trim().url().maxLength(2048).optional(),
     url: vine.string().trim().maxLength(2048).optional(),
+    /** Optional. Empty or omitted = send now; ISO date string = schedule for later. */
     sendAt: vine
       .string()
       .optional()

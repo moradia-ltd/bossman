@@ -3,11 +3,11 @@
  * Run via cron every minute for scheduled sends, e.g.:
  *   * * * * * cd /path/to/app && node ace push:send-scheduled
  */
+
 import { BaseCommand } from '@adonisjs/core/ace'
 import PushNotification from '#models/push_notification'
 import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
 import env from '#start/env'
-
 export default class SendScheduledPushNotifications extends BaseCommand {
   static commandName = 'push:send-scheduled'
   static description = 'Send pending push notifications that are due (scheduled_at <= now)'
