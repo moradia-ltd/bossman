@@ -110,7 +110,7 @@ export function DataTable<T extends { id?: string | number }>({
   searchPlaceholder = 'Search...',
   searchValue,
   onSearchChange,
-  searchDebounceMs = 100,
+  searchDebounceMs = 0,
   pagination,
   onRowClick,
   loading,
@@ -129,12 +129,15 @@ export function DataTable<T extends { id?: string | number }>({
 }: DataTableProps<T>) {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchValue ?? '')
   const searchTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const isSearchInputFocusedRef = useRef(false)
   const filtersDisclosure = useDisclosure()
   const [filters, setFilters] = useState<Record<string, unknown>>(initialFilters ?? {})
   const [activePreset, setActivePreset] = useState<string | null>(null)
 
   useEffect(() => {
-    setLocalSearchQuery(searchValue ?? '')
+    const nextSearchValue = searchValue ?? ''
+    if (isSearchInputFocusedRef.current) return
+    setLocalSearchQuery(nextSearchValue)
   }, [searchValue])
 
   useEffect(() => {
@@ -153,6 +156,10 @@ export function DataTable<T extends { id?: string | number }>({
   const handleSearchChange = (value: string) => {
     setLocalSearchQuery(value)
     if (!onSearchChange) return
+    if (searchDebounceMs <= 0) {
+      onSearchChange(value)
+      return
+    }
     if (searchTimerRef.current) clearTimeout(searchTimerRef.current)
     searchTimerRef.current = setTimeout(() => {
       onSearchChange(value)
@@ -303,6 +310,13 @@ export function DataTable<T extends { id?: string | number }>({
                 placeholder={searchPlaceholder}
                 value={localSearchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
+                onFocus={() => {
+                  isSearchInputFocusedRef.current = true
+                }}
+                onBlur={() => {
+                  isSearchInputFocusedRef.current = false
+                  setLocalSearchQuery(searchValue ?? '')
+                }}
                 className='pl-10'
               />
             </div>
