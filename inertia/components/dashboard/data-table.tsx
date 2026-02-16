@@ -11,6 +11,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DatePicker } from '@/components/ui/date-picker'
+import { EmptyState } from '@/components/ui/empty-state'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -29,7 +30,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { EmptyState } from '@/components/ui/empty-state'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { cn } from '@/lib/utils'
 
@@ -134,9 +134,7 @@ export function DataTable<T extends { id?: string | number }>({
   const [activePreset, setActivePreset] = useState<string | null>(null)
 
   useEffect(() => {
-    if (searchValue !== undefined) {
-      setLocalSearchQuery(searchValue)
-    }
+    setLocalSearchQuery(searchValue ?? '')
   }, [searchValue])
 
   useEffect(() => {
@@ -146,74 +144,11 @@ export function DataTable<T extends { id?: string | number }>({
   }, [])
 
   useEffect(() => {
-    if (initialFilters) {
-      setFilters(initialFilters)
-    }
+    setFilters(initialFilters ?? {})
   }, [initialFilters])
 
   // Get filterable columns
   const filterableColumns = useMemo(() => columns.filter((col) => col.filterable), [columns])
-
-  // Apply filters (client-side only when not in server mode)
-  const filteredData = useMemo(() => {
-    const serverMode = Boolean(onSearchChange) || Boolean(onFiltersChange)
-    if (serverMode) return data
-
-    let result = [...data]
-
-    // Apply search
-    const effectiveSearch = localSearchQuery.trim()
-    if (searchable && effectiveSearch) {
-      result = result.filter((row) =>
-        columns.some((col) => {
-          const value = (row as Record<string, unknown>)[col.key]
-          if (typeof value === 'string') {
-            return value.toLowerCase().includes(effectiveSearch.toLowerCase())
-          }
-          return false
-        }),
-      )
-    }
-
-    // Apply column filters
-    if (filterable) {
-      for (const [key, value] of Object.entries(filters)) {
-        if (value === null || value === undefined || value === '') continue
-
-        const column = columns.find((col) => col.key === key)
-        if (!column) continue
-
-        result = result.filter((row) => {
-          const rowValue = (row as Record<string, unknown>)[key]
-          if (column.filterType === 'dateRange' && typeof value === 'object') {
-            const range = value as { from?: string; to?: string }
-            if (rowValue && typeof rowValue === 'string') {
-              const date = new Date(rowValue)
-              if (range.from && date < new Date(range.from)) return false
-              if (range.to && date > new Date(range.to)) return false
-            }
-            return true
-          }
-          if (typeof value === 'string') {
-            return String(rowValue).toLowerCase().includes(value.toLowerCase())
-          }
-          return String(rowValue) === String(value)
-        })
-      }
-    }
-
-    return result
-  }, [
-    data,
-    localSearchQuery,
-    filters,
-    columns,
-    searchable,
-    filterable,
-    onSearchChange,
-    onFiltersChange,
-    searchValue,
-  ])
 
   const handleSearchChange = (value: string) => {
     setLocalSearchQuery(value)
@@ -227,7 +162,7 @@ export function DataTable<T extends { id?: string | number }>({
   const handleSelectAll = (checked: boolean) => {
     if (!onSelectionChange) return
     if (checked) {
-      const allIds = filteredData.map(getRowId).filter(Boolean)
+      const allIds = data.map(getRowId).filter(Boolean)
       onSelectionChange(allIds)
     } else {
       onSelectionChange([])
@@ -243,8 +178,7 @@ export function DataTable<T extends { id?: string | number }>({
     }
   }
 
-  const isAllSelected =
-    filteredData.length > 0 && filteredData.every((row) => selectedRows.includes(getRowId(row)))
+  const isAllSelected = data.length > 0 && data.every((row) => selectedRows.includes(getRowId(row)))
 
   const handlePresetSelect = (preset: FilterPreset) => {
     setFilters(preset.filters)
@@ -266,7 +200,7 @@ export function DataTable<T extends { id?: string | number }>({
   }
 
   // Pagination
-  const effectiveTotal = pagination?.total ?? filteredData.length
+  const effectiveTotal = pagination?.total ?? data.length
   const totalPages = pagination ? Math.ceil(effectiveTotal / pagination.pageSize) : 1
 
   const getPageNumbers = () => {
@@ -375,7 +309,7 @@ export function DataTable<T extends { id?: string | number }>({
           )}
           {filterable && (
             <Popover open={filtersDisclosure.isOpen} onOpenChange={filtersDisclosure.onOpenChange}>
-              <PopoverTrigger >
+              <PopoverTrigger>
                 <Button variant='outline' size='sm' leftIcon={<Filter className='h-4 w-4' />}>
                   Filters
                   {Object.keys(filters).length > 0 && (
@@ -550,11 +484,9 @@ export function DataTable<T extends { id?: string | number }>({
                   </div>
                 </TableCell>
               </TableRow>
-            ) : filteredData.length === 0 ? (
+            ) : data.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length + (selectable ? 1 : 0)}
-                  className='text-center'>
+                <TableCell colSpan={columns.length + (selectable ? 1 : 0)} className='text-center'>
                   {emptyIcon || emptyDescription ? (
                     <EmptyState
                       icon={emptyIcon}
@@ -568,7 +500,7 @@ export function DataTable<T extends { id?: string | number }>({
                 </TableCell>
               </TableRow>
             ) : (
-              filteredData.map((row) => {
+              data.map((row) => {
                 const rowId = getRowId(row)
                 const isSelected = selectedRows.includes(rowId)
                 const rowKey = rowId || `row-${Math.random()}`
@@ -576,10 +508,7 @@ export function DataTable<T extends { id?: string | number }>({
                   <TableRow
                     key={rowKey}
                     onClick={() => onRowClick?.(row)}
-                    className={cn(
-                      onRowClick && 'cursor-pointer',
-                      isSelected && 'bg-muted/50',
-                    )}>
+                    className={cn(onRowClick && 'cursor-pointer', isSelected && 'bg-muted/50')}>
                     {selectable && (
                       <TableCell onClick={(e) => e.stopPropagation()}>
                         <Checkbox
@@ -590,10 +519,7 @@ export function DataTable<T extends { id?: string | number }>({
                       </TableCell>
                     )}
                     {columns.map((column, idx) => (
-                      <TableCell
-                        key={column.key}
-                        className='min-w-0'
-                        style={colStyles[idx]}>
+                      <TableCell key={column.key} className='min-w-0' style={colStyles[idx]}>
                         <div className='min-w-0 overflow-hidden'>
                           {column.cell
                             ? column.cell(row)
@@ -615,7 +541,7 @@ export function DataTable<T extends { id?: string | number }>({
           <div className='flex items-center justify-center h-24 rounded-md border border-border'>
             <div className='h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent' />
           </div>
-        ) : filteredData.length === 0 ? (
+        ) : data.length === 0 ? (
           <div className='rounded-md border border-border overflow-hidden'>
             {emptyIcon || emptyDescription ? (
               <EmptyState
@@ -631,7 +557,7 @@ export function DataTable<T extends { id?: string | number }>({
             )}
           </div>
         ) : (
-          filteredData.map((row) => {
+          data.map((row) => {
             const rowId = getRowId(row)
             const isSelected = selectedRows.includes(rowId)
             const isClickable = Boolean(onRowClick)
@@ -654,9 +580,7 @@ export function DataTable<T extends { id?: string | number }>({
                 )}
                 {dataColumns.map((column) => (
                   <div key={column.key} className='flex flex-col gap-1'>
-                    <div className='text-xs font-medium text-muted-foreground'>
-                      {column.header}
-                    </div>
+                    <div className='text-xs font-medium text-muted-foreground'>{column.header}</div>
                     <div className='text-sm'>
                       {column.cell
                         ? column.cell(row)
@@ -703,11 +627,7 @@ export function DataTable<T extends { id?: string | number }>({
             return (
               <div key={rowKey} className='rounded-md border border-border p-4 space-y-2'>
                 {Content}
-                {actionsColumn && (
-                  <div className='pt-2 border-t'>
-                    {actionsColumn.cell?.(row)}
-                  </div>
-                )}
+                {actionsColumn && <div className='pt-2 border-t'>{actionsColumn.cell?.(row)}</div>}
               </div>
             )
           })
@@ -763,7 +683,9 @@ export function DataTable<T extends { id?: string | number }>({
                   {pageNumbers.map((page, idx) => {
                     if (page === '...') {
                       return (
-                        <span key={`ellipsis-${pagination.page}-${idx}`} className='px-2 text-muted-foreground'>
+                        <span
+                          key={`ellipsis-${pagination.page}-${idx}`}
+                          className='px-2 text-muted-foreground'>
                           ...
                         </span>
                       )
@@ -799,8 +721,8 @@ export function DataTable<T extends { id?: string | number }>({
               </div>
               <p className='pt-2 text-right text-sm text-muted-foreground'>
                 Showing {((pagination.page - 1) * pagination.pageSize + 1).toLocaleString()} to{' '}
-                {Math.min(pagination.page * pagination.pageSize, effectiveTotal).toLocaleString()} of{' '}
-                {effectiveTotal.toLocaleString()}
+                {Math.min(pagination.page * pagination.pageSize, effectiveTotal).toLocaleString()}{' '}
+                of {effectiveTotal.toLocaleString()}
               </p>
             </div>
           )}

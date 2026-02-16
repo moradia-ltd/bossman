@@ -17,9 +17,6 @@ export default class QaTestingController {
 
     // Optional fine-grained page access
     const allowed = await getPageAccessForUser(freshUser.id)
-    if (Array.isArray(allowed) && !allowed.includes('qaTesting')) {
-      return response.forbidden({ error: 'You do not have access to QA Testing.' })
-    }
 
     return inertia.render('qa-testing/index', {})
   }
@@ -36,9 +33,6 @@ export default class QaTestingController {
     }
 
     const allowed = await getPageAccessForUser(freshUser.id)
-    if (Array.isArray(allowed) && !allowed.includes('qaTesting')) {
-      return response.forbidden({ error: 'You do not have access to create QA reports.' })
-    }
 
     return inertia.render('qa-testing/create', {})
   }
