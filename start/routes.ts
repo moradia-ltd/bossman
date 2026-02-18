@@ -231,17 +231,24 @@ router
   .prefix('api/v1/audits')
   .use(middleware.auth())
 
-router.get('/health', [HealthChecksController])
-
 transmit.registerRoutes()
+
+router.get('/health', [HealthChecksController])
 
 router.get('/swagger', async () => {
   return AutoSwagger.default.docs(router.toJSON(), swagger)
 })
 
 // Renders Swagger-UI and passes YAML-output of /swagger
-router.get('/docs', async () => {
-  return AutoSwagger.default.rapidoc('/swagger')
-  // return AutoSwagger.default.scalar("/swagger"); to use Scalar instead. If you want, you can pass proxy url as second argument here.
-  // return AutoSwagger.default.rapidoc("/swagger", "view"); to use RapiDoc instead (pass "view" default, or "read" to change the render-style)
+router.get('/docs/:id?', async ({ params }) => {
+  const id = params.id
+
+  if (id === 1) {
+    return AutoSwagger.default.rapidoc('/swagger')
+  }
+  if (id === 2) {
+    return AutoSwagger.default.ui('/swagger')
+  }
+  return AutoSwagger.default.scalar('/swagger')
+  // return AutoSwagger.default.rapidoc('/swagger', 'read')
 })

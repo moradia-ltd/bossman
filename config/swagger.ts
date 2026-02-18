@@ -4,11 +4,11 @@ import url from 'node:url'
 
 export default {
   // path: __dirname + "/../", for AdonisJS v5
-  path: path.dirname(url.fileURLToPath(import.meta.url)) + '/../', // for AdonisJS v6
-  title: 'Foo', // use info instead
+  path: `${path.dirname(url.fileURLToPath(import.meta.url))}/../`, // for AdonisJS v6
+  title: 'togetha admin API docs', // use info instead
   version: '1.0.0', // use info instead
   description: '', // use info instead
-  tagIndex: 2,
+  tagIndex: 3,
   productionEnv: 'production', // optional
   info: {
     title: 'title',
@@ -16,7 +16,6 @@ export default {
     description: '',
   },
   snakeCase: true,
-
   debug: false, // set to true, to get some useful debug output
   ignore: ['/swagger', '/docs'],
   preferredPutPatch: 'PUT', // if PUT/PATCH are provided for the same route, prefer PUT
@@ -28,5 +27,5 @@ export default {
   authMiddlewares: ['auth', 'auth:api'], // optional
   defaultSecurityScheme: 'BearerAuth', // optional
   persistAuthorization: true, // persist authorization between reloads on the swagger page
-  showFullPath: false, // the path displayed after endpoint summary
+  showFullPath: true, // the path displayed after endpoint summary
 }

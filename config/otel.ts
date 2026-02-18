@@ -13,5 +13,17 @@ export default defineConfig({
       'X-Axiom-Dataset': env.get('AXIOM_DATASET') as string,
     },
   }),
+  userContext: {
+    resolver: async (ctx) => {
+      if (!ctx.auth.user) return null
+
+      return {
+        id: ctx.auth.user.id,
+        email: ctx.auth.user.email,
+        role: ctx.auth.user.role,
+      }
+    },
+  },
+
   // samplingRatio: app ? 1.0 : 0.1,
 })

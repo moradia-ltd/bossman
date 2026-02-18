@@ -10,10 +10,11 @@ export default class OrgActionsController {
     const { orgId } = params
     const connection = request.appEnv()
     const org = await Org.query({ connection }).where('id', orgId).firstOrFail()
+
     const ban = await AccountBan.query({ connection })
       .where('orgId', org.id)
       .orderBy('createdAt', 'desc')
-      .firstOrFail()
+      .first()
 
     return response.ok({ isBanned: ban?.isBanActive ?? false })
   }

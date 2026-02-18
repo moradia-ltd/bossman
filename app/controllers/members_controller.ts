@@ -40,6 +40,15 @@ export default class MembersController {
     return response.ok(members)
   }
 
+  /**
+   * @index
+   * @operationId getProducts
+   * @description Returns array of producs and it's relations
+   * @responseBody 200 - <Product[]>.with(relations)
+   * @paramUse(sortable, filterable)
+   * @responseHeader 200 - @use(paginated)
+   * @responseHeader 200 - X-pages - A description of the header - @example(test)
+   */
   async invitations({ auth, response }: HttpContext) {
     const user = auth.getUserOrFail()
     const freshUser = await User.findByOrFail('email', user.email)

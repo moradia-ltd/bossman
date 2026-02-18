@@ -49,8 +49,12 @@ const editOrgSchema = Yup.object({
   ownerRole: Yup.string().oneOf(['landlord', 'agency']).required(),
   isWhiteLabelEnabled: Yup.boolean(),
   customPaymentSchedule: Yup.object({
-    amount: Yup.number().min(0),
-    trialPeriodInDays: Yup.number().min(0),
+    amount: Yup.number()
+      .transform((v) => (v === '' || v == null || Number.isNaN(Number(v)) ? 0 : Number(v)))
+      .min(0),
+    trialPeriodInDays: Yup.number()
+      .transform((v) => (v === '' || v == null || Number.isNaN(Number(v)) ? 0 : Number(v)))
+      .min(0),
     frequency: Yup.string().oneOf(['monthly', 'quarterly', 'yearly']),
     currency: Yup.string().oneOf(['gbp', 'eur', 'usd']),
     paymentMethod: Yup.string().oneOf(['stripe', 'bank_transfer']),
@@ -106,8 +110,8 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
     customPaymentSchedule:
       org.isOnCustomPlan && cps
         ? {
-          amount: Number(cps.amount) ?? 0,
-          trialPeriodInDays: Number(cps.trialPeriodInDays) ?? 0,
+          amount: (Number(cps?.amount) || 0) as number,
+          trialPeriodInDays: (Number(cps.trialPeriodInDays) || 0) as number,
           frequency: (cps?.frequency as 'monthly' | 'quarterly' | 'yearly') ?? 'monthly',
           currency: (cps?.currency as 'gbp' | 'eur' | 'usd') ?? 'gbp',
           paymentMethod: (cps?.paymentMethod as 'stripe' | 'bank_transfer') ?? 'stripe',
@@ -162,6 +166,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
       updateOrgMutation(values)
     },
   })
+  console.log('🚀 ~ formik: errors', formik.errors)
   const { values, handleChange, setFieldValue, touched, errors } = formik
 
 
