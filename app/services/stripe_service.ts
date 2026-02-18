@@ -56,6 +56,9 @@ class StripeService {
     }
   }
 
+  public static async removeCustomer(customerId: string) {
+    await stripe.customers.del(customerId)
+  }
   public static async createSubscription({
     plan,
     frequency,

@@ -253,6 +253,8 @@ export default class OrgsController {
     } catch (err) {
       console.log('Error creating account', err)
       await trx.rollback()
+      // remove stripe customer
+
       return response.badRequest({
         error: err.message || 'Error creating account',
         err,
