@@ -266,7 +266,6 @@ export default class OrgsController {
     const loopService = new LoopService()
     try {
       const loopUser = await loopService.findUser(creatorEmail)
-      console.log('loopUser', loopUser)
       isLoopsUser = Boolean(loopUser)
     } catch (error) {
       console.log('error', error)
