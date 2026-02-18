@@ -95,8 +95,8 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
   const cps = org.customPaymentSchedule as Record<string, unknown> | undefined
   const cpf = org.customPlanFeatures as Record<string, unknown> | undefined
   return {
-    name: org.cleanName ?? org.companyName ?? org.name ?? '',
-    creatorEmail: org.creatorEmail ?? '',
+    name: org.cleanName,
+    creatorEmail: org.creatorEmail,
     companyName: org.companyName ?? '',
     companyWebsite: org.companyWebsite ?? '',
     companyEmail: org.companyEmail ?? '',
@@ -108,24 +108,24 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
         ? {
           amount: Number(cps.amount) ?? 0,
           trialPeriodInDays: Number(cps.trialPeriodInDays) ?? 0,
-          frequency: (cps.frequency as 'monthly' | 'quarterly' | 'yearly') ?? 'monthly',
-          currency: (cps.currency as 'gbp' | 'eur' | 'usd') ?? 'gbp',
-          paymentMethod: (cps.paymentMethod as 'stripe' | 'bank_transfer') ?? 'stripe',
+          frequency: (cps?.frequency as 'monthly' | 'quarterly' | 'yearly') ?? 'monthly',
+          currency: (cps?.currency as 'gbp' | 'eur' | 'usd') ?? 'gbp',
+          paymentMethod: (cps?.paymentMethod as 'stripe' | 'bank_transfer') ?? 'stripe',
           planType: (cps.planType as 'normal' | 'custom') ?? 'custom',
-          plan: (cps.plan as 'standard' | 'essential' | 'premium') ?? 'standard',
+          plan: (cps?.plan as 'standard' | 'essential' | 'premium') ?? 'standard',
         }
         : null,
     customPlanFeatures:
       org.isOnCustomPlan && cpf
         ? {
-          propertyLimit: Number(cpf.propertyLimit) ?? 0,
-          tenantLimit: Number(cpf.tenantLimit) ?? 0,
-          storageLimit: Number(cpf.storageLimit) ?? 0,
-          teamSizeLimit: Number(cpf.teamSizeLimit) ?? 0,
+          propertyLimit: Number(cpf?.propertyLimit) ?? 0,
+          tenantLimit: Number(cpf?.tenantLimit) ?? 0,
+          storageLimit: Number(cpf?.storageLimit) ?? 0,
+          teamSizeLimit: Number(cpf?.teamSizeLimit) ?? 0,
           prioritySupport: Boolean(cpf.prioritySupport),
-          activityLogRetention: Number(cpf.activityLogRetention) ?? 0,
+          activityLogRetention: Number(cpf?.activityLogRetention) ?? 0,
           depositProtection: Boolean(cpf.depositProtection),
-          advancedReporting: Boolean(cpf.advancedReporting),
+          advancedReporting: Boolean(cpf?.advancedReporting),
           eSignDocsLimit: Number(cpf.eSignDocsLimit) ?? 0,
           aiInvocationLimit: Number(cpf.aiInvocationLimit) ?? 0,
           customTemplatesLimit: Number(cpf.customTemplatesLimit) ?? 0,
@@ -148,8 +148,9 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
 }
 
 export default function OrgsEdit({ org }: OrgsEditProps) {
-  const id = String(org.id ?? '')
-  const cleanName = String(org.cleanName ?? org.companyName ?? org.name ?? 'Organisation')
+  console.log("🚀 ~ OrgsEdit ~ org:", org)
+  const id = org.id
+  const cleanName = org.cleanName
 
   const formik = useFormik<EditOrgFormValues>({
     initialValues: getInitialValues(org),
@@ -161,6 +162,8 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
       updateOrgMutation(values)
     },
   })
+  const { values, handleChange, setFieldValue, touched, errors } = formik
+
 
   const { mutate: updateOrgMutation, isPending } = useMutation({
     mutationFn: (values: EditOrgFormValues) => api.put(`/orgs/${id}`, values),
@@ -173,7 +176,6 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
     },
   })
 
-  const { values, handleChange, setFieldValue, touched, errors } = formik
 
   return (
     <DashboardLayout>
@@ -290,12 +292,12 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
             </SimpleGrid>
           </AppCard>
 
-          <OnlyShowIf condition={org.isOnCustomPlan && values.customPaymentSchedule != null}>
+          <OnlyShowIf condition={org.isOnCustomPlan}>
             <AppCard title='Custom payment schedule' description='Billing and plan.'>
               <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={4}>
                 <FormField label='Frequency' htmlFor='customPaymentSchedule.frequency'>
                   <Select
-                    value={values.customPaymentSchedule!.frequency}
+                    value={values.customPaymentSchedule?.frequency}
                     itemToStringLabel={(item) => startCase(item)}
                     onValueChange={(v) => setFieldValue('customPaymentSchedule.frequency', v)}>
                     <SelectTrigger id='customPaymentSchedule.frequency'>
@@ -310,7 +312,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 </FormField>
                 <FormField label='Currency' htmlFor='customPaymentSchedule.currency'>
                   <Select
-                    value={values.customPaymentSchedule!.currency}
+                    value={values.customPaymentSchedule?.currency}
                     itemToStringLabel={(item) => String(item).toUpperCase()}
                     onValueChange={(v) => setFieldValue('customPaymentSchedule.currency', v)}>
                     <SelectTrigger id='customPaymentSchedule.currency'>
@@ -330,7 +332,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     type='number'
                     min={0}
                     step={0.5}
-                    value={values.customPaymentSchedule!.amount}
+                    value={values.customPaymentSchedule?.amount}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -346,7 +348,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 </FormField>
                 <FormField label='Payment method' htmlFor='customPaymentSchedule.paymentMethod'>
                   <Select
-                    value={values.customPaymentSchedule!.paymentMethod}
+                    value={values.customPaymentSchedule?.paymentMethod}
                     itemToStringLabel={(item) => startCase(String(item).replace('_', ' '))}
                     onValueChange={(v) => setFieldValue('customPaymentSchedule.paymentMethod', v)}>
                     <SelectTrigger id='customPaymentSchedule.paymentMethod'>
@@ -371,7 +373,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.propertyLimit'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.propertyLimit}
+                    value={values.customPlanFeatures?.propertyLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -381,7 +383,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.tenantLimit'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.tenantLimit}
+                    value={values.customPlanFeatures?.tenantLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -391,7 +393,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.teamSizeLimit'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.teamSizeLimit}
+                    value={values.customPlanFeatures?.teamSizeLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -402,7 +404,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     type='number'
                     min={0}
                     step={0.5}
-                    value={values.customPlanFeatures!.storageLimit}
+                    value={values.customPlanFeatures?.storageLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -414,7 +416,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.eSignDocsLimit'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.eSignDocsLimit}
+                    value={values.customPlanFeatures?.eSignDocsLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -426,7 +428,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.aiInvocationLimit'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.aiInvocationLimit}
+                    value={values.customPlanFeatures?.aiInvocationLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -438,7 +440,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.customTemplatesLimit'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.customTemplatesLimit}
+                    value={values.customPlanFeatures?.customTemplatesLimit}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -450,7 +452,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                     name='customPlanFeatures.activityLogRetention'
                     type='number'
                     min={0}
-                    value={values.customPlanFeatures!.activityLogRetention}
+                    value={values.customPlanFeatures?.activityLogRetention}
                     onChange={handleChange}
                   />
                 </FormField>
@@ -459,7 +461,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <div className='flex items-center gap-2'>
                   <Switch
                     id='customPlanFeatures.prioritySupport'
-                    checked={values.customPlanFeatures!.prioritySupport}
+                    checked={values.customPlanFeatures?.prioritySupport}
                     onCheckedChange={(v) => setFieldValue('customPlanFeatures.prioritySupport', v)}
                   />
                   <label
@@ -471,7 +473,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <div className='flex items-center gap-2'>
                   <Switch
                     id='customPlanFeatures.depositProtection'
-                    checked={values.customPlanFeatures!.depositProtection}
+                    checked={values.customPlanFeatures?.depositProtection}
                     onCheckedChange={(v) =>
                       setFieldValue('customPlanFeatures.depositProtection', v)
                     }
@@ -485,7 +487,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
                 <div className='flex items-center gap-2'>
                   <Switch
                     id='customPlanFeatures.advancedReporting'
-                    checked={values.customPlanFeatures!.advancedReporting}
+                    checked={values.customPlanFeatures?.advancedReporting}
                     onCheckedChange={(v) =>
                       setFieldValue('customPlanFeatures.advancedReporting', v)
                     }
