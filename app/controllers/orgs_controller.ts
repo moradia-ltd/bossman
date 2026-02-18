@@ -207,15 +207,19 @@ export default class OrgsController {
       let subscription: Stripe.Response<Stripe.Subscription> | undefined
 
       if (isCustomPlan) {
-        session = await StripeService.createCustomSubscription({
-          customerId: customer!.id,
-          data: payload.customPaymentSchedule,
-          featureList: payload.featureList,
-        })
-        logger.info(`Custom subscription session created`)
-        logger.info(`${user.name} with sub_id ${session?.subscription}`)
-        logger.info(`${user.name} with session_id ${session?.id}`)
-        console.log('session', session)
+        if (payload.customPaymentSchedule.paymentMethod === 'stripe') {
+          session = await StripeService.createCustomSubscription({
+            customerId: customer!.id,
+            data: payload.customPaymentSchedule,
+            featureList: payload.featureList,
+          })
+          logger.info(`Custom subscription session created`)
+          logger.info(`${user.name} with sub_id ${session?.subscription}`)
+          logger.info(`${user.name} with session_id ${session?.id}`)
+          console.log('session', session)
+        } else {
+          logger.info('Bank transfer payment method selected')
+        }
       } else {
         subscription = await StripeService.createSubscription({
           plan: payload.customPaymentSchedule.plan,

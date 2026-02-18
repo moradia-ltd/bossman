@@ -124,6 +124,7 @@ class StripeService {
       })
     }
 
+    // togetha metered pricing
     const monthlyPriceId = 'price_1PY5AxHhNEQ5MjrctSprncNf'
     const yearlyPriceId = 'price_1PY5fDHhNEQ5Mjrcmi7nb2bT'
 
