@@ -52,12 +52,9 @@ export default class ConfirmDeleteCustomUserController {
 
     // action === 'accept': delete the org, then redirect
     const email = org.creatorEmail
-    const fullName = org.cleanName ?? 'User'
+    const fullName = org.cleanName
 
-    await mailer.send({
-      type: 'goodbye',
-      data: { email, fullName },
-    })
+    await mailer.send({ type: 'goodbye', data: { email, fullName } })
 
     await org.delete()
 

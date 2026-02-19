@@ -11,9 +11,13 @@ function CustomUserDeleteRequest(props: Emails['custom-user-delete-request']) {
         cannot be undone.
       </EmailText>
       <EmailText>Please choose one of the options below:</EmailText>
-      <EmailButton href={props.acceptUrl}>Accept – delete my account</EmailButton>
+      <EmailButton href={props.acceptUrl} variant='default'>
+        Accept – delete my account
+      </EmailButton>
       <EmailText>Or click below to keep your account:</EmailText>
-      <EmailButton href={props.declineUrl}>Decline – keep my account</EmailButton>
+      <EmailButton href={props.declineUrl} variant='destructive'>
+        Decline – keep my account
+      </EmailButton>
       <EmailText>
         If you accept, you will be redirected to a confirmation page and your account will be
         permanently deleted. If you decline, no changes will be made.

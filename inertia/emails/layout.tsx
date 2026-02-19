@@ -151,13 +151,16 @@ export function EmailButton({
   href,
   children,
   style,
+  variant = 'default',
 }: {
   href: string
   children: React.ReactNode
   style?: React.CSSProperties
+  variant?: 'default' | 'destructive'
 }) {
+  const base = variant === 'destructive' ? baseStyles.buttonDestructive : baseStyles.button
   return (
-    <Button href={href} style={mergeStyles(baseStyles.button, style)}>
+    <Button href={href} style={mergeStyles(base, style)}>
       {children}
     </Button>
   )

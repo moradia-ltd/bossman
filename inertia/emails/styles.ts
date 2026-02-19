@@ -14,7 +14,12 @@ export const colors = {
     secondary: '#64748b',
   },
   link: {
-    primary: '#1d489e',
+    primary: '#60a5fa',
+  },
+  button: {
+    primary: '#60a5fa',
+    destructive: '#ef4444',
+    destructiveHover: '#dc2626',
   },
   border: {
     primary: '#e2e8f0',
@@ -75,7 +80,15 @@ export const baseStyles = {
     textDecoration: 'underline',
   },
   button: {
-    backgroundColor: colors.link.primary,
+    backgroundColor: colors.button.primary,
+    color: colors.background.white,
+    padding: '10px 20px',
+    borderRadius: '4px',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+  },
+  buttonDestructive: {
+    backgroundColor: colors.button.destructive,
     color: colors.background.white,
     padding: '10px 20px',
     borderRadius: '4px',
