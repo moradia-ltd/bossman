@@ -19,11 +19,11 @@ export default class ConfirmDeleteCustomUserController {
     if (connection !== 'dev' && connection !== 'prod') throw new Error('Invalid connection')
 
     if (!token || typeof token !== 'string') {
-      return response.redirect('/account-deletion-declined?error=missing_token')
+      return response.redirect('/account-deletion-result?result=declined&error=missing_token')
     }
 
     if (action !== 'accept' && action !== 'decline') {
-      return response.redirect('/account-deletion-declined?error=invalid_action')
+      return response.redirect('/account-deletion-result?result=declined&error=invalid_action')
     }
 
     const tokenHash = hashDeleteRequestToken(token)
@@ -33,18 +33,18 @@ export default class ConfirmDeleteCustomUserController {
       .first()
 
     if (!deleteRequest) {
-      return response.redirect('/account-deletion-declined?error=invalid_or_expired')
+      return response.redirect('/account-deletion-result?result=declined&error=invalid_or_expired')
     }
 
     if (deleteRequest.expiresAt.toMillis() < now.toMillis()) {
-      return response.redirect('/account-deletion-declined?error=expired')
+      return response.redirect('/account-deletion-result?result=declined&error=expired')
     }
 
     const org = deleteRequest.org
 
     if (action === 'decline') {
       await deleteRequest.delete()
-      return response.redirect('/account-deletion-declined?declined=1')
+      return response.redirect('/account-deletion-result?result=declined')
     }
 
     deleteRequest.merge({ isSuccessful: true })
@@ -61,6 +61,6 @@ export default class ConfirmDeleteCustomUserController {
 
     await org.delete()
 
-    return response.redirect('/account-deleted')
+    return response.redirect('/account-deletion-result?result=deleted')
   }
 }
