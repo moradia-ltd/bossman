@@ -215,3 +215,19 @@ mailer.on({
       .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
   },
 })
+
+mailer.on({
+  type: 'custom-user-delete-request',
+  handler: async (message, data) => {
+    const CustomUserDeleteRequest = await import('#emails/custom-user-delete-request').then(
+      (m) => m.default,
+    )
+    const html = await render(CustomUserDeleteRequest(data))
+    message
+      .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))
+      .subject('Request to delete your account')
+      .to(data.email)
+      .html(html)
+      .replyTo(env.get('FROM_EMAIL', 'hello@example.com'))
+  },
+})

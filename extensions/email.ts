@@ -78,5 +78,11 @@ declare module '@adonisjs/core/types' {
       email: string
       fullName?: string | null
     }
+    'custom-user-delete-request': {
+      email: string
+      fullName: string
+      acceptUrl: string
+      declineUrl: string
+    }
   }
 }

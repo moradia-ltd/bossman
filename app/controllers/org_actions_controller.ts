@@ -1,9 +1,18 @@
+import { createHash } from 'node:crypto'
 import type { HttpContext } from '@adonisjs/core/http'
+import { DateTime } from 'luxon'
 import { banUser } from '#boss/jobs/ban_user'
+import { appUrl } from '#emails/global'
 import AccountBan from '#models/account_ban'
+import DeleteAccountRequest from '#models/delete_account_request'
 import Org from '#models/org'
+import { generateShortId } from '#services/app.functions'
 import mailer from '#services/email_service'
 import { banUserValidator, bulkOrgIdsValidator } from '#validators/org_action'
+
+function hashDeleteRequestToken(token: string) {
+  return createHash('sha256').update(token).digest('hex')
+}
 
 export default class OrgActionsController {
   async getBanStatus({ request, params, response }: HttpContext) {
@@ -150,5 +159,41 @@ export default class OrgActionsController {
       .whereIn('id', orgIds)
       .update({ isTestAccount: false })
     return response.ok({ message: `${count} org(s) removed test account flag`, updated: count })
+  }
+
+  async requestDeleteCustomUser({ params, request, response, now }: HttpContext) {
+    const { orgId } = params
+    const connection = request.appEnv()
+    const org = await Org.query({ connection }).where('id', orgId).preload('owner').firstOrFail()
+
+    const token = generateShortId(48)
+    const tokenHash = hashDeleteRequestToken(token)
+    const expiresAt = DateTime.now().plus({ days: 7 })
+
+    await DeleteAccountRequest.create(
+      {
+        orgId: org.id,
+        tokenHash,
+        expiresAt,
+      },
+      { connection },
+    )
+
+    const baseUrl = `${appUrl}/confirm-delete-custom-user?token=${encodeURIComponent(token)}&connection=${encodeURIComponent(connection)}`
+    const acceptUrl = `${baseUrl}&action=accept`
+    const declineUrl = `${baseUrl}&action=decline`
+
+    const email = org.creatorEmail
+    const fullName = org.cleanName ?? 'User'
+
+    await mailer.send({
+      type: 'custom-user-delete-request',
+      data: { email, fullName, acceptUrl, declineUrl },
+    })
+
+    return response.ok({
+      message:
+        'Delete request email sent. The user can accept or decline from the link in the email.',
+    })
   }
 }

@@ -41,6 +41,8 @@ const EmailsPageController = () => import('#controllers/emails_page_controller')
 const ServersController = () => import('#controllers/servers_controller')
 const AddonsController = () => import('#controllers/addons_controller')
 const QaTestingController = () => import('#controllers/qa_testing_controller')
+const ConfirmDeleteCustomUserController = () =>
+  import('#controllers/confirm_delete_custom_user_controller')
 
 router.get('/', async ({ auth, response }) => {
   return auth.user ? response.redirect('/dashboard') : response.redirect('/login')
@@ -132,6 +134,9 @@ router
 // Public routes
 router.on('/verify-email').renderInertia('verify-email')
 router.on('/verify-email-change').renderInertia('verify-email-change')
+router.get('/confirm-delete-custom-user', [ConfirmDeleteCustomUserController, 'respond'])
+router.on('/account-deleted').renderInertia('account-deleted')
+router.on('/account-deletion-declined').renderInertia('account-deletion-declined')
 router.get('/blog', [BlogPostsController, 'index'])
 router.get('/blog/:slug', [BlogPostsController, 'show'])
 router.get('/join', [TeamInvitationsController, 'joinPage'])

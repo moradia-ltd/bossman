@@ -51,6 +51,7 @@ export const API_ROUTES = {
     '/orgs/:orgId/actions/make-test-account',
     '/orgs/:orgId/actions/undo-test-account',
     '/orgs/:orgId/actions/toggle-sales-account',
+    '/orgs/:orgId/actions/request-delete-custom-user',
     '/orgs/actions/bulk-make-favourite',
     '/orgs/actions/bulk-undo-favourite',
     '/orgs/actions/bulk-make-test-account',

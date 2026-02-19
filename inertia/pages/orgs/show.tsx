@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { FlaskConical, Pencil, Star, StarOff, Store, UserCheck, UserX } from 'lucide-react'
+import { FlaskConical, Pencil, Star, StarOff, Store, Trash2, UserCheck, UserX } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import * as Yup from 'yup'
@@ -17,6 +17,7 @@ import { type QuickActionOption, QuickActions } from '@/components/dashboard/qui
 import { DateTimePicker, OnlyShowIf, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
+import { BaseDialog } from '@/components/ui/base-dialog'
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form_field'
@@ -57,6 +58,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
   const qs = query as { tab?: string }
   const currentTab = qs.tab ?? 'details'
   const [banUserSheetOpen, setBanUserSheetOpen] = useState(false)
+  const [requestDeleteDialogOpen, setRequestDeleteDialogOpen] = useState(false)
 
   const id = String(org.id ?? '')
   const cleanName = String(org.cleanName ?? org.companyName ?? org.name ?? 'Organisation')
@@ -173,6 +175,17 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
     },
   })
 
+  const requestDeleteCustomUserMutation = useMutation({
+    mutationFn: () => api.post(`/orgs/${id}/actions/request-delete-custom-user`, {}),
+    onSuccess: () => {
+      setRequestDeleteDialogOpen(false)
+      toast.success('Delete request email sent. The user can accept or decline from the link in the email.')
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to send delete request.')
+    },
+  })
+
   const quickActions: QuickActionOption[] = [
     {
       title: 'Ban user',
@@ -230,6 +243,12 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
       onClick: () => toggleSalesAccountMutation.mutate(),
       dontShowIf: !org.isSalesOrg,
     },
+    {
+      title: 'Request delete user',
+      description: 'Send an email to the user so they can accept or decline account deletion.',
+      icon: Trash2,
+      onClick: () => setRequestDeleteDialogOpen(true),
+    },
   ]
 
   return (
@@ -251,7 +270,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
         primaryDisabled={isBanning}
         showFooter
         showSecondary>
-        <form onSubmit={banUserFormik.handleSubmit} className='space-y-4'>
+        <form id='ban-user-form' onSubmit={banUserFormik.handleSubmit} className='space-y-4'>
           <FormField
             label='Reason'
             htmlFor='ban-reason'
@@ -322,6 +341,19 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
           )}
         </form>
       </BaseSheet>
+
+      <BaseDialog
+        open={requestDeleteDialogOpen}
+        onOpenChange={setRequestDeleteDialogOpen}
+        title='Request delete custom user'
+        description='An email will be sent to the org owner with a link to accept or decline the account deletion. If they accept, they will be redirected to a confirmation page and their account will be permanently deleted.'
+        primaryText='Send email'
+        secondaryText='Cancel'
+        primaryVariant='destructive'
+        isLoading={requestDeleteCustomUserMutation.isPending}
+        onPrimaryAction={() => requestDeleteCustomUserMutation.mutate()}
+        onSecondaryAction={() => setRequestDeleteDialogOpen(false)}
+      />
 
       <div className='space-y-6'>
         <PageHeader

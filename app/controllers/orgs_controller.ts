@@ -274,7 +274,7 @@ export default class OrgsController {
       const loopUser = await loopService.findUser(creatorEmail)
       isLoopsUser = Boolean(loopUser)
     } catch (error) {
-      console.log('error', error)
+      console.log('error', error.response.data)
     }
 
     return inertia.render('orgs/show', { org, isLoopsUser })
@@ -305,27 +305,18 @@ export default class OrgsController {
       const name = payload.name.trim()
       updates.name = name.endsWith('_org') ? name : `${name}_org`
     }
-    if (payload.creatorEmail !== undefined) updates.creatorEmail = payload.creatorEmail
-    if (payload.companyName !== undefined) updates.companyName = payload.companyName
-    if (payload.companyWebsite !== undefined) updates.companyWebsite = payload.companyWebsite
-    if (payload.companyEmail !== undefined) updates.companyEmail = payload.companyEmail
-    if (payload.country !== undefined) updates.country = payload.country as Org['country']
-    if (payload.ownerRole !== undefined) updates.ownerRole = payload.ownerRole
-    if (payload.isWhiteLabelEnabled !== undefined)
-      updates.isWhiteLabelEnabled = payload.isWhiteLabelEnabled
-    if (payload.customPaymentSchedule !== undefined) {
-      updates.customPaymentSchedule = {
-        ...(org.customPaymentSchedule as object),
-        ...payload.customPaymentSchedule,
-      } as Org['customPaymentSchedule']
-    }
-    if (payload.customPlanFeatures !== undefined) {
-      updates.customPlanFeatures = {
-        ...(org.customPlanFeatures as object),
-        ...payload.customPlanFeatures,
-      } as Org['customPlanFeatures']
-    }
-    if (payload.pages !== undefined) updates.pages = payload.pages as Org['pages']
+    updates.creatorEmail = payload.creatorEmail
+    updates.companyName = payload.companyName
+    updates.companyWebsite = payload.companyWebsite
+    updates.companyEmail = payload.companyEmail
+    updates.country = payload.country as Org['country']
+    updates.ownerRole = payload.ownerRole
+
+    updates.isWhiteLabelEnabled = payload.isWhiteLabelEnabled
+    updates.customPaymentSchedule = payload.customPaymentSchedule
+    updates.customPlanFeatures = payload.customPlanFeatures
+    updates.pages = payload.pages as Org['pages']
+
     if (payload.settings !== undefined) {
       updates.settings = { ...org.settings, ...payload.settings } as Org['settings']
     }
@@ -344,7 +335,7 @@ export default class OrgsController {
           await mailer.send({
             type: 'customer-price-updated',
             data: {
-              email: org.creatorEmail,
+              email: org.email,
               fullName,
               url: session.url,
               amount,

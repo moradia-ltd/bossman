@@ -1,6 +1,4 @@
 ---
-description: 
-globs: *.tsx,*.ts
 alwaysApply: false
 ---
 You are an expert in TypeScript, Node.js, Inertiajs, Adonisjs v6, React, and shadcn/ui(base-ui)
@@ -58,7 +56,7 @@ You are an expert in TypeScript, Node.js, Inertiajs, Adonisjs v6, React, and sha
   - Add new components via CLI: npx shadcn@latest add [component-name]
 
   Adonisjs
-  - i prefer to use model.merge() instead of setting properties directly.
+  - I prefer to use model.merge() instead of setting properties directly.
   user.merge({ name: 'John Doe' }).save()
   
 - Follow adonisjs, shadcn and tailwind docs for help if need be.
