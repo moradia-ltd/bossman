@@ -97,12 +97,8 @@ export function PublicLayout({
               : 'bg-transparent',
           )}>
           <div className='max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between'>
-            <Link href='/' className='flex items-center gap-2 w-fit'>
-              {/* <SmartCityLogo
-                className='h-6 w-6 text-primary'
-                title='Friars Technologies Smart City'
-              /> */}
-              <span className='font-bold text-lg'>{import.meta.env.VITE_APP_NAME}</span>
+            <Link href='/' className='flex items-center gap-2 w-fit' aria-label={import.meta.env.VITE_APP_NAME}>
+              <img src='/logo-full.svg' alt={import.meta.env.VITE_APP_NAME} className='h-8' />
             </Link>
             <PublicNavbarActions extraActions={actions} />
           </div>
@@ -115,8 +111,8 @@ export function PublicLayout({
           {footer ?? (
             <footer className='border-t border-border py-8 px-6'>
               <div className='max-w-screen-xl mx-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
-                <div className='flex items-center gap-2'>
-
+                <div className='flex items-center gap-3'>
+                  <img src='/logo-full.svg' alt='' className='h-7' aria-hidden />
                   <div className='leading-tight'>
                     <div className='font-semibold'>{import.meta.env.VITE_APP_NAME}</div>
                     <div className='text-sm text-muted-foreground'>{import.meta.env.VITE_APP_DESCRIPTION}</div>

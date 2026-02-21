@@ -45,6 +45,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { LogoFull } from '@/components/ui/logo-full'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useEnvironment } from '@/hooks/use-environment'
@@ -250,14 +251,20 @@ export function Sidebar({ children }: SidebarProps) {
 
   const SidebarContent = () => (
     <>
-      {/* Logo/Header */}
-      <div className='flex h-14 items-center px-3'>
-        <div className='flex flex-1 items-center'>
-          {(isOpen || isMobile) && (
-            <Link href='/'>
-              <img src={`/icons/togetha-${theme}.svg`} alt='Logo' className='h-8' />
-            </Link>
-          )}
+      {/* Logo/Header – same horizontal padding as nav (px-1.5 + pl-2) so logo aligns with content */}
+      <div className='flex h-14 shrink-0 items-center px-6'>
+        <div className='flex flex-1 min-w-0 items-center'>
+          <Link
+            href='/'
+            className={cn(
+              'flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md',
+              (isOpen || isMobile) ? 'pl-2' : 'justify-center w-full',
+            )}>
+            <LogoFull
+              className='text-sidebar-foreground'
+              heightClass={(isOpen || isMobile) ? 'h-7' : 'h-6 max-w-full'}
+            />
+          </Link>
         </div>
         <div className={cn('flex items-center', !isOpen && !isMobile && 'mx-auto')}>
           {isMobile ? (
