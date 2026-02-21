@@ -251,20 +251,16 @@ export function Sidebar({ children }: SidebarProps) {
 
   const SidebarContent = () => (
     <>
-      {/* Logo/Header – same horizontal padding as nav (px-1.5 + pl-2) so logo aligns with content */}
-      <div className='flex h-14 shrink-0 items-center px-6'>
+      {/* Logo/Header – same horizontal padding as nav (px-1.5 + pl-2) so logo aligns with content; hidden when sidebar closed */}
+      <div className={cn('flex h-14 shrink-0 items-center px-6', !isOpen && 'px-2')}>
         <div className='flex flex-1 min-w-0 items-center'>
-          <Link
-            href='/'
-            className={cn(
-              'flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md',
-              (isOpen || isMobile) ? 'pl-2' : 'justify-center w-full',
-            )}>
-            <LogoFull
-              className='text-sidebar-foreground'
-              heightClass={(isOpen || isMobile) ? 'h-7' : 'h-6 max-w-full'}
-            />
-          </Link>
+          {(isOpen || isMobile) && (
+            <Link
+              href='/'
+              className='flex items-center pl-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md'>
+              <LogoFull className='text-sidebar-foreground' heightClass='h-8' />
+            </Link>
+          )}
         </div>
         <div className={cn('flex items-center', !isOpen && !isMobile && 'mx-auto')}>
           {isMobile ? (
