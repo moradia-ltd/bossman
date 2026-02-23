@@ -4,7 +4,6 @@ import {
   IconBell,
   IconBuilding,
   IconSelector,
-  IconClipboardCheck,
   IconDatabase,
   IconDeviceLaptop,
   IconFileText,
@@ -99,7 +98,6 @@ const adminNavSections: NavSection[] = [
       { title: 'Emails', href: '/emails', icon: <IconMail className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <IconNews className='h-4 w-4' /> },
       { title: 'Addons', href: '/addons', icon: <IconPackage className='h-4 w-4' /> },
-      { title: 'QA Testing', href: '/qa-testing', icon: <IconClipboardCheck className='h-4 w-4' /> },
     ]
   }
 ]
@@ -150,7 +148,6 @@ export function Sidebar({ children }: SidebarProps) {
     if (path.startsWith('/emails')) return 'emails'
     if (path.startsWith('/servers')) return 'servers'
     if (path.startsWith('/addons')) return 'addons'
-    if (path.startsWith('/qa-testing')) return 'qaTesting'
     return null
   }
 

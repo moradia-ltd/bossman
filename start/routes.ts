@@ -40,7 +40,6 @@ const LogsPageController = () => import('#controllers/logs_page_controller')
 const EmailsPageController = () => import('#controllers/emails_page_controller')
 const ServersController = () => import('#controllers/servers_controller')
 const AddonsController = () => import('#controllers/addons_controller')
-const QaTestingController = () => import('#controllers/qa_testing_controller')
 const ConfirmDeleteCustomUserController = () =>
   import('#controllers/confirm_delete_custom_user_controller')
 
@@ -87,8 +86,6 @@ router
     router.get('/servers/:projectId', [ServersController, 'show'])
     router.get('/addons', [AddonsController, 'index'])
     router.get('/addons/create', [AddonsController, 'create'])
-    router.get('/qa-testing', [QaTestingController, 'index'])
-    router.get('/qa-testing/create', [QaTestingController, 'create'])
     router.post('/addons', [AddonsController, 'store'])
     router.get('/addons/:id/edit', [AddonsController, 'edit'])
     router.put('/addons/:id', [AddonsController, 'update'])
