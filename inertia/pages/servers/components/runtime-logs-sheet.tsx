@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Loader2, Terminal } from 'lucide-react'
+import { IconLoader2, IconTerminal2 } from '@tabler/icons-react'
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -44,7 +44,7 @@ export function RuntimeLogsSheet({
       className='w-full sm:max-w-2xl'>
       {isLoading ? (
         <div className='flex min-h-[200px] items-center justify-center py-12'>
-          <Loader2 className='h-10 w-10 animate-spin text-primary' />
+          <IconLoader2 className='h-10 w-10 animate-spin text-primary' />
         </div>
       ) : (
         <div className='h-[85vh] min-h-0 overflow-hidden'>
@@ -71,7 +71,7 @@ export function RuntimeLogsSheet({
                 </div>
               ) : (
                 <EmptyState
-                  icon={Terminal}
+                  icon={IconTerminal2}
                   title='No runtime logs'
                   description='Logs will appear when the service is running.'
                   className='py-6 [&_h3]:text-zinc-400 [&_p]:text-zinc-500 [&_.bg-muted]:bg-white/5'

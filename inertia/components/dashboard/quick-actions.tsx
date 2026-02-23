@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/react'
-import type { LucideIcon } from 'lucide-react'
-import { ChevronDown } from 'lucide-react'
+import type { Icon } from '@tabler/icons-react'
+import { IconChevronDown } from '@tabler/icons-react'
 import React, { type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,7 +12,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-function isIconComponent(icon: LucideIcon | ReactNode): icon is LucideIcon {
+function isIconComponent(icon: Icon | ReactNode): icon is Icon {
   return (
     typeof icon === 'function' ||
     (typeof icon === 'object' && icon !== null && '$$typeof' in icon)
@@ -24,8 +24,8 @@ export interface QuickActionOption {
   title: string
   /** Shown in a tooltip when hovering the dropdown item. */
   description: string
-  /** Icon: Lucide component (e.g. Pencil) or React node. */
-  icon: LucideIcon | ReactNode
+  /** Icon: Tabler component (e.g. IconPencil) or React node. */
+  icon: Icon | ReactNode
   /** When true, this action is not rendered. */
   dontShowIf?: boolean
   /** Click handler (use when no href). */
@@ -51,7 +51,7 @@ export function QuickActions({ options, className: classNameProp }: QuickActions
         <DropdownMenuTrigger asChild>
           <Button variant='default' size='md' aria-label='Quick actions'>
             Actions
-            <ChevronDown className='h-4 w-4 shrink-0' />
+            <IconChevronDown className='h-4 w-4 shrink-0' />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='min-w-[200px]'>

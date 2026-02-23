@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, useForm } from '@inertiajs/react'
-import { FileText, Minus, Plus } from 'lucide-react'
+import { IconFileText, IconMinus, IconPlus } from '@tabler/icons-react'
 import type { RawOrg } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -85,7 +85,7 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
         <Card className='w-fit'>
           <CardContent className='flex items-center gap-3 py-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-muted'>
-              <FileText className='h-5 w-5 text-muted-foreground' />
+              <IconFileText className='h-5 w-5 text-muted-foreground' />
             </div>
             <div>
               <p className='text-sm font-medium text-muted-foreground'>Active leases</p>
@@ -165,13 +165,13 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
                       disabled={data.lineItems.length <= 1}
                       aria-label='Remove line item'
                     >
-                      <Minus className='h-4 w-4' />
+                      <IconMinus className='h-4 w-4' />
                     </Button>
                   </div>
                 </div>
               ))}
               <Button type='button' variant='outline' size='sm' onClick={addLineItem}>
-                <Plus className='mr-2 h-4 w-4' />
+                <IconPlus className='mr-2 h-4 w-4' />
                 Add line item
               </Button>
             </div>

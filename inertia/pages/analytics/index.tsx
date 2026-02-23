@@ -3,14 +3,14 @@ import { Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { format, subDays, subMonths, subYears } from 'date-fns'
 import {
-  Activity,
-  Briefcase,
-  Building2,
-  ChevronRight,
-  Inbox,
-  User,
-  Wrench,
-} from 'lucide-react'
+  IconActivity,
+  IconBriefcase,
+  IconBuilding,
+  IconChevronRight,
+  IconInbox,
+  IconUser,
+  IconWrench,
+} from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import type { PaginatedResponse } from '#types/extra'
 import type { RawActivity, RawLease, RawOrg } from '#types/model-types'
@@ -174,7 +174,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     setEntitiesPeriod(null)
   }
 
-  const EntityIcon = entityType === 'orgs' ? Building2 : entityType === 'users' ? User : entityType === 'leases' ? Briefcase : entityType === 'maintenance' ? Wrench : Activity
+  const EntityIcon = entityType === 'orgs' ? IconBuilding : entityType === 'users' ? IconUser : entityType === 'leases' ? IconBriefcase : entityType === 'maintenance' ? IconWrench : IconActivity
 
   const renderEntitiesList = () => {
     if (entitiesLoading) {
@@ -200,7 +200,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     if (!items.length) {
       return (
         <div className='flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 py-16 px-6 text-center'>
-          <Inbox className='text-muted-foreground mb-4 h-12 w-12' />
+          <IconInbox className='text-muted-foreground mb-4 h-12 w-12' />
           <p className='text-sm font-medium'>No entities in this period</p>
           <p className='text-muted-foreground mt-1 text-xs'>
             Try selecting a different date or range on the chart.
@@ -238,7 +238,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                     <Badge variant='outline' className='capitalize shrink-0'>
                       {org.ownerRole}
                     </Badge>
-                    <ChevronRight className='text-muted-foreground h-4 w-4 shrink-0' />
+                    <IconChevronRight className='text-muted-foreground h-4 w-4 shrink-0' />
                   </Link>
                 </li>
               )
@@ -271,7 +271,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                       <p className='text-muted-foreground text-xs'>Created {timeLabel}</p>
                     </div>
                     <Badge variant='outline' className='shrink-0'>{lease.status}</Badge>
-                    <ChevronRight className='text-muted-foreground h-4 w-4 shrink-0' />
+                    <IconChevronRight className='text-muted-foreground h-4 w-4 shrink-0' />
                   </Link>
                 </li>
               )
@@ -355,23 +355,23 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
         <Tabs defaultValue='orgs' className='space-y-6'>
           <TabsList className='w-fit h-auto flex-wrap gap-1'>
             <TabsTrigger value='orgs' className='gap-2 rounded-md'>
-              <Building2 className='h-4 w-4' />
+              <IconBuilding className='h-4 w-4' />
               Orgs
             </TabsTrigger>
             <TabsTrigger value='togetha_users' className='gap-2 rounded-md'>
-              <User className='h-4 w-4' />
+              <IconUser className='h-4 w-4' />
               Users
             </TabsTrigger>
             <TabsTrigger value='leases' className='gap-2 rounded-md'>
-              <Briefcase className='h-4 w-4' />
+              <IconBriefcase className='h-4 w-4' />
               Leases
             </TabsTrigger>
             <TabsTrigger value='maintenance' className='gap-2 rounded-md'>
-              <Wrench className='h-4 w-4' />
+              <IconWrench className='h-4 w-4' />
               Maintenance
             </TabsTrigger>
             <TabsTrigger value='activity' className='gap-2 rounded-md'>
-              <Activity className='h-4 w-4' />
+              <IconActivity className='h-4 w-4' />
               Activity
             </TabsTrigger>
           </TabsList>
@@ -382,19 +382,19 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                 title='Total'
                 description='Orgs created in period'
                 value={formatNumber(orgsStats?.total)}
-                icon={Building2}
+                icon={IconBuilding}
               />
               <StatCard
                 title='Landlords'
                 description='Landlord orgs'
                 value={formatNumber(orgsStats?.landlords)}
-                icon={User}
+                icon={IconUser}
               />
               <StatCard
                 title='Agencies'
                 description='Agency orgs'
                 value={formatNumber(orgsStats?.agencies)}
-                icon={Briefcase}
+                icon={IconBriefcase}
               />
             </SimpleGrid>
             {orgsStatsLoading ? (
@@ -421,7 +421,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                 title='Total'
                 description='Users created in period'
                 value={formatNumber(usersStats?.total)}
-                icon={User}
+                icon={IconUser}
               />
             </SimpleGrid>
             {usersStatsLoading ? (
@@ -448,7 +448,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                 title='Total'
                 description='Leases created in period'
                 value={formatNumber(leasesStats?.total)}
-                icon={Briefcase}
+                icon={IconBriefcase}
               />
             </SimpleGrid>
             {leasesStatsLoading ? (
@@ -475,7 +475,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                 title='Total'
                 description='Maintenance requests in period'
                 value={formatNumber(maintenanceStats?.total)}
-                icon={Wrench}
+                icon={IconWrench}
               />
             </SimpleGrid>
             {maintenanceStatsLoading ? (
@@ -502,7 +502,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                 title='Total'
                 description='Activity in period'
                 value={formatNumber(activityStats?.total)}
-                icon={Activity}
+                icon={IconActivity}
               />
             </SimpleGrid>
             {activityStatsLoading ? (

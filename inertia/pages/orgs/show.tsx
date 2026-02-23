@@ -2,7 +2,16 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { FlaskConical, Pencil, Star, StarOff, Store, Trash2, UserCheck, UserX } from 'lucide-react'
+import {
+  IconBuildingStore,
+  IconFlask,
+  IconPencil,
+  IconStar,
+  IconStarOff,
+  IconTrash,
+  IconUserCheck,
+  IconUserX,
+} from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import * as Yup from 'yup'
@@ -190,63 +199,63 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
     {
       title: 'Ban user',
       description: 'Ban the org owner from the platform.',
-      icon: UserX,
+      icon: IconUserX,
       onClick: () => setBanUserSheetOpen(true),
       dontShowIf: banStatus?.isBanned,
     },
     {
       title: 'Unban user',
       description: 'Remove the ban from the org owner.',
-      icon: UserCheck,
+      icon: IconUserCheck,
       onClick: () => unbanUserMutation.mutate(),
       dontShowIf: !banStatus?.isBanned,
     },
     {
       title: 'Make favourite',
       description: 'Mark this org as a favourite.',
-      icon: Star,
+      icon: IconStar,
       onClick: () => makeFavouriteMutation.mutate(),
       dontShowIf: org.isFavourite,
     },
     {
       title: 'Undo favourite',
       description: 'Remove favourite from this org.',
-      icon: StarOff,
+      icon: IconStarOff,
       onClick: () => undoFavouriteMutation.mutate(),
       dontShowIf: !org.isFavourite,
     },
     {
       title: 'Make test account',
       description: 'Mark this org as a test account.',
-      icon: FlaskConical,
+      icon: IconFlask,
       onClick: () => makeTestAccountMutation.mutate(),
       dontShowIf: org.isTestAccount,
     },
     {
       title: 'Undo test account',
       description: 'Remove test account flag from this org.',
-      icon: FlaskConical,
+      icon: IconFlask,
       onClick: () => undoTestAccountMutation.mutate(),
       dontShowIf: !org.isTestAccount,
     },
     {
       title: 'Make sales account',
       description: 'Mark this org as a sales account.',
-      icon: Store,
+      icon: IconBuildingStore,
       onClick: () => toggleSalesAccountMutation.mutate(),
       dontShowIf: org.isSalesOrg,
     },
     {
       title: 'Undo sales account',
       description: 'Remove sales account flag from this org.',
-      icon: Store,
+      icon: IconBuildingStore,
       onClick: () => toggleSalesAccountMutation.mutate(),
       dontShowIf: !org.isSalesOrg,
     },
     {
       title: 'Request delete user',
       description: 'Send an email to the user so they can accept or decline account deletion.',
-      icon: Trash2,
+      icon: IconTrash,
       onClick: () => setRequestDeleteDialogOpen(true),
     },
   ]
@@ -364,7 +373,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
             <div className='flex items-center gap-2'>
               <Button variant='outline' size='md' asChild>
                 <Link href={`/orgs/${id}/edit`}>
-                  <Pencil className='mr-2 h-4 w-4' />
+                  <IconPencil className='mr-2 h-4 w-4' />
                   Edit
                 </Link>
               </Button>
@@ -423,7 +432,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
                     label='Favourite'
                     value={
                       <Badge variant='secondary' className='w-fit gap-1'>
-                        <Star className='h-3 w-3' />
+                        <IconStar className='h-3 w-3' />
                         Yes
                       </Badge>
                     }
@@ -434,7 +443,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
                     label='Test account'
                     value={
                       <Badge variant='outline' className='w-fit gap-1'>
-                        <FlaskConical className='h-3 w-3' />
+                        <IconFlask className='h-3 w-3' />
                         Yes
                       </Badge>
                     }
@@ -445,7 +454,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
                     label='Sales account'
                     value={
                       <Badge variant='secondary' className='w-fit gap-1'>
-                        <Store className='h-3 w-3' />
+                        <IconBuildingStore className='h-3 w-3' />
                         Yes
                       </Badge>
                     }

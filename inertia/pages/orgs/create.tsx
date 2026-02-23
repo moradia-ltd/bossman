@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { IdCard, Scroll, Users } from 'lucide-react'
+import { IconId, IconScroll, IconUsers } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -49,19 +49,19 @@ export default function OrgsCreate(props: OrgsCreateProps) {
   const steps = createStepperSteps([
     {
       label: 'Details',
-      icon: Users,
+      icon: IconUsers,
       id: 'details',
       content: <CreateCustomerFormStepOne formik={formik} />,
     },
     {
       label: 'Plan & Features',
-      icon: IdCard,
+      icon: IconId,
       id: 'plan',
       content: <CreateCustomerFormStepTwo formik={formik} />,
     },
     {
       label: 'Summary',
-      icon: Scroll,
+      icon: IconScroll,
       id: 'summary',
       content: <CreateCustomerSummary formik={formik} />,
       nextText: 'Create',

@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Loader2 } from 'lucide-react'
+import { IconLoader2 } from '@tabler/icons-react'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
@@ -61,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const isDisabled = Boolean(disabled || isLoading)
-    const resolvedLeftIcon = isLoading ? <Loader2 className='h-4 w-4 animate-spin' /> : leftIcon
+    const resolvedLeftIcon = isLoading ? <IconLoader2 className='h-4 w-4 animate-spin' /> : leftIcon
     const resolvedRightIcon = !isLoading ? rightIcon : null
 
     const rootClassName = cn(

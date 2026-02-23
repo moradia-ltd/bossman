@@ -1,7 +1,12 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { AlertCircle, Building2, Home, MapPin } from 'lucide-react'
+import {
+  IconAlertCircle,
+  IconBuilding,
+  IconHome,
+  IconMapPin,
+} from '@tabler/icons-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLeaseableEntity } from '#types/model-types'
 import { formatNumber } from '#utils/functions'
@@ -93,7 +98,7 @@ export default function LeaseableEntitiesIndex({
 
         {dataAccessExpired && (
           <Alert variant='destructive'>
-            <AlertCircle className='h-4 w-4' />
+            <IconAlertCircle className='h-4 w-4' />
             <AlertTitle>Access expired</AlertTitle>
             <AlertDescription>
               Your access to properties and leases expired
@@ -108,20 +113,20 @@ export default function LeaseableEntitiesIndex({
             title='Total'
             description='All properties'
             value={formatNumber(stats?.total)}
-            icon={Building2}
+            icon={IconBuilding}
           />
           <StatCard
             title='Vacant'
             description='Available to let'
             value={formatNumber(stats?.vacant)}
-            icon={Home}
+            icon={IconHome}
             iconClassName='h-4 w-4 text-amber-600'
           />
           <StatCard
             title='Occupied'
             description='Currently let'
             value={formatNumber(stats?.occupied)}
-            icon={MapPin}
+            icon={IconMapPin}
             iconClassName='h-4 w-4 text-green-600'
           />
         </SimpleGrid>

@@ -1,6 +1,12 @@
 import { Link, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
-import { CheckCircle2, Loader2, Mail, MailCheck, XCircle } from 'lucide-react'
+import {
+  IconCircleCheck,
+  IconLoader2,
+  IconMail,
+  IconMailCheck,
+  IconCircleX,
+} from '@tabler/icons-react'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -75,11 +81,11 @@ export function TokenVerificationShell({
           {isPending ? (
             <>
               <div className='text-[8rem] font-bold text-muted/10 leading-none select-none'>
-                <Mail className='h-32 w-32 mx-auto text-muted/20' />
+                <IconMail className='h-32 w-32 mx-auto text-muted/20' />
               </div>
               <div className='absolute inset-0 flex items-center justify-center'>
                 <div className='bg-primary/10 rounded-full p-8'>
-                  <Loader2 className='h-16 w-16 text-primary animate-spin' />
+                  <IconLoader2 className='h-16 w-16 text-primary animate-spin' />
                 </div>
               </div>
             </>
@@ -88,11 +94,11 @@ export function TokenVerificationShell({
           {isSuccess ? (
             <>
               <div className='text-[8rem] font-bold text-green-500/10 leading-none select-none'>
-                <MailCheck className='h-32 w-32 mx-auto text-green-500/20' />
+                <IconMailCheck className='h-32 w-32 mx-auto text-green-500/20' />
               </div>
               <div className='absolute inset-0 flex items-center justify-center'>
                 <div className='bg-green-500/10 rounded-full p-8 animate-in zoom-in duration-500'>
-                  <CheckCircle2 className='h-16 w-16 text-green-500' />
+                  <IconCircleCheck className='h-16 w-16 text-green-500' />
                 </div>
               </div>
             </>
@@ -101,11 +107,11 @@ export function TokenVerificationShell({
           {isError ? (
             <>
               <div className='text-[8rem] font-bold text-destructive/10 leading-none select-none'>
-                <XCircle className='h-32 w-32 mx-auto text-destructive/20' />
+                <IconCircleX className='h-32 w-32 mx-auto text-destructive/20' />
               </div>
               <div className='absolute inset-0 flex items-center justify-center'>
                 <div className='bg-destructive/10 rounded-full p-8'>
-                  <XCircle className='h-16 w-16 text-destructive' />
+                  <IconCircleX className='h-16 w-16 text-destructive' />
                 </div>
               </div>
             </>
@@ -135,7 +141,7 @@ export function TokenVerificationShell({
                   </p>
                 </div>
                 <div className='flex items-center justify-center gap-2 text-sm text-muted-foreground'>
-                  <Loader2 className='h-4 w-4 animate-spin' />
+                  <IconLoader2 className='h-4 w-4 animate-spin' />
                   <span>Redirecting…</span>
                 </div>
               </div>
@@ -163,7 +169,7 @@ export function TokenVerificationShell({
             {isPending ? (
               <div className='space-y-2'>
                 <div className='flex items-center justify-center gap-2 text-sm text-muted-foreground'>
-                  <Loader2 className='h-4 w-4 animate-spin' />
+                  <IconLoader2 className='h-4 w-4 animate-spin' />
                   <span>Processing…</span>
                 </div>
               </div>

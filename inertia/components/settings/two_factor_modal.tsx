@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { Copy, Shield } from 'lucide-react'
+import { IconCopy, IconShield } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -93,7 +93,7 @@ export function TwoFactorModal({ open, onOpenChange, onEnabled }: TwoFactorModal
         {!setupData ? (
           <div className='space-y-4'>
             <Alert>
-              <Shield className='h-4 w-4' />
+              <IconShield className='h-4 w-4' />
               <AlertDescription>
                 Preparing your QR code…
               </AlertDescription>
@@ -125,7 +125,7 @@ export function TwoFactorModal({ open, onOpenChange, onEnabled }: TwoFactorModal
                     navigator.clipboard.writeText(setupData.secret)
                     toast.success('Secret key copied')
                   }}>
-                  <Copy className='h-4 w-4' />
+                  <IconCopy className='h-4 w-4' />
                 </Button>
               </div>
               <p className='text-xs text-muted-foreground'>

@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react'
-import { Check, ChevronLeft, ChevronRight } from 'lucide-react'
+import { IconCheck, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import type { ComponentType } from 'react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -96,7 +96,7 @@ export function Stepper({ steps, className }: StepperProps) {
                     )}
                     aria-current={status === 'active' ? 'step' : undefined}>
                     {status === 'completed' ? (
-                      <Check className='h-5 w-5' aria-hidden />
+                      <IconCheck className='h-5 w-5' aria-hidden />
                     ) : Icon ? (
                       <Icon className='h-5 w-5' aria-hidden />
                     ) : (
@@ -128,13 +128,13 @@ export function Stepper({ steps, className }: StepperProps) {
           </Button>
         ) : (
           <Button type='button' variant='outline' onClick={handlePrev}>
-            <ChevronLeft className='h-4 w-4' />
+            <IconChevronLeft className='h-4 w-4' />
             Prev
           </Button>
         )}
         <Button type='button' onClick={handleNext} disabled={nextDisabled}>
           {nextLabel}
-          {!isLastStep && <ChevronRight className='h-4 w-4' />}
+          {!isLastStep && <IconChevronRight className='h-4 w-4' />}
         </Button>
       </div>
     </div>

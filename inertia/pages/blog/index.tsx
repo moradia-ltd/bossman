@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
-import { ArrowRight, Calendar, Clock } from 'lucide-react'
+import { IconArrowRight, IconCalendar, IconClock } from '@tabler/icons-react'
 import type { PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
 import { PublicLayout } from '@/components/layouts/public'
@@ -143,7 +143,7 @@ function FeaturedPostCard({ post }: { post: RawBlogPost }) {
                 <AuthorRow post={post} />
                 <HStack spacing={1} align='center' className='text-sm font-medium'>
                   Read
-                  <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
+                  <IconArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
                 </HStack>
               </HStack>
             </Stack>
@@ -243,13 +243,13 @@ function MetaDateAndReadTime({ post, className }: { post: RawBlogPost; className
     <HStack spacing={2} align='center' className={['text-xs', className].filter(Boolean).join(' ')}>
       {dateLabel ? (
         <HStack spacing={1} align='center' className='inline-flex'>
-          <Calendar className='h-3.5 w-3.5' />
+          <IconCalendar className='h-3.5 w-3.5' />
           {dateLabel}
         </HStack>
       ) : null}
       {minutes ? (
         <HStack spacing={1} align='center' className='inline-flex'>
-          <Clock className='h-3.5 w-3.5' />
+          <IconClock className='h-3.5 w-3.5' />
           {minutes} min read
         </HStack>
       ) : null}

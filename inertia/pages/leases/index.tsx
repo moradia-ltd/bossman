@@ -1,7 +1,12 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { AlertCircle, CheckCircle, FileText, XCircle } from 'lucide-react'
+import {
+  IconAlertCircle,
+  IconCircleCheck,
+  IconCircleX,
+  IconFileText,
+} from '@tabler/icons-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
@@ -101,7 +106,7 @@ export default function LeasesIndex({
 
         {dataAccessExpired && (
           <Alert variant='destructive'>
-            <AlertCircle className='h-4 w-4' />
+            <IconAlertCircle className='h-4 w-4' />
             <AlertTitle>Access expired</AlertTitle>
             <AlertDescription>
               Your access to properties and leases expired
@@ -118,26 +123,26 @@ export default function LeasesIndex({
             title='Total'
             description='All leases'
             value={formatNumber(stats?.total)}
-            icon={FileText}
+            icon={IconFileText}
           />
           <StatCard
             title='Active'
             description='Currently active'
             value={formatNumber(stats?.active)}
-            icon={CheckCircle}
+            icon={IconCircleCheck}
             iconClassName='h-4 w-4 text-green-600'
           />
           <StatCard
             title='Pending'
             description='Awaiting completion'
             value={formatNumber(stats?.pending)}
-            icon={AlertCircle}
+            icon={IconAlertCircle}
           />
           <StatCard
             title='Expired'
             description='Ended leases'
             value={formatNumber(stats?.expired)}
-            icon={XCircle}
+            icon={IconCircleX}
           />
         </SimpleGrid>
 

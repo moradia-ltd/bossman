@@ -1,4 +1,4 @@
-import { X } from 'lucide-react'
+import { IconX } from '@tabler/icons-react'
 import { startCase } from '#utils/functions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -173,7 +173,7 @@ export function FilterSortBar({
                 size='icon'
                 className='h-5 w-5 rounded-full hover:bg-muted'
                 onClick={chip.onRemove}>
-                <X className='h-3 w-3' />
+                <IconX className='h-3 w-3' />
               </Button>
             </Badge>
           ))}

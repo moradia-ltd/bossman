@@ -1,12 +1,12 @@
-import type { LucideIcon } from 'lucide-react'
+import type { Icon } from '@tabler/icons-react'
 import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Filter,
-  Search,
-} from 'lucide-react'
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+  IconFilter,
+  IconSearch,
+} from '@tabler/icons-react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -83,7 +83,7 @@ interface DataTableProps<T extends { id?: string | number }> {
   onRowClick?: (row: T) => void
   loading?: boolean
   emptyMessage?: string
-  emptyIcon?: LucideIcon
+  emptyIcon?: Icon
   emptyDescription?: string
   // Bulk selection props
   selectable?: boolean
@@ -305,7 +305,7 @@ export function DataTable<T extends { id?: string | number }>({
         <div className='flex flex-1 items-center gap-2'>
           {searchable && (
             <div className='relative flex-1 max-w-sm'>
-              <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
+              <IconSearch className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
               <Input
                 placeholder={searchPlaceholder}
                 value={localSearchQuery}
@@ -324,7 +324,7 @@ export function DataTable<T extends { id?: string | number }>({
           {filterable && (
             <Popover open={filtersDisclosure.isOpen} onOpenChange={filtersDisclosure.onOpenChange}>
               <PopoverTrigger>
-                <Button variant='outline' size='sm' leftIcon={<Filter className='h-4 w-4' />}>
+                <Button variant='outline' size='sm' leftIcon={<IconFilter className='h-4 w-4' />}>
                   Filters
                   {Object.keys(filters).length > 0 && (
                     <span className='ml-2 rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground'>
@@ -683,14 +683,14 @@ export function DataTable<T extends { id?: string | number }>({
                   size='sm'
                   onClick={() => pagination.onPageChange(1)}
                   disabled={pagination.page <= 1}>
-                  <ChevronsLeft className='h-4 w-4' />
+                  <IconChevronsLeft className='h-4 w-4' />
                 </Button>
                 <Button
                   variant='outline'
                   size='sm'
                   onClick={() => pagination.onPageChange(pagination.page - 1)}
                   disabled={pagination.page <= 1}>
-                  <ChevronLeft className='h-4 w-4' />
+                  <IconChevronLeft className='h-4 w-4' />
                 </Button>
 
                 <div className='flex items-center gap-1'>
@@ -723,14 +723,14 @@ export function DataTable<T extends { id?: string | number }>({
                   size='sm'
                   onClick={() => pagination.onPageChange(pagination.page + 1)}
                   disabled={pagination.page >= totalPages}>
-                  <ChevronRight className='h-4 w-4' />
+                  <IconChevronRight className='h-4 w-4' />
                 </Button>
                 <Button
                   variant='outline'
                   size='sm'
                   onClick={() => pagination.onPageChange(totalPages)}
                   disabled={pagination.page >= totalPages}>
-                  <ChevronsRight className='h-4 w-4' />
+                  <IconChevronsRight className='h-4 w-4' />
                 </Button>
               </div>
               <p className='pt-2 text-right text-sm text-muted-foreground'>

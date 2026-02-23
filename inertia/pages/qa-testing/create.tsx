@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
-import { Plus, Trash2 } from 'lucide-react'
+import { IconPlus, IconTrash } from '@tabler/icons-react'
 import { useMemo } from 'react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -407,7 +407,7 @@ export default function QaTestingCreate(_props: QaTestingCreateProps) {
                       onClick={() => removeBug(idx)}
                       disabled={data.bugs.length === 1}
                     >
-                      <Trash2 className='mr-2 h-4 w-4' />
+                      <IconTrash className='mr-2 h-4 w-4' />
                       Remove
                     </Button>
                   </div>
@@ -508,7 +508,7 @@ export default function QaTestingCreate(_props: QaTestingCreateProps) {
               ))}
 
               <Button type='button' variant='outline' onClick={addBug}>
-                <Plus className='mr-2 h-4 w-4' />
+                <IconPlus className='mr-2 h-4 w-4' />
                 Add bug
               </Button>
             </div>

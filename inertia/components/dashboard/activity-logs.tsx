@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { Activity, Clock, FileEdit, Plus, Trash2 } from 'lucide-react'
+import { IconActivity, IconClock, IconFilePencil, IconPlus, IconTrash } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { AppCard } from '@/components/ui/app-card'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,9 +21,9 @@ interface AuditLog {
 }
 
 const eventIcons: Record<string, React.ReactNode> = {
-  created: <Plus className='h-4 w-4' />,
-  updated: <FileEdit className='h-4 w-4' />,
-  deleted: <Trash2 className='h-4 w-4' />,
+  created: <IconPlus className='h-4 w-4' />,
+  updated: <IconFilePencil className='h-4 w-4' />,
+  deleted: <IconTrash className='h-4 w-4' />,
 }
 
 const eventColors: Record<string, string> = {
@@ -69,7 +69,7 @@ export function ActivityLogs() {
         description='Your recent account activity'
       >
         <EmptyState
-          icon={Activity}
+          icon={IconActivity}
           title='No recent activity'
           description='Your account activity will appear here.'
         />
@@ -111,7 +111,7 @@ export function ActivityLogs() {
                   </Badge>
                 </div>
                 <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-                  <Clock className='h-3 w-3' />
+                  <IconClock className='h-3 w-3' />
                   <span>{timeAgo(audit.created_at)}</span>
                 </div>
               </div>

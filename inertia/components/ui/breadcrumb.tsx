@@ -1,4 +1,4 @@
-import { ChevronRight, MoreHorizontal } from 'lucide-react'
+import { IconChevronRight, IconDots } from '@tabler/icons-react'
 import type * as React from 'react'
 import { cn } from '@/lib/utils'
 
@@ -72,7 +72,7 @@ function BreadcrumbSeparator({ children, className, ...props }: React.ComponentP
       aria-hidden='true'
       className={cn('[&>svg]:size-3.5', className)}
       {...props}>
-      {children ?? <ChevronRight />}
+      {children ?? <IconChevronRight />}
     </li>
   )
 }
@@ -85,7 +85,7 @@ function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<'span'
       aria-hidden='true'
       className={cn('flex size-9 items-center justify-center', className)}
       {...props}>
-      <MoreHorizontal className='size-4' />
+      <IconDots className='size-4' />
       <span className='sr-only'>More</span>
     </span>
   )

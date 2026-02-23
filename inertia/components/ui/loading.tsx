@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react'
+import { IconLoader2 } from '@tabler/icons-react'
 import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { Skeleton } from './skeleton'
@@ -57,7 +57,7 @@ const sizeMap = {
 function Spinner({ size = 'md', text, className }: Omit<SpinnerLoadingProps, 'variant'>) {
   return (
     <div className={cn('flex flex-col items-center justify-center gap-2', className)}>
-      <Loader2 className={cn('animate-spin text-primary', sizeMap[size])} />
+      <IconLoader2 className={cn('animate-spin text-primary', sizeMap[size])} />
       {text && <p className='text-sm text-muted-foreground'>{text}</p>}
     </div>
   )
@@ -186,7 +186,7 @@ export function Loading(props: LoadingProps) {
     const size = inlineProps.size ?? 'sm'
     return (
       <div className={cn('inline-flex items-center justify-center', className)}>
-        <Loader2 className={cn('animate-spin text-primary', sizeMap[size as keyof typeof sizeMap])} />
+        <IconLoader2 className={cn('animate-spin text-primary', sizeMap[size as keyof typeof sizeMap])} />
       </div>
     )
   }
@@ -200,7 +200,7 @@ export function Loading(props: LoadingProps) {
           className,
         )}>
         <div className='flex flex-col items-center justify-center gap-2'>
-          <Loader2 className='h-8 w-8 animate-spin text-primary' />
+          <IconLoader2 className='h-8 w-8 animate-spin text-primary' />
           {overlayProps.text && <p className='text-sm text-muted-foreground'>{overlayProps.text}</p>}
         </div>
       </div>

@@ -2,11 +2,11 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { UserX } from 'lucide-react'
+import { IconUserX } from '@tabler/icons-react'
 import { useState } from 'react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
-import { SimpleGrid } from '@/components/ui'
+import { EmptyState, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { DateTimePicker } from '@/components/ui/date-time-picker'
@@ -177,7 +177,7 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
                     {users.length === 0 && (
                       userSearch ? (
                         <EmptyState
-                          icon={UserX}
+                          icon={IconUserX}
                           title='No users match your search'
                           description='Try a different search term.'
                           className='py-6'

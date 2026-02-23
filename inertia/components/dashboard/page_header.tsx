@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react'
-import { ArrowLeft } from 'lucide-react'
+import { IconArrowLeft } from '@tabler/icons-react'
 import type { ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -24,14 +24,20 @@ export function PageHeader({ title, description, backHref, actions, className }:
         {backHref ? (
           <Button variant='ghost' size='icon' asChild>
             <Link href={backHref} aria-label='Back'>
-              <ArrowLeft className='h-4 w-4' />
+              <IconArrowLeft className='h-4 w-4' />
             </Link>
           </Button>
         ) : null}
 
         <div className='min-w-0'>
-          <h1 className='text-3xl font-bold tracking-tight truncate'>{title}</h1>
-          {description ? <p className='text-muted-foreground truncate'>{description}</p> : null}
+          <h1 className='text-2xl font-semibold tracking-tight truncate text-foreground sm:text-3xl'>
+            {title}
+          </h1>
+          {description ? (
+            <p className='mt-1 text-muted-foreground truncate text-[15px] leading-relaxed'>
+              {description}
+            </p>
+          ) : null}
         </div>
       </div>
 

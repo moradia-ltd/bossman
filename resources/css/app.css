@@ -1,12 +1,14 @@
 @import "tailwindcss";
 @source "../../inertia/app/app.css";
 
-
+/* Typography – Outfit throughout for a refined, cohesive look */
+@import "@fontsource-variable/outfit";
 
 /* ================================
    Tailwind v4 Theme Tokens
    ================================ */
 @theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -81,39 +83,39 @@
   }
 
   /* ================================
-     Light Theme
+     Light Theme – warm, refined
      ================================ */
   :root {
-    /* Core */
-    --background: #f5f5f5;
-    --foreground: #1a1a1a;
+    /* Core – warm off-white */
+    --background: #faf9f7;
+    --foreground: #1c1917;
 
     /* Surfaces */
     --card: #ffffff;
-    --card-foreground: #1a1a1a;
+    --card-foreground: #1c1917;
     --popover: #ffffff;
-    --popover-foreground: #1a1a1a;
+    --popover-foreground: #1c1917;
 
-    /* Brand */
+    /* Brand – teal anchor */
     --primary: #0e584f;
     --primary-foreground: #ffffff;
     --accent: #8ee6c9;
     --accent-foreground: #0e584f;
 
     /* UI */
-    --secondary: #f1f5f9;
-    --secondary-foreground: #1a1a1a;
-    --muted: #f8f9fa;
-    --muted-foreground: #64748b;
+    --secondary: #f5f4f2;
+    --secondary-foreground: #1c1917;
+    --muted: #f0eeeb;
+    --muted-foreground: #78716c;
 
-    --border: #e5e7eb;
-    --input: #e5e7eb;
+    --border: #e7e5e4;
+    --input: #e7e5e4;
     --ring: #0e584f;
 
-    --destructive: #ef4444;
+    --destructive: #dc2626;
     --destructive-foreground: #ffffff;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
     /* Charts */
     --chart-1: #0e584f;
@@ -137,8 +139,8 @@
     --quick-action-red-bg: rgba(239, 68, 68, 0.1);
 
     /* Sidebar */
-    --sidebar-background: #fafafa;
-    --sidebar-foreground: #3f3f46;
+    --sidebar-background: #f8f7f5;
+    --sidebar-foreground: #44403c;
     --sidebar-primary: #0e584f;
     --sidebar-primary-foreground: #ffffff;
     --sidebar-accent: #f1f5f9;
@@ -148,18 +150,18 @@
   }
 
   /* ================================
-     Dark Theme
+     Dark Theme – refined, soft
      ================================ */
   .dark {
-    /* Core */
-    --background: #060606;
-    --foreground: #f5f5f5;
+    /* Core – softer charcoal, less harsh */
+    --background: #171615;
+    --foreground: #e7e5e4;
 
     /* Surfaces */
-    --card: #0f0f0f;
-    --card-foreground: #f5f5f5;
-    --popover: #1a1a1a;
-    --popover-foreground: #f5f5f5;
+    --card: #1c1b1a;
+    --card-foreground: #e7e5e4;
+    --popover: #1c1b1a;
+    --popover-foreground: #e7e5e4;
 
     /* Brand */
     --primary: #0e584f;
@@ -167,14 +169,14 @@
     --accent: #0e584f;
     --accent-foreground: #ffffff;
 
-    /* UI */
-    --secondary: #262626;
-    --secondary-foreground: #f5f5f5;
-    --muted: #1f1f1f;
-    --muted-foreground: #a3a3a3;
+    /* UI – softer contrasts */
+    --secondary: #262524;
+    --secondary-foreground: #e7e5e4;
+    --muted: #222120;
+    --muted-foreground: #a8a29e;
 
-    --border: #262626;
-    --input: #262626;
+    --border: #2e2d2c;
+    --input: #2e2d2c;
     --ring: #0e584f;
 
     --destructive: #dc2626;
@@ -202,13 +204,13 @@
     --quick-action-red-bg: rgba(248, 113, 113, 0.12);
 
     /* Sidebar */
-    --sidebar-background: #0f0f0f;
-    --sidebar-foreground: #f5f5f5;
+    --sidebar-background: #1c1b1a;
+    --sidebar-foreground: #e7e5e4;
     --sidebar-primary: #0e584f;
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #262626;
-    --sidebar-accent-foreground: #f5f5f5;
-    --sidebar-border: #404040;
+    --sidebar-accent: #262524;
+    --sidebar-accent-foreground: #e7e5e4;
+    --sidebar-border: #2e2d2c;
     --sidebar-ring: #0e584f;
   }
 
@@ -219,5 +221,21 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Subtle grain overlay for depth */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  .dark body::before {
+    opacity: 0.02;
   }
 }

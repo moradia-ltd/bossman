@@ -1,6 +1,14 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
-import { AlertTriangle, Bug, CheckCircle2, Download, FileText, Plus, Trash2 } from 'lucide-react'
+import {
+  IconAlertTriangle,
+  IconBug,
+  IconCircleCheck,
+  IconDownload,
+  IconFileText,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -494,7 +502,7 @@ export default function QaTestingIndex(_props: QaTestingIndexProps) {
             <AppCard
               title={
                 <div className='flex items-center gap-2'>
-                  <Bug className='h-5 w-5 text-red-500' />
+                  <IconBug className='h-5 w-5 text-red-500' />
                   <span>Defect Management</span>
                 </div>
               }
@@ -502,13 +510,13 @@ export default function QaTestingIndex(_props: QaTestingIndexProps) {
               <div className='space-y-6'>
                 {bugs.length === 0 ? (
                   <div className='flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in zoom-in-95 duration-300'>
-                    <CheckCircle2 className='h-10 w-10 text-muted-foreground/50 mb-3' />
+                    <IconCircleCheck className='h-10 w-10 text-muted-foreground/50 mb-3' />
                     <p className='text-sm font-medium text-muted-foreground'>No bugs logged yet</p>
                     <p className='text-xs text-muted-foreground/70 mb-4'>
                       Great job! Or maybe look harder? 😉
                     </p>
                     <Button type='button' variant='outline' size='sm' onClick={addBug}>
-                      <Plus className='mr-2 h-4 w-4' />
+                      <IconPlus className='mr-2 h-4 w-4' />
                       Log a Bug
                     </Button>
                   </div>
@@ -530,7 +538,7 @@ export default function QaTestingIndex(_props: QaTestingIndexProps) {
                             size='icon'
                             className='text-muted-foreground hover:text-destructive'
                             onClick={() => removeBug(bug.id)}>
-                            <Trash2 className='h-4 w-4' />
+                            <IconTrash className='h-4 w-4' />
                           </Button>
                         </div>
 
@@ -609,7 +617,7 @@ export default function QaTestingIndex(_props: QaTestingIndexProps) {
                       </div>
                     ))}
                     <Button type='button' variant='outline' className='w-full' onClick={addBug}>
-                      <Plus className='mr-2 h-4 w-4' />
+                      <IconPlus className='mr-2 h-4 w-4' />
                       Add Another Bug
                     </Button>
                   </div>
@@ -695,19 +703,19 @@ export default function QaTestingIndex(_props: QaTestingIndexProps) {
 
                   {summary.failed > 0 && (
                     <div className='bg-red-50 text-red-700 p-3 rounded-md text-xs flex gap-2'>
-                      <AlertTriangle className='h-4 w-4 shrink-0' />
+                      <IconAlertTriangle className='h-4 w-4 shrink-0' />
                       <span>There are failing checks. Review them before exporting.</span>
                     </div>
                   )}
 
                   <Button onClick={exportMarkdown} className='w-full gap-2' size='lg'>
-                    <Download className='h-4 w-4' />
+                    <IconDownload className='h-4 w-4' />
                     Export Report
                   </Button>
 
                   <Button variant='outline' asChild className='w-full gap-2'>
                     <Link href='/qa-testing/create'>
-                      <FileText className='h-4 w-4' />
+                      <IconFileText className='h-4 w-4' />
                       Go to Database View
                     </Link>
                   </Button>

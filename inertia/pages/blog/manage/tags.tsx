@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, router, useForm } from '@inertiajs/react'
-import { Plus, Trash2 } from 'lucide-react'
+import { IconPlus, IconTrash } from '@tabler/icons-react'
 import type { RawBlogTag } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -35,7 +35,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
               title='New tag'
               description='Slug is generated automatically.'
               trigger={
-                <Button leftIcon={<Plus />}>
+                <Button leftIcon={<IconPlus />}>
                   Add tag
                 </Button>
               }
@@ -98,7 +98,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
                           if (!confirm('Delete this tag?')) return
                           router.delete(`/blog/manage/tags/${t.id}`, { preserveScroll: true })
                         }}>
-                        <Trash2 className='h-4 w-4' />
+                        <IconTrash className='h-4 w-4' />
                       </Button>
                     </TableCell>
                   </TableRow>

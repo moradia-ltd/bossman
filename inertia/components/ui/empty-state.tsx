@@ -1,9 +1,9 @@
-import type { LucideIcon } from 'lucide-react'
+import type { Icon } from '@tabler/icons-react'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
-  icon?: LucideIcon
+  icon?: Icon
   title?: string
   description?: string
   action?: React.ReactNode

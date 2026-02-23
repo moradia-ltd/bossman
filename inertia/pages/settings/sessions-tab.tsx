@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { LogOut, Monitor, Smartphone, Tablet, Trash2 } from 'lucide-react'
+import {
+  IconDeviceMobile,
+  IconDeviceTablet,
+  IconLogout,
+  IconMonitor,
+  IconTrash,
+} from '@tabler/icons-react'
 import { toast } from 'sonner'
 import type { RawSession } from '#types/model-types'
 import { timeAgo } from '#utils/date'
@@ -17,11 +23,11 @@ import api from '@/lib/http'
 function getDeviceIcon(deviceType: string | null) {
   switch (deviceType) {
     case 'mobile':
-      return <Smartphone className='h-4 w-4' />
+      return <IconDeviceMobile className='h-4 w-4' />
     case 'tablet':
-      return <Tablet className='h-4 w-4' />
+      return <IconDeviceTablet className='h-4 w-4' />
     default:
-      return <Monitor className='h-4 w-4' />
+      return <IconMonitor className='h-4 w-4' />
   }
 }
 
@@ -128,7 +134,7 @@ export function SessionsTab() {
                   <Button
                     variant='destructive'
                     size='sm'
-                    leftIcon={<LogOut />}
+                    leftIcon={<IconLogout />}
                     isLoading={isRevokingAll}
                     loadingText='Revoking…'>
                     Revoke All
@@ -197,7 +203,7 @@ export function SessionsTab() {
                           size='icon'
                           disabled={isRevoking}
                           className='text-destructive hover:text-destructive'>
-                          <Trash2 className='h-4 w-4' />
+                          <IconTrash className='h-4 w-4' />
                         </Button>
                       }
                       onPrimaryAction={() => revokeSessionMutation(row.id)}

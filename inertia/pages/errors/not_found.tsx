@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react'
-import { ArrowLeft, Home } from 'lucide-react'
+import { IconArrowLeft, IconHome } from '@tabler/icons-react'
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'
 
@@ -34,7 +34,7 @@ export default function NotFound() {
               Go Back
             </Button>
             <a href='/'>
-              <Button className='w-full sm:w-auto' leftIcon={<Home className='h-4 w-4' />}>
+              <Button className='w-full sm:w-auto' leftIcon={<IconHome className='h-4 w-4' />}>
                 Back to Home
               </Button>
             </a>

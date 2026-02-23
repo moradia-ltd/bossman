@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link, router } from '@inertiajs/react'
-import { Edit, Plus, Tags, Trash2 } from 'lucide-react'
+import { IconEdit, IconPlus, IconTags, IconTrash } from '@tabler/icons-react'
 import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
@@ -67,7 +67,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
         <div className='flex items-center justify-end gap-2'>
           <Button variant='ghost' size='icon' asChild>
             <Link href={`/blog/manage/${row.id}/edit`}>
-              <Edit className='h-4 w-4' />
+              <IconEdit className='h-4 w-4' />
             </Link>
           </Button>
           {row.publishedAt ? (
@@ -88,7 +88,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
                 onFinish: () => setIsDeletingId(null),
               })
             }}>
-            <Trash2 className='h-4 w-4' />
+            <IconTrash className='h-4 w-4' />
           </Button>
         </div>
       ),
@@ -107,16 +107,16 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
               <Button variant='outline' asChild>
                 <Link href='/blog'>View public blog</Link>
               </Button>
-              <Button variant='outline' leftIcon={<Tags />} asChild>
+              <Button variant='outline' leftIcon={<IconTags />} asChild>
                 <Link href='/blog/manage/categories'>Categories</Link>
               </Button>
-              <Button variant='outline' leftIcon={<Tags />} asChild>
+              <Button variant='outline' leftIcon={<IconTags />} asChild>
                 <Link href='/blog/manage/tags'>Tags</Link>
               </Button>
-              <Button variant='outline' leftIcon={<Tags />} asChild>
+              <Button variant='outline' leftIcon={<IconTags />} asChild>
                 <Link href='/blog/manage/authors'>Authors</Link>
               </Button>
-              <Button leftIcon={<Plus />} asChild>
+              <Button leftIcon={<IconPlus />} asChild>
                 <Link href='/blog/manage/create'>New post</Link>
               </Button>
             </>

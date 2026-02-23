@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { IconEye, IconEyeOff } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { Button } from './button'
 import { Input } from './input'
@@ -28,7 +28,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           disabled={disabled}
           aria-label={isVisible ? 'Hide password' : 'Show password'}
           aria-pressed={isVisible}>
-          {isVisible ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
+          {isVisible ? <IconEyeOff className='h-4 w-4' /> : <IconEye className='h-4 w-4' />}
         </Button>
       </div>
     )

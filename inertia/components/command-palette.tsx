@@ -3,21 +3,21 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { router, usePage } from '@inertiajs/react'
 import {
-  Bell,
-  Building2,
-  Check,
-  Database,
-  FileText,
-  Layers,
-  LayoutDashboard,
-  LogOut,
-  Moon,
-  Newspaper,
-  PlusSquare,
-  Settings,
-  Sun,
-  UsersRound,
-} from 'lucide-react'
+  IconBell,
+  IconBuilding,
+  IconCheck,
+  IconDatabase,
+  IconFileText,
+  IconLayoutDashboard,
+  IconLogout,
+  IconMoon,
+  IconNews,
+  IconSettings,
+  IconSquarePlus,
+  IconStack,
+  IconSun,
+  IconUsers,
+} from '@tabler/icons-react'
 import * as React from 'react'
 import {
   CommandDialog,
@@ -89,23 +89,23 @@ export function CommandPalette() {
   if (!isLoggedIn) return null
 
   const appNav: CommandEntry[] = [
-    { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Teams', href: '/teams', icon: <UsersRound className='mr-2 h-4 w-4' />, requires: 'teams' },
-    { label: 'Leases', href: '/leases', icon: <FileText className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Properties', href: '/properties', icon: <Layers className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Customers', href: '/orgs', icon: <Building2 className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Push notifications', href: '/push-notifications', icon: <Bell className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Backups', href: '/db-backups', icon: <Database className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Blog', href: '/blog/manage', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'New blog post', href: '/blog/manage/create', icon: <PlusSquare className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Blog categories', href: '/blog/manage/categories', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Blog tags', href: '/blog/manage/tags', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Blog authors', href: '/blog/manage/authors', icon: <Newspaper className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Settings', href: '/settings', icon: <Settings className='mr-2 h-4 w-4' /> },
+    { label: 'Dashboard', href: '/dashboard', icon: <IconLayoutDashboard className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Teams', href: '/teams', icon: <IconUsers className='mr-2 h-4 w-4' />, requires: 'teams' },
+    { label: 'Leases', href: '/leases', icon: <IconFileText className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Properties', href: '/properties', icon: <IconStack className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Customers', href: '/orgs', icon: <IconBuilding className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Push notifications', href: '/push-notifications', icon: <IconBell className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Backups', href: '/db-backups', icon: <IconDatabase className='mr-2 h-4 w-4' />, requires: 'dashboard' },
+    { label: 'Blog', href: '/blog/manage', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'New blog post', href: '/blog/manage/create', icon: <IconSquarePlus className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Blog categories', href: '/blog/manage/categories', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Blog tags', href: '/blog/manage/tags', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Blog authors', href: '/blog/manage/authors', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
+    { label: 'Settings', href: '/settings', icon: <IconSettings className='mr-2 h-4 w-4' /> },
   ]
 
   const accountActions: CommandEntry[] = [
-    { label: 'Log out', href: '/logout', icon: <LogOut className='mr-2 h-4 w-4' /> },
+    { label: 'Log out', href: '/logout', icon: <IconLogout className='mr-2 h-4 w-4' /> },
   ]
 
   const visibleAppNav = (() => {
@@ -136,14 +136,14 @@ export function CommandPalette() {
         <CommandSeparator />
         <CommandGroup heading='Theme'>
           <CommandItem value='Theme: Light' onSelect={() => selectTheme('light')}>
-            <Sun className='mr-2 h-4 w-4' />
+            <IconSun className='mr-2 h-4 w-4' />
             Light
-            {theme === 'light' ? <Check className='ml-auto h-4 w-4' /> : null}
+            {theme === 'light' ? <IconCheck className='ml-auto h-4 w-4' /> : null}
           </CommandItem>
           <CommandItem value='Theme: Dark' onSelect={() => selectTheme('dark')}>
-            <Moon className='mr-2 h-4 w-4' />
+            <IconMoon className='mr-2 h-4 w-4' />
             Dark
-            {theme === 'dark' ? <Check className='ml-auto h-4 w-4' /> : null}
+            {theme === 'dark' ? <IconCheck className='ml-auto h-4 w-4' /> : null}
           </CommandItem>
         </CommandGroup>
 

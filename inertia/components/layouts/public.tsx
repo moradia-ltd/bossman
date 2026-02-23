@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Link, router, usePage } from '@inertiajs/react'
-import { ArrowRight, Menu } from 'lucide-react'
+import { IconArrowRight, IconMenu2 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -41,11 +41,11 @@ function PublicNavbarActions({ extraActions }: { extraActions?: React.ReactNode 
       {/* Desktop auth CTAs + optional extra actions */}
       <div className='hidden md:flex items-center gap-2'>
         {isLoggedIn ? (
-          <Button asChild rightIcon={<ArrowRight className='h-4 w-4' />}>
+          <Button asChild rightIcon={<IconArrowRight className='h-4 w-4' />}>
             <Link href='/dashboard'>Dashboard</Link>
           </Button>
         ) : (
-          <Button asChild rightIcon={<ArrowRight className='h-4 w-4' />}>
+          <Button asChild rightIcon={<IconArrowRight className='h-4 w-4' />}>
             <Link href='/login'>Sign In</Link>
           </Button>
         )}
@@ -59,7 +59,7 @@ function PublicNavbarActions({ extraActions }: { extraActions?: React.ReactNode 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' size='icon' aria-label='Open menu'>
-              <Menu className='h-5 w-5' />
+              <IconMenu2 className='h-5 w-5' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
@@ -91,12 +91,11 @@ export function PublicLayout({
       {showHeader && (
         <header
           className={cn(
-            'z-50',
-            headerSticky
-              ? 'sticky top-0 bg-transparent supports-[backdrop-filter]:backdrop-blur'
-              : 'bg-transparent',
+            'z-50 transition-shadow duration-300',
+            headerSticky &&
+              'sticky top-0 bg-background/80 supports-[backdrop-filter]:bg-background/60 supports-[backdrop-filter]:backdrop-blur-md border-b border-border/50',
           )}>
-          <div className='max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between'>
+          <div className='max-w-screen-xl mx-auto px-6 py-5 flex items-center justify-between'>
             <Link href='/' className='flex items-center gap-2 w-fit' aria-label={import.meta.env.VITE_APP_NAME}>
               <img src='/logo-full.svg' alt={import.meta.env.VITE_APP_NAME} className='h-8' />
             </Link>
@@ -114,8 +113,12 @@ export function PublicLayout({
                 <div className='flex items-center gap-3'>
                   <img src='/logo-full.svg' alt='' className='h-7' aria-hidden />
                   <div className='leading-tight'>
-                    <div className='font-semibold'>{import.meta.env.VITE_APP_NAME}</div>
-                    <div className='text-sm text-muted-foreground'>{import.meta.env.VITE_APP_DESCRIPTION}</div>
+                    <div className='font-semibold text-foreground'>
+                      {import.meta.env.VITE_APP_NAME}
+                    </div>
+                    <div className='text-sm text-muted-foreground mt-0.5'>
+                      {import.meta.env.VITE_APP_DESCRIPTION}
+                    </div>
                   </div>
                 </div>
                 <div className='text-sm text-muted-foreground flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3'>

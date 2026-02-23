@@ -1,6 +1,11 @@
 import { Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { ExternalLink, Eye, FileText, Pencil } from 'lucide-react'
+import {
+  IconExternalLink,
+  IconEye,
+  IconFileText,
+  IconPencil,
+} from '@tabler/icons-react'
 import { useState } from 'react'
 import type { Column } from '#types/extra'
 import type { TogethaCurrencies } from '#utils/currency'
@@ -71,7 +76,7 @@ const getColumns = (
             size='sm'
             onClick={() => onView(row)}
             className='inline-flex items-center gap-1'>
-            <Eye className='h-3.5 w-3.5' />
+            <IconEye className='h-3.5 w-3.5' />
             View
           </Button>
           {row.status === 'draft' && (
@@ -80,7 +85,7 @@ const getColumns = (
                 <Link
                   href={`/orgs/${orgId}/invoices/${row.id}/line-items/create`}
                   className='inline-flex items-center gap-1'>
-                  <Pencil className='h-3.5 w-3.5' />
+                  <IconPencil className='h-3.5 w-3.5' />
                   Edit
                 </Link>
               </Button>
@@ -93,7 +98,7 @@ const getColumns = (
                 target='_blank'
                 rel='noopener noreferrer'
                 className='inline-flex items-center gap-1'>
-                <ExternalLink className='h-3.5 w-3.5' />
+                <IconExternalLink className='h-3.5 w-3.5' />
                 Open
               </a>
             </Button>
@@ -105,7 +110,7 @@ const getColumns = (
                 target='_blank'
                 rel='noopener noreferrer'
                 className='inline-flex items-center gap-1'>
-                <FileText className='h-3.5 w-3.5' />
+                <IconFileText className='h-3.5 w-3.5' />
                 PDF
               </a>
             </Button>
@@ -196,7 +201,7 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
                         target='_blank'
                         rel='noopener noreferrer'
                         className='inline-flex items-center justify-center gap-2'>
-                        <ExternalLink className='h-4 w-4' />
+                        <IconExternalLink className='h-4 w-4' />
                         Complete on Stripe
                       </a>
                     </Button>
@@ -206,7 +211,7 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
                       <Link
                         href={`/orgs/${orgId}/invoices/${selectedInvoice.id}/line-items/create`}
                         className='inline-flex items-center justify-center gap-2'>
-                        <Pencil className='h-4 w-4' />
+                        <IconPencil className='h-4 w-4' />
                         Add line item
                       </Link>
                     </Button>
@@ -218,7 +223,7 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
                         target='_blank'
                         rel='noopener noreferrer'
                         className='inline-flex items-center justify-center gap-2'>
-                        <ExternalLink className='h-4 w-4' />
+                        <IconExternalLink className='h-4 w-4' />
                         View hosted invoice
                       </a>
                     </Button>
@@ -230,7 +235,7 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
                         target='_blank'
                         rel='noopener noreferrer'
                         className='inline-flex items-center justify-center gap-2'>
-                        <FileText className='h-4 w-4' />
+                        <IconFileText className='h-4 w-4' />
                         Download PDF
                       </a>
                     </Button>

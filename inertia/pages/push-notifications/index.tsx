@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
-import { Bell, Plus, RefreshCw } from 'lucide-react'
+import { IconBell, IconPlus, IconRefresh } from '@tabler/icons-react'
 import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
@@ -128,7 +128,7 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
           <Button
             variant='outline'
             size='sm'
-            leftIcon={<RefreshCw className='h-4 w-4' />}
+            leftIcon={<IconRefresh className='h-4 w-4' />}
             isLoading={resendingId === row.id}
             loadingText='Sending…'
             disabled={resendingId === row.id}
@@ -161,7 +161,7 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
           actions={
             <Button asChild>
               <Link href='/push-notifications/create'>
-                <Plus className='mr-2 h-4 w-4' />
+                <IconPlus className='mr-2 h-4 w-4' />
                 Send notification
               </Link>
             </Button>
@@ -171,7 +171,7 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
-              <Bell className='h-5 w-5' />
+              <IconBell className='h-5 w-5' />
               Notifications
             </CardTitle>
             <CardDescription>{notifications.meta.total} total</CardDescription>

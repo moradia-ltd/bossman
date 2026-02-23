@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Mail } from 'lucide-react'
+import { IconChevronLeft, IconChevronRight, IconMail } from '@tabler/icons-react'
 import { useState } from 'react'
 import type { Column } from '#types/extra'
 import { timeAgo } from '#utils/date'
@@ -277,7 +277,7 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
                       <TableRow>
                         <TableCell colSpan={columnsWithClick.length} className='text-center'>
                           <EmptyState
-                            icon={Mail}
+                            icon={IconMail}
                             title='No emails found'
                             description='Emails sent via Resend will appear here.'
                             className='py-12'
@@ -301,12 +301,12 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
                 {(hasMore || canGoPrev) && (
                   <div className='flex items-center justify-between border-t border-border pt-4'>
                     <Button variant='outline' size='sm' disabled={!canGoPrev} onClick={goPrev}>
-                      <ChevronLeft className='h-4 w-4' />
+                      <IconChevronLeft className='h-4 w-4' />
                       Previous
                     </Button>
                     <Button variant='outline' size='sm' disabled={!hasMore} onClick={goNext}>
                       Next
-                      <ChevronRight className='h-4 w-4' />
+                      <IconChevronRight className='h-4 w-4' />
                     </Button>
                   </div>
                 )}

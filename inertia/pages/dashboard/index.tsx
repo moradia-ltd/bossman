@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { Activity, FileText, Users } from 'lucide-react'
+import { IconActivity, IconFileText, IconUsers } from '@tabler/icons-react'
 import { useState } from 'react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
@@ -112,19 +112,19 @@ export default function DashboardIndex(_props: DashboardIndexProps) {
             title='Total users'
             description='Registered users'
             value={formatNumber(stats?.totalUsers ?? 0)}
-            icon={Users}
+            icon={IconUsers}
           />
           <StatCard
             title='Total tenancies'
             description='Active and past leases'
             value={formatNumber(stats?.totalTenancies ?? 0)}
-            icon={FileText}
+            icon={IconFileText}
           />
           <StatCard
             title='Total activity'
             description='Activity events recorded'
             value={formatNumber(stats?.totalActivity ?? 0)}
-            icon={Activity}
+            icon={IconActivity}
           />
         </SimpleGrid>
 

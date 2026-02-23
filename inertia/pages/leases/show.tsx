@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
-import { Pencil } from 'lucide-react'
+import { IconPencil } from '@tabler/icons-react'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { startCase } from '#utils/functions'
@@ -33,7 +33,7 @@ export default function LeaseShow({ lease }: LeaseShowProps) {
     {
       title: 'Edit lease',
       description: 'Open the lease edit page to change details.',
-      icon: Pencil,
+      icon: IconPencil,
       dontShowIf: false,
       href: `/leases/${lease.id}/edit`,
     },

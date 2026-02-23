@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router, useForm } from '@inertiajs/react'
-import { Save, Trash2 } from 'lucide-react'
+import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react'
 import type { RawBlogAuthor, RawBlogCategory, RawBlogPost, RawBlogTag } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -229,7 +229,7 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
 
               <div className='flex flex-wrap items-center justify-between gap-2'>
                 <div className='flex flex-wrap items-center gap-2'>
-                  <Button type='submit' leftIcon={<Save />} isLoading={processing} loadingText='Saving…'>
+                  <Button type='submit' leftIcon={<IconDeviceFloppy />} isLoading={processing} loadingText='Saving…'>
                     Save changes
                   </Button>
                   <Button type='button' variant='outline' asChild>
@@ -239,7 +239,7 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                 <Button
                   type='button'
                   variant='destructive'
-                  leftIcon={<Trash2 />}
+                  leftIcon={<IconTrash />}
                   onClick={() => {
                     if (!confirm('Delete this post?')) return
                     router.delete(`/blog/manage/${post.id}`, { preserveScroll: true })

@@ -1,5 +1,5 @@
 import { format, isAfter, isBefore, isValid, parse, startOfDay } from 'date-fns'
-import { CalendarIcon, X } from 'lucide-react'
+import { IconCalendar, IconX } from '@tabler/icons-react'
 import type * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -56,7 +56,7 @@ export function DatePicker({
               !selected && 'text-muted-foreground',
               buttonClassName,
             )}
-            leftIcon={<CalendarIcon className='h-4 w-4' />}>
+            leftIcon={<IconCalendar className='h-4 w-4' />}>
             {selected ? format(selected, 'PPP') : placeholder}
           </Button>
         </PopoverTrigger>
@@ -71,7 +71,7 @@ export function DatePicker({
               e.stopPropagation()
               onChange?.('')
             }}>
-            <X className='h-4 w-4' />
+            <IconX className='h-4 w-4' />
           </button>
         ) : null}
 

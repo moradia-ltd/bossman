@@ -1,6 +1,6 @@
 
 import { Head, Link } from '@inertiajs/react'
-import { ArrowLeft, Calendar, Clock } from 'lucide-react'
+import { IconArrowLeft, IconCalendar, IconClock } from '@tabler/icons-react'
 import type { RawBlogPost } from '#types/model-types'
 import { PublicLayout } from '@/components/layouts/public'
 import { Badge } from '@/components/ui/badge'
@@ -57,13 +57,13 @@ export default function BlogShow({ post }: BlogShowProps) {
                   ) : null}
                   {publishedLabel ? (
                     <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
-                      <Calendar className='h-3.5 w-3.5' />
+                      <IconCalendar className='h-3.5 w-3.5' />
                       {publishedLabel}
                     </span>
                   ) : null}
                   {minutes ? (
                     <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
-                      <Clock className='h-3.5 w-3.5' />
+                      <IconClock className='h-3.5 w-3.5' />
                       {minutes} min read
                     </span>
                   ) : null}

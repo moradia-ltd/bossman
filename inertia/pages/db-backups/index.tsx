@@ -1,7 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
-import { Download, Plus, RotateCcw, Trash2 } from 'lucide-react'
+import { IconDownload, IconPlus, IconRotate2, IconTrash } from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -122,7 +122,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
             aria-label='Download backup'
             disabled={downloadingId === row.id}
             onClick={() => handleDownload(row)}>
-            <Download className='h-4 w-4' />
+            <IconDownload className='h-4 w-4' />
           </Button>
           <BaseDialog
             title='Delete backup?'
@@ -134,7 +134,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
                 size='icon'
                 className='h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10'
                 aria-label='Delete backup'>
-                <Trash2 className='h-4 w-4' />
+                <IconTrash className='h-4 w-4' />
               </Button>
             }
             primaryText='Delete'
@@ -228,7 +228,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
                 description='Choose a backup and the database connection URL to restore it to. This will overwrite the target database.'
                 trigger={
                   <Button type='button' variant='outline'>
-                    <RotateCcw className='mr-2 h-4 w-4' />
+                    <IconRotate2 className='mr-2 h-4 w-4' />
                     Restore
                   </Button>
                 }
@@ -281,7 +281,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
                 description='This will create a new database backup and upload it to storage. This may take a moment. Continue?'
                 trigger={
                   <Button type='button' variant='default'>
-                    <Plus className='mr-2 h-4 w-4' />
+                    <IconPlus className='mr-2 h-4 w-4' />
                     Create
                   </Button>
                 }

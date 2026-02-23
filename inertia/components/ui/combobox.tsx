@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { IconCheck, IconSelector } from '@tabler/icons-react'
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import {
@@ -87,7 +87,7 @@ export function Combobox({
           className={cn('w-full justify-between', className)}
           disabled={disabled}>
           {selectedOption ? selectedOption.label : placeholder}
-          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <IconSelector className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='p-0' align='start' sideOffset={4} >
@@ -122,7 +122,7 @@ export function Combobox({
                     handleSelect(option.value)
                   }}
                   className='cursor-pointer'>
-                  <Check
+                  <IconCheck
                     className={cn(
                       'mr-2 h-4 w-4',
                       value === option.value ? 'opacity-100' : 'opacity-0',

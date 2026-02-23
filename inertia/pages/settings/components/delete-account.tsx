@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { AlertTriangle, Trash2 } from 'lucide-react'
+import { IconAlertTriangle, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BaseDialog } from '@/components/ui/base-dialog'
@@ -43,7 +43,7 @@ export function AccountTab() {
       <Card className='border-destructive'>
         <CardHeader>
           <CardTitle className='flex items-center gap-2 text-destructive'>
-            <AlertTriangle className='h-5 w-5' />
+            <IconAlertTriangle className='h-5 w-5' />
             Danger Zone
           </CardTitle>
           <CardDescription>
@@ -52,7 +52,7 @@ export function AccountTab() {
         </CardHeader>
         <CardContent>
           <Alert variant='destructive' className='mb-4'>
-            <AlertTriangle className='h-4 w-4' />
+            <IconAlertTriangle className='h-4 w-4' />
             <AlertTitle>Warning</AlertTitle>
             <AlertDescription>
               Deleting your account will permanently remove all your data, including:
@@ -69,7 +69,7 @@ export function AccountTab() {
             title='Are you absolutely sure?'
             description='This action cannot be undone. This will permanently delete your account and remove all your data from our servers. Please enter your password to confirm.'
             trigger={
-              <Button variant='destructive' leftIcon={<Trash2 />} isLoading={isDeleting} loadingText='Deleting…'>
+              <Button variant='destructive' leftIcon={<IconTrash />} isLoading={isDeleting} loadingText='Deleting…'>
                 Delete Account
               </Button>
             }

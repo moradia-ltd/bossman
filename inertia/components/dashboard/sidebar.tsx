@@ -1,31 +1,30 @@
 import { Link, router, usePage } from '@inertiajs/react'
 import {
-  BarChart3,
-  Bell,
-  Building2,
-  ChevronsUpDown,
-  ClipboardCheck,
-  Database,
-  FileText,
-  Globe,
-  Home,
-  Laptop,
-  Layers,
-  LayoutDashboard,
-  LogOut,
-  Mail,
-  Menu,
-  Moon,
-  Newspaper,
-  Package,
-  PanelLeftOpen,
-  PanelRightOpen,
-  ScrollText,
-  Server,
-  Settings,
-  Sun,
-  UsersRound,
-} from 'lucide-react'
+  IconChartBar,
+  IconBell,
+  IconBuilding,
+  IconSelector,
+  IconClipboardCheck,
+  IconDatabase,
+  IconDeviceLaptop,
+  IconFileText,
+  IconLayoutDashboard,
+  IconLogout,
+  IconMail,
+  IconMenu2,
+  IconMoon,
+  IconNews,
+  IconPackage,
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+  IconLogs,
+  IconServer,
+  IconSettings,
+  IconStack,
+  IconSun,
+  IconUsers,
+  IconWorld,
+} from '@tabler/icons-react'
 import type { RawUser } from '#types/model-types'
 import { startCase } from '#utils/functions'
 import { CommandPalette } from '@/components/command-palette'
@@ -68,15 +67,15 @@ const appNavSections: NavSection[] = [
   {
     label: 'Togetha',
     items: [
-      { title: 'Analytics', href: '/analytics', icon: <BarChart3 className='h-4 w-4' /> },
-      { title: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard className='h-4 w-4' /> },
-      { title: 'Leases', href: '/leases', icon: <FileText className='h-4 w-4' /> },
+      { title: 'Analytics', href: '/analytics', icon: <IconChartBar className='h-4 w-4' /> },
+      { title: 'Dashboard', href: '/dashboard', icon: <IconLayoutDashboard className='h-4 w-4' /> },
+      { title: 'Leases', href: '/leases', icon: <IconFileText className='h-4 w-4' /> },
       {
         title: 'Properties',
         href: '/properties',
-        icon: <Layers className='h-4 w-4' />,
+        icon: <IconStack className='h-4 w-4' />,
       },
-      { title: 'Customers', href: '/orgs', icon: <Building2 className='h-4 w-4' /> },
+      { title: 'Customers', href: '/orgs', icon: <IconBuilding className='h-4 w-4' /> },
 
 
     ],
@@ -91,16 +90,16 @@ const adminNavSections: NavSection[] = [
       {
         title: 'Push notifications',
         href: '/push-notifications',
-        icon: <Bell className='h-4 w-4' />,
+        icon: <IconBell className='h-4 w-4' />,
       },
-      { title: 'Teams', href: '/teams', icon: <UsersRound className='h-4 w-4' /> },
-      { title: 'Backups', href: '/db-backups', icon: <Database className='h-4 w-4' /> },
-      { title: 'Servers', href: '/servers', icon: <Server className='h-4 w-4' /> },
-      { title: 'Logs', href: '/logs', icon: <ScrollText className='h-4 w-4' /> },
-      { title: 'Emails', href: '/emails', icon: <Mail className='h-4 w-4' /> },
-      { title: 'Blog', href: '/blog/manage', icon: <Newspaper className='h-4 w-4' /> },
-      { title: 'Addons', href: '/addons', icon: <Package className='h-4 w-4' /> },
-      { title: 'QA Testing', href: '/qa-testing', icon: <ClipboardCheck className='h-4 w-4' /> },
+      { title: 'Teams', href: '/teams', icon: <IconUsers className='h-4 w-4' /> },
+      { title: 'Backups', href: '/db-backups', icon: <IconDatabase className='h-4 w-4' /> },
+      { title: 'Servers', href: '/servers', icon: <IconServer className='h-4 w-4' /> },
+      { title: 'Logs', href: '/logs', icon: <IconLogs className='h-4 w-4' /> },
+      { title: 'Emails', href: '/emails', icon: <IconMail className='h-4 w-4' /> },
+      { title: 'Blog', href: '/blog/manage', icon: <IconNews className='h-4 w-4' /> },
+      { title: 'Addons', href: '/addons', icon: <IconPackage className='h-4 w-4' /> },
+      { title: 'QA Testing', href: '/qa-testing', icon: <IconClipboardCheck className='h-4 w-4' /> },
     ]
   }
 ]
@@ -109,7 +108,7 @@ const settingsNavSections: NavSection[] = [
   {
     label: 'Settings',
     items: [
-      { title: 'Preferences', href: '/settings', icon: <Settings className='h-4 w-4' /> },
+      { title: 'Preferences', href: '/settings', icon: <IconSettings className='h-4 w-4' /> },
     ]
   }
 ]
@@ -196,7 +195,7 @@ export function Sidebar({ children }: SidebarProps) {
   const renderItem = (item: NavItem) => {
     const isActive = isNavItemActive(item.href)
     const linkClassName = cn(
-      'flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px] font-normal text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+      'flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13px] font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
       !isOpen && !isMobile && 'justify-center px-2',
       isActive && 'bg-primary text-sidebar-primary-foreground',
     )
@@ -242,7 +241,7 @@ export function Sidebar({ children }: SidebarProps) {
   const SectionLabel = ({ children }: { children: string }) => (
     <div
       className={cn(
-        'px-2 pb-1 pt-3 text-[10px] font-medium tracking-wide text-gray-400 uppercase',
+        'px-2.5 pb-1.5 pt-4 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase',
         !showSectionLabels && 'hidden',
       )}>
       {children}
@@ -251,8 +250,8 @@ export function Sidebar({ children }: SidebarProps) {
 
   const SidebarContent = () => (
     <>
-      {/* Logo/Header – same horizontal padding as nav (px-1.5 + pl-2) so logo aligns with content; hidden when sidebar closed */}
-      <div className={cn('flex h-14 shrink-0 items-center px-6', !isOpen && 'px-2')}>
+      {/* Logo/Header – same horizontal padding as nav so logo aligns with content; hidden when sidebar closed */}
+      <div className={cn('flex h-14 shrink-0 items-center px-1.5', !isOpen && 'px-2')}>
         <div className='flex flex-1 min-w-0 items-center'>
           {(isOpen || isMobile) && (
             <Link
@@ -265,7 +264,7 @@ export function Sidebar({ children }: SidebarProps) {
         <div className={cn('flex items-center', !isOpen && !isMobile && 'mx-auto')}>
           {isMobile ? (
             <Button variant='ghost' size='icon' onClick={closeMobileMenu} aria-label='Close menu'>
-              <PanelLeftOpen className='h-5 w-5' />
+              <IconLayoutSidebarLeftCollapse className='h-5 w-5' />
             </Button>
           ) : (
             <Button
@@ -274,9 +273,9 @@ export function Sidebar({ children }: SidebarProps) {
               onClick={toggleSidebar}
               aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
               {isOpen ? (
-                <PanelLeftOpen className='h-5 w-5' />
+                <IconLayoutSidebarLeftCollapse className='h-5 w-5' />
               ) : (
-                <PanelRightOpen className='h-6 w-6 ' />
+                <IconLayoutSidebarLeftExpand className='h-6 w-6' />
               )}
             </Button>
           )}
@@ -330,7 +329,7 @@ export function Sidebar({ children }: SidebarProps) {
                 </div>
               )}
               {(isOpen || isMobile) && (
-                <ChevronsUpDown className='h-4 w-4 text-muted-foreground shrink-0' />
+                <IconSelector className='h-4 w-4 text-muted-foreground shrink-0' />
               )}
             </button>
           </DropdownMenuTrigger>
@@ -344,7 +343,7 @@ export function Sidebar({ children }: SidebarProps) {
 
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
-                <Globe className='h-4 w-4' />
+                <IconWorld className='h-4 w-4' />
                 Environment
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent side='right' align='start' className='p-2'>
@@ -352,12 +351,12 @@ export function Sidebar({ children }: SidebarProps) {
                   value={environment}
                   onValueChange={(v) => setEnvironment(v as 'prod' | 'dev')}>
                   <DropdownMenuRadioItem value='prod'>
-                    <Sun className='h-4 w-4' />
+                    <IconSun className='h-4 w-4' />
                     Production
                   </DropdownMenuRadioItem>
 
                   <DropdownMenuRadioItem value='dev'>
-                    <Laptop className='h-4 w-4' />
+                    <IconDeviceLaptop className='h-4 w-4' />
                     Development
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
@@ -368,7 +367,7 @@ export function Sidebar({ children }: SidebarProps) {
 
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
-                <Sun className='h-4 w-4' />
+                <IconSun className='h-4 w-4' />
                 Theme
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent side='right' align='start' className='p-2'>
@@ -376,15 +375,15 @@ export function Sidebar({ children }: SidebarProps) {
                   value={theme}
                   onValueChange={(v) => setTheme(v as 'light' | 'dark' | 'system')}>
                   <DropdownMenuRadioItem value='light'>
-                    <Sun className='h-4 w-4' />
+                    <IconSun className='h-4 w-4' />
                     Light
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value='dark'>
-                    <Moon className='h-4 w-4' />
+                    <IconMoon className='h-4 w-4' />
                     Dark
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value='system'>
-                    <Laptop className='h-4 w-4' />
+                    <IconDeviceLaptop className='h-4 w-4' />
                     System
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
@@ -394,7 +393,7 @@ export function Sidebar({ children }: SidebarProps) {
             <DropdownMenuSeparator />
 
             <DropdownMenuItem variant='destructive' onClick={() => router.visit('/logout')}>
-              <LogOut className='h-4 w-4' />
+              <IconLogout className='h-4 w-4' />
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -408,7 +407,7 @@ export function Sidebar({ children }: SidebarProps) {
       {/* Desktop Sidebar */}
       <aside
         className={cn(
-          'hidden md:flex min-h-0 flex-col border-r border-border bg-sidebar transition-all duration-300',
+          'hidden md:flex min-h-0 flex-col border-r border-sidebar-border bg-sidebar shadow-sm transition-all duration-300',
           isOpen ? 'w-64' : 'w-16',
         )}
         style={{
@@ -437,12 +436,12 @@ export function Sidebar({ children }: SidebarProps) {
       <main className='flex-1 min-h-0 overflow-y-auto overflow-x-hidden bg-background'>
         <CommandPalette />
         {/* Header */}
-        <div className='sticky top-0 z-30 border-b border-border bg-background'>
+        <div className='sticky top-0 z-30 border-b border-border bg-background/95 supports-[backdrop-filter]:bg-background/80 supports-[backdrop-filter]:backdrop-blur-sm'>
           <div className='w-full flex h-16 items-center justify-between gap-2 px-4 sm:px-6'>
             <div className='flex items-center gap-2'>
               {isMobile && (
                 <Button variant='ghost' size='icon' onClick={openMobileMenu} aria-label='Open menu'>
-                  <Menu className='h-5 w-5' />
+                  <IconMenu2 className='h-5 w-5' />
                 </Button>
               )}
             </div>

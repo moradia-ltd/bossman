@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
-import { ChevronRight, Package, Plus } from 'lucide-react'
+import { IconChevronRight, IconPackage, IconPlus } from '@tabler/icons-react'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { EmptyState } from '@/components/ui'
@@ -44,7 +44,7 @@ export default function AddonsIndex({ addons }: AddonsIndexProps) {
           title='Addons'
           description='Create and manage addons. Each addon can have a price and billing type configured.'
           actions={
-            <Button asChild leftIcon={<Plus className='h-4 w-4' />}>
+            <Button asChild leftIcon={<IconPlus className='h-4 w-4' />}>
               <Link href='/addons/create'>New addon</Link>
             </Button>
           }
@@ -52,7 +52,7 @@ export default function AddonsIndex({ addons }: AddonsIndexProps) {
 
         {addons.length === 0 ? (
           <EmptyState
-            icon={Package}
+            icon={IconPackage}
             title='No addons'
             description='Create your first addon using the button above. You can set the price on the create page.'
             className='rounded-lg border border-dashed border-border bg-muted/30'
@@ -69,9 +69,9 @@ export default function AddonsIndex({ addons }: AddonsIndexProps) {
                     <div className='flex w-full flex-col items-stretch gap-4 p-5 text-left'>
                       <div className='flex items-start justify-between gap-3'>
                         <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary ring-1 ring-primary/20'>
-                          <Package className='h-6 w-6' />
+                          <IconPackage className='h-6 w-6' />
                         </div>
-                        <ChevronRight className='h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5' />
+                        <IconChevronRight className='h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5' />
                       </div>
                       <div className='min-w-0 flex-1 space-y-1'>
                         <h3 className='truncate text-base font-semibold tracking-tight text-foreground'>

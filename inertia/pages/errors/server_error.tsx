@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react'
-import { AlertCircle, ArrowLeft, Home, RefreshCw } from 'lucide-react'
+import { IconAlertCircle, IconArrowLeft, IconHome, IconRefresh } from '@tabler/icons-react'
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,7 +23,7 @@ export default function ServerError({ error }: ServerErrorProps) {
             <div className='text-[12rem] font-bold text-muted/20 leading-none select-none'>500</div>
             <div className='absolute inset-0 flex items-center justify-center'>
               <div className='bg-destructive/10 rounded-full p-6'>
-                <AlertCircle className='h-16 w-16 text-destructive' />
+                <IconAlertCircle className='h-16 w-16 text-destructive' />
               </div>
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function ServerError({ error }: ServerErrorProps) {
               variant='outline'
               onClick={() => router.reload()}
               className='w-full sm:w-auto'
-              leftIcon={<RefreshCw className='h-4 w-4' />}>
+              leftIcon={<IconRefresh className='h-4 w-4' />}>
               Try Again
             </Button>
             {/*<Button
@@ -64,7 +64,7 @@ export default function ServerError({ error }: ServerErrorProps) {
               Go Back
             </Button>*/}
             <a href='/'>
-              <Button className='w-full sm:w-auto' leftIcon={<Home className='h-4 w-4' />}>
+              <Button className='w-full sm:w-auto' leftIcon={<IconHome className='h-4 w-4' />}>
                 Back to Home
               </Button>
             </a>

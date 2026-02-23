@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Bell, Check, CheckCheck, X } from 'lucide-react'
+import { IconBell, IconCheck, IconChecks, IconX } from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { PaginatedResponse } from '#types/extra'
@@ -128,7 +128,7 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' size='icon' className='relative'>
-          <Bell className='h-5 w-5' />
+          <IconBell className='h-5 w-5' />
           {currentUnreadCount > 0 && (
             <span className='absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white'>
               {currentUnreadCount > 9 ? '9+' : currentUnreadCount}
@@ -141,7 +141,7 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
           <h3 className='font-semibold'>Notifications</h3>
           {currentUnreadCount > 0 && (
             <Button variant='ghost' size='sm' onClick={() => markAllAsReadMutation()}>
-              <CheckCheck className='mr-2 h-4 w-4' />
+              <IconChecks className='mr-2 h-4 w-4' />
               Mark all read
             </Button>
           )}
@@ -149,7 +149,7 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
         <ScrollArea className='h-96'>
           {notifications.length === 0 ? (
             <EmptyState
-              icon={Bell}
+              icon={IconBell}
               title='No notifications'
               description="You're all caught up."
               className='py-8'
@@ -185,7 +185,7 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
                               size='icon'
                               className='h-6 w-6'
                               onClick={() => markAsReadMutation(notification.id)}>
-                              <Check className='h-3 w-3' />
+                              <IconCheck className='h-3 w-3' />
                             </Button>
                           )}
                           <Button
@@ -193,7 +193,7 @@ export function NotificationCenter({ userId, initialUnreadCount = 0 }: Notificat
                             size='icon'
                             className='h-6 w-6'
                             onClick={() => deleteNotificationMutation(notification.id)}>
-                            <X className='h-3 w-3' />
+                            <IconX className='h-3 w-3' />
                           </Button>
                         </div>
                       </div>

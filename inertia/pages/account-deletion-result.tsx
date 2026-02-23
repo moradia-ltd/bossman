@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
-import { CheckCircle, ShieldCheck } from 'lucide-react'
+import { IconCircleCheck, IconShieldCheck } from '@tabler/icons-react'
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
@@ -36,9 +36,9 @@ export default function AccountDeletionResult() {
       <Head title={isDeleted ? 'Account deleted' : 'Account deletion'} />
       <div className='mx-auto flex max-w-md flex-col items-center justify-center px-6 py-16 text-center'>
         {isDeleted ? (
-          <CheckCircle className='text-muted-foreground mb-4 h-16 w-16 text-green-600' />
+          <IconCircleCheck className='text-muted-foreground mb-4 h-16 w-16 text-green-600' />
         ) : (
-          <ShieldCheck className='text-muted-foreground mb-4 h-16 w-16 text-blue-600' />
+          <IconShieldCheck className='text-muted-foreground mb-4 h-16 w-16 text-blue-600' />
         )}
         <h1 className='text-2xl font-semibold'>{title}</h1>
         <p className='text-muted-foreground mt-2'>{message}</p>

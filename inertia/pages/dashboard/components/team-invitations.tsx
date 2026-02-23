@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Pencil, Plus } from 'lucide-react'
+import { IconPencil, IconPlus } from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { AppCard } from '@/components/ui/app-card'
@@ -116,7 +116,7 @@ export function TeamInvitationsInviteButton() {
       description='Select the pages this person can access, then send the invite.'
       trigger={
         <Button
-          leftIcon={<Plus className='h-4 w-4' />}
+          leftIcon={<IconPlus className='h-4 w-4' />}
           isLoading={inviteMutation.isPending}
           loadingText='Sending invite...'>
           Invite member
@@ -301,7 +301,7 @@ export function TeamInvitations() {
                         size='icon'
                         aria-label='Edit page access'
                         onClick={() => openEditInvitation(inv)}>
-                        <Pencil className='h-4 w-4' />
+                        <IconPencil className='h-4 w-4' />
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Link, usePage } from '@inertiajs/react'
-import { ArrowRight } from 'lucide-react'
+import { IconArrowRight } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 
 interface BlogHeaderActionsProps {
@@ -13,7 +13,7 @@ export function BlogHeaderActions({ showBlogLink = false }: BlogHeaderActionsPro
 
   if (isLoggedIn) {
     return (
-      <Button asChild rightIcon={<ArrowRight className='h-4 w-4' />}>
+      <Button asChild rightIcon={<IconArrowRight className='h-4 w-4' />}>
         <Link href='/dashboard'>Dashboard</Link>
       </Button>
     )
@@ -26,7 +26,7 @@ export function BlogHeaderActions({ showBlogLink = false }: BlogHeaderActionsPro
           <Link href='/blog'>Blog</Link>
         </Button>
       ) : null}
-      <Button asChild rightIcon={<ArrowRight className='h-4 w-4' />}>
+      <Button asChild rightIcon={<IconArrowRight className='h-4 w-4' />}>
         <Link href='/login'>Sign In</Link>
       </Button>
     </>

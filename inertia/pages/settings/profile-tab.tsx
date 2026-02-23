@@ -1,7 +1,7 @@
 import { router, usePage } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { Camera, Trash2 } from 'lucide-react'
+import { IconCamera, IconTrash } from '@tabler/icons-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { AppCard } from '@/components/ui/app-card'
@@ -167,7 +167,7 @@ export function ProfileTab() {
                   variant='outline'
                   size='sm'
                   onClick={handleDeleteAvatar}
-                  leftIcon={<Trash2 className='mr-2 h-4 w-4' />}
+                  leftIcon={<IconTrash className='mr-2 h-4 w-4' />}
                   loadingText='Deleting...'
                   disabled={isDeletingAvatar}
                   className={user?.avatar ? '' : 'hidden'}>

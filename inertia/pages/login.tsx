@@ -57,11 +57,15 @@ export default function Login({ errors, isDev }: LoginProps) {
   return (
     <PublicLayout showFooter={false}>
       <Head title='Login' />
-      <div className='max-w-screen-xl mx-auto px-6 py-12 flex items-start justify-center'>
-        <Card className='w-full max-w-md'>
-          <CardHeader>
-            <CardTitle className='text-2xl'>Login</CardTitle>
-            <CardDescription>Enter your credentials to access your account</CardDescription>
+      <div className='max-w-screen-xl mx-auto px-6 py-16 sm:py-24 flex items-start justify-center'>
+        <Card className='w-full max-w-md border-border/80 shadow-lg'>
+          <CardHeader className='space-y-1'>
+            <CardTitle className='text-2xl font-semibold tracking-tight'>
+              Login
+            </CardTitle>
+            <CardDescription className='text-[15px]'>
+              Enter your credentials to access your account
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {errors?.message && (

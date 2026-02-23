@@ -1,7 +1,14 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
-import { Briefcase, Building2, FlaskConical, Plus, Star, User } from 'lucide-react'
+import {
+  IconBriefcase,
+  IconBuilding,
+  IconFlask,
+  IconPlus,
+  IconStar,
+  IconUser,
+} from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
@@ -83,7 +90,7 @@ const columns: Column<RawOrg>[] = [
     cell: (row) =>
       row.isFavourite ? (
 
-        <Star className='h-4 w-4 text-yellow-500' />
+        <IconStar className='h-4 w-4 text-yellow-500' />
 
       ) : (
         <span className='text-muted-foreground text-sm'>—</span>
@@ -96,7 +103,7 @@ const columns: Column<RawOrg>[] = [
     cell: (row) =>
       row.isTestAccount ? (
         <Badge variant='outline' className='gap-1 w-fit'>
-          <FlaskConical className='h-3 w-3' />
+          <IconFlask className='h-3 w-3' />
           Yes
         </Badge>
       ) : (
@@ -287,7 +294,7 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
           actions={
             <Button asChild>
               <Link href='/orgs/create'>
-                <Plus className='mr-2 h-4 w-4' />
+                <IconPlus className='mr-2 h-4 w-4' />
                 Create
               </Link>
             </Button>
@@ -299,19 +306,19 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
             title='Total'
             description='All customers'
             value={formatNumber(stats.total)}
-            icon={Building2}
+            icon={IconBuilding}
           />
           <StatCard
             title='Landlords'
             description='Landlord-owned customers'
             value={formatNumber(stats.landlords)}
-            icon={User}
+            icon={IconUser}
           />
           <StatCard
             title='Agencies'
             description='Agency-owned customers'
             value={formatNumber(stats.agencies)}
-            icon={Briefcase}
+            icon={IconBriefcase}
           />
         </SimpleGrid>
 

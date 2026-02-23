@@ -1,7 +1,7 @@
 'use client'
 
 import { format, isValid, parse } from 'date-fns'
-import { CalendarIcon, Check } from 'lucide-react'
+import { IconCalendar, IconCheck } from '@tabler/icons-react'
 import type * as React from 'react'
 import { useCallback, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -150,7 +150,7 @@ export function DatePresetPicker({
             (!from || !to) && 'text-muted-foreground',
             buttonClassName,
           )}
-          leftIcon={<CalendarIcon className='h-4 w-4' />}
+          leftIcon={<IconCalendar className='h-4 w-4' />}
         >
           {buttonLabel}
         </Button>
@@ -174,7 +174,7 @@ export function DatePresetPicker({
                       'justify-start font-normal h-8',
                       active && 'bg-primary/60 font-medium ring-1 ring-primary/30',
                     )}
-                    leftIcon={active ? <Check className='h-3.5 w-3.5' /> : undefined}
+                    leftIcon={active ? <IconCheck className='h-3.5 w-3.5' /> : undefined}
                     onClick={() => handlePreset(preset)}
                   >
                     {preset.label}

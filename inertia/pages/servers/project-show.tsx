@@ -1,7 +1,14 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ChevronRight, Loader2, RefreshCw, RotateCcw, Server, Terminal } from 'lucide-react'
+import {
+  IconChevronRight,
+  IconLoader2,
+  IconRefresh,
+  IconRotate2,
+  IconServer,
+  IconTerminal2,
+} from '@tabler/icons-react'
 
 import { RuntimeLogsSheet } from './components/runtime-logs-sheet'
 import { useState } from 'react'
@@ -164,7 +171,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
         <Deferred data='project' fallback={<LoadingSkeleton type='list' />}>
           {safeProject === null ? (
             <EmptyState
-              icon={Server}
+              icon={IconServer}
               title={projectName ? `${projectName} not found` : 'Project not found'}
               description='This Railway project may not exist or you may not have access.'
               action={
@@ -190,7 +197,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                         onClick={() => openServiceDeployments(service)}
                         className='flex w-full items-center gap-4 p-4 text-left'>
                         <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground'>
-                          <Server className='h-5 w-5' />
+                          <IconServer className='h-5 w-5' />
                         </div>
                         <div className='min-w-0 flex-1'>
                           <p className='font-semibold text-foreground'>{service.name}</p>
@@ -198,14 +205,14 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                             View deployments & logs
                           </p>
                         </div>
-                        <ChevronRight className='h-5 w-5 shrink-0 text-muted-foreground' />
+                        <IconChevronRight className='h-5 w-5 shrink-0 text-muted-foreground' />
                       </button>
                     </Card>
                   ))}
                 </div>
               ) : (
                 <EmptyState
-                  icon={Server}
+                  icon={IconServer}
                   title='No services'
                   description='This project has no services yet.'
                   className='rounded-lg border border-dashed border-border bg-muted/30'
@@ -226,7 +233,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
         className='w-full sm:max-w-xl'>
         {deploymentsLoading ? (
           <div className='flex min-h-[200px] items-center justify-center py-12'>
-            <Loader2 className='h-10 w-10 animate-spin text-primary' />
+            <IconLoader2 className='h-10 w-10 animate-spin text-primary' />
           </div>
         ) : deployments.length > 0 ? (
           <div className='min-h-0 overflow-hidden'>
@@ -266,7 +273,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                             <Button
                               variant='outline'
                               size='xs'
-                              leftIcon={<RotateCcw className='h-3.5 w-3.5' />}
+                              leftIcon={<IconRotate2 className='h-3.5 w-3.5' />}
                               onClick={() => restartMutation.mutate(d.id)}
                               disabled={restartMutation.isPending}
                               isLoading={restartMutation.isPending}
@@ -276,7 +283,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                             <Button
                               variant='outline'
                               size='xs'
-                              leftIcon={<RefreshCw className='h-3.5 w-3.5' />}
+                              leftIcon={<IconRefresh className='h-3.5 w-3.5' />}
                               onClick={() => redeployMutation.mutate(d.id)}
                               disabled={redeployMutation.isPending || !d.canRedeploy}
                               isLoading={redeployMutation.isPending}
@@ -291,7 +298,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                         size='sm'
                         className='w-full justify-start gap-2 bg-muted/60'
                         onClick={() => openDeploymentLogs(d.id)}>
-                        <Terminal className='h-4 w-4 shrink-0' />
+                        <IconTerminal2 className='h-4 w-4 shrink-0' />
                         View runtime logs
                       </Button>
                     </div>
@@ -303,7 +310,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
           </div>
         ) : (
           <EmptyState
-            icon={RefreshCw}
+            icon={IconRefresh}
             title='No deployments'
             description='No deployments for this service yet.'
             className='min-h-[200px] py-12'

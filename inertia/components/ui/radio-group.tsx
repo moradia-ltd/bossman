@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { IconCheck } from '@tabler/icons-react'
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
@@ -102,7 +102,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
                       : 'border-input',
                   )}
                 >
-                  {isSelected && <Check className='h-3 w-3' />}
+                  {isSelected && <IconCheck className='h-3 w-3' />}
                 </span>
 
                 <div className='min-w-0'>

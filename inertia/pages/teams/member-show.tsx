@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { FileText, Home, Layers } from 'lucide-react'
+import { IconFileText, IconHome, IconLayers } from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { RawTeamMember } from '#types/model-types'
@@ -158,11 +158,11 @@ export default function MemberShow({ member }: MemberShowProps) {
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'properties' | 'leases')}>
             <TabsList className='grid w-full grid-cols-2 max-w-md'>
               <TabsTrigger value='properties' className='flex items-center gap-2'>
-                <Layers className='h-4 w-4' />
+                <IconLayers className='h-4 w-4' />
                 Properties
               </TabsTrigger>
               <TabsTrigger value='leases' className='flex items-center gap-2'>
-                <FileText className='h-4 w-4' />
+                <IconFileText className='h-4 w-4' />
                 Leases
               </TabsTrigger>
             </TabsList>
@@ -188,7 +188,7 @@ export default function MemberShow({ member }: MemberShowProps) {
                       <p className='text-sm text-muted-foreground'>Loading properties…</p>
                     ) : leaseableEntities.length === 0 ? (
                       <EmptyState
-                        icon={Home}
+                        icon={IconHome}
                         title='No properties found'
                         description='No properties available to assign.'
                         className='py-6'
@@ -236,7 +236,7 @@ export default function MemberShow({ member }: MemberShowProps) {
                       <p className='text-sm text-muted-foreground'>Loading leases…</p>
                     ) : leases.length === 0 ? (
                       <EmptyState
-                        icon={FileText}
+                        icon={IconFileText}
                         title='No leases found'
                         description='No leases available to assign.'
                         className='py-6'

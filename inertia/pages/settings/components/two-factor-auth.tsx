@@ -1,7 +1,14 @@
 import { router, usePage } from '@inertiajs/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { Copy, Download, KeyRound, Shield, ShieldCheck, ShieldOff } from 'lucide-react'
+import {
+  IconCopy,
+  IconDownload,
+  IconKey,
+  IconShield,
+  IconShieldCheck,
+  IconShieldOff,
+} from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { TwoFactorModal } from '@/components/settings/two_factor_modal'
@@ -105,7 +112,7 @@ export function TwoFactorTab() {
           <CardTitle className='flex items-center gap-2'>
             {isEnabled ? (
               <>
-                <ShieldCheck className='h-5 w-5 text-green-500' />
+                <IconShieldCheck className='h-5 w-5 text-green-500' />
                 Two-Factor Authentication (Enabled)
               </>
             ) : (
@@ -123,7 +130,7 @@ export function TwoFactorTab() {
           {isEnabled ? (
             <>
               <Alert>
-                <ShieldCheck className='h-4 w-4' />
+                <IconShieldCheck className='h-4 w-4' />
                 <AlertDescription>
                   Two-factor authentication is currently enabled on your account.
                 </AlertDescription>
@@ -144,7 +151,7 @@ export function TwoFactorTab() {
                     trigger={
                       <Button
                         variant='outline'
-                        leftIcon={<ShieldOff />}
+                        leftIcon={<IconShieldOff />}
                         isLoading={isDisabling}
                         loadingText='Disabling…'>
                         Disable 2FA
@@ -184,7 +191,7 @@ export function TwoFactorTab() {
                     trigger={
                       <Button
                         variant='outline'
-                        leftIcon={<KeyRound />}
+                        leftIcon={<IconKey />}
                         isLoading={isRegenerating}
                         loadingText='Regenerating…'>
                         Regenerate Recovery Codes
@@ -222,7 +229,7 @@ export function TwoFactorTab() {
                 <Button
                   onClick={() => setTwoFactorOpen(true)}
                   disabled={!user?.emailVerified}
-                  leftIcon={<Shield />}>
+                  leftIcon={<IconShield />}>
                   Enable 2FA
                 </Button>
                 {!user?.emailVerified && (
@@ -239,7 +246,7 @@ export function TwoFactorTab() {
 
           {showRecoveryCodes.length > 0 && (
             <Alert className='mt-6'>
-              <KeyRound className='h-4 w-4' />
+              <IconKey className='h-4 w-4' />
               <AlertDescription>
                 <div className='space-y-4'>
                   <div>
@@ -260,11 +267,11 @@ export function TwoFactorTab() {
                   </div>
                   <div className='flex gap-2'>
                     <Button variant='outline' size='sm' onClick={copyRecoveryCodes}>
-                      <Copy className='mr-2 h-4 w-4' />
+                      <IconCopy className='mr-2 h-4 w-4' />
                       Copy Codes
                     </Button>
                     <Button variant='outline' size='sm' onClick={downloadRecoveryCodes}>
-                      <Download className='mr-2 h-4 w-4' />
+                      <IconDownload className='mr-2 h-4 w-4' />
                       Download
                     </Button>
                   </div>

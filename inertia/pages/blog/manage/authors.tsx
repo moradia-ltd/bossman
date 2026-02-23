@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, router, useForm } from '@inertiajs/react'
-import { Plus, Trash2 } from 'lucide-react'
+import { IconPlus, IconTrash } from '@tabler/icons-react'
 import type { RawBlogAuthor } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -40,7 +40,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
               title='New author'
               description='Slug is generated automatically.'
               trigger={
-                <Button leftIcon={<Plus />}>
+                <Button leftIcon={<IconPlus />}>
                   Add author
                 </Button>
               }
@@ -121,7 +121,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                           if (!confirm('Delete this author? Posts will keep working (author will be removed from posts).')) return
                           router.delete(`/blog/manage/authors/${a.id}`, { preserveScroll: true })
                         }}>
-                        <Trash2 className='h-4 w-4' />
+                        <IconTrash className='h-4 w-4' />
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -1,7 +1,7 @@
 'use client'
 
 import { Link } from '@inertiajs/react'
-import { AlertCircle, Home, RefreshCw } from 'lucide-react'
+import { IconAlertCircle, IconHome, IconRefresh } from '@tabler/icons-react'
 import { Component, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -75,7 +75,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <div className='text-[8rem] font-bold text-muted/20 leading-none select-none'>!</div>
               <div className='absolute inset-0 flex items-center justify-center'>
                 <div className='bg-destructive/10 rounded-full p-6'>
-                  <AlertCircle className='h-16 w-16 text-destructive' />
+                  <IconAlertCircle className='h-16 w-16 text-destructive' />
                 </div>
               </div>
             </div>
@@ -110,11 +110,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 variant='outline'
                 onClick={this.handleReset}
                 className='w-full sm:w-auto'
-                leftIcon={<RefreshCw className='h-4 w-4' />}>
+                leftIcon={<IconRefresh className='h-4 w-4' />}>
                 Try Again
               </Button>
               <a href='/'>
-                <Button className='w-full sm:w-auto' leftIcon={<Home className='h-4 w-4' />}>
+                <Button className='w-full sm:w-auto' leftIcon={<IconHome className='h-4 w-4' />}>
                   Back to Home
                 </Button>
               </a>

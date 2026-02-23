@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
-import { Plus } from 'lucide-react'
+import { IconPlus } from '@tabler/icons-react'
 import type { RawBlogAuthor, RawBlogCategory, RawBlogTag } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -222,7 +222,7 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
               </div>
 
               <div className='flex flex-wrap items-center gap-2'>
-                <Button type='submit' leftIcon={<Plus />} isLoading={processing} loadingText='Creating…'>
+                <Button type='submit' leftIcon={<IconPlus />} isLoading={processing} loadingText='Creating…'>
                   Create post
                 </Button>
                 <Button type='button' variant='outline' asChild>
