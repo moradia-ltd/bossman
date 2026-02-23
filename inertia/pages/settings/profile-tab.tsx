@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { AppCard } from '@/components/ui/app-card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
@@ -156,7 +155,7 @@ export function ProfileTab() {
                 className={user?.avatar ? 'hidden' : ''}
                 isLoading={isUploadingAvatar}
                 loadingText='Uploading...'
-                leftIcon={<Camera className='mr-2 h-4 w-4' />}
+                leftIcon={<IconCamera className='mr-2 h-4 w-4' />}
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploadingAvatar}>
                 Upload Avatar

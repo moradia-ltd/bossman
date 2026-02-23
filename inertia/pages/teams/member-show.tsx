@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { IconFileText, IconHome, IconLayers } from '@tabler/icons-react'
+import { IconFileText, IconHome, IconStack } from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import type { RawTeamMember } from '#types/model-types'
@@ -158,7 +158,7 @@ export default function MemberShow({ member }: MemberShowProps) {
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'properties' | 'leases')}>
             <TabsList className='grid w-full grid-cols-2 max-w-md'>
               <TabsTrigger value='properties' className='flex items-center gap-2'>
-                <IconLayers className='h-4 w-4' />
+                <IconStack className='h-4 w-4' />
                 Properties
               </TabsTrigger>
               <TabsTrigger value='leases' className='flex items-center gap-2'>

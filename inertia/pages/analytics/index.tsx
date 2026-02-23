@@ -9,7 +9,7 @@ import {
   IconChevronRight,
   IconInbox,
   IconUser,
-  IconWrench,
+  IconTool,
 } from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import type { PaginatedResponse } from '#types/extra'
@@ -62,7 +62,7 @@ const CHART_CONFIGS: Record<string, ChartConfig> = {
 
 type EntityType = 'orgs' | 'users' | 'leases' | 'maintenance' | 'activity'
 
-interface AnalyticsIndexProps extends SharedProps {}
+interface AnalyticsIndexProps extends SharedProps { }
 
 export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
   const [startDate, setStartDate] = useState(toYMD(defaultStart))
@@ -135,6 +135,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     queryKey: ['analytics-entities', entityType, entitiesPeriod?.startDate, entitiesPeriod?.endDate],
     queryFn: async () => {
       if (!entitiesPeriod || !entityType) return null
+      // @ts-ignore
       const res = await api.get<PaginatedResponse<unknown>>(entitiesEndpoint!, {
         params: {
           startDate: entitiesPeriod.startDate,
@@ -174,7 +175,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     setEntitiesPeriod(null)
   }
 
-  const EntityIcon = entityType === 'orgs' ? IconBuilding : entityType === 'users' ? IconUser : entityType === 'leases' ? IconBriefcase : entityType === 'maintenance' ? IconWrench : IconActivity
+  const EntityIcon = entityType === 'orgs' ? IconBuilding : entityType === 'users' ? IconUser : entityType === 'leases' ? IconBriefcase : entityType === 'maintenance' ? IconTool : IconActivity
 
   const renderEntitiesList = () => {
     if (entitiesLoading) {
@@ -286,11 +287,11 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                       <p className='font-medium truncate'>{title}</p>
                       <p className='text-muted-foreground text-xs'>Created {timeLabel}</p>
                     </div>
-                    {item.status && (
+                    {item.status != null ? (
                       <Badge variant='outline' className='shrink-0 capitalize'>
                         {String(item.status).replace('_', ' ')}
                       </Badge>
-                    )}
+                    ) : null}
                   </div>
                 </li>
               )
@@ -367,7 +368,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
               Leases
             </TabsTrigger>
             <TabsTrigger value='maintenance' className='gap-2 rounded-md'>
-              <IconWrench className='h-4 w-4' />
+              <IconTool className='h-4 w-4' />
               Maintenance
             </TabsTrigger>
             <TabsTrigger value='activity' className='gap-2 rounded-md'>
@@ -475,7 +476,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                 title='Total'
                 description='Maintenance requests in period'
                 value={formatNumber(maintenanceStats?.total)}
-                icon={IconWrench}
+                icon={IconTool}
               />
             </SimpleGrid>
             {maintenanceStatsLoading ? (

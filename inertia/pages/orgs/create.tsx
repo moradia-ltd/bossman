@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { IconId, IconScroll, IconUsers } from '@tabler/icons-react'
+import { IconClipboardCheck, IconId, IconUsers } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -61,7 +61,7 @@ export default function OrgsCreate(props: OrgsCreateProps) {
     },
     {
       label: 'Summary',
-      icon: IconScroll,
+      icon: IconClipboardCheck,
       id: 'summary',
       content: <CreateCustomerSummary formik={formik} />,
       nextText: 'Create',

@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
+  IconDeviceDesktop,
   IconDeviceMobile,
   IconDeviceTablet,
   IconLogout,
-  IconMonitor,
   IconTrash,
 } from '@tabler/icons-react'
 import { toast } from 'sonner'
@@ -27,7 +27,7 @@ function getDeviceIcon(deviceType: string | null) {
     case 'tablet':
       return <IconDeviceTablet className='h-4 w-4' />
     default:
-      return <IconMonitor className='h-4 w-4' />
+      return <IconDeviceDesktop className='h-4 w-4' />
   }
 }
 

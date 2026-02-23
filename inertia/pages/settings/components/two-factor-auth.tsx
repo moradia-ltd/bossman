@@ -117,7 +117,7 @@ export function TwoFactorTab() {
               </>
             ) : (
               <>
-                <Shield className='h-5 w-5' />
+                <IconShield className='h-5 w-5' />
                 Two-Factor Authentication
               </>
             )}

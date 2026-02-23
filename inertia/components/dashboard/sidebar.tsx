@@ -195,7 +195,7 @@ export function Sidebar({ children }: SidebarProps) {
   const renderItem = (item: NavItem) => {
     const isActive = isNavItemActive(item.href)
     const linkClassName = cn(
-      'flex items-center gap-3 rounded-lg px-2.5 py-2 text-[13px] font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+      'flex items-center gap-3 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
       !isOpen && !isMobile && 'justify-center px-2',
       isActive && 'bg-primary text-sidebar-primary-foreground',
     )
@@ -241,7 +241,7 @@ export function Sidebar({ children }: SidebarProps) {
   const SectionLabel = ({ children }: { children: string }) => (
     <div
       className={cn(
-        'px-2.5 pb-1.5 pt-4 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase',
+        'px-2.5 pb-1 pt-3 text-[10px] font-semibold tracking-widest text-muted-foreground uppercase',
         !showSectionLabels && 'hidden',
       )}>
       {children}
@@ -283,17 +283,17 @@ export function Sidebar({ children }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <ScrollArea className='flex-1 min-h-0 px-1.5 py-2'>
+      <ScrollArea className='flex-1 min-h-0 px-1.5 py-1.5'>
         {!showSectionLabels ? (
-          <nav className='space-y-1'>
+          <nav className='space-y-0.5'>
             {effectiveNavSections.flatMap((s) => s.items).map(renderItem)}
           </nav>
         ) : (
-          <nav className='space-y-1 px-6'>
+          <nav className='space-y-0.5 px-6'>
             {effectiveNavSections.map((section) => (
               <div key={section.label}>
                 <SectionLabel>{section.label}</SectionLabel>
-                <div className='space-y-1'>{section.items.map(renderItem)}</div>
+                <div className='space-y-0.5'>{section.items.map(renderItem)}</div>
               </div>
             ))}
           </nav>
