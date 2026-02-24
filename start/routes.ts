@@ -240,6 +240,8 @@ router.get('/swagger', async () => {
   return AutoSwagger.default.docs(router.toJSON(), swagger)
 })
 
+router.get('/admin/api/server-stats', '#controllers/server_stats_controller.index')
+
 // Renders Swagger-UI and passes YAML-output of /swagger
 router.get('/docs/:id?', async ({ params }) => {
   const id = params.id
