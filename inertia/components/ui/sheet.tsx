@@ -47,7 +47,8 @@ const sheetVariants = cva(
 )
 
 interface SheetContentProps
-  extends React.ComponentPropsWithoutRef<typeof BaseDialog.Popup>,
+  extends
+    React.ComponentPropsWithoutRef<typeof BaseDialog.Popup>,
     VariantProps<typeof sheetVariants> {}
 
 const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
@@ -81,16 +82,11 @@ const SheetFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
 )
 SheetFooter.displayName = 'SheetFooter'
 
-const SheetTitle = React.forwardRef<
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h2
-    ref={ref}
-    className={cn('text-lg font-semibold text-foreground', className)}
-    {...props}
-  />
-))
+const SheetTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h2 ref={ref} className={cn('text-lg font-semibold text-foreground', className)} {...props} />
+  ),
+)
 SheetTitle.displayName = 'SheetTitle'
 
 const SheetDescription = React.forwardRef<

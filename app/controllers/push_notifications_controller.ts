@@ -4,10 +4,7 @@ import { DateTime } from 'luxon'
 
 import PushNotification from '#models/push_notification'
 import TogethaUser from '#models/togetha_user'
-import {
-  resolveUserIds,
-  sendToRecipients,
-} from '#services/push_notification_service'
+import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
 import { storePushNotificationValidator } from '#validators/push_notification'
 
 export default class PushNotificationsController {
@@ -75,11 +72,7 @@ export default class PushNotificationsController {
       return response.badRequest({ errors: { targetUserIds: ['Select at least one user'] } })
     }
     try {
-      const userIds = await resolveUserIds(
-        payload.targetType,
-        payload.targetUserIds,
-        appEnv,
-      )
+      const userIds = await resolveUserIds(payload.targetType, payload.targetUserIds, appEnv)
       const sendNow = !payload.sendAt
 
       const notification = await PushNotification.create({

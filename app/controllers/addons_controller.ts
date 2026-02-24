@@ -30,10 +30,10 @@ export default class AddonsController {
         ...(payload.billingType === 'one_off'
           ? {}
           : {
-            recurring: {
-              interval: payload.billingType === 'recurring_monthly' ? 'month' : 'year',
-            },
-          }),
+              recurring: {
+                interval: payload.billingType === 'recurring_monthly' ? 'month' : 'year',
+              },
+            }),
       },
       env,
     )
@@ -56,7 +56,6 @@ export default class AddonsController {
 
     const payload = await request.validateUsing(updateAddonValidator)
     await addon.merge(payload).save()
-
 
     return response.redirect(`/addons`)
   }

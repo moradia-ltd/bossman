@@ -2,9 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "nodenext",
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "isolatedModules": true,
@@ -23,9 +21,7 @@
     "declaration": false,
     "sourceMap": true,
     "emitDecoratorMetadata": true,
-    "types": [
-      "@types/node"
-    ],
+    "types": ["@types/node"],
     "rootDir": "./",
     "outDir": "./build",
     "jsx": "react-jsx",
@@ -36,19 +32,11 @@
     "resolvePackageJsonImports": true,
     "preserveConstEnums": true,
     "paths": {
-      "#audit_resolvers/*": [
-        "./app/audit_resolvers/*.js"
-      ]
+      "#audit_resolvers/*": ["./app/audit_resolvers/*.js"]
     }
   },
   "ts-node": {
     "swc": true
   },
-  "exclude": [
-    "inertia",
-    "node_modules",
-    "./build",
-    "bin/test.ts",
-    "**/*.test.ts"
-  ]
+  "exclude": ["inertia", "node_modules", "./build", "bin/test.ts", "**/*.test.ts"]
 }

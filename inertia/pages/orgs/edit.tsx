@@ -110,30 +110,30 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
     customPaymentSchedule:
       org.isOnCustomPlan && cps
         ? {
-          amount: (Number(cps?.amount) || 0) as number,
-          trialPeriodInDays: (Number(cps.trialPeriodInDays) || 0) as number,
-          frequency: (cps?.frequency as 'monthly' | 'quarterly' | 'yearly') ?? 'monthly',
-          currency: (cps?.currency as 'gbp' | 'eur' | 'usd') ?? 'gbp',
-          paymentMethod: (cps?.paymentMethod as 'stripe' | 'bank_transfer') ?? 'stripe',
-          planType: (cps.planType as 'normal' | 'custom') ?? 'custom',
-          plan: (cps?.plan as 'standard' | 'essential' | 'premium') ?? 'standard',
-        }
+            amount: (Number(cps?.amount) || 0) as number,
+            trialPeriodInDays: (Number(cps.trialPeriodInDays) || 0) as number,
+            frequency: (cps?.frequency as 'monthly' | 'quarterly' | 'yearly') ?? 'monthly',
+            currency: (cps?.currency as 'gbp' | 'eur' | 'usd') ?? 'gbp',
+            paymentMethod: (cps?.paymentMethod as 'stripe' | 'bank_transfer') ?? 'stripe',
+            planType: (cps.planType as 'normal' | 'custom') ?? 'custom',
+            plan: (cps?.plan as 'standard' | 'essential' | 'premium') ?? 'standard',
+          }
         : null,
     customPlanFeatures:
       org.isOnCustomPlan && cpf
         ? {
-          propertyLimit: Number(cpf?.propertyLimit) ?? 0,
-          tenantLimit: Number(cpf?.tenantLimit) ?? 0,
-          storageLimit: Number(cpf?.storageLimit) ?? 0,
-          teamSizeLimit: Number(cpf?.teamSizeLimit) ?? 0,
-          prioritySupport: Boolean(cpf.prioritySupport),
-          activityLogRetention: Number(cpf?.activityLogRetention) ?? 0,
-          depositProtection: Boolean(cpf.depositProtection),
-          advancedReporting: Boolean(cpf?.advancedReporting),
-          eSignDocsLimit: Number(cpf.eSignDocsLimit) ?? 0,
-          aiInvocationLimit: Number(cpf.aiInvocationLimit) ?? 0,
-          customTemplatesLimit: Number(cpf.customTemplatesLimit) ?? 0,
-        }
+            propertyLimit: Number(cpf?.propertyLimit) ?? 0,
+            tenantLimit: Number(cpf?.tenantLimit) ?? 0,
+            storageLimit: Number(cpf?.storageLimit) ?? 0,
+            teamSizeLimit: Number(cpf?.teamSizeLimit) ?? 0,
+            prioritySupport: Boolean(cpf.prioritySupport),
+            activityLogRetention: Number(cpf?.activityLogRetention) ?? 0,
+            depositProtection: Boolean(cpf.depositProtection),
+            advancedReporting: Boolean(cpf?.advancedReporting),
+            eSignDocsLimit: Number(cpf.eSignDocsLimit) ?? 0,
+            aiInvocationLimit: Number(cpf.aiInvocationLimit) ?? 0,
+            customTemplatesLimit: Number(cpf.customTemplatesLimit) ?? 0,
+          }
         : null,
     settings: {
       preferredCurrency: org.settings?.preferredCurrency ?? '',
@@ -152,7 +152,7 @@ function getInitialValues(org: RawOrg): EditOrgFormValues {
 }
 
 export default function OrgsEdit({ org }: OrgsEditProps) {
-  console.log("🚀 ~ OrgsEdit ~ org:", org)
+  console.log('🚀 ~ OrgsEdit ~ org:', org)
   const id = org.id
   const cleanName = org.cleanName
 
@@ -162,13 +162,11 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
     validateOnBlur: true,
     validateOnChange: true,
     onSubmit(values) {
-
       updateOrgMutation(values)
     },
   })
   console.log('🚀 ~ formik: errors', formik.errors)
   const { values, handleChange, setFieldValue, touched, errors } = formik
-
 
   const { mutate: updateOrgMutation, isPending } = useMutation({
     mutationFn: (values: EditOrgFormValues) => api.put(`/orgs/${id}`, values),
@@ -180,7 +178,6 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
       toast.error(serverErrorResponder(error) || 'Failed to update organisation.')
     },
   })
-
 
   return (
     <DashboardLayout>
@@ -197,10 +194,7 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
               <Button variant='outline' size='md' asChild>
                 <Link href={`/orgs/${id}`}>Cancel</Link>
               </Button>
-              <Button
-                size='md'
-                onClick={() => formik.handleSubmit()}
-                disabled={isPending}>
+              <Button size='md' onClick={() => formik.handleSubmit()} disabled={isPending}>
                 Save changes
               </Button>
             </div>

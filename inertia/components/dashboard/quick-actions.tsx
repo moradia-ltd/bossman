@@ -14,8 +14,7 @@ import { cn } from '@/lib/utils'
 
 function isIconComponent(icon: Icon | ReactNode): icon is Icon {
   return (
-    typeof icon === 'function' ||
-    (typeof icon === 'object' && icon !== null && '$$typeof' in icon)
+    typeof icon === 'function' || (typeof icon === 'object' && icon !== null && '$$typeof' in icon)
   )
 }
 
@@ -59,9 +58,7 @@ export function QuickActions({ options, className: classNameProp }: QuickActions
             const iconEl = isIconComponent(opt.icon) ? (
               React.createElement(opt.icon, { className: 'h-4 w-4 shrink-0' })
             ) : (
-              <span className={cn('[&_svg]:h-4 [&_svg]:w-4 shrink-0')}>
-                {opt.icon}
-              </span>
+              <span className={cn('[&_svg]:h-4 [&_svg]:w-4 shrink-0')}>{opt.icon}</span>
             )
 
             const handleSelect = () => {
@@ -80,17 +77,13 @@ export function QuickActions({ options, className: classNameProp }: QuickActions
             )
 
             return (
-              <DropdownMenuItem
-                key={`${opt.title}-${opt.href ?? 'action'}`}
-                onClick={handleSelect}>
+              <DropdownMenuItem key={`${opt.title}-${opt.href ?? 'action'}`} onClick={handleSelect}>
                 {opt.description ? (
                   <Tooltip>
                     <TooltipTrigger className='flex w-full cursor-default items-center gap-2 outline-none'>
                       {itemContent}
                     </TooltipTrigger>
-                    <TooltipContent side='right'>
-                      {opt.description}
-                    </TooltipContent>
+                    <TooltipContent side='right'>{opt.description}</TooltipContent>
                   </Tooltip>
                 ) : (
                   itemContent

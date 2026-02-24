@@ -53,13 +53,13 @@ export function ActivitiesTab({ orgId }: ActivitiesTabProps) {
   return (
     <AppCard title='Activities' description='Recent activity for this organisation'>
       <DataTable
-          columns={columns}
-          data={activities}
-          loading={isPending}
-          emptyMessage='No activity yet.'
-          pagination={
-            meta
-              ? {
+        columns={columns}
+        data={activities}
+        loading={isPending}
+        emptyMessage='No activity yet.'
+        pagination={
+          meta
+            ? {
                 page: meta.currentPage,
                 pageSize: meta.perPage,
                 total: meta.total,
@@ -69,9 +69,9 @@ export function ActivitiesTab({ orgId }: ActivitiesTabProps) {
                   setPage(1)
                 },
               }
-              : undefined
-          }
-        />
+            : undefined
+        }
+      />
     </AppCard>
   )
 }

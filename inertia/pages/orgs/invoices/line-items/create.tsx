@@ -56,8 +56,7 @@ export default function OrgInvoiceLineItemCreate({
                 label='Description'
                 htmlFor='description'
                 required
-                error={formError || errors.description}
-              >
+                error={formError || errors.description}>
                 <Input
                   id='description'
                   value={data.description}
@@ -66,12 +65,7 @@ export default function OrgInvoiceLineItemCreate({
                   required
                 />
               </FormField>
-              <FormField
-                label='Amount'
-                htmlFor='amount'
-                required
-                error={errors.amount}
-              >
+              <FormField label='Amount' htmlFor='amount' required error={errors.amount}>
                 <Input
                   id='amount'
                   type='number'
@@ -88,8 +82,7 @@ export default function OrgInvoiceLineItemCreate({
                   id='currency'
                   value={data.currency}
                   onChange={(e) => setData('currency', e.target.value)}
-                  className='border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50'
-                >
+                  className='border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50'>
                   {CURRENCY_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}

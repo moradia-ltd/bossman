@@ -16,7 +16,10 @@ function parseDateRange(request: HttpContext['request']): DateRange {
   const defaultStart = new Date(now)
   defaultStart.setMonth(defaultStart.getMonth() - 1)
   return {
-    startDate: typeof startDate === 'string' && startDate ? startDate : defaultStart.toISOString().slice(0, 10),
+    startDate:
+      typeof startDate === 'string' && startDate
+        ? startDate
+        : defaultStart.toISOString().slice(0, 10),
     endDate: typeof endDate === 'string' && endDate ? endDate : defaultEnd,
   }
 }
@@ -55,7 +58,11 @@ export default class AnalyticsController {
 
     const row = (totalsResult.rows as { total: number; landlords: number; agencies: number }[])[0]
     const totals = row
-      ? { total: Number(row.total), landlords: Number(row.landlords), agencies: Number(row.agencies) }
+      ? {
+          total: Number(row.total),
+          landlords: Number(row.landlords),
+          agencies: Number(row.agencies),
+        }
       : { total: 0, landlords: 0, agencies: 0 }
 
     const toDateStr = (d: string | Date): string =>
@@ -65,7 +72,12 @@ export default class AnalyticsController {
       count: Number(r.count),
     }))
 
-    return response.ok({ total: totals.total, landlords: totals.landlords, agencies: totals.agencies, growth })
+    return response.ok({
+      total: totals.total,
+      landlords: totals.landlords,
+      agencies: totals.agencies,
+      growth,
+    })
   }
 
   /** Orgs created in a date range (for bar click; never includes test accounts). */
@@ -123,7 +135,8 @@ export default class AnalyticsController {
     const endDate = request.input('endDate', '')
     const page = Number(request.input('page', 1))
     const perPage = Math.min(Number(request.input('perPage', 20)) || 20, 100)
-    if (!startDate || !endDate) return response.badRequest({ error: 'startDate and endDate required' })
+    if (!startDate || !endDate)
+      return response.badRequest({ error: 'startDate and endDate required' })
 
     const users = await TogethaUser.query({ connection: appEnv })
       .whereRaw('created_at::date BETWEEN ? AND ?', [startDate, endDate])
@@ -167,7 +180,8 @@ export default class AnalyticsController {
     const endDate = request.input('endDate', '')
     const page = Number(request.input('page', 1))
     const perPage = Math.min(Number(request.input('perPage', 20)) || 20, 100)
-    if (!startDate || !endDate) return response.badRequest({ error: 'startDate and endDate required' })
+    if (!startDate || !endDate)
+      return response.badRequest({ error: 'startDate and endDate required' })
 
     const leases = await Lease.query({ connection: appEnv })
       .whereRaw('created_at::date BETWEEN ? AND ?', [startDate, endDate])
@@ -211,7 +225,8 @@ export default class AnalyticsController {
     const endDate = request.input('endDate', '')
     const page = Number(request.input('page', 1))
     const perPage = Math.min(Number(request.input('perPage', 20)) || 20, 100)
-    if (!startDate || !endDate) return response.badRequest({ error: 'startDate and endDate required' })
+    if (!startDate || !endDate)
+      return response.badRequest({ error: 'startDate and endDate required' })
 
     const list = await MaintenanceRequest.query({ connection: appEnv })
       .whereRaw('created_at::date BETWEEN ? AND ?', [startDate, endDate])
@@ -255,7 +270,8 @@ export default class AnalyticsController {
     const endDate = request.input('endDate', '')
     const page = Number(request.input('page', 1))
     const perPage = Math.min(Number(request.input('perPage', 20)) || 20, 100)
-    if (!startDate || !endDate) return response.badRequest({ error: 'startDate and endDate required' })
+    if (!startDate || !endDate)
+      return response.badRequest({ error: 'startDate and endDate required' })
 
     const list = await Activity.query({ connection: appEnv })
       .whereRaw('created_at::date BETWEEN ? AND ?', [startDate, endDate])

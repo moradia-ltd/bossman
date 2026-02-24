@@ -80,15 +80,15 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
         const errorText =
           row.status === 'failed' && row.errorMessage
             ? (() => {
-              try {
-                const parsed = JSON.parse(row.errorMessage) as Record<string, string>
-                return typeof parsed.request === 'string'
-                  ? parsed.request
-                  : (Object.values(parsed)[0] ?? row.errorMessage)
-              } catch {
-                return row.errorMessage
-              }
-            })()
+                try {
+                  const parsed = JSON.parse(row.errorMessage) as Record<string, string>
+                  return typeof parsed.request === 'string'
+                    ? parsed.request
+                    : (Object.values(parsed)[0] ?? row.errorMessage)
+                } catch {
+                  return row.errorMessage
+                }
+              })()
             : null
         return errorText ? (
           <Tooltip>

@@ -49,6 +49,14 @@ export default defineConfig({
       file: () => import('@adonisjs/core/providers/repl_provider'),
       environment: ['repl', 'test'],
     },
+    {
+      file: () => import('adonisjs-server-stats/provider'),
+      environment: ['web'],
+    },
+    {
+      file: () => import('adonisjs-server-stats/log-stream/provider'),
+      environment: ['web'],
+    },
     () => import('@adonisjs/core/providers/vinejs_provider'),
     () => import('@adonisjs/core/providers/edge_provider'),
     () => import('@adonisjs/session/session_provider'),
@@ -65,7 +73,7 @@ export default defineConfig({
     () => import('@adonisjs/cache/cache_provider'),
     () => import('@adonisjs/limiter/limiter_provider'),
     () => import('@stouder-io/adonis-auditing/auditing_provider'),
-    () => import('@adonisjs/otel/otel_provider')
+    () => import('@adonisjs/otel/otel_provider'),
   ],
 
   /*

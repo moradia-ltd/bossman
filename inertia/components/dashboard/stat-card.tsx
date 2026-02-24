@@ -35,9 +35,7 @@ export function StatCard({ title, description, value, icon: Icon, iconClassName 
         </HStack>
       </CardHeader>
       <CardContent className='pt-0'>
-        <div className='text-2xl font-semibold tabular-nums tracking-tight'>
-          {value}
-        </div>
+        <div className='text-2xl font-semibold tabular-nums tracking-tight'>{value}</div>
       </CardContent>
     </Card>
   )

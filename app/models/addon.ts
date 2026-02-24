@@ -3,7 +3,6 @@ import { slugify } from '@adonisjs/lucid-slugify'
 import type { DateTime } from 'luxon'
 
 export default class Addon extends BaseModel {
-
   @column({ isPrimary: true })
   declare id: string
 

@@ -33,4 +33,3 @@ export default class BlogCategory extends SuperBaseModel {
   @hasMany(() => BlogPost)
   declare posts: HasMany<typeof BlogPost>
 }
-

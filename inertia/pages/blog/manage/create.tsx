@@ -10,7 +10,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminCreateProps extends SharedProps {
@@ -63,10 +69,14 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                 e.preventDefault()
                 post('/blog/manage', { preserveScroll: true })
               }}
-              className='space-y-6'
-            >
+              className='space-y-6'>
               <div className='grid gap-4 md:grid-cols-2'>
-                <FormField label='Title' htmlFor='title' required error={errors.title} className='md:col-span-2'>
+                <FormField
+                  label='Title'
+                  htmlFor='title'
+                  required
+                  error={errors.title}
+                  className='md:col-span-2'>
                   <Input
                     id='title'
                     value={data.title}
@@ -75,7 +85,11 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                   />
                 </FormField>
 
-                <FormField label='Summary' htmlFor='summary' error={errors.summary} className='md:col-span-2'>
+                <FormField
+                  label='Summary'
+                  htmlFor='summary'
+                  error={errors.summary}
+                  className='md:col-span-2'>
                   <Textarea
                     id='summary'
                     value={data.summary}
@@ -84,7 +98,11 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                   />
                 </FormField>
 
-                <FormField label='Content' htmlFor='content' error={errors.content} className='md:col-span-2'>
+                <FormField
+                  label='Content'
+                  htmlFor='content'
+                  error={errors.content}
+                  className='md:col-span-2'>
                   <Textarea
                     id='content'
                     value={data.content}
@@ -102,7 +120,10 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                   />
                 </FormField>
 
-                <FormField label='Cover image URL' htmlFor='coverImageUrl' error={errors.coverImageUrl}>
+                <FormField
+                  label='Cover image URL'
+                  htmlFor='coverImageUrl'
+                  error={errors.coverImageUrl}>
                   <Input
                     id='coverImageUrl'
                     value={data.coverImageUrl}
@@ -114,8 +135,7 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                 <FormField label='Category' error={errors.categoryId}>
                   <Select
                     value={data.categoryId ?? ''}
-                    onValueChange={(value) => setData('categoryId', value ? value : null)}
-                  >
+                    onValueChange={(value) => setData('categoryId', value ? value : null)}>
                     <SelectTrigger>
                       <SelectValue placeholder='None' />
                     </SelectTrigger>
@@ -176,7 +196,9 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                     ) : (
                       <div className='text-sm text-muted-foreground'>No tags yet.</div>
                     )}
-                    {errors.tagIds ? <p className='text-sm text-destructive'>{errors.tagIds}</p> : null}
+                    {errors.tagIds ? (
+                      <p className='text-sm text-destructive'>{errors.tagIds}</p>
+                    ) : null}
                   </CardContent>
                 </Card>
 
@@ -216,13 +238,19 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                         .
                       </div>
                     )}
-                    {errors.authorIds ? <p className='text-sm text-destructive'>{errors.authorIds}</p> : null}
+                    {errors.authorIds ? (
+                      <p className='text-sm text-destructive'>{errors.authorIds}</p>
+                    ) : null}
                   </CardContent>
                 </Card>
               </div>
 
               <div className='flex flex-wrap items-center gap-2'>
-                <Button type='submit' leftIcon={<IconPlus />} isLoading={processing} loadingText='Creating…'>
+                <Button
+                  type='submit'
+                  leftIcon={<IconPlus />}
+                  isLoading={processing}
+                  loadingText='Creating…'>
                   Create post
                 </Button>
                 <Button type='button' variant='outline' asChild>

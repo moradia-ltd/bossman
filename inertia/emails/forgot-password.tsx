@@ -8,9 +8,7 @@ function ForgotPassword(props: Emails['forgot-password']) {
   return (
     <EmailWrapper>
       <EmailHeading>Reset Your Password</EmailHeading>
-      <EmailText>
-        Hi {props.fullName || 'there'},
-      </EmailText>
+      <EmailText>Hi {props.fullName || 'there'},</EmailText>
       <EmailText>
         We received a request to reset your password. Click the button below to create a new
         password.

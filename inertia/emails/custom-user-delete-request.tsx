@@ -7,8 +7,8 @@ function CustomUserDeleteRequest(props: Emails['custom-user-delete-request']) {
       <EmailHeading>Request to delete your account</EmailHeading>
       <EmailText>Hi {props.fullName},</EmailText>
       <EmailText>
-        We received a request to permanently delete your account and all associated data. This action
-        cannot be undone.
+        We received a request to permanently delete your account and all associated data. This
+        action cannot be undone.
       </EmailText>
       <EmailText>Please choose one of the options below:</EmailText>
       <EmailButton href={props.acceptUrl} variant='default'>
@@ -22,7 +22,9 @@ function CustomUserDeleteRequest(props: Emails['custom-user-delete-request']) {
         If you accept, you will be redirected to a confirmation page and your account will be
         permanently deleted. If you decline, no changes will be made.
       </EmailText>
-      <EmailText>If you did not request this, you can safely ignore this email or click Decline.</EmailText>
+      <EmailText>
+        If you did not request this, you can safely ignore this email or click Decline.
+      </EmailText>
     </EmailWrapper>
   )
 }

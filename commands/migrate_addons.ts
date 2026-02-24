@@ -7,7 +7,7 @@ export default class MigrateAddons extends BaseCommand {
   static description = ''
 
   static options: CommandOptions = {
-    startApp: true
+    startApp: true,
   }
 
   async run() {
@@ -27,14 +27,11 @@ export default class MigrateAddons extends BaseCommand {
           priceCurrency: addon.priceCurrency,
           stripePriceId: addon.stripePriceId,
           slug: addon.slug,
-          sortOrder: addon.sortOrder
+          sortOrder: addon.sortOrder,
         },
-        { connection: 'prod' }
+        { connection: 'prod' },
       )
-
-
     }
-
 
     this.logger.info('Dont forget to copy over prices and')
   }

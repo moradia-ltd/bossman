@@ -187,7 +187,9 @@ export function ProfileTab() {
       </AppCard>
 
       {/* Profile Information */}
-      <AppCard title='Profile Information' description='Update your profile information. This will be visible to other users.'>
+      <AppCard
+        title='Profile Information'
+        description='Update your profile information. This will be visible to other users.'>
         <form onSubmit={profileFormik.handleSubmit} className='space-y-4'>
           <div className='space-y-2'>
             <Label htmlFor='fullName'>Full Name</Label>

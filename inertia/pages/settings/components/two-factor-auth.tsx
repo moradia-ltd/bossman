@@ -161,7 +161,10 @@ export function TwoFactorTab() {
                     primaryText={isDisabling ? 'Disabling...' : 'Disable 2FA'}
                     primaryDisabled={isDisabling}
                     isLoading={isDisabling}>
-                    <form id='disable-2fa-form' onSubmit={disableFormik.handleSubmit} className='space-y-4'>
+                    <form
+                      id='disable-2fa-form'
+                      onSubmit={disableFormik.handleSubmit}
+                      className='space-y-4'>
                       <div className='space-y-2'>
                         <Label htmlFor='disablePassword'>Password</Label>
                         <PasswordInput
@@ -201,7 +204,10 @@ export function TwoFactorTab() {
                     primaryText={isRegenerating ? 'Regenerating...' : 'Regenerate Codes'}
                     primaryDisabled={isRegenerating}
                     isLoading={isRegenerating}>
-                    <form id='regenerate-codes-form' onSubmit={regenerateFormik.handleSubmit} className='space-y-4'>
+                    <form
+                      id='regenerate-codes-form'
+                      onSubmit={regenerateFormik.handleSubmit}
+                      className='space-y-4'>
                       <div className='space-y-2'>
                         <Label htmlFor='regeneratePassword'>Password</Label>
                         <PasswordInput
@@ -222,9 +228,9 @@ export function TwoFactorTab() {
             <>
               <div className='space-y-4'>
                 <p className='text-sm text-muted-foreground'>
-                  Two-factor authentication adds an extra layer of security to your account. When enabled,
-                  you'll need to enter a code from your authenticator app in addition to your password when
-                  signing in.
+                  Two-factor authentication adds an extra layer of security to your account. When
+                  enabled, you'll need to enter a code from your authenticator app in addition to
+                  your password when signing in.
                 </p>
                 <Button
                   onClick={() => setTwoFactorOpen(true)}

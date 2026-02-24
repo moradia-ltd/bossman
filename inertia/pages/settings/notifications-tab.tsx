@@ -31,7 +31,7 @@ export function NotificationsTab() {
   })
 
   // Get notification settings from user settings or use defaults
-  const notifications = (settingsData?.notifications as NotificationSettings | undefined)
+  const notifications = settingsData?.notifications as NotificationSettings | undefined
   const notificationSettings: NotificationSettings = {
     emailNotifications: notifications?.emailNotifications ?? defaultSettings.emailNotifications,
     pushNotifications: notifications?.pushNotifications ?? defaultSettings.pushNotifications,
@@ -41,14 +41,14 @@ export function NotificationsTab() {
   // Notification settings mutation
   const { mutate: updateNotificationSettingsMutation, isPending } = useMutation({
     mutationFn: async (values: NotificationSettings) => {
-      const response = await api.put<{ message: string; data: { settings: Record<string, unknown> } }>(
-        '/user/settings',
-        {
-          settings: {
-            notifications: values,
-          },
+      const response = await api.put<{
+        message: string
+        data: { settings: Record<string, unknown> }
+      }>('/user/settings', {
+        settings: {
+          notifications: values,
         },
-      )
+      })
       return response.data
     },
     onSuccess: (data) => {
@@ -64,8 +64,7 @@ export function NotificationsTab() {
   return (
     <AppCard
       title='Notification Preferences'
-      description='Manage how you receive notifications and updates.'
-    >
+      description='Manage how you receive notifications and updates.'>
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
           <div className='space-y-0.5'>

@@ -261,21 +261,23 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
           </div>
         ) : deployments.length > 0 ? (
           <div className='min-h-0 overflow-hidden'>
-
             <div className='space-y-3 pr-2'>
               {deployments.map((d, index) => (
                 <Card
                   key={d.id}
                   className='overflow-hidden border-border bg-card transition-colors hover:border-primary/25'>
                   <div
-                    className={`border-l-4 ${d.status === 'SUCCESS'
-                      ? 'border-l-green-500'
-                      : d.status === 'FAILED' || d.status === 'CRASHED'
-                        ? 'border-l-destructive'
-                        : 'border-l-amber-500'
-                      }`}>
+                    className={`border-l-4 ${
+                      d.status === 'SUCCESS'
+                        ? 'border-l-green-500'
+                        : d.status === 'FAILED' || d.status === 'CRASHED'
+                          ? 'border-l-destructive'
+                          : 'border-l-amber-500'
+                    }`}>
                     <div className='flex flex-col gap-3 p-4'>
-                      <p className='text-sm font-medium text-foreground truncate' title={deploymentTitle(d)}>
+                      <p
+                        className='text-sm font-medium text-foreground truncate'
+                        title={deploymentTitle(d)}>
                         {deploymentTitle(d)}
                       </p>
                       <div className='flex flex-wrap items-center justify-between gap-2'>
@@ -344,7 +346,6 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                 </Card>
               ))}
             </div>
-
           </div>
         ) : (
           <EmptyState

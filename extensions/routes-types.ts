@@ -1,6 +1,6 @@
-
 export const API_ROUTES = {
-  GET: ['/analytics/orgs/stats',
+  GET: [
+    '/analytics/orgs/stats',
     '/analytics/orgs/entities',
     '/analytics/users/stats',
     '/analytics/users/entities',
@@ -42,8 +42,10 @@ export const API_ROUTES = {
     '/notifications',
     '/notifications/unread-count',
     '/audits',
-    '/audits/recent'] as const,
-  POST: ['/orgs',
+    '/audits/recent',
+  ] as const,
+  POST: [
+    '/orgs',
     '/orgs/:orgId/actions/ban-user',
     '/orgs/:orgId/actions/unban-user',
     '/orgs/:orgId/actions/make-favourite',
@@ -75,37 +77,37 @@ export const API_ROUTES = {
     '/invitations',
     '/team-invitations/accept',
     '/notifications/mark-as-read',
-    '/notifications/mark-all-as-read'] as const,
-  PUT: ['/orgs/:id',
+    '/notifications/mark-all-as-read',
+  ] as const,
+  PUT: [
+    '/orgs/:id',
     '/update-env',
     '/user/profile',
     '/user/password',
     '/user/settings',
     '/members/:memberId',
-    '/invitations/:invitationId'] as const,
-  DELETE: ['/user/avatar',
-    '/user/account',
-    '/notifications/:id'] as const,
-};
+    '/invitations/:invitationId',
+  ] as const,
+  DELETE: ['/user/avatar', '/user/account', '/notifications/:id'] as const,
+}
 
-type ReplaceParam<T extends string> =
-  T extends `${infer Start}:${infer Param}/${infer Rest}`
-    ? `${Start}${string}/${ReplaceParam<Rest>}`
-    : T extends `${infer Start}:${infer Param}`
-      ? `${Start}${string}`
-      : T;
+type ReplaceParam<T extends string> = T extends `${infer Start}:${infer Param}/${infer Rest}`
+  ? `${Start}${string}/${ReplaceParam<Rest>}`
+  : T extends `${infer Start}:${infer Param}`
+    ? `${Start}${string}`
+    : T
 
 type TransformRoutes<T extends readonly string[]> = {
-  [K in keyof T]: T[K] | ReplaceParam<T[K]>;
-}[number];
+  [K in keyof T]: T[K] | ReplaceParam<T[K]>
+}[number]
 
 export type APIRoutes = {
-  [K in keyof typeof API_ROUTES]: TransformRoutes<typeof API_ROUTES[K]>;
-};
+  [K in keyof typeof API_ROUTES]: TransformRoutes<(typeof API_ROUTES)[K]>
+}
 
 export type APIRouteStatic = {
-  [K in keyof typeof API_ROUTES]: typeof API_ROUTES[K][number];
-};
+  [K in keyof typeof API_ROUTES]: (typeof API_ROUTES)[K][number]
+}
 
 // Usage example:
 // const apiRoutes: APIRoutes = API_ROUTES as any;

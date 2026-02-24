@@ -72,7 +72,7 @@ const activityChartConfig = {
   count: { label: 'Activity', color: 'var(--chart-3)' },
 } satisfies ChartConfig
 
-interface DashboardIndexProps extends SharedProps { }
+interface DashboardIndexProps extends SharedProps {}
 
 export default function DashboardIndex(_props: DashboardIndexProps) {
   const [activityPage, setActivityPage] = useState(1)
@@ -146,17 +146,15 @@ export default function DashboardIndex(_props: DashboardIndexProps) {
           config={activityChartConfig}
         />
 
-        <AppCard
-          title='Recent activity'
-          description='Latest activity across the platform.'>
+        <AppCard title='Recent activity' description='Latest activity across the platform.'>
           <DataTable
-              columns={activityColumns}
-              data={activities}
-              loading={activityLoading}
-              emptyMessage='No activity yet.'
-              pagination={
-                activityMeta
-                  ? {
+            columns={activityColumns}
+            data={activities}
+            loading={activityLoading}
+            emptyMessage='No activity yet.'
+            pagination={
+              activityMeta
+                ? {
                     page: activityMeta.currentPage,
                     pageSize: activityMeta.perPage,
                     total: activityMeta.total,
@@ -166,9 +164,9 @@ export default function DashboardIndex(_props: DashboardIndexProps) {
                       setActivityPage(1)
                     },
                   }
-                  : undefined
-              }
-            />
+                : undefined
+            }
+          />
         </AppCard>
       </div>
     </DashboardLayout>

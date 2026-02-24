@@ -101,7 +101,9 @@ export default class OrgsController {
       .first()
 
     if (existingUser) {
-      return response.badRequest({ error: 'A user with this email or phone number already exists' })
+      return response.badRequest({
+        error: 'A user with this email or phone number already exists',
+      })
     }
 
     try {
@@ -443,7 +445,9 @@ export default class OrgsController {
       : []
 
     try {
-      const invoice = await StripeService.createDraftInvoice(org.paymentCustomerId, { description })
+      const invoice = await StripeService.createDraftInvoice(org.paymentCustomerId, {
+        description,
+      })
       for (const item of lineItems) {
         await StripeService.createInvoiceItem(org.paymentCustomerId, invoice.id, {
           amount: item.amountCents,

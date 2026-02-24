@@ -1,14 +1,14 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @source "../../inertia/app/app.css";
 
 /* Typography – Outfit throughout for a refined, cohesive look */
-@import "@fontsource-variable/outfit";
+@import '@fontsource-variable/outfit';
 
 /* ================================
    Tailwind v4 Theme Tokens
    ================================ */
 @theme {
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
@@ -75,7 +75,6 @@
    Base Layer
    ================================ */
 @layer base {
-
   html.dashboard-shell,
   body.dashboard-shell {
     height: 100%;
@@ -221,12 +220,12 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   /* Subtle grain overlay for depth */
   body::before {
-    content: "";
+    content: '';
     position: fixed;
     inset: 0;
     pointer-events: none;

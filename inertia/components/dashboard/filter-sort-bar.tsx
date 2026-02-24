@@ -14,21 +14,21 @@ import { Switch } from '@/components/ui/switch'
 
 export type FilterSortField =
   | {
-    type: 'switch'
-    key: string
-    label: string
-    value: boolean
-  }
+      type: 'switch'
+      key: string
+      label: string
+      value: boolean
+    }
   | {
-    type: 'select'
-    key: string
-    label: string
-    value: string
-    options: { value: string; label: string }[]
-    placeholder?: string
-    allValue?: string
-    triggerClassName?: string
-  }
+      type: 'select'
+      key: string
+      label: string
+      value: string
+      options: { value: string; label: string }[]
+      placeholder?: string
+      allValue?: string
+      triggerClassName?: string
+    }
 
 export type SortOrderOption = { value: 'asc' | 'desc'; label: string }
 

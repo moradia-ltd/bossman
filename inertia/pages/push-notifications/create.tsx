@@ -44,7 +44,7 @@ const targetTypeOptions = [
   },
 ]
 
-interface PushNotificationsCreateProps extends SharedProps { }
+interface PushNotificationsCreateProps extends SharedProps {}
 
 export default function PushNotificationsCreate(_props: PushNotificationsCreateProps) {
   const [userSearch, setUserSearch] = useState('')
@@ -174,8 +174,8 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
                         </span>
                       </label>
                     ))}
-                    {users.length === 0 && (
-                      userSearch ? (
+                    {users.length === 0 &&
+                      (userSearch ? (
                         <EmptyState
                           icon={IconUserX}
                           title='No users match your search'
@@ -186,8 +186,7 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
                         <p className='py-4 text-center text-sm text-muted-foreground'>
                           Loading users...
                         </p>
-                      )
-                    )}
+                      ))}
                   </div>
                 </ScrollArea>
                 {errors.targetUserIds && (

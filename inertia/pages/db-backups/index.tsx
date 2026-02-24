@@ -294,7 +294,7 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
           }
         />
 
-        <Deferred data="backups" fallback={<LoadingSkeleton type='table' />}>
+        <Deferred data='backups' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='Backups' description={`${backups?.meta?.total ?? 0} total`}>
             <DataTable
               columns={columns}

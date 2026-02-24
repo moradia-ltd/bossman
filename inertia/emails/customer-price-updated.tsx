@@ -26,7 +26,9 @@ function CustomerPriceUpdated(props: Emails['customer-price-updated']) {
         If the button doesn&apos;t work, copy and paste this link into your browser:
       </EmailText>
       <EmailLink href={props.url}>{props.url}</EmailLink>
-      <EmailText>This link will expire after a short time. If you need a new link, contact support.</EmailText>
+      <EmailText>
+        This link will expire after a short time. If you need a new link, contact support.
+      </EmailText>
     </EmailWrapper>
   )
 }

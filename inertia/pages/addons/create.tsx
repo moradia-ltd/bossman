@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
-interface AddonsCreateProps extends SharedProps { }
+interface AddonsCreateProps extends SharedProps {}
 
 const BILLING_OPTIONS = [
   { value: 'one_off', label: 'One-off' },

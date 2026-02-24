@@ -55,7 +55,7 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
     if (data.lineItems.length <= 1) return
     setData(
       'lineItems',
-      data.lineItems.filter((_, i) => i !== index)
+      data.lineItems.filter((_, i) => i !== index),
     )
   }
 
@@ -95,10 +95,7 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
         </Card>
 
         <form onSubmit={handleSubmit} className='space-y-6'>
-          <AppCard
-            title='Memo (optional)'
-            description='Internal note for the invoice.'
-          >
+          <AppCard title='Memo (optional)' description='Internal note for the invoice.'>
             <FormField label='Memo' htmlFor='description' error={formError}>
               <Textarea
                 id='description'
@@ -112,17 +109,15 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
 
           <AppCard
             title='Line items'
-            description='Add one or more line items. Amount is in the selected currency (e.g. 10.50 for £10.50).'
-          >
+            description='Add one or more line items. Amount is in the selected currency (e.g. 10.50 for £10.50).'>
             <div className='space-y-4'>
               {data.lineItems.map((row, index) => (
                 <div
                   key={row.id}
                   className={cn(
                     'grid gap-4 rounded-lg border p-4',
-                    'grid-cols-1 sm:grid-cols-[1fr_120px_100px_auto]'
-                  )}
-                >
+                    'grid-cols-1 sm:grid-cols-[1fr_120px_100px_auto]',
+                  )}>
                   <FormField label='Description' htmlFor={`lineItems.${index}.description`}>
                     <Input
                       id={`lineItems.${index}.description`}
@@ -147,8 +142,7 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
                       id={`lineItems.${index}.currency`}
                       value={row.currency}
                       onChange={(e) => updateLineItem(index, 'currency', e.target.value)}
-                      className='border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50'
-                    >
+                      className='border-input bg-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50'>
                       {CURRENCY_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
                           {opt.label}
@@ -163,8 +157,7 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
                       size='icon'
                       onClick={() => removeLineItem(index)}
                       disabled={data.lineItems.length <= 1}
-                      aria-label='Remove line item'
-                    >
+                      aria-label='Remove line item'>
                       <IconMinus className='h-4 w-4' />
                     </Button>
                   </div>

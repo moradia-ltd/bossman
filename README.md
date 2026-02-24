@@ -83,6 +83,7 @@ App: `http://localhost:3333`
 ### Manual Setup
 
 1. **Install & env**
+
    ```bash
    npm install
    cp .env.example .env
@@ -90,6 +91,7 @@ App: `http://localhost:3333`
    ```
 
 2. **Database**
+
    ```bash
    node ace migration:run
    # Optional: node ace db:seed
@@ -102,15 +104,15 @@ App: `http://localhost:3333`
 
 ## Scripts
 
-| Command        | Description                    |
-|----------------|--------------------------------|
-| `npm run dev`  | Start dev server with HMR      |
-| `npm run build`| Production build               |
-| `npm start`    | Run production server          |
-| `npm test`     | Run tests (Japa)               |
-| `npm run typecheck` | TypeScript check         |
+| Command             | Description               |
+| ------------------- | ------------------------- |
+| `npm run dev`       | Start dev server with HMR |
+| `npm run build`     | Production build          |
+| `npm start`         | Run production server     |
+| `npm test`          | Run tests (Japa)          |
+| `npm run typecheck` | TypeScript check          |
 | `npm run format`    | Biome format              |
-| `npm run refresh`  | Refresh route types       |
+| `npm run refresh`   | Refresh route types       |
 
 ## Database
 

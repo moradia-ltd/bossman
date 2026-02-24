@@ -19,14 +19,7 @@ export { BaseModal, type BaseModalProps } from './base-modal'
 export { BaseSheet, type BaseSheetProps } from './base-sheet'
 export { Button, buttonVariants } from './button'
 export { Calendar } from './calendar'
-export {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './card'
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
 export { Checkbox } from './checkbox'
 export { Combobox } from './combobox'
 export {

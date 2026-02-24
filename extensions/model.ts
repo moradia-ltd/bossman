@@ -34,9 +34,7 @@ declare module '@adonisjs/lucid/orm' {
 
 declare module '@adonisjs/lucid/types/model' {
   interface ModelQueryBuilderContract<Model extends LucidModel, Result = InstanceType<Model>>
-    extends ChainableContract,
-      ExcutableQueryBuilderContract<Result[]>,
-      ModelTypes {}
+    extends ChainableContract, ExcutableQueryBuilderContract<Result[]>, ModelTypes {}
 }
 
 ModelQueryBuilder.macro('sortByLatest', function (this: ModelQueryBuilder) {

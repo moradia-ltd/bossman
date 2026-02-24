@@ -33,8 +33,14 @@ import api from '@/lib/http'
 const ANALYTICS_DATE_PRESETS = [
   { label: 'Last 7 days', getRange: () => ({ start: subDays(new Date(), 6), end: new Date() }) },
   { label: 'Last 30 days', getRange: () => ({ start: subDays(new Date(), 29), end: new Date() }) },
-  { label: 'Last 3 months', getRange: () => ({ start: subMonths(new Date(), 2), end: new Date() }) },
-  { label: 'Last 6 months', getRange: () => ({ start: subMonths(new Date(), 5), end: new Date() }) },
+  {
+    label: 'Last 3 months',
+    getRange: () => ({ start: subMonths(new Date(), 2), end: new Date() }),
+  },
+  {
+    label: 'Last 6 months',
+    getRange: () => ({ start: subMonths(new Date(), 5), end: new Date() }),
+  },
   { label: 'Last year', getRange: () => ({ start: subYears(new Date(), 1), end: new Date() }) },
 ]
 
@@ -62,7 +68,7 @@ const CHART_CONFIGS: Record<string, ChartConfig> = {
 
 type EntityType = 'orgs' | 'users' | 'leases' | 'maintenance' | 'activity'
 
-interface AnalyticsIndexProps extends SharedProps { }
+interface AnalyticsIndexProps extends SharedProps {}
 
 export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
   const [startDate, setStartDate] = useState(toYMD(defaultStart))
@@ -127,12 +133,15 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     },
   })
 
-  const entitiesEndpoint = entityType && entitiesPeriod
-    ? `/analytics/${entityType}/entities`
-    : null
+  const entitiesEndpoint = entityType && entitiesPeriod ? `/analytics/${entityType}/entities` : null
 
   const { data: entitiesData, isPending: entitiesLoading } = useQuery({
-    queryKey: ['analytics-entities', entityType, entitiesPeriod?.startDate, entitiesPeriod?.endDate],
+    queryKey: [
+      'analytics-entities',
+      entityType,
+      entitiesPeriod?.startDate,
+      entitiesPeriod?.endDate,
+    ],
     queryFn: async () => {
       if (!entitiesPeriod || !entityType) return null
       // @ts-ignore
@@ -156,26 +165,32 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     [],
   )
 
-  const handleBarClick = (type: EntityType) => (payload: {
-    date: string
-    startDate: string
-    endDate: string
-  }) => {
-    setEntityType(type)
-    setEntitiesPeriod({
-      startDate: payload.startDate,
-      endDate: payload.endDate,
-      label: format(new Date(payload.date), 'PPP'),
-    })
-    setEntitiesSheetOpen(true)
-  }
+  const handleBarClick =
+    (type: EntityType) => (payload: { date: string; startDate: string; endDate: string }) => {
+      setEntityType(type)
+      setEntitiesPeriod({
+        startDate: payload.startDate,
+        endDate: payload.endDate,
+        label: format(new Date(payload.date), 'PPP'),
+      })
+      setEntitiesSheetOpen(true)
+    }
 
   const closeEntitiesSheet = () => {
     setEntitiesSheetOpen(false)
     setEntitiesPeriod(null)
   }
 
-  const EntityIcon = entityType === 'orgs' ? IconBuilding : entityType === 'users' ? IconUser : entityType === 'leases' ? IconBriefcase : entityType === 'maintenance' ? IconTool : IconActivity
+  const EntityIcon =
+    entityType === 'orgs'
+      ? IconBuilding
+      : entityType === 'users'
+        ? IconUser
+        : entityType === 'leases'
+          ? IconBriefcase
+          : entityType === 'maintenance'
+            ? IconTool
+            : IconActivity
 
   const renderEntitiesList = () => {
     if (entitiesLoading) {
@@ -185,8 +200,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
             <div
               key={i}
               className='flex items-center gap-3 rounded-xl border border-border bg-muted/20 px-4 py-3'
-              aria-hidden
-            >
+              aria-hidden>
               <div className='h-10 w-10 shrink-0 rounded-full bg-muted animate-pulse' />
               <div className='min-w-0 flex-1 space-y-1'>
                 <div className='h-4 w-32 rounded bg-muted animate-pulse' />
@@ -211,7 +225,8 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
     }
     const rowClass =
       'flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:bg-muted/40 hover:border-muted-foreground/20'
-    const linkRowClass = rowClass + ' focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+    const linkRowClass =
+      rowClass + ' focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
     return (
       <ScrollArea className='h-[60vh] pr-2'>
         <ul className='space-y-3'>
@@ -221,8 +236,7 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
             const iconWrap = (
               <span
                 key={`${id}-icon`}
-                className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted'
-              >
+                className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted'>
                 <EntityIcon className='text-muted-foreground h-5 w-5' />
               </span>
             )
@@ -271,7 +285,9 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
                       <p className='font-medium truncate'>{lease.name ?? lease.shortId ?? id}</p>
                       <p className='text-muted-foreground text-xs'>Created {timeLabel}</p>
                     </div>
-                    <Badge variant='outline' className='shrink-0'>{lease.status}</Badge>
+                    <Badge variant='outline' className='shrink-0'>
+                      {lease.status}
+                    </Badge>
                     <IconChevronRight className='text-muted-foreground h-4 w-4 shrink-0' />
                   </Link>
                 </li>
@@ -532,15 +548,12 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
               : sheetTitles[entityType]
           }
           description={
-            entitiesPeriod
-              ? `${entitiesPeriod.startDate} – ${entitiesPeriod.endDate}`
-              : undefined
+            entitiesPeriod ? `${entitiesPeriod.startDate} – ${entitiesPeriod.endDate}` : undefined
           }
           open={entitiesSheetOpen}
           onOpenChange={(open) => !open && closeEntitiesSheet()}
           side='right'
-          showFooter={false}
-        >
+          showFooter={false}>
           {renderEntitiesList()}
         </BaseSheet>
       </div>

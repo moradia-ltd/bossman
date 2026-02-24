@@ -28,8 +28,8 @@ export default class TeamsPageController {
         })
       })
       .preload('user')
-      .orderBy('createdAt', 'asc')
-      .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'asc')
+      .orderBy('createdAt', 'desc')
+      .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 10)
 
     return inertia.render('teams/index', { members: inertia.defer(async () => members) })
@@ -48,10 +48,7 @@ export default class TeamsPageController {
       return response.forbidden()
     }
 
-    const member = await TeamMember.query()
-      .where('id', params.id)
-      .preload('user')
-      .firstOrFail()
+    const member = await TeamMember.query().where('id', params.id).preload('user').firstOrFail()
 
     return inertia.render('teams/member-show', { member })
   }

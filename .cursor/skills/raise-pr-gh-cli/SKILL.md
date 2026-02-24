@@ -8,6 +8,7 @@ description: Creates a new pull request using the GitHub CLI (gh). Use when the 
 ## When to Use
 
 Apply this skill when the user asks to:
+
 - Raise a new PR
 - Create a PR with gh / GitHub CLI
 - Open a pull request from the current branch
@@ -43,17 +44,17 @@ Apply this skill when the user asks to:
 
 ## Options Reference
 
-| Option | Purpose |
-|--------|--------|
-| `--title`, `-t` | PR title |
-| `--body`, `-b` | PR description |
-| `--draft` | Create as draft |
-| `--base` | Base branch (default from repo) |
-| `--head` | Head branch (default: current) |
-| `--web` | Open form in browser |
-| `--fill` | Use commit message for title/body |
-| `--assignee` | Assign users (comma-separated) |
-| `--reviewer` | Request reviewers |
+| Option          | Purpose                           |
+| --------------- | --------------------------------- |
+| `--title`, `-t` | PR title                          |
+| `--body`, `-b`  | PR description                    |
+| `--draft`       | Create as draft                   |
+| `--base`        | Base branch (default from repo)   |
+| `--head`        | Head branch (default: current)    |
+| `--web`         | Open form in browser              |
+| `--fill`        | Use commit message for title/body |
+| `--assignee`    | Assign users (comma-separated)    |
+| `--reviewer`    | Request reviewers                 |
 
 ## Tips
 

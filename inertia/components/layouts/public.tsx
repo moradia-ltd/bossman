@@ -67,7 +67,9 @@ function PublicNavbarActions({ extraActions }: { extraActions?: React.ReactNode 
             <DropdownMenuItem onClick={() => router.visit('/blog')}>Blog</DropdownMenuItem>
             <DropdownMenuSeparator />
             {isLoggedIn ? (
-              <DropdownMenuItem onClick={() => router.visit('/dashboard')}>Dashboard</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.visit('/dashboard')}>
+                Dashboard
+              </DropdownMenuItem>
             ) : (
               <DropdownMenuItem onClick={() => router.visit('/login')}>Sign In</DropdownMenuItem>
             )}
@@ -96,7 +98,10 @@ export function PublicLayout({
               'sticky top-0 bg-background/80 supports-[backdrop-filter]:bg-background/60 supports-[backdrop-filter]:backdrop-blur-md border-b border-border/50',
           )}>
           <div className='max-w-screen-xl mx-auto px-6 py-5 flex items-center justify-between'>
-            <Link href='/' className='flex items-center gap-2 w-fit' aria-label={import.meta.env.VITE_APP_NAME}>
+            <Link
+              href='/'
+              className='flex items-center gap-2 w-fit'
+              aria-label={import.meta.env.VITE_APP_NAME}>
               <img src='/logo-full.svg' alt={import.meta.env.VITE_APP_NAME} className='h-8' />
             </Link>
             <PublicNavbarActions extraActions={actions} />
@@ -126,7 +131,9 @@ export function PublicLayout({
                     {import.meta.env.VITE_SUPPORT_EMAIL}
                   </a>
                   <span className='hidden sm:inline'>•</span>
-                  <span>© {new Date().getFullYear()} {import.meta.env.VITE_APP_NAME}</span>
+                  <span>
+                    © {new Date().getFullYear()} {import.meta.env.VITE_APP_NAME}
+                  </span>
                 </div>
               </div>
             </footer>

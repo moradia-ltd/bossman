@@ -12,7 +12,6 @@ import { Label } from '@/components/ui/label'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
-
 interface ResetPasswordValues {
   token: string
   newPassword: string
@@ -46,7 +45,7 @@ export default function ResetPassword({ qs }: { qs: { token: string } }) {
       resetPasswordMutation(values)
     },
   })
-  const { mutate: resetPasswordMutation, isPending, } = useMutation({
+  const { mutate: resetPasswordMutation, isPending } = useMutation({
     mutationFn: (values: { token: string; newPassword: string }) =>
       api.post('/auth/reset-password', values),
     onSuccess: () => {
@@ -60,10 +59,6 @@ export default function ResetPassword({ qs }: { qs: { token: string } }) {
       toast.error(error || 'Failed to reset password. Please try again.')
     },
   })
-
-
-
-
 
   return (
     <PublicLayout showFooter={false}>
@@ -84,8 +79,6 @@ export default function ResetPassword({ qs }: { qs: { token: string } }) {
                 </Alert>
               )}
 
-
-
               <div className='space-y-2'>
                 <Label htmlFor='newPassword'>New Password</Label>
                 <Input
@@ -93,7 +86,11 @@ export default function ResetPassword({ qs }: { qs: { token: string } }) {
                   type='password'
                   {...formik.getFieldProps('newPassword')}
                   placeholder='••••••••'
-                  className={formik.touched.newPassword && formik.errors.newPassword ? 'border-destructive' : ''}
+                  className={
+                    formik.touched.newPassword && formik.errors.newPassword
+                      ? 'border-destructive'
+                      : ''
+                  }
                 />
                 {formik.touched.newPassword && formik.errors.newPassword && (
                   <p className='text-sm text-destructive'>{formik.errors.newPassword}</p>
@@ -107,14 +104,22 @@ export default function ResetPassword({ qs }: { qs: { token: string } }) {
                   type='password'
                   {...formik.getFieldProps('confirmPassword')}
                   placeholder='••••••••'
-                  className={formik.touched.confirmPassword && formik.errors.confirmPassword ? 'border-destructive' : ''}
+                  className={
+                    formik.touched.confirmPassword && formik.errors.confirmPassword
+                      ? 'border-destructive'
+                      : ''
+                  }
                 />
                 {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                   <p className='text-sm text-destructive'>{formik.errors.confirmPassword}</p>
                 )}
               </div>
 
-              <Button type='submit' className='w-full' isLoading={isPending} loadingText='Resetting…'>
+              <Button
+                type='submit'
+                className='w-full'
+                isLoading={isPending}
+                loadingText='Resetting…'>
                 Reset Password
               </Button>
 

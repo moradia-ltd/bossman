@@ -15,7 +15,11 @@ function AccessRevoked(props: Emails['access-revoked']) {
       <EmailText>
         If you believe this was done in error or would like to appeal, please contact support.
       </EmailText>
-      <EmailText>Best regards,<br />The Togetha Team</EmailText>
+      <EmailText>
+        Best regards,
+        <br />
+        The Togetha Team
+      </EmailText>
     </EmailWrapper>
   )
 }

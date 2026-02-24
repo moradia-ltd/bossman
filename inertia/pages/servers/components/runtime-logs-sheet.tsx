@@ -19,11 +19,7 @@ interface RuntimeLogsSheetProps {
   deploymentId: string | null
 }
 
-export function RuntimeLogsSheet({
-  open,
-  onOpenChange,
-  deploymentId,
-}: RuntimeLogsSheetProps) {
+export function RuntimeLogsSheet({ open, onOpenChange, deploymentId }: RuntimeLogsSheetProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const { data: logs = [], isLoading } = useQuery({

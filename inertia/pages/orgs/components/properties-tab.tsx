@@ -7,7 +7,6 @@ import { AppCard } from '@/components/ui/app-card'
 import api from '@/lib/http'
 
 const columns: Column<RawProperty>[] = [
-
   {
     key: 'summarizedAddress',
     header: 'Address',
@@ -49,13 +48,13 @@ export function PropertiesTab({ orgId }: PropertiesTabProps) {
   return (
     <AppCard title='Properties' description='Properties for this organisation'>
       <DataTable
-          columns={columns}
-          data={properties}
-          loading={isPending}
-          emptyMessage='No properties yet.'
-          pagination={
-            meta
-              ? {
+        columns={columns}
+        data={properties}
+        loading={isPending}
+        emptyMessage='No properties yet.'
+        pagination={
+          meta
+            ? {
                 page: meta.currentPage,
                 pageSize: meta.perPage,
                 total: meta.total,
@@ -65,9 +64,9 @@ export function PropertiesTab({ orgId }: PropertiesTabProps) {
                   setPage(1)
                 },
               }
-              : undefined
-          }
-        />
+            : undefined
+        }
+      />
     </AppCard>
   )
 }

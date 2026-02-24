@@ -179,7 +179,10 @@ export class RailwayApiService {
     return (data.deployments?.edges ?? []).map((e) => e.node)
   }
 
-  async getDeploymentRuntimeLogs(deploymentId: string, limit: number = 500): Promise<RailwayRuntimeLog[]> {
+  async getDeploymentRuntimeLogs(
+    deploymentId: string,
+    limit: number = 500,
+  ): Promise<RailwayRuntimeLog[]> {
     const data = await this.graphql<{
       deploymentLogs: Array<{ message: string; severity?: string; timestamp: string }>
     }>(

@@ -137,7 +137,6 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
             <Button
               variant='ghost'
               size='xs'
-
               aria-label='Edit page access'
               onClick={() => openEditMember(row)}>
               <IconPencil className='h-4 w-4' />
@@ -176,15 +175,15 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
               pagination={
                 members?.meta
                   ? {
-                    page: members.meta.currentPage,
-                    pageSize: members.meta.perPage,
-                    total: members.meta.total,
-                    onPageChange: (p) => changePage(p),
-                    onPageSizeChange: (pageSize) => {
-                      changeRows(pageSize)
-                      changePage(1)
-                    },
-                  }
+                      page: members.meta.currentPage,
+                      pageSize: members.meta.perPage,
+                      total: members.meta.total,
+                      onPageChange: (p) => changePage(p),
+                      onPageSizeChange: (pageSize) => {
+                        changeRows(pageSize)
+                        changePage(1)
+                      },
+                    }
                   : undefined
               }
               emptyMessage='No members found'

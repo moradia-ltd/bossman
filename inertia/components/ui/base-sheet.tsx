@@ -98,20 +98,17 @@ export function BaseSheet({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       {trigger != null && <SheetTrigger asChild>{trigger}</SheetTrigger>}
-      <SheetContent
-        side={side}
-        className={className}
-        style={contentStyle}>
+      <SheetContent side={side} className={className} style={contentStyle}>
         {(title != null || description != null) && (
           <SheetHeader>
             {title != null && <SheetTitle>{title}</SheetTitle>}
-            {description != null && (
-              <SheetDescription>{description}</SheetDescription>
-            )}
+            {description != null && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>
         )}
         {children != null && (
-          <div ref={contentRef} className={title != null || description != null ? 'mt-6' : undefined}>
+          <div
+            ref={contentRef}
+            className={title != null || description != null ? 'mt-6' : undefined}>
             {children}
           </div>
         )}

@@ -172,7 +172,10 @@ export default class AuthController {
     }
 
     const user = await User.findByOrFail('emailChangeToken', token)
-    logger.info('User found for email change', { userId: user.id, pendingEmail: user.pendingEmail })
+    logger.info('User found for email change', {
+      userId: user.id,
+      pendingEmail: user.pendingEmail,
+    })
 
     if (!user.pendingEmail) {
       logger.warn('Email change verification attempted but no pending email', { userId: user.id })

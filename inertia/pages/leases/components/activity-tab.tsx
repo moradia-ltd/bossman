@@ -13,7 +13,7 @@ interface ActivityTabProps {
 }
 
 const columns: Column<RawActivity>[] = [
-  { key: 'summary', header: 'Summary', },
+  { key: 'summary', header: 'Summary' },
   {
     key: 'createdAt',
     header: 'Date',
@@ -59,15 +59,15 @@ export function ActivityTab({ leaseId }: ActivityTabProps) {
         pagination={
           meta
             ? {
-              page: meta.currentPage,
-              pageSize: meta.perPage,
-              total: meta.total,
-              onPageChange: setPage,
-              onPageSizeChange: (size) => {
-                setPerPage(size)
-                setPage(1)
-              },
-            }
+                page: meta.currentPage,
+                pageSize: meta.perPage,
+                total: meta.total,
+                onPageChange: setPage,
+                onPageSizeChange: (size) => {
+                  setPerPage(size)
+                  setPage(1)
+                },
+              }
             : undefined
         }
       />

@@ -9,8 +9,7 @@ export default class LeaseableEntitiesController {
   async index({ auth, request, inertia }: HttpContext) {
     const params = await request.paginationQs()
     const userId = auth.user?.id
-    const dataAccess =
-      userId !== undefined ? await getDataAccessForUser(userId) : null
+    const dataAccess = userId !== undefined ? await getDataAccessForUser(userId) : null
     const appEnv = dataAccess?.effectiveAppEnv ?? request.appEnv()
 
     const baseQuery = LeaseableEntity.query({ connection: appEnv })
@@ -18,7 +17,10 @@ export default class LeaseableEntitiesController {
       .whereIn('type', ['standalone', 'block'])
       .orderBy('address', 'asc')
 
-    if (dataAccess?.propertiesMode === 'selected' && dataAccess.allowedLeaseableEntityIds !== null) {
+    if (
+      dataAccess?.propertiesMode === 'selected' &&
+      dataAccess.allowedLeaseableEntityIds !== null
+    ) {
       if (dataAccess.allowedLeaseableEntityIds.length === 0) {
         baseQuery.whereRaw('1 = 0')
       } else {
@@ -50,8 +52,7 @@ export default class LeaseableEntitiesController {
 
   async show({ auth, params, inertia, request, response }: HttpContext) {
     const userId = auth.user?.id
-    const dataAccess =
-      userId !== undefined ? await getDataAccessForUser(userId) : null
+    const dataAccess = userId !== undefined ? await getDataAccessForUser(userId) : null
     const appEnv = dataAccess?.effectiveAppEnv ?? request.appEnv()
     const entity = await LeaseableEntity.query({ connection: appEnv })
       .where('id', params.id)

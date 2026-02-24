@@ -91,10 +91,7 @@ export class SessionService {
    * Update the last activity timestamp for a session by id
    */
   async updateActivityById(sessionId: string, userId: string): Promise<void> {
-    const session = await Session.query()
-      .where('id', sessionId)
-      .where('user_id', userId)
-      .first()
+    const session = await Session.query().where('id', sessionId).where('user_id', userId).first()
 
     if (!session) return
     session.lastActivity = DateTime.now()
@@ -102,10 +99,7 @@ export class SessionService {
   }
 
   async sessionExists(sessionId: string, userId: string): Promise<boolean> {
-    const row = await Session.query()
-      .where('id', sessionId)
-      .where('user_id', userId)
-      .first()
+    const row = await Session.query().where('id', sessionId).where('user_id', userId).first()
     return Boolean(row)
   }
 

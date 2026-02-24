@@ -39,7 +39,9 @@ const GRID_COLS_CLASSES: Record<string, string> = {
   'xl-4': 'xl:grid-cols-4',
 }
 
-const getGridColsClass = (cols: number | { base?: number; sm?: number; md?: number; lg?: number; xl?: number }): string => {
+const getGridColsClass = (
+  cols: number | { base?: number; sm?: number; md?: number; lg?: number; xl?: number },
+): string => {
   if (typeof cols === 'number') {
     return GRID_COLS_CLASSES[String(cols)] ?? ''
   }

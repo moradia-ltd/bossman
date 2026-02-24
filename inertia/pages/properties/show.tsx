@@ -16,7 +16,6 @@ import { LeasesTab } from './components/leases-tab'
 
 const validTabs = ['details', 'leases', 'activity'] as const
 
-
 interface PropertyShowProps extends SharedProps {
   property: RawLeaseableEntity
 }
@@ -38,7 +37,6 @@ export default function PropertyShow({ property }: PropertyShowProps) {
           title={property.address}
           backHref='/properties'
           description={`${startCase(property.type)} - ${startCase(property.subType) ?? ''}`}
-
         />
 
         <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>

@@ -31,7 +31,9 @@ interface OneSignalApiResponse {
 /**
  * Normalize OneSignal errors (can be array or object) into Record<string, string>.
  */
-function normalizeErrors(errors: Record<string, string> | string[] | undefined): Record<string, string> | undefined {
+function normalizeErrors(
+  errors: Record<string, string> | string[] | undefined,
+): Record<string, string> | undefined {
   if (!errors) return undefined
   if (Array.isArray(errors)) {
     const msg = errors.length > 0 ? errors.join('; ') : 'Unknown error'

@@ -89,9 +89,7 @@ const columns: Column<RawOrg>[] = [
     width: 120,
     cell: (row) =>
       row.isFavourite ? (
-
         <IconStar className='h-4 w-4 text-yellow-500' />
-
       ) : (
         <span className='text-muted-foreground text-sm'>—</span>
       ),
@@ -141,7 +139,11 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
   const sortBy = String(query.sortBy ?? 'created_at')
   const sortOrder = query.sortOrder ?? 'desc'
   const hasActiveFilters =
-    includeTestAccounts || favouritesOnly || !!ownerRole || sortBy !== 'created_at' || sortOrder !== 'desc'
+    includeTestAccounts ||
+    favouritesOnly ||
+    !!ownerRole ||
+    sortBy !== 'created_at' ||
+    sortOrder !== 'desc'
 
   const handleFilterChange = (updates: Record<string, string | boolean>) => {
     updateQuery({ ...updates, page: 1 })
@@ -160,8 +162,18 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
 
   const filterSortFields = useMemo(
     () => [
-      { type: 'switch' as const, key: 'includeTestAccounts', label: 'Include test accounts', value: includeTestAccounts },
-      { type: 'switch' as const, key: 'favouritesOnly', label: 'Favourites only', value: favouritesOnly },
+      {
+        type: 'switch' as const,
+        key: 'includeTestAccounts',
+        label: 'Include test accounts',
+        value: includeTestAccounts,
+      },
+      {
+        type: 'switch' as const,
+        key: 'favouritesOnly',
+        label: 'Favourites only',
+        value: favouritesOnly,
+      },
       {
         type: 'select' as const,
         key: 'ownerRole',
@@ -322,7 +334,7 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
           />
         </SimpleGrid>
 
-        <Deferred data="orgs" fallback={<LoadingSkeleton type='table' />}>
+        <Deferred data='orgs' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All customers' description={`${orgs?.meta?.total ?? 0} total`}>
             <div className='space-y-4'>
               <FilterSortBar

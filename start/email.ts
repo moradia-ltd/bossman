@@ -159,9 +159,8 @@ mailer.on({
 mailer.on({
   type: 'customer-complete-subscription',
   handler: async (message, data) => {
-    const CustomerCompleteSubscription = await import(
-      '#emails/customer-complete-subscription'
-    ).then((m) => m.default)
+    const CustomerCompleteSubscription =
+      await import('#emails/customer-complete-subscription').then((m) => m.default)
     const html = await render(CustomerCompleteSubscription(data))
     message
       .from(env.get('NO_REPLY_EMAIL', 'noreply@example.com'))

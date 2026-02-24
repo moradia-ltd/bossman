@@ -9,8 +9,6 @@ import { PasswordTab } from './password-tab'
 import { ProfileTab } from './profile-tab'
 import { SessionsTab } from './sessions-tab'
 
-
-
 export default function Settings(_props: SharedProps) {
   const { query, updateQuery } = useInertiaParams()
   const currentTab = query.tab ?? 'profile'

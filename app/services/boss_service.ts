@@ -50,8 +50,13 @@ async function start(): Promise<PgBoss> {
       const opts: Record<string, unknown> = {}
       if (reg.queueOptions.retryLimit !== undefined) opts.retryLimit = reg.queueOptions.retryLimit
       if (reg.queueOptions.retryDelay !== undefined) opts.retryDelay = reg.queueOptions.retryDelay
-      if (reg.queueOptions.retryBackoff !== undefined) opts.retryBackoff = reg.queueOptions.retryBackoff
-      if (reg.queueOptions.retryDelayMax !== undefined && Number.isInteger(reg.queueOptions.retryDelayMax) && reg.queueOptions.retryDelayMax >= 0) {
+      if (reg.queueOptions.retryBackoff !== undefined)
+        opts.retryBackoff = reg.queueOptions.retryBackoff
+      if (
+        reg.queueOptions.retryDelayMax !== undefined &&
+        Number.isInteger(reg.queueOptions.retryDelayMax) &&
+        reg.queueOptions.retryDelayMax >= 0
+      ) {
         opts.retryDelayMax = reg.queueOptions.retryDelayMax
       }
       if (reg.queueOptions.deadLetter !== undefined) opts.deadLetter = reg.queueOptions.deadLetter
@@ -75,7 +80,7 @@ function registerWork(registration: BossWorkRegistration): void {
 async function send<T extends object>(
   name: string,
   data?: T | null,
-  options?: BossQueueOptions & { startAfter?: number | Date | string }
+  options?: BossQueueOptions & { startAfter?: number | Date | string },
 ): Promise<string | null> {
   await start()
   return getBoss().send(name, data ?? null, options ?? undefined)
@@ -88,7 +93,7 @@ async function schedule(
   name: string,
   cron: string,
   data?: object | null,
-  options?: { tz?: string }
+  options?: { tz?: string },
 ): Promise<void> {
   await start()
   await getBoss().schedule(name, cron, data ?? null, options)
@@ -101,7 +106,7 @@ async function sendAfter<T extends object>(
   name: string,
   data: T | null,
   options: BossQueueOptions | null,
-  after: number | Date | string
+  after: number | Date | string,
 ): Promise<string | null> {
   await start()
   const boss = getBoss()

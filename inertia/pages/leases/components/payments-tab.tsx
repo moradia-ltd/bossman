@@ -65,13 +65,13 @@ export function PaymentsTab({ leaseId }: PaymentsTabProps) {
   return (
     <AppCard title='Payments' description='Payment history for this lease'>
       <DataTable
-          columns={columns}
-          data={payments}
-          loading={isPending}
-          emptyMessage='No payments yet.'
-          pagination={
-            meta
-              ? {
+        columns={columns}
+        data={payments}
+        loading={isPending}
+        emptyMessage='No payments yet.'
+        pagination={
+          meta
+            ? {
                 page: meta.currentPage,
                 pageSize: meta.perPage,
                 total: meta.total,
@@ -81,9 +81,9 @@ export function PaymentsTab({ leaseId }: PaymentsTabProps) {
                   setPage(1)
                 },
               }
-              : undefined
-          }
-        />
+            : undefined
+        }
+      />
     </AppCard>
   )
 }

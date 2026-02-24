@@ -34,4 +34,3 @@ export default class BlogTag extends SuperBaseModel {
   })
   declare posts: ManyToMany<typeof BlogPost>
 }
-

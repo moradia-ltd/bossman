@@ -30,7 +30,16 @@ type ResendEmailListItem = {
   from: string
   created_at: string
   subject: string
-  last_event: 'delivered' | 'failed' | 'scheduled' | 'sending' | 'sent' | 'bounced' | 'opened' | 'clicked' | 'complained'
+  last_event:
+    | 'delivered'
+    | 'failed'
+    | 'scheduled'
+    | 'sending'
+    | 'sent'
+    | 'bounced'
+    | 'opened'
+    | 'clicked'
+    | 'complained'
   bcc: string[] | null
   cc: string[] | null
   reply_to: string | null
@@ -170,7 +179,7 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
     router.visit('/emails')
   }
 
-  const { data: emailsList, isLoading: emailsListLoading, } = useQuery({
+  const { data: emailsList, isLoading: emailsListLoading } = useQuery({
     queryKey: ['emails', 'list', limit, cursor.after, cursor.before],
     queryFn: async () => {
       const res = await api.get<ResendListResponse>('/emails', {
@@ -184,7 +193,6 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
     },
   })
 
-
   const emailDetailQuery = useQuery({
     queryKey: ['emails', selectedEmailId],
     queryFn: async () => {
@@ -194,8 +202,6 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
     },
     enabled: !!selectedEmailId,
   })
-
-
 
   const data = emailsList?.data ?? []
   const hasMore = emailsList?.has_more ?? false
@@ -254,9 +260,7 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
           ) : null}
         </BaseSheet>
 
-        <AppCard
-          title='Sent emails'
-          description='Browse sent emails.'>
+        <AppCard title='Sent emails' description='Browse sent emails.'>
           <div className='space-y-4'>
             {emailsListLoading ? (
               <LoadingSkeleton type='table' />

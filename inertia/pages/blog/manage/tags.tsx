@@ -11,7 +11,14 @@ import { AppCard } from '@/components/ui/app-card'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Stack } from '@/components/ui/stack'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 interface BlogAdminTagsProps extends SharedProps {
   tags?: RawBlogTag[]
@@ -34,11 +41,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
             <BaseModal
               title='New tag'
               description='Slug is generated automatically.'
-              trigger={
-                <Button leftIcon={<IconPlus />}>
-                  Add tag
-                </Button>
-              }
+              trigger={<Button leftIcon={<IconPlus />}>Add tag</Button>}
               primaryText='Create tag'
               secondaryText='Cancel'
               primaryVariant='default'
@@ -66,7 +69,12 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
                 }}>
                 <Stack spacing={4}>
                   <FormField label='Name' htmlFor='name' required error={errors.name}>
-                    <Input id='name' value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                    <Input
+                      id='name'
+                      value={data.name}
+                      onChange={(e) => setData('name', e.target.value)}
+                      required
+                    />
                   </FormField>
                 </Stack>
               </form>
@@ -74,7 +82,7 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
           }
         />
 
-        <Deferred data="tags" fallback={<LoadingSkeleton type='table' />}>
+        <Deferred data='tags' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All tags' description={`${(tags ?? []).length} total`}>
             <Table>
               <TableHeader>
@@ -118,4 +126,3 @@ export default function BlogAdminTags({ tags }: BlogAdminTagsProps) {
     </DashboardLayout>
   )
 }
-

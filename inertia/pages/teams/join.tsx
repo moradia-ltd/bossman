@@ -85,11 +85,14 @@ export default function JoinTeam(props: JoinTeamProps) {
             {canShowInvite && (
               <div className='space-y-1 text-sm text-muted-foreground'>
                 <div>
-                  <span className='font-medium text-foreground'>Invited email:</span> {props.invitation?.email}
+                  <span className='font-medium text-foreground'>Invited email:</span>{' '}
+                  {props.invitation?.email}
                 </div>
                 <div>
                   <span className='font-medium text-foreground'>Invited by:</span>{' '}
-                  {props.invitation?.invitedBy?.fullName ?? props.invitation?.invitedBy?.email ?? 'Someone'}
+                  {props.invitation?.invitedBy?.fullName ??
+                    props.invitation?.invitedBy?.email ??
+                    'Someone'}
                 </div>
               </div>
             )}
@@ -117,8 +120,8 @@ export default function JoinTeam(props: JoinTeamProps) {
             {canShowInvite && isAuthed && !isAuthedAsInvitee && (
               <Alert variant='destructive'>
                 <AlertDescription>
-                  You&apos;re logged in with a different email. Please logout first
-                  to accept this invite.
+                  You&apos;re logged in with a different email. Please logout first to accept this
+                  invite.
                 </AlertDescription>
               </Alert>
             )}
@@ -176,7 +179,11 @@ export default function JoinTeam(props: JoinTeamProps) {
                   />
                 </div>
 
-                <Button type='submit' className='w-full' isLoading={acceptMutation.isPending} loadingText='Joining…'>
+                <Button
+                  type='submit'
+                  className='w-full'
+                  isLoading={acceptMutation.isPending}
+                  loadingText='Joining…'>
                   Create account & join {INVITE_CONTEXT_NAME}
                 </Button>
 
@@ -194,4 +201,3 @@ export default function JoinTeam(props: JoinTeamProps) {
     </PublicLayout>
   )
 }
-

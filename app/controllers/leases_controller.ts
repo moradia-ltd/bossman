@@ -9,8 +9,7 @@ export default class LeasesController {
   async index({ auth, request, inertia }: HttpContext) {
     const params = await request.paginationQs()
     const userId = auth.user?.id
-    const dataAccess =
-      userId !== undefined ? await getDataAccessForUser(userId) : null
+    const dataAccess = userId !== undefined ? await getDataAccessForUser(userId) : null
     const appEnv = dataAccess?.effectiveAppEnv ?? request.appEnv()
 
     const baseQuery = Lease.query({ connection: appEnv })
@@ -51,8 +50,7 @@ export default class LeasesController {
 
   async show({ auth, params, inertia, request, response }: HttpContext) {
     const userId = auth.user?.id
-    const dataAccess =
-      userId !== undefined ? await getDataAccessForUser(userId) : null
+    const dataAccess = userId !== undefined ? await getDataAccessForUser(userId) : null
     const appEnv = dataAccess?.effectiveAppEnv ?? request.appEnv()
     const lease = await Lease.query({ connection: appEnv }).where('id', params.id).firstOrFail()
 

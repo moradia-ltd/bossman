@@ -123,11 +123,8 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
           }
         />
 
-        <Deferred data="posts" fallback={<LoadingSkeleton type='table' />}>
-          <AppCard
-            title='Posts'
-            description='Search, paginate, and manage your posts.'
-          >
+        <Deferred data='posts' fallback={<LoadingSkeleton type='table' />}>
+          <AppCard title='Posts' description='Search, paginate, and manage your posts.'>
             <DataTable
               columns={columns}
               data={posts?.data ?? []}
@@ -150,4 +147,3 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
     </DashboardLayout>
   )
 }
-

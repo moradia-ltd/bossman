@@ -11,7 +11,14 @@ import { AppCard } from '@/components/ui/app-card'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Stack } from '@/components/ui/stack'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminCategoriesProps extends SharedProps {
@@ -36,11 +43,7 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
             <BaseModal
               title='New category'
               description='Slug is generated automatically.'
-              trigger={
-                <Button leftIcon={<IconPlus />}>
-                  Add category
-                </Button>
-              }
+              trigger={<Button leftIcon={<IconPlus />}>Add category</Button>}
               primaryText='Create category'
               secondaryText='Cancel'
               primaryVariant='default'
@@ -68,7 +71,12 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                 }}>
                 <Stack spacing={4}>
                   <FormField label='Name' htmlFor='name' required error={errors.name}>
-                    <Input id='name' value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                    <Input
+                      id='name'
+                      value={data.name}
+                      onChange={(e) => setData('name', e.target.value)}
+                      required
+                    />
                   </FormField>
                   <FormField label='Description' htmlFor='description' error={errors.description}>
                     <Textarea
@@ -84,7 +92,7 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
           }
         />
 
-        <Deferred data="categories" fallback={<LoadingSkeleton type='table' />}>
+        <Deferred data='categories' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All categories' description={`${(categories ?? []).length} total`}>
             <Table>
               <TableHeader>
@@ -105,8 +113,15 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                         size='icon'
                         className='text-destructive hover:text-destructive'
                         onClick={() => {
-                          if (!confirm('Delete this category? Posts will keep working (category will be cleared).')) return
-                          router.delete(`/blog/manage/categories/${c.id}`, { preserveScroll: true })
+                          if (
+                            !confirm(
+                              'Delete this category? Posts will keep working (category will be cleared).',
+                            )
+                          )
+                            return
+                          router.delete(`/blog/manage/categories/${c.id}`, {
+                            preserveScroll: true,
+                          })
                         }}>
                         <IconTrash className='h-4 w-4' />
                       </Button>
@@ -128,4 +143,3 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
     </DashboardLayout>
   )
 }
-

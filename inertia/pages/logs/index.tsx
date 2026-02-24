@@ -72,11 +72,7 @@ function buildColumns(onView: (row: RawAudit) => void): Column<RawAudit>[] {
       key: 'userId',
       header: 'User ID',
       width: 120,
-      cell: (row) => (
-        <span className='font-mono text-xs text-muted-foreground'>
-          {row.userId}
-        </span>
-      ),
+      cell: (row) => <span className='font-mono text-xs text-muted-foreground'>{row.userId}</span>,
     },
     {
       key: 'createdAt',
@@ -203,15 +199,15 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
                 pagination={
                   audits?.meta
                     ? {
-                      page: audits.meta.currentPage,
-                      pageSize: audits.meta.perPage,
-                      total: audits.meta.total,
-                      onPageChange: changePage,
-                      onPageSizeChange: (pageSize) => {
-                        changeRows(pageSize)
-                        changePage(1)
-                      },
-                    }
+                        page: audits.meta.currentPage,
+                        pageSize: audits.meta.perPage,
+                        total: audits.meta.total,
+                        onPageChange: changePage,
+                        onPageSizeChange: (pageSize) => {
+                          changeRows(pageSize)
+                          changePage(1)
+                        },
+                      }
                     : undefined
                 }
                 emptyMessage='No audit events found'

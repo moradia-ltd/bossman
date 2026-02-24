@@ -72,13 +72,13 @@ export function LeasesTab({ orgId }: LeasesTabProps) {
   return (
     <AppCard title='Leases' description='Leases for this organisation'>
       <DataTable
-          columns={columns}
-          data={leases}
-          loading={isPending}
-          emptyMessage='No leases yet.'
-          pagination={
-            meta
-              ? {
+        columns={columns}
+        data={leases}
+        loading={isPending}
+        emptyMessage='No leases yet.'
+        pagination={
+          meta
+            ? {
                 page: meta.currentPage,
                 pageSize: meta.perPage,
                 total: meta.total,
@@ -88,9 +88,9 @@ export function LeasesTab({ orgId }: LeasesTabProps) {
                   setPage(1)
                 },
               }
-              : undefined
-          }
-        />
+            : undefined
+        }
+      />
     </AppCard>
   )
 }

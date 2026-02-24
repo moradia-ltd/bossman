@@ -9,7 +9,11 @@ function AccessRestored(props: Emails['access-restored']) {
       <EmailText>
         Your access to Togetha has been restored. You can sign in and use the platform again.
       </EmailText>
-      <EmailText>Best regards,<br />The Togetha Team</EmailText>
+      <EmailText>
+        Best regards,
+        <br />
+        The Togetha Team
+      </EmailText>
     </EmailWrapper>
   )
 }

@@ -13,9 +13,7 @@ export function EmailVerificationCard({ emailVerified = false }: EmailVerificati
   const { mutate: resendVerificationMutation, isPending } = useMutation({
     mutationFn: () => api.post('/auth/verify-email/resend'),
     onSuccess: (response) => {
-      const message =
-        response.data?.message ||
-        'Verification email sent! Please check your inbox.'
+      const message = response.data?.message || 'Verification email sent! Please check your inbox.'
       toast.success('Verification email sent!', { description: message })
     },
     onError: (err: ServerErrorResponse) => {
@@ -27,38 +25,36 @@ export function EmailVerificationCard({ emailVerified = false }: EmailVerificati
   return (
     <AppCard
       title='Email Verification'
-      description='Verify your email address to secure your account and enable all features.'
-    >
+      description='Verify your email address to secure your account and enable all features.'>
       <div className='flex items-center justify-between gap-4'>
-          <div>
-            <p className='text-sm font-medium'>
-              Email Status:{' '}
-              <span
-                className={
-                  emailVerified
-                    ? 'text-green-600 dark:text-green-400'
-                    : 'text-yellow-600 dark:text-yellow-400'
-                }>
-                {emailVerified ? 'Verified' : 'Not Verified'}
-              </span>
-            </p>
-            <p className='text-sm text-muted-foreground'>
-              {emailVerified
-                ? 'Your email has been verified.'
-                : 'Please verify your email address to access all features.'}
-            </p>
-          </div>
-          {!emailVerified ? (
-            <Button
-              variant='outline'
-              onClick={() => resendVerificationMutation()}
-              isLoading={isPending}
-              loadingText='Sending…'>
-              Resend Verification Email
-            </Button>
-          ) : null}
+        <div>
+          <p className='text-sm font-medium'>
+            Email Status:{' '}
+            <span
+              className={
+                emailVerified
+                  ? 'text-green-600 dark:text-green-400'
+                  : 'text-yellow-600 dark:text-yellow-400'
+              }>
+              {emailVerified ? 'Verified' : 'Not Verified'}
+            </span>
+          </p>
+          <p className='text-sm text-muted-foreground'>
+            {emailVerified
+              ? 'Your email has been verified.'
+              : 'Please verify your email address to access all features.'}
+          </p>
         </div>
+        {!emailVerified ? (
+          <Button
+            variant='outline'
+            onClick={() => resendVerificationMutation()}
+            isLoading={isPending}
+            loadingText='Sending…'>
+            Resend Verification Email
+          </Button>
+        ) : null}
+      </div>
     </AppCard>
   )
 }
-

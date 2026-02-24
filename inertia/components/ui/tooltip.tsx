@@ -24,16 +24,14 @@ function TooltipContent({
         sideOffset={sideOffset}
         align={align}
         alignOffset={alignOffset}
-        className='z-50'
-      >
+        className='z-50'>
         <TooltipPrimitive.Popup
           className={cn(
             'bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95',
             'rounded-md border border-border px-2 py-1 text-xs shadow-md',
             className,
           )}
-          {...props}
-        >
+          {...props}>
           {children}
           <TooltipPrimitive.Arrow className='fill-popover stroke-border' />
         </TooltipPrimitive.Popup>
@@ -43,4 +41,3 @@ function TooltipContent({
 }
 
 export { Tooltip, TooltipTrigger, TooltipContent }
-

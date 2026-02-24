@@ -71,10 +71,7 @@ export function LeasesTab({ propertyId }: LeasesTabProps) {
   const meta = data?.meta
 
   return (
-    <AppCard
-      title='Leases'
-      description={`Leases for this property (${meta?.total ?? 0} total)`}
-    >
+    <AppCard title='Leases' description={`Leases for this property (${meta?.total ?? 0} total)`}>
       <DataTable
         columns={columns}
         data={leases}
@@ -83,15 +80,15 @@ export function LeasesTab({ propertyId }: LeasesTabProps) {
         pagination={
           meta
             ? {
-              page: meta.currentPage,
-              pageSize: meta.perPage,
-              total: meta.total,
-              onPageChange: setPage,
-              onPageSizeChange: (size) => {
-                setPerPage(size)
-                setPage(1)
-              },
-            }
+                page: meta.currentPage,
+                pageSize: meta.perPage,
+                total: meta.total,
+                onPageChange: setPage,
+                onPageSizeChange: (size) => {
+                  setPerPage(size)
+                  setPage(1)
+                },
+              }
             : undefined
         }
       />

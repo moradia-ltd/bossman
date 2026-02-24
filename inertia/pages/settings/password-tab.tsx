@@ -54,66 +54,69 @@ export function PasswordTab() {
   return (
     <AppCard
       title='Change Password'
-      description='Update your password to keep your account secure.'
-    >
+      description='Update your password to keep your account secure.'>
       {!user?.emailVerified && (
-          <div className='rounded-lg border-destructive/50 text-destructive border p-4 mb-4'>
-            <p className='text-sm'>
-              <strong>Email verification required:</strong> Please verify your email address before
-              changing your password.
-            </p>
-          </div>
-        )}
-        <form onSubmit={passwordFormik.handleSubmit} className='space-y-4'>
-          <div className='space-y-2'>
-            <Label htmlFor='currentPassword'>Current Password</Label>
-            <Input
-              id='currentPassword'
-              name='currentPassword'
-              type='password'
-              value={passwordFormik.values.currentPassword}
-              onChange={passwordFormik.handleChange}
-              onBlur={passwordFormik.handleBlur}
-              required
-              placeholder='••••••••'
-              disabled={isFormDisabled}
-            />
-          </div>
+        <div className='rounded-lg border-destructive/50 text-destructive border p-4 mb-4'>
+          <p className='text-sm'>
+            <strong>Email verification required:</strong> Please verify your email address before
+            changing your password.
+          </p>
+        </div>
+      )}
+      <form onSubmit={passwordFormik.handleSubmit} className='space-y-4'>
+        <div className='space-y-2'>
+          <Label htmlFor='currentPassword'>Current Password</Label>
+          <Input
+            id='currentPassword'
+            name='currentPassword'
+            type='password'
+            value={passwordFormik.values.currentPassword}
+            onChange={passwordFormik.handleChange}
+            onBlur={passwordFormik.handleBlur}
+            required
+            placeholder='••••••••'
+            disabled={isFormDisabled}
+          />
+        </div>
 
-          <div className='space-y-2'>
-            <Label htmlFor='newPassword'>New Password</Label>
-            <Input
-              id='newPassword'
-              name='newPassword'
-              type='password'
-              value={passwordFormik.values.newPassword}
-              onChange={passwordFormik.handleChange}
-              onBlur={passwordFormik.handleBlur}
-              required
-              placeholder='••••••••'
-              disabled={isFormDisabled}
-            />
-          </div>
+        <div className='space-y-2'>
+          <Label htmlFor='newPassword'>New Password</Label>
+          <Input
+            id='newPassword'
+            name='newPassword'
+            type='password'
+            value={passwordFormik.values.newPassword}
+            onChange={passwordFormik.handleChange}
+            onBlur={passwordFormik.handleBlur}
+            required
+            placeholder='••••••••'
+            disabled={isFormDisabled}
+          />
+        </div>
 
-          <div className='space-y-2'>
-            <Label htmlFor='confirmPassword'>Confirm New Password</Label>
-            <Input
-              id='confirmPassword'
-              name='confirmPassword'
-              type='password'
-              value={passwordFormik.values.confirmPassword}
-              onChange={passwordFormik.handleChange}
-              onBlur={passwordFormik.handleBlur}
-              required
-              placeholder='••••••••'
-              disabled={isFormDisabled}
-            />
-          </div>
+        <div className='space-y-2'>
+          <Label htmlFor='confirmPassword'>Confirm New Password</Label>
+          <Input
+            id='confirmPassword'
+            name='confirmPassword'
+            type='password'
+            value={passwordFormik.values.confirmPassword}
+            onChange={passwordFormik.handleChange}
+            onBlur={passwordFormik.handleBlur}
+            required
+            placeholder='••••••••'
+            disabled={isFormDisabled}
+          />
+        </div>
 
-          <Button type='submit' disabled={isFormDisabled} isLoading={isUpdatingPassword} loadingText='Updating…'>
-            Update Password
-          </Button>
-        </form>
+        <Button
+          type='submit'
+          disabled={isFormDisabled}
+          isLoading={isUpdatingPassword}
+          loadingText='Updating…'>
+          Update Password
+        </Button>
+      </form>
     </AppCard>
   )
 }

@@ -60,8 +60,7 @@ export default function AddonsIndex({ addons }: AddonsIndexProps) {
         ) : (
           <AppCard
             title='Addons'
-            description={`${addons.length} addon${addons.length === 1 ? '' : 's'}`}
-          >
+            description={`${addons.length} addon${addons.length === 1 ? '' : 's'}`}>
             <div className='grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
               {addons.map((addon) => (
                 <Link key={addon.id} href={`/addons/${addon.id}/edit`}>

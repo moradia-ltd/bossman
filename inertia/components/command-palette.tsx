@@ -89,18 +89,78 @@ export function CommandPalette() {
   if (!isLoggedIn) return null
 
   const appNav: CommandEntry[] = [
-    { label: 'Dashboard', href: '/dashboard', icon: <IconLayoutDashboard className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Teams', href: '/teams', icon: <IconUsers className='mr-2 h-4 w-4' />, requires: 'teams' },
-    { label: 'Leases', href: '/leases', icon: <IconFileText className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Properties', href: '/properties', icon: <IconStack className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Customers', href: '/orgs', icon: <IconBuilding className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Push notifications', href: '/push-notifications', icon: <IconBell className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Backups', href: '/db-backups', icon: <IconDatabase className='mr-2 h-4 w-4' />, requires: 'dashboard' },
-    { label: 'Blog', href: '/blog/manage', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'New blog post', href: '/blog/manage/create', icon: <IconSquarePlus className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Blog categories', href: '/blog/manage/categories', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Blog tags', href: '/blog/manage/tags', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
-    { label: 'Blog authors', href: '/blog/manage/authors', icon: <IconNews className='mr-2 h-4 w-4' />, requires: 'blog' },
+    {
+      label: 'Dashboard',
+      href: '/dashboard',
+      icon: <IconLayoutDashboard className='mr-2 h-4 w-4' />,
+      requires: 'dashboard',
+    },
+    {
+      label: 'Teams',
+      href: '/teams',
+      icon: <IconUsers className='mr-2 h-4 w-4' />,
+      requires: 'teams',
+    },
+    {
+      label: 'Leases',
+      href: '/leases',
+      icon: <IconFileText className='mr-2 h-4 w-4' />,
+      requires: 'dashboard',
+    },
+    {
+      label: 'Properties',
+      href: '/properties',
+      icon: <IconStack className='mr-2 h-4 w-4' />,
+      requires: 'dashboard',
+    },
+    {
+      label: 'Customers',
+      href: '/orgs',
+      icon: <IconBuilding className='mr-2 h-4 w-4' />,
+      requires: 'dashboard',
+    },
+    {
+      label: 'Push notifications',
+      href: '/push-notifications',
+      icon: <IconBell className='mr-2 h-4 w-4' />,
+      requires: 'dashboard',
+    },
+    {
+      label: 'Backups',
+      href: '/db-backups',
+      icon: <IconDatabase className='mr-2 h-4 w-4' />,
+      requires: 'dashboard',
+    },
+    {
+      label: 'Blog',
+      href: '/blog/manage',
+      icon: <IconNews className='mr-2 h-4 w-4' />,
+      requires: 'blog',
+    },
+    {
+      label: 'New blog post',
+      href: '/blog/manage/create',
+      icon: <IconSquarePlus className='mr-2 h-4 w-4' />,
+      requires: 'blog',
+    },
+    {
+      label: 'Blog categories',
+      href: '/blog/manage/categories',
+      icon: <IconNews className='mr-2 h-4 w-4' />,
+      requires: 'blog',
+    },
+    {
+      label: 'Blog tags',
+      href: '/blog/manage/tags',
+      icon: <IconNews className='mr-2 h-4 w-4' />,
+      requires: 'blog',
+    },
+    {
+      label: 'Blog authors',
+      href: '/blog/manage/authors',
+      icon: <IconNews className='mr-2 h-4 w-4' />,
+      requires: 'blog',
+    },
     { label: 'Settings', href: '/settings', icon: <IconSettings className='mr-2 h-4 w-4' /> },
   ]
 
@@ -125,8 +185,7 @@ export function CommandPalette() {
               key={item.href}
               className='cursor-pointer py-2'
               value={`${item.label} ${item.keywords || ''}`}
-              onSelect={() => go(item.href)}
-            >
+              onSelect={() => go(item.href)}>
               {item.icon}
               {item.label}
             </CommandItem>
@@ -153,8 +212,7 @@ export function CommandPalette() {
             <CommandItem
               key={item.href}
               value={`${item.label} ${item.keywords || ''}`}
-              onSelect={() => go(item.href)}
-            >
+              onSelect={() => go(item.href)}>
               {item.icon}
               {item.label}
             </CommandItem>
@@ -164,4 +222,3 @@ export function CommandPalette() {
     </CommandDialog>
   )
 }
-

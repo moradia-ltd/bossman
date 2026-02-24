@@ -1,12 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import {
-  IconAlertCircle,
-  IconBuilding,
-  IconHome,
-  IconMapPin,
-} from '@tabler/icons-react'
+import { IconAlertCircle, IconBuilding, IconHome, IconMapPin } from '@tabler/icons-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLeaseableEntity } from '#types/model-types'
 import { formatNumber } from '#utils/functions'

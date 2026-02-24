@@ -181,9 +181,7 @@ export function SessionsTab() {
                 header: 'Started',
                 cell: (row: SessionRow) => (
                   <div className='text-sm text-muted-foreground'>
-                    {row?.createdAt
-                      ? dateTimeFormatter(row.createdAt, 'long')
-                      : '—'}
+                    {row?.createdAt ? dateTimeFormatter(row.createdAt, 'long') : '—'}
                   </div>
                 ),
               },

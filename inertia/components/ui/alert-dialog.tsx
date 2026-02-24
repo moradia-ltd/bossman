@@ -100,10 +100,7 @@ function AlertDialogFooter({ className, ...props }: React.ComponentProps<'div'>)
   )
 }
 
-function AlertDialogTitle({
-  className,
-  ...props
-}: React.ComponentProps<'h2'>) {
+function AlertDialogTitle({ className, ...props }: React.ComponentProps<'h2'>) {
   return (
     <h2
       data-slot='alert-dialog-title'
@@ -113,10 +110,7 @@ function AlertDialogTitle({
   )
 }
 
-function AlertDialogDescription({
-  className,
-  ...props
-}: React.ComponentProps<'p'>) {
+function AlertDialogDescription({ className, ...props }: React.ComponentProps<'p'>) {
   return (
     <p
       data-slot='alert-dialog-description'
@@ -126,23 +120,12 @@ function AlertDialogDescription({
   )
 }
 
-function AlertDialogAction({
-  className,
-  ...props
-}: React.ComponentProps<'button'>) {
+function AlertDialogAction({ className, ...props }: React.ComponentProps<'button'>) {
   return <button className={cn(buttonVariants(), className)} {...props} />
 }
 
-function AlertDialogCancel({
-  className,
-  ...props
-}: React.ComponentProps<'button'>) {
-  return (
-    <button
-      className={cn(buttonVariants({ variant: 'outline' }), className)}
-      {...props}
-    />
-  )
+function AlertDialogCancel({ className, ...props }: React.ComponentProps<'button'>) {
+  return <button className={cn(buttonVariants({ variant: 'outline' }), className)} {...props} />
 }
 
 export {

@@ -1,4 +1,4 @@
-import { Label } from '../ui/label';
+import { Label } from '../ui/label'
 
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (

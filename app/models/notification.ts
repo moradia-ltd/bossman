@@ -33,15 +33,13 @@ export default class Notification extends SuperBaseModel {
   declare readAt: DateTime | null
 
   @column({
-    prepare: (value: NotificationAction[] | null) =>
-      value ? JSON.stringify(value) : null,
+    prepare: (value: NotificationAction[] | null) => (value ? JSON.stringify(value) : null),
     consume: (value: string | null) => (value ? JSON.parse(value) : null),
   })
   declare actions: NotificationAction[] | null
 
   @column({
-    prepare: (value: Record<string, unknown> | null) =>
-      value ? JSON.stringify(value) : null,
+    prepare: (value: Record<string, unknown> | null) => (value ? JSON.stringify(value) : null),
     consume: (value: string | null) => (value ? JSON.parse(value) : null),
   })
   declare data: Record<string, unknown> | null

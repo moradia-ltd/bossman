@@ -12,7 +12,14 @@ import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { Stack } from '@/components/ui/stack'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminAuthorsProps extends SharedProps {
@@ -39,11 +46,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
             <BaseModal
               title='New author'
               description='Slug is generated automatically.'
-              trigger={
-                <Button leftIcon={<IconPlus />}>
-                  Add author
-                </Button>
-              }
+              trigger={<Button leftIcon={<IconPlus />}>Add author</Button>}
               primaryText='Create author'
               secondaryText='Cancel'
               primaryVariant='default'
@@ -71,13 +74,30 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                 }}>
                 <Stack spacing={4}>
                   <SimpleGrid cols={{ base: 1, md: 2 }} spacing={4}>
-                    <FormField label='Name' htmlFor='name' required error={errors.name} className='md:col-span-2'>
-                      <Input id='name' value={data.name} onChange={(e) => setData('name', e.target.value)} required />
+                    <FormField
+                      label='Name'
+                      htmlFor='name'
+                      required
+                      error={errors.name}
+                      className='md:col-span-2'>
+                      <Input
+                        id='name'
+                        value={data.name}
+                        onChange={(e) => setData('name', e.target.value)}
+                        required
+                      />
                     </FormField>
                     <FormField label='Email (optional)' htmlFor='email' error={errors.email}>
-                      <Input id='email' value={data.email} onChange={(e) => setData('email', e.target.value)} />
+                      <Input
+                        id='email'
+                        value={data.email}
+                        onChange={(e) => setData('email', e.target.value)}
+                      />
                     </FormField>
-                    <FormField label='Avatar URL (optional)' htmlFor='avatarUrl' error={errors.avatarUrl}>
+                    <FormField
+                      label='Avatar URL (optional)'
+                      htmlFor='avatarUrl'
+                      error={errors.avatarUrl}>
                       <Input
                         id='avatarUrl'
                         value={data.avatarUrl}
@@ -85,8 +105,17 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                         placeholder='https://...'
                       />
                     </FormField>
-                    <FormField label='Bio (optional)' htmlFor='bio' error={errors.bio} className='md:col-span-2'>
-                      <Textarea id='bio' value={data.bio} onChange={(e) => setData('bio', e.target.value)} rows={4} />
+                    <FormField
+                      label='Bio (optional)'
+                      htmlFor='bio'
+                      error={errors.bio}
+                      className='md:col-span-2'>
+                      <Textarea
+                        id='bio'
+                        value={data.bio}
+                        onChange={(e) => setData('bio', e.target.value)}
+                        rows={4}
+                      />
                     </FormField>
                   </SimpleGrid>
                 </Stack>
@@ -95,7 +124,7 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
           }
         />
 
-        <Deferred data="authors" fallback={<LoadingSkeleton type='table' />}>
+        <Deferred data='authors' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All authors' description={`${(authors ?? []).length} total`}>
             <Table>
               <TableHeader>
@@ -118,7 +147,12 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
                         size='icon'
                         className='text-destructive hover:text-destructive'
                         onClick={() => {
-                          if (!confirm('Delete this author? Posts will keep working (author will be removed from posts).')) return
+                          if (
+                            !confirm(
+                              'Delete this author? Posts will keep working (author will be removed from posts).',
+                            )
+                          )
+                            return
                           router.delete(`/blog/manage/authors/${a.id}`, { preserveScroll: true })
                         }}>
                         <IconTrash className='h-4 w-4' />
@@ -141,4 +175,3 @@ export default function BlogAdminAuthors({ authors }: BlogAdminAuthorsProps) {
     </DashboardLayout>
   )
 }
-

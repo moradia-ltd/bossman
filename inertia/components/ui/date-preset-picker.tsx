@@ -35,16 +35,19 @@ function toYMD(d: Date): string {
   return format(d, 'yyyy-MM-dd')
 }
 
-function rangesEqual(
-  a: { start: Date; end: Date },
-  b: { start: Date; end: Date },
-): boolean {
+function rangesEqual(a: { start: Date; end: Date }, b: { start: Date; end: Date }): boolean {
   return toYMD(a.start) === toYMD(b.start) && toYMD(a.end) === toYMD(b.end)
 }
 
 const DEFAULT_PRESETS: DatePreset[] = [
-  { label: 'Last 7 days', getRange: () => ({ start: new Date(Date.now() - 6 * 864e5), end: new Date() }) },
-  { label: 'Last 30 days', getRange: () => ({ start: new Date(Date.now() - 29 * 864e5), end: new Date() }) },
+  {
+    label: 'Last 7 days',
+    getRange: () => ({ start: new Date(Date.now() - 6 * 864e5), end: new Date() }),
+  },
+  {
+    label: 'Last 30 days',
+    getRange: () => ({ start: new Date(Date.now() - 29 * 864e5), end: new Date() }),
+  },
   {
     label: 'Last 3 months',
     getRange: () => {
@@ -139,7 +142,7 @@ export function DatePresetPicker({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger >
+      <PopoverTrigger>
         <Button
           type='button'
           variant='outline'
@@ -150,8 +153,7 @@ export function DatePresetPicker({
             (!from || !to) && 'text-muted-foreground',
             buttonClassName,
           )}
-          leftIcon={<IconCalendar className='h-4 w-4' />}
-        >
+          leftIcon={<IconCalendar className='h-4 w-4' />}>
           {buttonLabel}
         </Button>
       </PopoverTrigger>
@@ -175,8 +177,7 @@ export function DatePresetPicker({
                       active && 'bg-primary/60 font-medium ring-1 ring-primary/30',
                     )}
                     leftIcon={active ? <IconCheck className='h-3.5 w-3.5' /> : undefined}
-                    onClick={() => handlePreset(preset)}
-                  >
+                    onClick={() => handlePreset(preset)}>
                     {preset.label}
                   </Button>
                 )

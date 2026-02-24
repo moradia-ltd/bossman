@@ -43,8 +43,8 @@ const sessionConfig = defineConfig({
   stores: {
     cookie: stores.cookie(),
     database: stores.database({
-      connectionName: 'default'
-    })
+      connectionName: 'default',
+    }),
   },
 })
 

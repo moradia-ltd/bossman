@@ -75,12 +75,9 @@ const appNavSections: NavSection[] = [
         icon: <IconStack className='h-4 w-4' />,
       },
       { title: 'Customers', href: '/orgs', icon: <IconBuilding className='h-4 w-4' /> },
-
-
     ],
   },
 ]
-
 
 const adminNavSections: NavSection[] = [
   {
@@ -98,8 +95,8 @@ const adminNavSections: NavSection[] = [
       { title: 'Emails', href: '/emails', icon: <IconMail className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <IconNews className='h-4 w-4' /> },
       { title: 'Addons', href: '/addons', icon: <IconPackage className='h-4 w-4' /> },
-    ]
-  }
+    ],
+  },
 ]
 
 const settingsNavSections: NavSection[] = [
@@ -107,8 +104,8 @@ const settingsNavSections: NavSection[] = [
     label: 'Settings',
     items: [
       { title: 'Preferences', href: '/settings', icon: <IconSettings className='h-4 w-4' /> },
-    ]
-  }
+    ],
+  },
 ]
 interface SidebarProps {
   children?: React.ReactNode
@@ -298,8 +295,10 @@ export function Sidebar({ children }: SidebarProps) {
       </ScrollArea>
 
       <div className='border-t p-3 text-center'>
-
-        <span className={`text-xs font-bold text-center text-${environment === 'prod' ? 'green' : 'red'}-500`}>{startCase(environment)} </span>
+        <span
+          className={`text-xs font-bold text-center text-${environment === 'prod' ? 'green' : 'red'}-500`}>
+          {startCase(environment)}{' '}
+        </span>
       </div>
       {/* User section */}
       <div className='border-t p-3'>

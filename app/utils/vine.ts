@@ -15,8 +15,14 @@ export const queryParamsSchema = vine.compile(
     sortOrder: vine.enum(['asc', 'desc']).optional(),
 
     // Orgs index filters (query strings "true"/"false" cast to boolean)
-    includeTestAccounts: vine.string().optional().transform((value) => value === 'true'),
-    favouritesOnly: vine.string().optional().transform((value) => value === 'true'),
+    includeTestAccounts: vine
+      .string()
+      .optional()
+      .transform((value) => value === 'true'),
+    favouritesOnly: vine
+      .string()
+      .optional()
+      .transform((value) => value === 'true'),
     ownerRole: vine.string().optional(),
 
     id: vine.string().optional(),

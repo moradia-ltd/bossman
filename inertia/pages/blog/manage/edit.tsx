@@ -10,7 +10,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminEditProps extends SharedProps {
@@ -69,10 +75,14 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                 e.preventDefault()
                 put(`/blog/manage/${post.id}`, { preserveScroll: true })
               }}
-              className='space-y-6'
-            >
+              className='space-y-6'>
               <div className='grid gap-4 md:grid-cols-2'>
-                <FormField label='Title' htmlFor='title' required error={errors.title} className='md:col-span-2'>
+                <FormField
+                  label='Title'
+                  htmlFor='title'
+                  required
+                  error={errors.title}
+                  className='md:col-span-2'>
                   <Input
                     id='title'
                     value={data.title}
@@ -81,7 +91,11 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                   />
                 </FormField>
 
-                <FormField label='Summary' htmlFor='summary' error={errors.summary} className='md:col-span-2'>
+                <FormField
+                  label='Summary'
+                  htmlFor='summary'
+                  error={errors.summary}
+                  className='md:col-span-2'>
                   <Textarea
                     id='summary'
                     value={data.summary}
@@ -90,7 +104,11 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                   />
                 </FormField>
 
-                <FormField label='Content' htmlFor='content' error={errors.content} className='md:col-span-2'>
+                <FormField
+                  label='Content'
+                  htmlFor='content'
+                  error={errors.content}
+                  className='md:col-span-2'>
                   <Textarea
                     id='content'
                     value={data.content}
@@ -108,7 +126,10 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                   />
                 </FormField>
 
-                <FormField label='Cover image URL' htmlFor='coverImageUrl' error={errors.coverImageUrl}>
+                <FormField
+                  label='Cover image URL'
+                  htmlFor='coverImageUrl'
+                  error={errors.coverImageUrl}>
                   <Input
                     id='coverImageUrl'
                     value={data.coverImageUrl}
@@ -120,8 +141,7 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                 <FormField label='Category' error={errors.categoryId}>
                   <Select
                     value={data.categoryId ?? ''}
-                    onValueChange={(value) => setData('categoryId', value ? value : null)}
-                  >
+                    onValueChange={(value) => setData('categoryId', value ? value : null)}>
                     <SelectTrigger>
                       <SelectValue placeholder='None' />
                     </SelectTrigger>
@@ -182,7 +202,9 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                     ) : (
                       <div className='text-sm text-muted-foreground'>No tags yet.</div>
                     )}
-                    {errors.tagIds ? <p className='text-sm text-destructive'>{errors.tagIds}</p> : null}
+                    {errors.tagIds ? (
+                      <p className='text-sm text-destructive'>{errors.tagIds}</p>
+                    ) : null}
                   </CardContent>
                 </Card>
 
@@ -222,14 +244,20 @@ export default function BlogAdminEdit({ post, categories, tags, authors }: BlogA
                         .
                       </div>
                     )}
-                    {errors.authorIds ? <p className='text-sm text-destructive'>{errors.authorIds}</p> : null}
+                    {errors.authorIds ? (
+                      <p className='text-sm text-destructive'>{errors.authorIds}</p>
+                    ) : null}
                   </CardContent>
                 </Card>
               </div>
 
               <div className='flex flex-wrap items-center justify-between gap-2'>
                 <div className='flex flex-wrap items-center gap-2'>
-                  <Button type='submit' leftIcon={<IconDeviceFloppy />} isLoading={processing} loadingText='Saving…'>
+                  <Button
+                    type='submit'
+                    leftIcon={<IconDeviceFloppy />}
+                    isLoading={processing}
+                    loadingText='Saving…'>
                     Save changes
                   </Button>
                   <Button type='button' variant='outline' asChild>

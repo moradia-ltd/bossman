@@ -188,7 +188,9 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
     mutationFn: () => api.post(`/orgs/${id}/actions/request-delete-custom-user`, {}),
     onSuccess: () => {
       setRequestDeleteDialogOpen(false)
-      toast.success('Delete request email sent. The user can accept or decline from the link in the email.')
+      toast.success(
+        'Delete request email sent. The user can accept or decline from the link in the email.',
+      )
     },
     onError: (err: ServerErrorResponse) => {
       toast.error(serverErrorResponder(err) || 'Failed to send delete request.')

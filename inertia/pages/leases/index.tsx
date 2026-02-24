@@ -1,12 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import {
-  IconAlertCircle,
-  IconCircleCheck,
-  IconCircleX,
-  IconFileText,
-} from '@tabler/icons-react'
+import { IconAlertCircle, IconCircleCheck, IconCircleX, IconFileText } from '@tabler/icons-react'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
@@ -110,9 +105,7 @@ export default function LeasesIndex({
             <AlertTitle>Access expired</AlertTitle>
             <AlertDescription>
               Your access to properties and leases expired
-              {dataAccessExpiredAt
-                ? ` on ${dateFormatter(dataAccessExpiredAt)}. `
-                : '. '}
+              {dataAccessExpiredAt ? ` on ${dateFormatter(dataAccessExpiredAt)}. ` : '. '}
               Contact your administrator to restore access.
             </AlertDescription>
           </Alert>
@@ -146,8 +139,7 @@ export default function LeasesIndex({
           />
         </SimpleGrid>
 
-        <Deferred data="leases" fallback={<LoadingSkeleton type='table' />}>
-
+        <Deferred data='leases' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All leases'>
             <DataTable
               columns={columns}

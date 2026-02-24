@@ -43,4 +43,3 @@ export default class BlogAuthor extends SuperBaseModel {
   })
   declare posts: ManyToMany<typeof BlogPost>
 }
-

@@ -19,7 +19,7 @@ import {
   createCustomerValidationSchema,
 } from './create-form'
 
-interface OrgsCreateProps extends SharedProps { }
+interface OrgsCreateProps extends SharedProps {}
 
 export default function OrgsCreate(props: OrgsCreateProps) {
   const formik = useFormik<CreateCustomerFormValues>({

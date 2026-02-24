@@ -43,24 +43,24 @@ export const PAGE_OPTIONS: Array<{
   description: string
   required?: boolean
 }> = [
-    { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
-    { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
-    { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
-    { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
-    { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
-    { key: 'leases', label: 'Leases', description: 'Leases and tenancies' },
-    { key: 'properties', label: 'Properties', description: 'Properties and leaseable entities' },
-    {
-      key: 'pushNotifications',
-      label: 'Push notifications',
-      description: 'Send and manage push notifications',
-    },
-    { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
-    { key: 'logs', label: 'Logs', description: 'View audit events across the app' },
-    { key: 'emails', label: 'Emails', description: 'View sent emails (Resend)' },
-    { key: 'servers', label: 'Servers', description: 'Railway projects and deployments' },
-    { key: 'addons', label: 'Addons', description: 'Manage addons' },
-  ]
+  { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
+  { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
+  { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
+  { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
+  { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
+  { key: 'leases', label: 'Leases', description: 'Leases and tenancies' },
+  { key: 'properties', label: 'Properties', description: 'Properties and leaseable entities' },
+  {
+    key: 'pushNotifications',
+    label: 'Push notifications',
+    description: 'Send and manage push notifications',
+  },
+  { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
+  { key: 'logs', label: 'Logs', description: 'View audit events across the app' },
+  { key: 'emails', label: 'Emails', description: 'View sent emails (Resend)' },
+  { key: 'servers', label: 'Servers', description: 'Railway projects and deployments' },
+  { key: 'addons', label: 'Addons', description: 'Manage addons' },
+]
 
 export function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): PageKey[] {
   const set = new Set(pages)
@@ -369,7 +369,9 @@ export function TeamInvitations() {
                         checked={checked}
                         disabled={disabled}
                         onCheckedChange={(v) =>
-                          setEditInvitationPages((prev) => togglePageInSet(prev, opt.key, v === true))
+                          setEditInvitationPages((prev) =>
+                            togglePageInSet(prev, opt.key, v === true),
+                          )
                         }
                       />
                       <div className='min-w-0'>

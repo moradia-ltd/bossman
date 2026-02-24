@@ -191,7 +191,10 @@ function getMonday(d: Date): Date {
   return copy
 }
 
-function weeksInRange(startDate: string, endDate: string): { weekKey: string; label: string; start: string; end: string }[] {
+function weeksInRange(
+  startDate: string,
+  endDate: string,
+): { weekKey: string; label: string; start: string; end: string }[] {
   const start = new Date(startDate)
   const end = new Date(endDate)
   const weeks: { weekKey: string; label: string; start: string; end: string }[] = []
@@ -233,7 +236,10 @@ function buildWeeklyChartData(
   })
 }
 
-function monthsInRange(startDate: string, endDate: string): { monthKey: string; label: string; start: string; end: string }[] {
+function monthsInRange(
+  startDate: string,
+  endDate: string,
+): { monthKey: string; label: string; start: string; end: string }[] {
   const start = new Date(startDate)
   const end = new Date(endDate)
   const months: { monthKey: string; label: string; start: string; end: string }[] = []
@@ -319,7 +325,13 @@ export function AnalyticsGrowthChart({
   const seriesLabel = config.count?.label ?? 'Count'
 
   const handleBarClick = onBarClick
-    ? (entry: { date: string; label: string; count: number; startDate?: string; endDate?: string }) => {
+    ? (entry: {
+        date: string
+        label: string
+        count: number
+        startDate?: string
+        endDate?: string
+      }) => {
         const start = entry.startDate ?? entry.date
         const end = entry.endDate ?? entry.date
         onBarClick({ date: entry.date, startDate: start, endDate: end })
@@ -357,7 +369,9 @@ export function AnalyticsGrowthChart({
                       {seriesLabel}: {value}
                     </p>
                     {onBarClick && (
-                      <p className='text-xs text-muted-foreground mt-1'>Click bar to view entities</p>
+                      <p className='text-xs text-muted-foreground mt-1'>
+                        Click bar to view entities
+                      </p>
                     )}
                   </div>
                 )

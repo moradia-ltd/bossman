@@ -11,7 +11,6 @@ export interface RadioGroupOption {
 }
 
 export interface RadioGroupProps {
-
   /** Gap between options (e.g. 2 = gap-2) */
   spacing?: number
   /** Options to render (selection is by option.value) */
@@ -62,8 +61,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
         role='radiogroup'
         aria-orientation={cols > 1 ? 'horizontal' : 'vertical'}
         className={cn('grid w-full', gapClass, className)}
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
-      >
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
         {options.map((option) => {
           const isSelected = value === option.value
           const optionId = `${name}-${option.value}`
@@ -79,8 +77,7 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
                   ? 'border-primary bg-primary/5'
                   : 'border-border bg-card hover:border-muted-foreground/50',
                 disabled && 'pointer-events-none opacity-50',
-              )}
-            >
+              )}>
               <input
                 type='radio'
                 id={optionId}
@@ -100,17 +97,14 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
                     isSelected
                       ? 'border-primary bg-primary text-primary-foreground'
                       : 'border-input',
-                  )}
-                >
+                  )}>
                   {isSelected && <IconCheck className='h-3 w-3' />}
                 </span>
 
                 <div className='min-w-0'>
                   <span className='font-medium'>{option.label}</span>
                   {option.description ? (
-                    <p className='mt-0.5 text-sm text-muted-foreground'>
-                      {option.description}
-                    </p>
+                    <p className='mt-0.5 text-sm text-muted-foreground'>{option.description}</p>
                   ) : null}
                 </div>
               </div>

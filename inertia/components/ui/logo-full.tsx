@@ -47,7 +47,16 @@ export function LogoFull({ className, heightClass = 'h-7' }: LogoFullProps) {
         />
         <circle cx='32' cy='16' r='3.5' fill='white' />
         <circle cx='32' cy='16' r='6' fill='none' stroke='white' strokeWidth='1.5' opacity='0.28' />
-        <line x1='6' y1='43' x2='46' y2='43' stroke='white' strokeWidth='2.5' strokeLinecap='round' opacity='0.18' />
+        <line
+          x1='6'
+          y1='43'
+          x2='46'
+          y2='43'
+          stroke='white'
+          strokeWidth='2.5'
+          strokeLinecap='round'
+          opacity='0.18'
+        />
         <rect x='27' y='31' width='9' height='12' rx='2' fill='white' fillOpacity='0.9' />
         {/* Wordmark: currentColor so parent controls text color (e.g. white in dark mode) */}
         <text

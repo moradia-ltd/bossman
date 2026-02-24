@@ -37,7 +37,6 @@ function getEventLabel(event: string, auditableType: string): string {
   return `${event} ${typeLabel}`
 }
 
-
 export function ActivityLogs() {
   const { data, isLoading, error } = useQuery<{ audits: AuditLog[] }>({
     queryKey: ['recent-audits'],
@@ -48,14 +47,12 @@ export function ActivityLogs() {
     refetchInterval: 30000, // Refetch every 30 seconds
   })
 
-
   if (isLoading) {
     return (
       <AppCard
         className='col-span-3'
         title='Recent Activity'
-        description='Your recent account activity'
-      >
+        description='Your recent account activity'>
         <Loading variant='skeleton' type='list' count={5} />
       </AppCard>
     )
@@ -66,8 +63,7 @@ export function ActivityLogs() {
       <AppCard
         className='col-span-3'
         title='Recent Activity'
-        description='Your recent account activity'
-      >
+        description='Your recent account activity'>
         <EmptyState
           icon={IconActivity}
           title='No recent activity'
@@ -97,8 +93,9 @@ export function ActivityLogs() {
           {data.audits.map((audit) => (
             <div key={audit.id} className='flex items-start gap-3'>
               <div
-                className={`flex items-center justify-center h-8 w-8 rounded-full ${eventColors[audit.event] || 'bg-gray-500/10 text-gray-500'
-                  }`}>
+                className={`flex items-center justify-center h-8 w-8 rounded-full ${
+                  eventColors[audit.event] || 'bg-gray-500/10 text-gray-500'
+                }`}>
                 {eventIcons[audit.event] || <Activity className='h-4 w-4' />}
               </div>
               <div className='flex-1 min-w-0'>

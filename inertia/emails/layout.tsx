@@ -38,14 +38,11 @@ export function EmailWrapper({ children, style, noFooterMargin = false }: EmailW
         <Container style={mergeStyles(baseStyles.baseContainer, style)}>
           {/* <Logo /> */}
           {children}
-
         </Container>
       </Body>
     </Html>
   )
 }
-
-
 
 export function EmailSignature() {
   return (
@@ -198,10 +195,10 @@ export function EmailList({
     <ListComponent style={mergeStyles(baseStyles.list, style)}>
       {items
         ? items.map((item, index) => (
-          <li key={index.toString()} style={baseStyles.listItem}>
-            {item}
-          </li>
-        ))
+            <li key={index.toString()} style={baseStyles.listItem}>
+              {item}
+            </li>
+          ))
         : children}
     </ListComponent>
   )
