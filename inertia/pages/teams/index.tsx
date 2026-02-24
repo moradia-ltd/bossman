@@ -233,26 +233,28 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
             </div>
             <div className='space-y-2'>
               <Label>Page access</Label>
-              <div className='grid gap-2 rounded-lg border border-border p-3'>
-                {PAGE_OPTIONS.map((opt) => {
-                  const checked = editMemberPages.includes(opt.key)
-                  const disabled = Boolean(opt.required)
-                  return (
-                    <HStack key={opt.key} spacing={3} align='start'>
-                      <Checkbox
-                        checked={checked}
-                        disabled={disabled}
-                        onCheckedChange={(v) =>
-                          setEditMemberPages((prev) => togglePageInSet(prev, opt.key, v === true))
-                        }
-                      />
-                      <div className='min-w-0'>
-                        <div className='text-sm font-medium'>{opt.label}</div>
-                        <div className='text-xs text-muted-foreground'>{opt.description}</div>
-                      </div>
-                    </HStack>
-                  )
-                })}
+              <div className='max-h-[280px] overflow-y-auto rounded-lg border border-border p-3'>
+                <div className='grid gap-2'>
+                  {PAGE_OPTIONS.map((opt) => {
+                    const checked = editMemberPages.includes(opt.key)
+                    const disabled = Boolean(opt.required)
+                    return (
+                      <HStack key={opt.key} spacing={3} align='start'>
+                        <Checkbox
+                          checked={checked}
+                          disabled={disabled}
+                          onCheckedChange={(v) =>
+                            setEditMemberPages((prev) => togglePageInSet(prev, opt.key, v === true))
+                          }
+                        />
+                        <div className='min-w-0'>
+                          <div className='text-sm font-medium'>{opt.label}</div>
+                          <div className='text-xs text-muted-foreground'>{opt.description}</div>
+                        </div>
+                      </HStack>
+                    )
+                  })}
+                </div>
               </div>
               <p className='text-xs text-muted-foreground'>Dashboard is always included.</p>
             </div>

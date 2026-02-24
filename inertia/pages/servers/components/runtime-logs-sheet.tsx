@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { IconLoader2, IconTerminal2 } from '@tabler/icons-react'
+import { useEffect, useRef } from 'react'
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import api from '@/lib/http'
+import { dateFormatter } from '@/lib/date'
 
 export interface RailwayLog {
   message: string
@@ -22,6 +24,8 @@ export function RuntimeLogsSheet({
   onOpenChange,
   deploymentId,
 }: RuntimeLogsSheetProps) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ['railway', 'deployment-logs', deploymentId],
     queryFn: async () => {
@@ -34,6 +38,18 @@ export function RuntimeLogsSheet({
     enabled: !!deploymentId && open,
   })
 
+  // Scroll to bottom when sheet opens and logs are loaded so latest logs are visible.
+  // Defer with rAF so layout is complete (fixes reopen after close).
+  useEffect(() => {
+    if (!open || isLoading || logs.length === 0) return
+    const scrollToBottom = () => {
+      const scrollable = scrollRef.current?.firstElementChild as HTMLElement | null
+      if (scrollable) scrollable.scrollTop = scrollable.scrollHeight
+    }
+    const id = requestAnimationFrame(() => requestAnimationFrame(scrollToBottom))
+    return () => cancelAnimationFrame(id)
+  }, [open, isLoading, logs])
+
   return (
     <BaseSheet
       open={open}
@@ -41,14 +57,14 @@ export function RuntimeLogsSheet({
       title='Runtime logs'
       description='Most recent runtime output for this deployment.'
       side='right'
-      className='w-full sm:max-w-2xl'>
+      className='w-full sm:max-w-3xl'>
       {isLoading ? (
         <div className='flex min-h-[200px] items-center justify-center py-12'>
           <IconLoader2 className='h-10 w-10 animate-spin text-primary' />
         </div>
       ) : (
         <div className='h-[85vh] min-h-0 overflow-hidden'>
-          <ScrollArea className='h-full'>
+          <ScrollArea ref={scrollRef} className='h-full'>
             <div className='rounded-lg border border-border bg-[#0d1117] p-4 font-mono text-[13px] shadow-inner'>
               <div className='mb-3 flex items-center gap-2 border-b border-white/10 pb-2'>
                 <span className='h-2.5 w-2.5 rounded-full bg-emerald-500' />
@@ -63,7 +79,7 @@ export function RuntimeLogsSheet({
                       key={`${log.timestamp ?? ''}-${i}`}
                       className='flex gap-3 rounded py-1.5 pl-1 hover:bg-white/5'>
                       <span className='shrink-0 select-none text-zinc-500'>
-                        {log.timestamp ? new Date(log.timestamp).toISOString() : '—'}
+                        {log.timestamp ? dateFormatter(log.timestamp, 'basicWithTime') : '—'}
                       </span>
                       <span className='min-w-0 break-words text-zinc-300'>{log.message}</span>
                     </div>

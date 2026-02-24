@@ -17,7 +17,7 @@ The admin app for [Togetha](https://togetha.co.uk) — property and tenancy mana
 
 - **Stack**: React 19, TypeScript, Inertia.js, Vite 6
 - **Styling**: Tailwind CSS
-- **UI**: shadcn-style components (Base UI primitives), Lucide icons
+- **UI**: shadcn-style components (Base UI primitives), Tabler icons
 - **Forms**: Formik + Yup for multi-step flows (e.g. create customer)
 - **Charts**: Recharts (dashboard growth charts)
 - **Data**: TanStack Query for API data

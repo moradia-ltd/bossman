@@ -2,9 +2,11 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  IconChevronDown,
   IconChevronRight,
   IconLoader2,
   IconRefresh,
+  IconRocket,
   IconRotate2,
   IconServer,
   IconTerminal2,
@@ -20,6 +22,12 @@ import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { BaseSheet } from '@/components/ui/base-sheet'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
@@ -128,6 +136,21 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
     },
   })
 
+  const deployMutation = useMutation({
+    mutationFn: (deploymentId: string) => api.post(`/railway/deployments/${deploymentId}/redeploy`),
+    onSuccess: () => {
+      toast.success('Deploy triggered.')
+      if (selectedService) {
+        queryClient.invalidateQueries({
+          queryKey: ['railway', 'deployments', selectedService.id, selectedService.environmentId],
+        })
+      }
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to deploy.')
+    },
+  })
+
   const openServiceDeployments = (service: RailwayService) => {
     if (!safeProject?.environments?.length) return
     const envId = safeProject.environments[0].id
@@ -152,6 +175,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
         return 'default'
       case 'BUILDING':
       case 'DEPLOYING':
+      case 'PENDING':
         return 'secondary'
       case 'FAILED':
       case 'CRASHED':
@@ -269,27 +293,41 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                           </span>
                         </div>
                         {index === 0 && (
-                          <div className='flex shrink-0 gap-2'>
-                            <Button
-                              variant='outline'
-                              size='xs'
-                              leftIcon={<IconRotate2 className='h-3.5 w-3.5' />}
-                              onClick={() => restartMutation.mutate(d.id)}
-                              disabled={restartMutation.isPending}
-                              isLoading={restartMutation.isPending}
-                              loadingText='Restarting…'>
-                              Restart
-                            </Button>
-                            <Button
-                              variant='outline'
-                              size='xs'
-                              leftIcon={<IconRefresh className='h-3.5 w-3.5' />}
-                              onClick={() => redeployMutation.mutate(d.id)}
-                              disabled={redeployMutation.isPending || !d.canRedeploy}
-                              isLoading={redeployMutation.isPending}
-                              loadingText='Redeploying…'>
-                              Redeploy
-                            </Button>
+                          <div className='flex shrink-0 items-center gap-2'>
+                            {d.status === 'PENDING' && (
+                              <Button
+                                variant='default'
+                                size='xs'
+                                leftIcon={<IconRocket className='h-3.5 w-3.5' />}
+                                onClick={() => deployMutation.mutate(d.id)}
+                                disabled={deployMutation.isPending}
+                                isLoading={deployMutation.isPending}
+                                loadingText='Deploying…'>
+                                Deploy service
+                              </Button>
+                            )}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant='outline' size='xs'>
+                                  Actions
+                                  <IconChevronDown className='h-3.5 w-3.5' />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align='end'>
+                                <DropdownMenuItem
+                                  onClick={() => restartMutation.mutate(d.id)}
+                                  disabled={restartMutation.isPending}>
+                                  <IconRotate2 className='mr-2 h-4 w-4' />
+                                  Restart
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => redeployMutation.mutate(d.id)}
+                                  disabled={redeployMutation.isPending || !d.canRedeploy}>
+                                  <IconRefresh className='mr-2 h-4 w-4' />
+                                  Redeploy
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         )}
                       </div>

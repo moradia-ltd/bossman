@@ -30,7 +30,7 @@ You are an expert in TypeScript, Node.js, Inertiajs, Adonisjs v6, React, and sha
   - Use shadcn/ui components primarily (Button, Input, Label, Card, Alert, Checkbox, etc.)
   - Components are located in ./inertia/components/ui/
   - Use a mobile-first approach.
-  - Use lucide-react for icons
+  - Use tabler-icons-react for icons
   - Use the cn() utility from @/lib/utils for conditional className merging
   
   Performance Optimization
