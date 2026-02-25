@@ -36,7 +36,7 @@ const memberColumns: Column<RawTeamMember>[] = [
     header: 'Name',
     sortable: true,
     cell(row) {
-      return <span className='font-medium'>{row.user.fullName || row.user.email || '—'}</span>
+      return <span className='font-medium'>{row.user?.fullName || row.user?.email || '—'}</span>
     },
   },
   {
@@ -44,7 +44,7 @@ const memberColumns: Column<RawTeamMember>[] = [
     header: 'Email',
     sortable: true,
     cell(row) {
-      return <span className='text-sm text-muted-foreground'>{row.user.email || '—'}</span>
+      return <span className='text-sm text-muted-foreground'>{row.user?.email || '—'}</span>
     },
   },
   {
@@ -73,7 +73,6 @@ interface TeamsPageProps extends SharedProps {
 }
 
 export default function TeamsPage({ members }: TeamsPageProps) {
-  console.log("🚀 ~ TeamsPage ~ members:", members)
   const queryClient = useQueryClient()
   const { query, changePage, changeRows, searchTable } = useInertiaParams({
     page: 1,
@@ -174,11 +173,11 @@ export default function TeamsPage({ members }: TeamsPageProps) {
                 changePage(1)
               }}
               pagination={
-                members?.meta
+                (members?.metadata ?? members?.meta)
                   ? {
-                    page: members.meta.currentPage,
-                    pageSize: members.meta.perPage,
-                    total: members.meta.total,
+                    page: (members?.metadata ?? members?.meta)?.currentPage ?? 1,
+                    pageSize: (members?.metadata ?? members?.meta)?.perPage ?? 10,
+                    total: (members?.metadata ?? members?.meta)?.total ?? 0,
                     onPageChange: (p) => changePage(p),
                     onPageSizeChange: (pageSize) => {
                       changeRows(pageSize)
@@ -197,7 +196,7 @@ export default function TeamsPage({ members }: TeamsPageProps) {
           title='Edit page access'
           description={
             editMember
-              ? `Choose which pages ${editMember.user.fullName || editMember.user.email || 'this member'} can access.`
+              ? `Choose which pages ${editMember.user?.fullName || editMember.user?.email || 'this member'} can access.`
               : ''
           }
           open={Boolean(editMember)}

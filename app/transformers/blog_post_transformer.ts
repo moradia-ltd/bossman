@@ -1,4 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
+
 import type BlogPost from '#models/blog_post'
 
 export default class BlogPostTransformer extends BaseTransformer<BlogPost> {

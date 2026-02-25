@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
+
 import BlogAuthor from '#models/blog_author'
 import BlogCategory from '#models/blog_category'
 import BlogPost from '#models/blog_post'
@@ -27,8 +28,8 @@ export default class BlogPostsController {
     return inertia.render('blog/index', {
       posts: inertia.defer(async () => {
         const p = await posts
-        return BlogPostTransformer.paginate(p.all(), p.getMeta())
-      }),
+        return BlogPostTransformer.paginate(p.all(), p.getMeta()) as never
+      }) as never,
     })
   }
 
@@ -43,7 +44,7 @@ export default class BlogPostsController {
 
     if (!post) return response.notFound({ error: 'Post not found' })
 
-    return inertia.render('blog/show', { post: BlogPostTransformer.transform(post) })
+    return inertia.render('blog/show', { post: BlogPostTransformer.transform(post) as never })
   }
 
   async adminIndex({ request, inertia }: HttpContext) {
@@ -63,7 +64,7 @@ export default class BlogPostsController {
     return inertia.render('blog/manage/index', {
       posts: inertia.defer(async () => {
         const p = await posts
-        return BlogPostTransformer.paginate(p.all(), p.getMeta())
+        return BlogPostTransformer.paginate(p.all(), p.getMeta()) as never
       }),
     })
   }
@@ -74,9 +75,9 @@ export default class BlogPostsController {
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
 
     return inertia.render('blog/manage/create', {
-      categories: BlogCategoryTransformer.transform(categories),
-      tags: BlogTagTransformer.transform(tags),
-      authors: BlogAuthorTransformer.transform(authors),
+      categories: BlogCategoryTransformer.transform(categories) as never,
+      tags: BlogTagTransformer.transform(tags) as never,
+      authors: BlogAuthorTransformer.transform(authors) as never,
     })
   }
 
@@ -95,10 +96,10 @@ export default class BlogPostsController {
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
 
     return inertia.render('blog/manage/edit', {
-      post: BlogPostTransformer.transform(post),
-      categories: BlogCategoryTransformer.transform(categories),
-      tags: BlogTagTransformer.transform(tags),
-      authors: BlogAuthorTransformer.transform(authors),
+      post: BlogPostTransformer.transform(post) as never,
+      categories: BlogCategoryTransformer.transform(categories) as never,
+      tags: BlogTagTransformer.transform(tags) as never,
+      authors: BlogAuthorTransformer.transform(authors) as never,
     })
   }
 

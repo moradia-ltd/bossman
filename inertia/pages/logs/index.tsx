@@ -197,11 +197,11 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
                 columns={buildColumns(openView)}
                 data={audits?.data ?? []}
                 pagination={
-                  audits?.meta
+                  (audits?.metadata ?? audits?.meta)
                     ? {
-                        page: audits.meta.currentPage,
-                        pageSize: audits.meta.perPage,
-                        total: audits.meta.total,
+                        page: (audits?.metadata ?? audits?.meta)?.currentPage ?? 1,
+                        pageSize: (audits?.metadata ?? audits?.meta)?.perPage ?? 10,
+                        total: (audits?.metadata ?? audits?.meta)?.total ?? 0,
                         onPageChange: changePage,
                         onPageSizeChange: (pageSize) => {
                           changeRows(pageSize)

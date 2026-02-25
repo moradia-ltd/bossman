@@ -61,11 +61,14 @@ const columns: Column<RawLease>[] = [
     key: 'Org',
     header: 'Org',
     width: 130,
-    cell: (row) => (
-      <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>
-        {row.org.cleanName}
-      </Link>
-    ),
+    cell: (row) =>
+      row.org ? (
+        <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>
+          {row.org.cleanName ?? row.org.name}
+        </Link>
+      ) : (
+        '—'
+      ),
   },
   {
     key: 'Created At',
@@ -149,9 +152,9 @@ export default function LeasesIndex({
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
               pagination={{
-                page: leases?.meta.currentPage,
-                pageSize: leases?.meta.perPage,
-                total: leases?.meta.total,
+                page: (leases?.metadata ?? leases?.meta)?.currentPage ?? 1,
+                pageSize: (leases?.metadata ?? leases?.meta)?.perPage ?? 20,
+                total: (leases?.metadata ?? leases?.meta)?.total ?? 0,
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               }}

@@ -2,9 +2,9 @@ import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import BaseInertiaMiddleware from '@adonisjs/inertia/inertia_middleware'
 
-import UserTransformer from '#transformers/user_transformer'
 import { getPageAccessForUser } from '#services/page_access_service'
 import env from '#start/env'
+import UserTransformer from '#transformers/user_transformer'
 
 export default class InertiaMiddleware extends BaseInertiaMiddleware {
   async share(ctx: HttpContext) {
@@ -19,12 +19,10 @@ export default class InertiaMiddleware extends BaseInertiaMiddleware {
         error: session?.flashMessages.get('error'),
         success: session?.flashMessages.get('success'),
       }),
-      user: ctx.inertia.always(
-        user ? UserTransformer.transform(user) : undefined
-      ),
+      user: ctx.inertia.always(user ? UserTransformer.transform(user) : undefined),
       appEnv: (ctx.session?.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev',
       isDev: env.get('NODE_ENV') === 'development',
-      pageAccess: ctx.inertia.always(pageAccess),
+      pageAccess: ctx.inertia.always(pageAccess ?? undefined),
       params: ctx.request.params(),
       qs,
       isLoggedIn: ctx.inertia.always(ctx.auth?.isAuthenticated ?? false),

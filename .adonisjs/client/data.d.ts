@@ -6,8 +6,103 @@
 /// <reference path="./manifest.d.ts" />
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
+import type AddonTransformer from '#transformers/addon_transformer'
+import type BlogAuthorTransformer from '#transformers/blog_author_transformer'
+import type BlogCategoryTransformer from '#transformers/blog_category_transformer'
+import type BlogPostTransformer from '#transformers/blog_post_transformer'
+import type BlogTagTransformer from '#transformers/blog_tag_transformer'
+import type DbBackupTransformer from '#transformers/db_backup_transformer'
+import type DocumentTransformer from '#transformers/document_transformer'
+import type LeaseTransformer from '#transformers/lease_transformer'
+import type LeaseableEntityTransformer from '#transformers/leaseable_entity_transformer'
+import type NotificationTransformer from '#transformers/notification_transformer'
+import type OrgTransformer from '#transformers/org_transformer'
+import type PaymentTransformer from '#transformers/payment_transformer'
+import type PropertyTransformer from '#transformers/property_transformer'
+import type PushNotificationTransformer from '#transformers/push_notification_transformer'
+import type SessionTransformer from '#transformers/session_transformer'
+import type TeamInvitationTransformer from '#transformers/team_invitation_transformer'
+import type TeamMemberTransformer from '#transformers/team_member_transformer'
+import type TenantTransformer from '#transformers/tenant_transformer'
+import type UserTransformer from '#transformers/user_transformer'
 import type InertiaMiddleware from '#middleware/inertia_middleware'
 
 export namespace Data {
+  export type Addon = InferData<AddonTransformer>
+  export namespace Addon {
+    export type Variants = InferVariants<AddonTransformer>
+  }
+  export type BlogAuthor = InferData<BlogAuthorTransformer>
+  export namespace BlogAuthor {
+    export type Variants = InferVariants<BlogAuthorTransformer>
+  }
+  export type BlogCategory = InferData<BlogCategoryTransformer>
+  export namespace BlogCategory {
+    export type Variants = InferVariants<BlogCategoryTransformer>
+  }
+  export type BlogPost = InferData<BlogPostTransformer>
+  export namespace BlogPost {
+    export type Variants = InferVariants<BlogPostTransformer>
+  }
+  export type BlogTag = InferData<BlogTagTransformer>
+  export namespace BlogTag {
+    export type Variants = InferVariants<BlogTagTransformer>
+  }
+  export type DbBackup = InferData<DbBackupTransformer>
+  export namespace DbBackup {
+    export type Variants = InferVariants<DbBackupTransformer>
+  }
+  export type Document = InferData<DocumentTransformer>
+  export namespace Document {
+    export type Variants = InferVariants<DocumentTransformer>
+  }
+  export type Lease = InferData<LeaseTransformer>
+  export namespace Lease {
+    export type Variants = InferVariants<LeaseTransformer>
+  }
+  export type LeaseableEntity = InferData<LeaseableEntityTransformer>
+  export namespace LeaseableEntity {
+    export type Variants = InferVariants<LeaseableEntityTransformer>
+  }
+  export type Notification = InferData<NotificationTransformer>
+  export namespace Notification {
+    export type Variants = InferVariants<NotificationTransformer>
+  }
+  export type Org = InferData<OrgTransformer>
+  export namespace Org {
+    export type Variants = InferVariants<OrgTransformer>
+  }
+  export type Payment = InferData<PaymentTransformer>
+  export namespace Payment {
+    export type Variants = InferVariants<PaymentTransformer>
+  }
+  export type Property = InferData<PropertyTransformer>
+  export namespace Property {
+    export type Variants = InferVariants<PropertyTransformer>
+  }
+  export type PushNotification = InferData<PushNotificationTransformer>
+  export namespace PushNotification {
+    export type Variants = InferVariants<PushNotificationTransformer>
+  }
+  export type Session = InferData<SessionTransformer>
+  export namespace Session {
+    export type Variants = InferVariants<SessionTransformer>
+  }
+  export type TeamInvitation = InferData<TeamInvitationTransformer>
+  export namespace TeamInvitation {
+    export type Variants = InferVariants<TeamInvitationTransformer>
+  }
+  export type TeamMember = InferData<TeamMemberTransformer>
+  export namespace TeamMember {
+    export type Variants = InferVariants<TeamMemberTransformer>
+  }
+  export type Tenant = InferData<TenantTransformer>
+  export namespace Tenant {
+    export type Variants = InferVariants<TenantTransformer>
+  }
+  export type User = InferData<UserTransformer>
+  export namespace User {
+    export type Variants = InferVariants<UserTransformer>
+  }
   export type SharedProps = InferSharedProps<InertiaMiddleware>
 }

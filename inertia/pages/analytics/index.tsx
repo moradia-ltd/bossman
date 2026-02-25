@@ -332,9 +332,9 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
             return null
           })}
         </ul>
-        {entitiesData && entitiesData.meta.total > entitiesData.data.length && (
+        {entitiesData && (entitiesData.metadata ?? entitiesData.meta)?.total != null && (entitiesData.metadata ?? entitiesData.meta)!.total > entitiesData.data.length && (
           <div className='text-muted-foreground mt-4 rounded-lg bg-muted/30 px-3 py-2 text-center text-xs'>
-            Showing {entitiesData.data.length} of {entitiesData.meta.total} — scroll for more
+            Showing {entitiesData.data.length} of {(entitiesData.metadata ?? entitiesData.meta)!.total} — scroll for more
           </div>
         )}
       </ScrollArea>

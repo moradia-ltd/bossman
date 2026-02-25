@@ -11,8 +11,10 @@ export default class PushNotificationTransformer extends BaseTransformer<PushNot
       'description',
       'imageUrl',
       'url',
+      'scheduledAt',
       'status',
       'sentAt',
+      'errorMessage',
       'createdAt',
       'updatedAt',
     ])

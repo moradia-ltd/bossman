@@ -3,9 +3,9 @@ import logger from '@adonisjs/core/services/logger'
 import { DateTime } from 'luxon'
 
 import PushNotification from '#models/push_notification'
-import PushNotificationTransformer from '#transformers/push_notification_transformer'
 import TogethaUser from '#models/togetha_user'
 import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
+import PushNotificationTransformer from '#transformers/push_notification_transformer'
 import { storePushNotificationValidator } from '#validators/push_notification'
 
 export default class PushNotificationsController {
@@ -30,13 +30,13 @@ export default class PushNotificationsController {
     return inertia.render('push-notifications/index', {
       notifications: PushNotificationTransformer.paginate(
         notifications.all(),
-        notifications.getMeta()
-      ),
+        notifications.getMeta(),
+      ) as never,
     })
   }
 
   async create({ inertia }: HttpContext) {
-    return inertia.render('push-notifications/create')
+    return inertia.render('push-notifications/create', {})
   }
 
   async resend({ request, response }: HttpContext) {
