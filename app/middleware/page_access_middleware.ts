@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
+
 import { getPageAccessForUser } from '#services/page_access_service'
 import { PAGE_KEY_TO_PATH, requiredPageKeyForPath } from '#utils/page_access'
 

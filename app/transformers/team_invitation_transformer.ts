@@ -1,4 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
+
 import type TeamInvitation from '#models/team_invitation'
 
 export default class TeamInvitationTransformer extends BaseTransformer<TeamInvitation> {

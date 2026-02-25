@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+
 import useDisclosure from '@/hooks/use-disclosure'
 
 const SIDEBAR_STORAGE_KEY = 'dashboard-sidebar-open'

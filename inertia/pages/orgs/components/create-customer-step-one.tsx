@@ -1,9 +1,11 @@
 import type { FormikProps } from 'formik'
+
 import { AppCard } from '@/components/ui/app-card'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password_input'
 import { RadioGroup } from '@/components/ui/radio-group'
+
 import type { CreateCustomerFormValues } from '../create-form'
 
 const accountTypeOptions = [

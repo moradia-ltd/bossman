@@ -1,5 +1,6 @@
 import { args, BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
+
 import { generateFile } from '#utils/file_generator'
 
 export default class MakeEmail extends BaseCommand {

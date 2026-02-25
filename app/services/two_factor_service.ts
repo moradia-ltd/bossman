@@ -1,5 +1,6 @@
-import speakeasy from 'speakeasy'
 import QRCode from 'qrcode'
+import speakeasy from 'speakeasy'
+
 import env from '#start/env'
 
 class TwoFactorService {

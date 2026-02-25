@@ -1,5 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router, usePage } from '@inertiajs/react'
+
 import type { RawLeaseableEntity } from '#types/model-types'
 import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+
 import { ActivityTab } from './components/activity-tab'
 import { LeasesTab } from './components/leases-tab'
 

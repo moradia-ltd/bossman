@@ -1,11 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
 import { IconLoader2, IconTerminal2 } from '@tabler/icons-react'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
+
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import api from '@/lib/http'
 import { dateFormatter } from '@/lib/date'
+import api from '@/lib/http'
 
 export interface RailwayLog {
   message: string
@@ -62,9 +63,7 @@ export function BuildLogsSheet({ open, onOpenChange, deploymentId }: BuildLogsSh
             <div className='rounded-lg border border-border bg-[#0d1117] p-4 font-mono text-[13px] shadow-inner'>
               <div className='mb-3 flex items-center gap-2 border-b border-white/10 pb-2'>
                 <span className='h-2.5 w-2.5 rounded-full bg-amber-500' />
-                <span className='text-xs uppercase tracking-wider text-zinc-500'>
-                  Build output
-                </span>
+                <span className='text-xs uppercase tracking-wider text-zinc-500'>Build output</span>
               </div>
               {logs.length > 0 ? (
                 <div className='space-y-0.5'>

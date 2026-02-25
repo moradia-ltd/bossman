@@ -1,4 +1,5 @@
 import { PgBoss } from 'pg-boss'
+
 import config from '#config/boss'
 
 export interface BossQueueOptions {

@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
+
 import string from '@adonisjs/core/helpers/string'
 import app from '@adonisjs/core/services/app'
 

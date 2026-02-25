@@ -1,5 +1,6 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip'
 import type * as React from 'react'
+
 import { cn } from '@/lib/utils'
 
 const Tooltip = TooltipPrimitive.Root

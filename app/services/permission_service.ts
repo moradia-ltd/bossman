@@ -1,4 +1,5 @@
 import logger from '@adonisjs/core/services/logger'
+
 import type TogethaUser from '#models/togetha_user'
 
 export type Pages = 'dashboard' | 'team' | 'finance' | 'manage' | 'settings'

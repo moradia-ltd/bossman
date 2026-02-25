@@ -1,5 +1,6 @@
 import type { DateTime as DateTimeType } from 'luxon'
 import { DateTime } from 'luxon'
+
 import Session from '#models/session'
 import { parseUserAgent } from '#utils/user_agent_parser'
 

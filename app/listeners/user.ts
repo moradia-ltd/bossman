@@ -1,6 +1,7 @@
 import logger from '@adonisjs/core/services/logger'
 import type { EventsList } from '@adonisjs/core/types'
 import db from '@adonisjs/lucid/services/db'
+
 import mailer from '#services/email_service'
 import env from '#start/env'
 

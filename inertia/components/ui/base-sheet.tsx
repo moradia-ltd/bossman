@@ -1,7 +1,9 @@
 'use client'
 
 import { useRef, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
+import { HStack } from '@/components/ui/hstack'
 import {
   Sheet,
   SheetContent,
@@ -11,7 +13,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { HStack } from '@/components/ui/hstack'
 
 export interface BaseSheetProps {
   title?: React.ReactNode

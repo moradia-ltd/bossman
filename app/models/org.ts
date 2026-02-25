@@ -3,10 +3,12 @@ import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { type Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
+
 import Lease from '#models/lease'
 import Payment from '#models/payment'
 import type { AppCountries } from '#types/extra'
 import type { TogethaCurrencies } from '#utils/currency'
+
 import { type PlanFeatures, plansFeatureList } from '../data/subscription.js'
 import { FileStoreRoutes } from '../enum/file_store.js'
 import SubPlansReversed from '../enum/sub_plan.js'

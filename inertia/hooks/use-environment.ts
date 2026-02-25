@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/react'
 import { useCallback, useEffect, useState } from 'react'
+
 import api from '@/lib/http'
 
 type AppEnv = 'prod' | 'dev'

@@ -14,10 +14,12 @@ export default class AddonsController {
       .orderBy('sort_order', 'asc')
       .orderBy('name', 'asc')
 
-    return (inertia.render as (page: 'addons/index', props: { addons: unknown }) => ReturnType<HttpContext['inertia']['render']>)(
-      'addons/index',
-      { addons: AddonTransformer.transform(addons) },
-    )
+    return (
+      inertia.render as (
+        page: 'addons/index',
+        props: { addons: unknown },
+      ) => ReturnType<HttpContext['inertia']['render']>
+    )('addons/index', { addons: AddonTransformer.transform(addons) })
   }
 
   async create({ inertia }: HttpContext) {

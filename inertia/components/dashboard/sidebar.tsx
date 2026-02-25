@@ -24,6 +24,7 @@ import {
   IconUsers,
   IconWorld,
 } from '@tabler/icons-react'
+
 import type { RawUser } from '#types/model-types'
 import { startCase } from '#utils/functions'
 import { CommandPalette } from '@/components/command-palette'

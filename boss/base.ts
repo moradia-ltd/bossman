@@ -2,6 +2,7 @@ import logger from '@adonisjs/core/services/logger'
 import vine from '@vinejs/vine'
 import type { Infer } from '@vinejs/vine/types'
 import type { DateTime } from 'luxon'
+
 import boss from '#services/boss_service'
 
 type VineSchema = Parameters<typeof vine.validate>[0]['schema']

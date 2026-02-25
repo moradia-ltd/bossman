@@ -17,7 +17,7 @@ function shouldSkipAuth(url: string): boolean {
     // leave path as-is
   }
   return SKIP_AUTH_PATHS.some(
-    (p) => path === p || path.startsWith(p + '/') || path.endsWith(p) || path.endsWith(p + '/')
+    (p) => path === p || path.startsWith(p + '/') || path.endsWith(p) || path.endsWith(p + '/'),
   )
 }
 

@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react'
 import { IconArrowLeft, IconHome } from '@tabler/icons-react'
+
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'
 

@@ -1,9 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link, router } from '@inertiajs/react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { IconPencil, IconSettings } from '@tabler/icons-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawTeamMember } from '#types/model-types'
 import { timeAgo } from '#utils/date'
@@ -84,8 +85,6 @@ export default function TeamsPage({ members }: TeamsPageProps) {
   const [editMember, setEditMember] = useState<RawTeamMember | null>(null)
   const [editMemberPages, setEditMemberPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
   const [editEnableProdAccess, setEditEnableProdAccess] = useState(true)
-
-
 
   const updateMemberMutation = useMutation({
     mutationFn: async ({
@@ -175,15 +174,15 @@ export default function TeamsPage({ members }: TeamsPageProps) {
               pagination={
                 (members?.metadata ?? members?.meta)
                   ? {
-                    page: (members?.metadata ?? members?.meta)?.currentPage ?? 1,
-                    pageSize: (members?.metadata ?? members?.meta)?.perPage ?? 10,
-                    total: (members?.metadata ?? members?.meta)?.total ?? 0,
-                    onPageChange: (p) => changePage(p),
-                    onPageSizeChange: (pageSize) => {
-                      changeRows(pageSize)
-                      changePage(1)
-                    },
-                  }
+                      page: (members?.metadata ?? members?.meta)?.currentPage ?? 1,
+                      pageSize: (members?.metadata ?? members?.meta)?.perPage ?? 10,
+                      total: (members?.metadata ?? members?.meta)?.total ?? 0,
+                      onPageChange: (p) => changePage(p),
+                      onPageSizeChange: (pageSize) => {
+                        changeRows(pageSize)
+                        changePage(1)
+                      },
+                    }
                   : undefined
               }
               emptyMessage='No members found'

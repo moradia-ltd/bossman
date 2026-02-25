@@ -1,5 +1,6 @@
 import type { MultipartFile } from '@adonisjs/core/bodyparser'
 import type db from '@adonisjs/lucid/services/db'
+
 import type { baseCountries } from '../data/countries.js'
 
 export type AppCountries = (typeof baseCountries)[number]['name']

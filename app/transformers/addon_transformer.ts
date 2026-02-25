@@ -1,4 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
+
 import type Addon from '#models/addon'
 
 export default class AddonTransformer extends BaseTransformer<Addon> {

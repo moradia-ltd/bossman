@@ -1,7 +1,8 @@
-import type { DateTime } from 'luxon'
 import { column } from '@adonisjs/lucid/orm'
-import type User from './user.js'
+import type { DateTime } from 'luxon'
+
 import SuperBaseModel from './super_base.js'
+import type User from './user.js'
 
 export interface NotificationAction {
   label: string

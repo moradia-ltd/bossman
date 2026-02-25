@@ -1,6 +1,7 @@
 import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
 import axios from 'axios'
+
 import env from '#start/env'
 
 export const strapiUrl = 'https://cms.togetha.co.uk/api'

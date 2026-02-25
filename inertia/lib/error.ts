@@ -1,4 +1,5 @@
 import type { AxiosError } from 'axios'
+
 import { capitalizeFirstLetter } from './string'
 export interface ServerErrorResponse {
   response: AxiosError<{

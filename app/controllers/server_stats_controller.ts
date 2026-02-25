@@ -1,5 +1,5 @@
-import app from '@adonisjs/core/services/app'
 import type { HttpContext } from '@adonisjs/core/http'
+import app from '@adonisjs/core/services/app'
 import type { StatsEngine } from 'adonisjs-server-stats'
 
 export default class ServerStatsController {

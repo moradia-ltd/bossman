@@ -9,11 +9,13 @@ import {
 } from '@adonisjs/lucid/orm'
 import type { HasMany, HasOne, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+
 import Document from '#models/document'
 import Lease from '#models/lease'
 import TogethaActivity from '#models/togetha_activity'
 import User from '#models/user'
 import meiliSearchClient from '#services/meilisearch_service'
+
 import SuperBaseModel from './super_base.js'
 
 export default class Tenant extends SuperBaseModel {

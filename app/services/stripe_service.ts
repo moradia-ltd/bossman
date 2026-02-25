@@ -2,6 +2,7 @@
 
 import app from '@adonisjs/core/services/app'
 import Stripe from 'stripe'
+
 import type { CustomSubscriptionInfo } from '#extensions/event'
 import Org from '#models/org'
 import SubscriptionPlan from '#models/subscription_plan'

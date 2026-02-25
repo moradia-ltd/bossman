@@ -1,4 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
+
 import type LeaseableEntity from '#models/leaseable_entity'
 
 export default class LeaseableEntityTransformer extends BaseTransformer<LeaseableEntity> {

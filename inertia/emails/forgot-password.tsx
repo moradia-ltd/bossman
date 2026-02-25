@@ -1,6 +1,6 @@
+import { appUrl } from '#emails/global'
 import { EmailButton, EmailHeading, EmailLink, EmailText, EmailWrapper } from '#emails/layout'
 import type { Emails } from '#types/mails'
-import { appUrl } from '#emails/global'
 
 function ForgotPassword(props: Emails['forgot-password']) {
   const resetUrl = `${appUrl}/reset-password?token=${props.token}`

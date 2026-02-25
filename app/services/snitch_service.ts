@@ -1,6 +1,7 @@
 import logger from '@adonisjs/core/services/logger'
 import type { ModelObject } from '@adonisjs/lucid/types/model'
 import axios from 'axios'
+
 import env from '#start/env'
 
 const twistApi = axios.create({

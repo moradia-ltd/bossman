@@ -13,10 +13,7 @@
     "composite": true,
     "noEmit": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedParameters": false
   },
-  "include": [
-    "./inertia/**/*.ts",
-    "./inertia/**/*.tsx"
-  ]
+  "include": ["./inertia/**/*.ts", "./inertia/**/*.tsx"]
 }

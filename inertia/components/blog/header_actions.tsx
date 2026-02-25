@@ -1,6 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Link, usePage } from '@inertiajs/react'
 import { IconArrowRight } from '@tabler/icons-react'
+
 import { Button } from '@/components/ui/button'
 
 interface BlogHeaderActionsProps {

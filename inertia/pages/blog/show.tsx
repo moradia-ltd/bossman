@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react'
 import { IconArrowLeft, IconCalendar, IconClock } from '@tabler/icons-react'
+
 import type { RawBlogPost } from '#types/model-types'
 import { PublicLayout } from '@/components/layouts/public'
 import { Badge } from '@/components/ui/badge'

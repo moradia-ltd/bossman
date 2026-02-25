@@ -1,8 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
-import { useQuery } from '@tanstack/react-query'
 import { IconChevronLeft, IconChevronRight, IconMail } from '@tabler/icons-react'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+
 import type { Column } from '#types/extra'
 import { timeAgo } from '#utils/date'
 import { DashboardLayout } from '@/components/dashboard/layout'

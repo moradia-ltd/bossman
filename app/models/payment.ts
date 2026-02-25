@@ -4,10 +4,12 @@ import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { attachment } from '@jrmc/adonis-attachment'
 import type { Attachment } from '@jrmc/adonis-attachment/types/attachment'
 import type { DateTime } from 'luxon'
+
 import Landlord from '#models/landlord'
 import Lease from '#models/lease'
 import meiliSearchClient from '#services/meilisearch_service'
 import DateService from '#utils/date'
+
 import type { formData } from '../data/form-data.js'
 import { FileStoreRoutes } from '../enum/file_store.js'
 import SuperBaseModel from './super_base.js'

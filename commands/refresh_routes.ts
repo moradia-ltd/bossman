@@ -3,6 +3,7 @@
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { hrtime } from 'node:process'
+
 import { BaseCommand } from '@adonisjs/core/ace'
 import string from '@adonisjs/core/helpers/string'
 import type { CommandOptions } from '@adonisjs/core/types/ace'

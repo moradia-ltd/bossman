@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import React from 'react'
+
 import { Separator } from '@/components/ui/seperator'
 import { cn } from '@/lib/utils'
 

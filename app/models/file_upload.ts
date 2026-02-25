@@ -2,8 +2,10 @@ import { compose } from '@adonisjs/core/helpers'
 import { beforeDelete, beforeSave, belongsTo, column, hasOne } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 import { Auditable } from '@stouder-io/adonis-auditing'
+
 import meiliSearchClient from '#services/meilisearch_service'
 import { convertBytesToMb } from '#utils/functions'
+
 import Document from './document.js'
 import Org from './org.js'
 import SuperBaseModel from './super_base.js'

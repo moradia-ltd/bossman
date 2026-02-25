@@ -13,7 +13,6 @@
  * @see https://opentelemetry.io/docs/languages/js/getting-started/nodejs/
  */
 import '../otel.js'
-
 import { Ignitor, prettyPrintError } from '@adonisjs/core'
 import 'reflect-metadata'
 

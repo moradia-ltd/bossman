@@ -1,4 +1,5 @@
 import type { FormikProps } from 'formik'
+
 import { startCase } from '#utils/functions'
 import { OnlyShowIf } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
@@ -14,6 +15,7 @@ import {
 } from '@/components/ui/select'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { Switch } from '@/components/ui/switch'
+
 import type { CreateCustomerFormValues } from '../create-form'
 
 interface CreateCustomerFormStepTwoProps {

@@ -3,6 +3,7 @@
 import { Link } from '@inertiajs/react'
 import { IconAlertCircle, IconHome, IconRefresh } from '@tabler/icons-react'
 import { Component, type ReactNode } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 

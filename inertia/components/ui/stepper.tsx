@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react'
 import { IconCheck, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import type { ComponentType } from 'react'
 import { useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 

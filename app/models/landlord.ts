@@ -1,12 +1,14 @@
 import { afterDelete, afterSave, column, computed, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+
 import MaintenanceRequest from '#models/maintenance_request'
 import Org from '#models/org'
 import Property from '#models/property'
 import Tenant from '#models/tenant'
 import User from '#models/user'
 import meiliSearchClient from '#services/meilisearch_service'
+
 import SuperBaseModel from './super_base.js'
 
 export default class Landlord extends SuperBaseModel {

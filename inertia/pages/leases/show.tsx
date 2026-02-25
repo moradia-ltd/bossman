@@ -1,6 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
 import { IconPencil } from '@tabler/icons-react'
+
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { startCase } from '#utils/functions'
@@ -13,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
+
 import { ActivityTab } from './components/activity-tab'
 import { PaymentsTab } from './components/payments-tab'
 import { StatusBadge } from './components/status'

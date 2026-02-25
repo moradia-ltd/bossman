@@ -1,4 +1,5 @@
 import type Stripe from 'stripe'
+
 import type Org from '#models/org'
 import type TogethaUser from '#models/togetha_user'
 import type User from '#models/user'

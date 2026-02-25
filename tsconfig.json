@@ -65,7 +65,7 @@
     "jsx": "react",
     "outDir": "./build",
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedParameters": false
   },
   "references": [
     {

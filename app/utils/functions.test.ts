@@ -1,6 +1,7 @@
 import '@japa/assert'
 import { test } from '@japa/runner'
 import pluralize from 'pluralize'
+
 import { formatCurrency } from './currency.js'
 import {
   // calculatePerformance,

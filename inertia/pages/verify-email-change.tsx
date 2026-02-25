@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
+
 import { TokenVerificationShell } from '@/components/auth/token_verification_shell'
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'

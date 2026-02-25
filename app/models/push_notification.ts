@@ -2,6 +2,7 @@ import { compose } from '@adonisjs/core/helpers'
 import { column } from '@adonisjs/lucid/orm'
 import { Auditable } from '@stouder-io/adonis-auditing'
 import type { DateTime } from 'luxon'
+
 import SuperBaseModel from './super_base.js'
 
 export type PushNotificationTargetType =

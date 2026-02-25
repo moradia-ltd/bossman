@@ -2,6 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { IconBell, IconPlus, IconRefresh } from '@tabler/icons-react'
 import { useState } from 'react'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
@@ -175,7 +176,9 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
               <IconBell className='h-5 w-5' />
               Notifications
             </CardTitle>
-            <CardDescription>{(notifications?.metadata ?? notifications?.meta)?.total ?? 0} total</CardDescription>
+            <CardDescription>
+              {(notifications?.metadata ?? notifications?.meta)?.total ?? 0} total
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <DataTable

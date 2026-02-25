@@ -1,5 +1,7 @@
 import type { FormikProps } from 'formik'
+
 import { Checkbox, HStack, SimpleGrid, Stack, Switch } from '@/components/ui'
+
 import type { CreateCustomerFormValues } from '../create-form'
 import pageTree from '../data'
 

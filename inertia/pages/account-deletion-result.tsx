@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react'
 import { IconCircleCheck, IconShieldCheck } from '@tabler/icons-react'
+
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'

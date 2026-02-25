@@ -2,9 +2,9 @@ import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import type { DateTime } from 'luxon'
+
 import Lease from './lease.js'
 import Property from './property.js'
-
 import TeamMember from './team_member.js'
 import type { ActivityType } from './togetha_activity.js'
 import TogethaUser from './togetha_user.js'

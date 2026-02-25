@@ -1,7 +1,9 @@
 import logger from '@adonisjs/core/services/logger'
 import { afterCreate, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+
 import User from '#models/user'
+
 import SuperBaseModel from './super_base.js'
 import TeamMember from './team_member.js'
 

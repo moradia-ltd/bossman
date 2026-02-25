@@ -1,6 +1,7 @@
 import { belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
+
 import SuperBaseModel from './super_base.js'
 import User from './user.js'
 

@@ -2,6 +2,7 @@ import logger from '@adonisjs/core/services/logger'
 import type { Emails } from '@adonisjs/core/types'
 import type { Message } from '@adonisjs/mail'
 import mail from '@adonisjs/mail/services/main'
+
 import env from '#start/env'
 
 const NO_REPLY_EMAIL = env.get('NO_REPLY_EMAIL', 'do_not_reply@togetha.co.uk')

@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
-import { Badge } from '@/components/ui/badge'
 import { AppCard } from '@/components/ui/app-card'
+import { Badge } from '@/components/ui/badge'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 

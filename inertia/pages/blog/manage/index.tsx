@@ -2,15 +2,16 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link, router } from '@inertiajs/react'
 import { IconEdit, IconPlus, IconTags, IconTrash } from '@tabler/icons-react'
 import { useState } from 'react'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { LoadingSkeleton } from '@/components/ui'
+import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { AppCard } from '@/components/ui/app-card'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 
 interface BlogAdminIndexProps extends SharedProps {

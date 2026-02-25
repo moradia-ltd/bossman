@@ -1,6 +1,7 @@
 import logger from '@adonisjs/core/services/logger'
-import { loadJobs } from '#boss/jobs'
+
 import { registerCrons } from '#boss/crons'
+import { loadJobs } from '#boss/jobs'
 
 /**
  * Load all job definitions and start boss (create queues, register crons).

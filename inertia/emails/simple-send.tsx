@@ -1,5 +1,7 @@
 import { Html } from '@react-email/components'
+
 import type { Emails } from '#types/mails'
+
 import { EmailHeading, EmailSignature, EmailText, EmailWrapper } from './layout.js'
 
 function SimpleSend(props: Emails['simple-send']) {

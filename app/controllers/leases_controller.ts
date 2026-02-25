@@ -1,10 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
+
 import Activity from '#models/activity'
 import Lease from '#models/lease'
 import Payment from '#models/payment'
-import LeaseTransformer from '#transformers/lease_transformer'
 import { getDataAccessForUser } from '#services/data_access_service'
+import LeaseTransformer from '#transformers/lease_transformer'
 
 export default class LeasesController {
   async index({ auth, request, inertia }: HttpContext) {

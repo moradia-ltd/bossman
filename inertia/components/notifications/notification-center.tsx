@@ -1,8 +1,9 @@
 import { Link } from '@inertiajs/react'
-import { useMutation, useQuery } from '@tanstack/react-query'
 import { IconBell, IconCheck, IconChecks, IconX } from '@tabler/icons-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
+
 import type { PaginatedResponse } from '#types/extra'
 import { Button } from '@/components/ui/button'
 import {
