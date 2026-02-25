@@ -3,6 +3,7 @@ import db from '@adonisjs/lucid/services/db'
 import Activity from '#models/activity'
 import Lease from '#models/lease'
 import LeaseableEntity from '#models/leaseable_entity'
+import LeaseableEntityTransformer from '#transformers/leaseable_entity_transformer'
 import { getDataAccessForUser } from '#services/data_access_service'
 
 export default class LeaseableEntitiesController {
@@ -28,9 +29,12 @@ export default class LeaseableEntitiesController {
       }
     }
 
-    const leaseableEntities = baseQuery.withPagination(params)
+    const entitiesPromise = baseQuery.withPagination(params)
     return inertia.render('properties/index', {
-      leaseableEntities: inertia.defer(async () => leaseableEntities),
+      leaseableEntities: inertia.defer(async () => {
+        const p = await entitiesPromise
+        return LeaseableEntityTransformer.paginate(p.all(), p.getMeta())
+      }),
       dataAccessExpired: dataAccess?.dataAccessExpired ?? false,
       dataAccessExpiredAt: dataAccess?.dataAccessExpiredAt ?? null,
     })
@@ -65,7 +69,9 @@ export default class LeaseableEntitiesController {
       }
     }
 
-    return inertia.render('properties/show', { property: entity })
+    return inertia.render('properties/show', {
+      property: LeaseableEntityTransformer.transform(entity),
+    })
   }
 
   async leases({ request, params, response }: HttpContext) {

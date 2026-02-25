@@ -1,8 +1,15 @@
 {
+  "references": [
+    {
+      "path": "./tsconfig.inertia.json"
+    }
+  ],
   "compilerOptions": {
     "target": "esnext",
     "module": "nodenext",
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "isolatedModules": true,
@@ -21,7 +28,9 @@
     "declaration": false,
     "sourceMap": true,
     "emitDecoratorMetadata": true,
-    "types": ["@types/node"],
+    "types": [
+      "@types/node"
+    ],
     "rootDir": "./",
     "outDir": "./build",
     "jsx": "react-jsx",
@@ -31,12 +40,21 @@
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
     "preserveConstEnums": true,
+    "rewriteRelativeImportExtensions": true,
     "paths": {
-      "#audit_resolvers/*": ["./app/audit_resolvers/*.js"]
+      "#audit_resolvers/*": [
+        "./app/audit_resolvers/*.js"
+      ]
     }
   },
   "ts-node": {
     "swc": true
   },
-  "exclude": ["inertia", "node_modules", "./build", "bin/test.ts", "**/*.test.ts"]
+  "exclude": [
+    "inertia",
+    "node_modules",
+    "./build",
+    "bin/test.ts",
+    "**/*.test.ts"
+  ]
 }

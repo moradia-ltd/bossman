@@ -1,11 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import BlogTag from '#models/blog_tag'
+import BlogTagTransformer from '#transformers/blog_tag_transformer'
 import { createBlogTagValidator } from '#validators/blog'
 
 export default class BlogTagsController {
   async index({ inertia }: HttpContext) {
     const tags = await BlogTag.query().orderBy('name', 'asc')
-    return inertia.render('blog/manage/tags', { tags: inertia.defer(async () => tags) })
+    return inertia.render('blog/manage/tags', {
+      tags: inertia.defer(async () => BlogTagTransformer.transform(tags)),
+    })
   }
 
   async store({ request, response }: HttpContext) {

@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Addon from '#models/addon'
+import AddonTransformer from '#transformers/addon_transformer'
 import StripeService from '#services/stripe_service'
 import { createAddonValidator, updateAddonValidator } from '#validators/addon'
 
@@ -12,7 +13,7 @@ export default class AddonsController {
       .orderBy('sort_order', 'asc')
       .orderBy('name', 'asc')
 
-    return inertia.render('addons/index', { addons })
+    return inertia.render('addons/index', { addons: AddonTransformer.transform(addons) })
   }
 
   async create({ inertia }: HttpContext) {
@@ -46,7 +47,7 @@ export default class AddonsController {
     const env = request.appEnv()
     const addon = await Addon.find(params.id, { connection: env })
     if (!addon) return response.notFound()
-    return inertia.render('addons/edit', { addon })
+    return inertia.render('addons/edit', { addon: AddonTransformer.transform(addon) })
   }
 
   async update({ params, request, response }: HttpContext) {

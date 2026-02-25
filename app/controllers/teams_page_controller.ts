@@ -1,6 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import TeamMember from '#models/team_member'
 import User from '#models/user'
+import TeamMemberTransformer from '#transformers/team_member_transformer'
 import { getPageAccessForUser } from '#services/page_access_service'
 
 export default class TeamsPageController {
@@ -32,7 +33,11 @@ export default class TeamsPageController {
       .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 10)
 
-    return inertia.render('teams/index', { members: inertia.defer(async () => members) })
+    return inertia.render('teams/index', {
+      members: inertia.defer(async () =>
+        TeamMemberTransformer.paginate(members.all(), members.getMeta())
+      ),
+    })
   }
 
   async show({ auth, params, inertia, request, response }: HttpContext) {
@@ -50,6 +55,8 @@ export default class TeamsPageController {
 
     const member = await TeamMember.query().where('id', params.id).preload('user').firstOrFail()
 
-    return inertia.render('teams/member-show', { member })
+    return inertia.render('teams/member-show', {
+      member: TeamMemberTransformer.transform(member),
+    })
   }
 }

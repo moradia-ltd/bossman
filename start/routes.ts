@@ -124,17 +124,21 @@ router
 // Guest routes (web login uses server redirect so session cookie is set in same navigation)
 router
   .group(() => {
-    router.on('/login').renderInertia('login')
-    router.on('/forgot-password').renderInertia('forgot-password')
-    router.on('/reset-password').renderInertia('reset-password')
+    router.get('/login', ({ inertia }) => inertia.render('login' as never, {}))
+    router.get('/forgot-password', ({ inertia }) => inertia.render('forgot-password' as never, {}))
+    router.get('/reset-password', ({ inertia }) => inertia.render('reset-password' as never, {}))
   })
   .use(middleware.guest())
 
 // Public routes
-router.on('/verify-email').renderInertia('verify-email')
-router.on('/verify-email-change').renderInertia('verify-email-change')
+router.get('/verify-email', ({ inertia }) => inertia.render('verify-email' as never, {}))
+router.get('/verify-email-change', ({ inertia }) =>
+  inertia.render('verify-email-change' as never, {}),
+)
 router.get('/confirm-delete-custom-user', [ConfirmDeleteCustomUserController, 'respond'])
-router.on('/account-deletion-result').renderInertia('account-deletion-result')
+router.get('/account-deletion-result', ({ inertia }) =>
+  inertia.render('account-deletion-result' as never, {}),
+)
 router.get('/blog', [BlogPostsController, 'index'])
 router.get('/blog/:slug', [BlogPostsController, 'show'])
 router.get('/join', [TeamInvitationsController, 'joinPage'])
@@ -149,7 +153,7 @@ router
 // Settings page
 router
   .group(() => {
-    router.on('/settings').renderInertia('settings/index')
+    router.get('/settings', ({ inertia }) => inertia.render('settings/index' as never, {}))
   })
   .use([middleware.auth()])
 

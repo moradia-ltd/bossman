@@ -1,11 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import BlogAuthor from '#models/blog_author'
+import BlogAuthorTransformer from '#transformers/blog_author_transformer'
 import { createBlogAuthorValidator } from '#validators/blog'
 
 export default class BlogAuthorsController {
   async index({ inertia }: HttpContext) {
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
-    return inertia.render('blog/manage/authors', { authors: inertia.defer(async () => authors) })
+    return inertia.render('blog/manage/authors', {
+      authors: inertia.defer(async () => BlogAuthorTransformer.transform(authors)),
+    })
   }
 
   async store({ request, response }: HttpContext) {

@@ -13,6 +13,7 @@ import Property from '#models/property'
 import SubscriptionPlan from '#models/subscription_plan'
 import TogethaTeam from '#models/togetha_teams'
 import TogethaUser from '#models/togetha_user'
+import OrgTransformer from '#transformers/org_transformer'
 import mailer from '#services/email_service'
 import { LoopService } from '#services/loop_service'
 import OrgService from '#services/org_service'
@@ -65,7 +66,10 @@ export default class OrgsController {
       agencies: agenciesResult.total,
     }
 
-    return inertia.render('orgs/index', { orgs: inertia.defer(async () => orgs), stats })
+    return inertia.render('orgs/index', {
+      orgs: inertia.defer(async () => OrgTransformer.paginate(orgs.all(), orgs.getMeta())),
+      stats,
+    })
   }
 
   async stats({ request, response }: HttpContext) {
@@ -279,13 +283,16 @@ export default class OrgsController {
       console.log('error', error.response.data)
     }
 
-    return inertia.render('orgs/show', { org, isLoopsUser })
+    return inertia.render('orgs/show', {
+      org: OrgTransformer.transform(org),
+      isLoopsUser,
+    })
   }
 
   async edit({ params, inertia, request }: HttpContext) {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
-    return inertia.render('orgs/edit', { org })
+    return inertia.render('orgs/edit', { org: OrgTransformer.transform(org) })
   }
 
   async update({ params, request, response }: HttpContext) {
@@ -415,7 +422,10 @@ export default class OrgsController {
       .where('status', 'active')
       .where('end_date', '>=', now.toISODate()!)
       .getCount()
-    return inertia.render('orgs/invoices/create', { org, activeLeasesCount })
+    return inertia.render('orgs/invoices/create', {
+      org: OrgTransformer.transform(org),
+      activeLeasesCount,
+    })
   }
 
   async storeInvoice({ params, request, response, session }: HttpContext) {
@@ -479,7 +489,7 @@ export default class OrgsController {
       return response.notFound()
     }
     return inertia.render('orgs/invoices/line-items/create', {
-      org,
+      org: OrgTransformer.transform(org),
       invoiceId: params.invoiceId,
     })
   }

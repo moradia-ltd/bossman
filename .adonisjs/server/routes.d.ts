@@ -1,0 +1,489 @@
+import '@adonisjs/core/types/http'
+
+type ParamValue = string | number | bigint | boolean
+
+export type ScannedRoutes = {
+  ALL: {
+    'server-stats.dashboard': { paramsTuple?: []; params?: {} }
+    'server-stats.overview': { paramsTuple?: []; params?: {} }
+    'server-stats.overview.chart': { paramsTuple?: []; params?: {} }
+    'server-stats.requests': { paramsTuple?: []; params?: {} }
+    'server-stats.requests.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.queries': { paramsTuple?: []; params?: {} }
+    'server-stats.queries.grouped': { paramsTuple?: []; params?: {} }
+    'server-stats.queries.explain': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.events': { paramsTuple?: []; params?: {} }
+    'server-stats.routes': { paramsTuple?: []; params?: {} }
+    'server-stats.logs': { paramsTuple?: []; params?: {} }
+    'server-stats.emails': { paramsTuple?: []; params?: {} }
+    'server-stats.emails.preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.traces': { paramsTuple?: []; params?: {} }
+    'server-stats.traces.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.cache': { paramsTuple?: []; params?: {} }
+    'server-stats.cache.show': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
+    'server-stats.jobs': { paramsTuple?: []; params?: {} }
+    'server-stats.jobs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.jobs.retry': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.config': { paramsTuple?: []; params?: {} }
+    'server-stats.filters': { paramsTuple?: []; params?: {} }
+    'server-stats.filters.create': { paramsTuple?: []; params?: {} }
+    'server-stats.filters.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
+    'analytics.orgs_stats': { paramsTuple?: []; params?: {} }
+    'analytics.orgs_entities': { paramsTuple?: []; params?: {} }
+    'analytics.users_stats': { paramsTuple?: []; params?: {} }
+    'analytics.users_entities': { paramsTuple?: []; params?: {} }
+    'analytics.leases_stats': { paramsTuple?: []; params?: {} }
+    'analytics.leases_entities': { paramsTuple?: []; params?: {} }
+    'analytics.maintenance_stats': { paramsTuple?: []; params?: {} }
+    'analytics.maintenance_entities': { paramsTuple?: []; params?: {} }
+    'analytics.activity_stats': { paramsTuple?: []; params?: {} }
+    'analytics.activity_entities': { paramsTuple?: []; params?: {} }
+    'dashboard.stats': { paramsTuple?: []; params?: {} }
+    'dashboard.recent_activity': { paramsTuple?: []; params?: {} }
+    'leases.stats': { paramsTuple?: []; params?: {} }
+    'leases.payments': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leases.activity': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.stats': { paramsTuple?: []; params?: {} }
+    'leaseable_entities.leases': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.activity': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.stats': { paramsTuple?: []; params?: {} }
+    'orgs.store': { paramsTuple?: []; params?: {} }
+    'orgs.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'org_actions.ban_user': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.unban_user': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.make_favourite': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.undo_favourite': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.make_test_account': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.undo_test_account': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.toggle_sales_account': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.request_delete_custom_user': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.bulk_make_favourite': { paramsTuple?: []; params?: {} }
+    'org_actions.bulk_undo_favourite': { paramsTuple?: []; params?: {} }
+    'org_actions.bulk_make_test_account': { paramsTuple?: []; params?: {} }
+    'org_actions.bulk_undo_test_account': { paramsTuple?: []; params?: {} }
+    'org_actions.get_ban_status': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'orgs.leases': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.properties': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.activities': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.invoices': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'push_notifications.users': { paramsTuple?: []; params?: {} }
+    'api.db_backups.store': { paramsTuple?: []; params?: {} }
+    'db_backups.restore': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'emails.index': { paramsTuple?: []; params?: {} }
+    'emails.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.projects': { paramsTuple?: []; params?: {} }
+    'railway.project': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployments': { paramsTuple: [ParamValue]; params: {'serviceId': ParamValue} }
+    'railway.deployment_logs': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_build_logs': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_restart': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_redeploy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.service_deploy': { paramsTuple: [ParamValue]; params: {'serviceId': ParamValue} }
+    'dashboard.index': { paramsTuple?: []; params?: {} }
+    'teams_page.index': { paramsTuple?: []; params?: {} }
+    'teams_page.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leases.index': { paramsTuple?: []; params?: {} }
+    'leases.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.index': { paramsTuple?: []; params?: {} }
+    'leaseable_entities.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.index': { paramsTuple?: []; params?: {} }
+    'orgs.create': { paramsTuple?: []; params?: {} }
+    'orgs.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.create_invoice': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.store_invoice': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.create_invoice_line_item': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'invoiceId': ParamValue} }
+    'orgs.store_invoice_line_item': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'invoiceId': ParamValue} }
+    'push_notifications.index': { paramsTuple?: []; params?: {} }
+    'push_notifications.create': { paramsTuple?: []; params?: {} }
+    'push_notifications.store': { paramsTuple?: []; params?: {} }
+    'push_notifications.resend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'analytics.index': { paramsTuple?: []; params?: {} }
+    'db_backups.index': { paramsTuple?: []; params?: {} }
+    'db_backups.download': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'logs_page.index': { paramsTuple?: []; params?: {} }
+    'servers.index': { paramsTuple?: []; params?: {} }
+    'servers.show': { paramsTuple: [ParamValue]; params: {'projectId': ParamValue} }
+    'addons.index': { paramsTuple?: []; params?: {} }
+    'addons.create': { paramsTuple?: []; params?: {} }
+    'addons.store': { paramsTuple?: []; params?: {} }
+    'addons.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'addons.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'emails_page.index': { paramsTuple?: []; params?: {} }
+    'emails_page.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'db_backups.store': { paramsTuple?: []; params?: {} }
+    'db_backups.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.admin_index': { paramsTuple?: []; params?: {} }
+    'blog_posts.create': { paramsTuple?: []; params?: {} }
+    'blog_posts.store': { paramsTuple?: []; params?: {} }
+    'blog_posts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_categories.index': { paramsTuple?: []; params?: {} }
+    'blog_categories.store': { paramsTuple?: []; params?: {} }
+    'blog_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_tags.index': { paramsTuple?: []; params?: {} }
+    'blog_tags.store': { paramsTuple?: []; params?: {} }
+    'blog_tags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_authors.index': { paramsTuple?: []; params?: {} }
+    'blog_authors.store': { paramsTuple?: []; params?: {} }
+    'blog_authors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'confirm_delete_custom_user.respond': { paramsTuple?: []; params?: {} }
+    'blog_posts.index': { paramsTuple?: []; params?: {} }
+    'blog_posts.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
+    'team_invitations.join_page': { paramsTuple?: []; params?: {} }
+    'auth.logout': { paramsTuple?: []; params?: {} }
+    'auth.login': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password': { paramsTuple?: []; params?: {} }
+    'auth.reset_password': { paramsTuple?: []; params?: {} }
+    'auth.verify_email': { paramsTuple?: []; params?: {} }
+    'auth.verify_email_change': { paramsTuple?: []; params?: {} }
+    'auth.resend_verification_email': { paramsTuple?: []; params?: {} }
+    'users.update_profile': { paramsTuple?: []; params?: {} }
+    'users.update_password': { paramsTuple?: []; params?: {} }
+    'users.upload_avatar': { paramsTuple?: []; params?: {} }
+    'users.delete_avatar': { paramsTuple?: []; params?: {} }
+    'sessions.index': { paramsTuple?: []; params?: {} }
+    'sessions.revoke': { paramsTuple?: []; params?: {} }
+    'sessions.revoke_all': { paramsTuple?: []; params?: {} }
+    'users.delete_account': { paramsTuple?: []; params?: {} }
+    'users.update_settings': { paramsTuple?: []; params?: {} }
+    'users.get_settings': { paramsTuple?: []; params?: {} }
+    'two_factor.setup': { paramsTuple?: []; params?: {} }
+    'two_factor.enable': { paramsTuple?: []; params?: {} }
+    'two_factor.disable': { paramsTuple?: []; params?: {} }
+    'two_factor.verify': { paramsTuple?: []; params?: {} }
+    'two_factor.regenerate_recovery_codes': { paramsTuple?: []; params?: {} }
+    'members.index': { paramsTuple?: []; params?: {} }
+    'members.invitations': { paramsTuple?: []; params?: {} }
+    'members.data_access_options': { paramsTuple?: []; params?: {} }
+    'members.update_member': { paramsTuple: [ParamValue]; params: {'memberId': ParamValue} }
+    'team_invitations.invite': { paramsTuple?: []; params?: {} }
+    'team_invitations.update_invitation': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
+    'team_invitations.invite_link': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
+    'team_invitations.accept': { paramsTuple?: []; params?: {} }
+    'notifications.index': { paramsTuple?: []; params?: {} }
+    'notifications.mark_as_read': { paramsTuple?: []; params?: {} }
+    'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
+    'notifications.unread_count': { paramsTuple?: []; params?: {} }
+    'notifications.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'audits.index': { paramsTuple?: []; params?: {} }
+    'audits.recent': { paramsTuple?: []; params?: {} }
+    'health_checks': { paramsTuple?: []; params?: {} }
+    'server_stats.index': { paramsTuple?: []; params?: {} }
+    'debug.queries': { paramsTuple?: []; params?: {} }
+    'debug.events': { paramsTuple?: []; params?: {} }
+    'debug.routes': { paramsTuple?: []; params?: {} }
+    'debug.emails': { paramsTuple?: []; params?: {} }
+    'debug.email_preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'debug.traces': { paramsTuple?: []; params?: {} }
+    'debug.trace_detail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_stream': { paramsTuple?: []; params?: {} }
+    'subscribe': { paramsTuple?: []; params?: {} }
+    'unsubscribe': { paramsTuple?: []; params?: {} }
+  }
+  GET: {
+    'server-stats.dashboard': { paramsTuple?: []; params?: {} }
+    'server-stats.overview': { paramsTuple?: []; params?: {} }
+    'server-stats.overview.chart': { paramsTuple?: []; params?: {} }
+    'server-stats.requests': { paramsTuple?: []; params?: {} }
+    'server-stats.requests.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.queries': { paramsTuple?: []; params?: {} }
+    'server-stats.queries.grouped': { paramsTuple?: []; params?: {} }
+    'server-stats.queries.explain': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.events': { paramsTuple?: []; params?: {} }
+    'server-stats.routes': { paramsTuple?: []; params?: {} }
+    'server-stats.logs': { paramsTuple?: []; params?: {} }
+    'server-stats.emails': { paramsTuple?: []; params?: {} }
+    'server-stats.emails.preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.traces': { paramsTuple?: []; params?: {} }
+    'server-stats.traces.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.cache': { paramsTuple?: []; params?: {} }
+    'server-stats.cache.show': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
+    'server-stats.jobs': { paramsTuple?: []; params?: {} }
+    'server-stats.jobs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.config': { paramsTuple?: []; params?: {} }
+    'server-stats.filters': { paramsTuple?: []; params?: {} }
+    'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
+    'analytics.orgs_stats': { paramsTuple?: []; params?: {} }
+    'analytics.orgs_entities': { paramsTuple?: []; params?: {} }
+    'analytics.users_stats': { paramsTuple?: []; params?: {} }
+    'analytics.users_entities': { paramsTuple?: []; params?: {} }
+    'analytics.leases_stats': { paramsTuple?: []; params?: {} }
+    'analytics.leases_entities': { paramsTuple?: []; params?: {} }
+    'analytics.maintenance_stats': { paramsTuple?: []; params?: {} }
+    'analytics.maintenance_entities': { paramsTuple?: []; params?: {} }
+    'analytics.activity_stats': { paramsTuple?: []; params?: {} }
+    'analytics.activity_entities': { paramsTuple?: []; params?: {} }
+    'dashboard.stats': { paramsTuple?: []; params?: {} }
+    'dashboard.recent_activity': { paramsTuple?: []; params?: {} }
+    'leases.stats': { paramsTuple?: []; params?: {} }
+    'leases.payments': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leases.activity': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.stats': { paramsTuple?: []; params?: {} }
+    'leaseable_entities.leases': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.activity': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.stats': { paramsTuple?: []; params?: {} }
+    'org_actions.get_ban_status': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'orgs.leases': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.properties': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.activities': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.invoices': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'push_notifications.users': { paramsTuple?: []; params?: {} }
+    'emails.index': { paramsTuple?: []; params?: {} }
+    'emails.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.projects': { paramsTuple?: []; params?: {} }
+    'railway.project': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployments': { paramsTuple: [ParamValue]; params: {'serviceId': ParamValue} }
+    'railway.deployment_logs': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_build_logs': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'dashboard.index': { paramsTuple?: []; params?: {} }
+    'teams_page.index': { paramsTuple?: []; params?: {} }
+    'teams_page.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leases.index': { paramsTuple?: []; params?: {} }
+    'leases.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.index': { paramsTuple?: []; params?: {} }
+    'leaseable_entities.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.index': { paramsTuple?: []; params?: {} }
+    'orgs.create': { paramsTuple?: []; params?: {} }
+    'orgs.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.create_invoice': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.create_invoice_line_item': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'invoiceId': ParamValue} }
+    'push_notifications.index': { paramsTuple?: []; params?: {} }
+    'push_notifications.create': { paramsTuple?: []; params?: {} }
+    'analytics.index': { paramsTuple?: []; params?: {} }
+    'db_backups.index': { paramsTuple?: []; params?: {} }
+    'db_backups.download': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'logs_page.index': { paramsTuple?: []; params?: {} }
+    'servers.index': { paramsTuple?: []; params?: {} }
+    'servers.show': { paramsTuple: [ParamValue]; params: {'projectId': ParamValue} }
+    'addons.index': { paramsTuple?: []; params?: {} }
+    'addons.create': { paramsTuple?: []; params?: {} }
+    'addons.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'emails_page.index': { paramsTuple?: []; params?: {} }
+    'emails_page.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.admin_index': { paramsTuple?: []; params?: {} }
+    'blog_posts.create': { paramsTuple?: []; params?: {} }
+    'blog_posts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_categories.index': { paramsTuple?: []; params?: {} }
+    'blog_tags.index': { paramsTuple?: []; params?: {} }
+    'blog_authors.index': { paramsTuple?: []; params?: {} }
+    'confirm_delete_custom_user.respond': { paramsTuple?: []; params?: {} }
+    'blog_posts.index': { paramsTuple?: []; params?: {} }
+    'blog_posts.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
+    'team_invitations.join_page': { paramsTuple?: []; params?: {} }
+    'auth.logout': { paramsTuple?: []; params?: {} }
+    'auth.verify_email': { paramsTuple?: []; params?: {} }
+    'auth.verify_email_change': { paramsTuple?: []; params?: {} }
+    'sessions.index': { paramsTuple?: []; params?: {} }
+    'users.get_settings': { paramsTuple?: []; params?: {} }
+    'members.index': { paramsTuple?: []; params?: {} }
+    'members.invitations': { paramsTuple?: []; params?: {} }
+    'members.data_access_options': { paramsTuple?: []; params?: {} }
+    'notifications.index': { paramsTuple?: []; params?: {} }
+    'notifications.unread_count': { paramsTuple?: []; params?: {} }
+    'audits.index': { paramsTuple?: []; params?: {} }
+    'audits.recent': { paramsTuple?: []; params?: {} }
+    'health_checks': { paramsTuple?: []; params?: {} }
+    'server_stats.index': { paramsTuple?: []; params?: {} }
+    'debug.queries': { paramsTuple?: []; params?: {} }
+    'debug.events': { paramsTuple?: []; params?: {} }
+    'debug.routes': { paramsTuple?: []; params?: {} }
+    'debug.emails': { paramsTuple?: []; params?: {} }
+    'debug.email_preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'debug.traces': { paramsTuple?: []; params?: {} }
+    'debug.trace_detail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_stream': { paramsTuple?: []; params?: {} }
+  }
+  HEAD: {
+    'server-stats.dashboard': { paramsTuple?: []; params?: {} }
+    'server-stats.overview': { paramsTuple?: []; params?: {} }
+    'server-stats.overview.chart': { paramsTuple?: []; params?: {} }
+    'server-stats.requests': { paramsTuple?: []; params?: {} }
+    'server-stats.requests.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.queries': { paramsTuple?: []; params?: {} }
+    'server-stats.queries.grouped': { paramsTuple?: []; params?: {} }
+    'server-stats.queries.explain': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.events': { paramsTuple?: []; params?: {} }
+    'server-stats.routes': { paramsTuple?: []; params?: {} }
+    'server-stats.logs': { paramsTuple?: []; params?: {} }
+    'server-stats.emails': { paramsTuple?: []; params?: {} }
+    'server-stats.emails.preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.traces': { paramsTuple?: []; params?: {} }
+    'server-stats.traces.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.cache': { paramsTuple?: []; params?: {} }
+    'server-stats.cache.show': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
+    'server-stats.jobs': { paramsTuple?: []; params?: {} }
+    'server-stats.jobs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.config': { paramsTuple?: []; params?: {} }
+    'server-stats.filters': { paramsTuple?: []; params?: {} }
+    'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
+    'analytics.orgs_stats': { paramsTuple?: []; params?: {} }
+    'analytics.orgs_entities': { paramsTuple?: []; params?: {} }
+    'analytics.users_stats': { paramsTuple?: []; params?: {} }
+    'analytics.users_entities': { paramsTuple?: []; params?: {} }
+    'analytics.leases_stats': { paramsTuple?: []; params?: {} }
+    'analytics.leases_entities': { paramsTuple?: []; params?: {} }
+    'analytics.maintenance_stats': { paramsTuple?: []; params?: {} }
+    'analytics.maintenance_entities': { paramsTuple?: []; params?: {} }
+    'analytics.activity_stats': { paramsTuple?: []; params?: {} }
+    'analytics.activity_entities': { paramsTuple?: []; params?: {} }
+    'dashboard.stats': { paramsTuple?: []; params?: {} }
+    'dashboard.recent_activity': { paramsTuple?: []; params?: {} }
+    'leases.stats': { paramsTuple?: []; params?: {} }
+    'leases.payments': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leases.activity': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.stats': { paramsTuple?: []; params?: {} }
+    'leaseable_entities.leases': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.activity': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.stats': { paramsTuple?: []; params?: {} }
+    'org_actions.get_ban_status': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'orgs.leases': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.properties': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.activities': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.invoices': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'push_notifications.users': { paramsTuple?: []; params?: {} }
+    'emails.index': { paramsTuple?: []; params?: {} }
+    'emails.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.projects': { paramsTuple?: []; params?: {} }
+    'railway.project': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployments': { paramsTuple: [ParamValue]; params: {'serviceId': ParamValue} }
+    'railway.deployment_logs': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_build_logs': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'dashboard.index': { paramsTuple?: []; params?: {} }
+    'teams_page.index': { paramsTuple?: []; params?: {} }
+    'teams_page.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leases.index': { paramsTuple?: []; params?: {} }
+    'leases.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'leaseable_entities.index': { paramsTuple?: []; params?: {} }
+    'leaseable_entities.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.index': { paramsTuple?: []; params?: {} }
+    'orgs.create': { paramsTuple?: []; params?: {} }
+    'orgs.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.create_invoice': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.create_invoice_line_item': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'invoiceId': ParamValue} }
+    'push_notifications.index': { paramsTuple?: []; params?: {} }
+    'push_notifications.create': { paramsTuple?: []; params?: {} }
+    'analytics.index': { paramsTuple?: []; params?: {} }
+    'db_backups.index': { paramsTuple?: []; params?: {} }
+    'db_backups.download': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'logs_page.index': { paramsTuple?: []; params?: {} }
+    'servers.index': { paramsTuple?: []; params?: {} }
+    'servers.show': { paramsTuple: [ParamValue]; params: {'projectId': ParamValue} }
+    'addons.index': { paramsTuple?: []; params?: {} }
+    'addons.create': { paramsTuple?: []; params?: {} }
+    'addons.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'emails_page.index': { paramsTuple?: []; params?: {} }
+    'emails_page.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.admin_index': { paramsTuple?: []; params?: {} }
+    'blog_posts.create': { paramsTuple?: []; params?: {} }
+    'blog_posts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_categories.index': { paramsTuple?: []; params?: {} }
+    'blog_tags.index': { paramsTuple?: []; params?: {} }
+    'blog_authors.index': { paramsTuple?: []; params?: {} }
+    'confirm_delete_custom_user.respond': { paramsTuple?: []; params?: {} }
+    'blog_posts.index': { paramsTuple?: []; params?: {} }
+    'blog_posts.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
+    'team_invitations.join_page': { paramsTuple?: []; params?: {} }
+    'auth.logout': { paramsTuple?: []; params?: {} }
+    'auth.verify_email': { paramsTuple?: []; params?: {} }
+    'auth.verify_email_change': { paramsTuple?: []; params?: {} }
+    'sessions.index': { paramsTuple?: []; params?: {} }
+    'users.get_settings': { paramsTuple?: []; params?: {} }
+    'members.index': { paramsTuple?: []; params?: {} }
+    'members.invitations': { paramsTuple?: []; params?: {} }
+    'members.data_access_options': { paramsTuple?: []; params?: {} }
+    'notifications.index': { paramsTuple?: []; params?: {} }
+    'notifications.unread_count': { paramsTuple?: []; params?: {} }
+    'audits.index': { paramsTuple?: []; params?: {} }
+    'audits.recent': { paramsTuple?: []; params?: {} }
+    'health_checks': { paramsTuple?: []; params?: {} }
+    'server_stats.index': { paramsTuple?: []; params?: {} }
+    'debug.queries': { paramsTuple?: []; params?: {} }
+    'debug.events': { paramsTuple?: []; params?: {} }
+    'debug.routes': { paramsTuple?: []; params?: {} }
+    'debug.emails': { paramsTuple?: []; params?: {} }
+    'debug.email_preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'debug.traces': { paramsTuple?: []; params?: {} }
+    'debug.trace_detail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'event_stream': { paramsTuple?: []; params?: {} }
+  }
+  POST: {
+    'server-stats.jobs.retry': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.filters.create': { paramsTuple?: []; params?: {} }
+    'orgs.store': { paramsTuple?: []; params?: {} }
+    'org_actions.ban_user': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.unban_user': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.make_favourite': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.undo_favourite': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.make_test_account': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.undo_test_account': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.toggle_sales_account': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.request_delete_custom_user': { paramsTuple: [ParamValue]; params: {'orgId': ParamValue} }
+    'org_actions.bulk_make_favourite': { paramsTuple?: []; params?: {} }
+    'org_actions.bulk_undo_favourite': { paramsTuple?: []; params?: {} }
+    'org_actions.bulk_make_test_account': { paramsTuple?: []; params?: {} }
+    'org_actions.bulk_undo_test_account': { paramsTuple?: []; params?: {} }
+    'api.db_backups.store': { paramsTuple?: []; params?: {} }
+    'db_backups.restore': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_restart': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.deployment_redeploy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'railway.service_deploy': { paramsTuple: [ParamValue]; params: {'serviceId': ParamValue} }
+    'orgs.store_invoice': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'orgs.store_invoice_line_item': { paramsTuple: [ParamValue,ParamValue]; params: {'id': ParamValue,'invoiceId': ParamValue} }
+    'push_notifications.store': { paramsTuple?: []; params?: {} }
+    'push_notifications.resend': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'addons.store': { paramsTuple?: []; params?: {} }
+    'db_backups.store': { paramsTuple?: []; params?: {} }
+    'blog_posts.store': { paramsTuple?: []; params?: {} }
+    'blog_categories.store': { paramsTuple?: []; params?: {} }
+    'blog_tags.store': { paramsTuple?: []; params?: {} }
+    'blog_authors.store': { paramsTuple?: []; params?: {} }
+    'auth.login': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password': { paramsTuple?: []; params?: {} }
+    'auth.reset_password': { paramsTuple?: []; params?: {} }
+    'auth.resend_verification_email': { paramsTuple?: []; params?: {} }
+    'users.upload_avatar': { paramsTuple?: []; params?: {} }
+    'sessions.revoke': { paramsTuple?: []; params?: {} }
+    'sessions.revoke_all': { paramsTuple?: []; params?: {} }
+    'two_factor.setup': { paramsTuple?: []; params?: {} }
+    'two_factor.enable': { paramsTuple?: []; params?: {} }
+    'two_factor.disable': { paramsTuple?: []; params?: {} }
+    'two_factor.verify': { paramsTuple?: []; params?: {} }
+    'two_factor.regenerate_recovery_codes': { paramsTuple?: []; params?: {} }
+    'team_invitations.invite': { paramsTuple?: []; params?: {} }
+    'team_invitations.invite_link': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
+    'team_invitations.accept': { paramsTuple?: []; params?: {} }
+    'notifications.mark_as_read': { paramsTuple?: []; params?: {} }
+    'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
+    'subscribe': { paramsTuple?: []; params?: {} }
+    'unsubscribe': { paramsTuple?: []; params?: {} }
+  }
+  DELETE: {
+    'server-stats.filters.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'db_backups.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_tags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_authors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.delete_avatar': { paramsTuple?: []; params?: {} }
+    'users.delete_account': { paramsTuple?: []; params?: {} }
+    'notifications.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  PUT: {
+    'orgs.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'addons.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.update_profile': { paramsTuple?: []; params?: {} }
+    'users.update_password': { paramsTuple?: []; params?: {} }
+    'users.update_settings': { paramsTuple?: []; params?: {} }
+    'members.update_member': { paramsTuple: [ParamValue]; params: {'memberId': ParamValue} }
+    'team_invitations.update_invitation': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
+  }
+}
+declare module '@adonisjs/core/types/http' {
+  export interface RoutesList extends ScannedRoutes {}
+}

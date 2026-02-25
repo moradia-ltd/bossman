@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import logger from '@adonisjs/core/services/logger'
 import drive from '@adonisjs/drive/services/main'
 import DbBackup from '#models/db_backup'
+import DbBackupTransformer from '#transformers/db_backup_transformer'
 import BackupService from '#services/backup_service'
 
 export default class DbBackupsController {
@@ -12,7 +13,11 @@ export default class DbBackupsController {
       .orderBy('createdAt', 'desc')
       .paginate(params.page ?? 1, params.perPage ?? 20)
 
-    return inertia.render('db-backups/index', { backups: inertia.defer(async () => backups) })
+    return inertia.render('db-backups/index', {
+      backups: inertia.defer(async () =>
+        DbBackupTransformer.paginate(backups.all(), backups.getMeta())
+      ),
+    })
   }
 
   /** API: create a new backup. Returns JSON. */
