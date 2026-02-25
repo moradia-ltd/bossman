@@ -5,13 +5,18 @@ import { router, usePage } from '@inertiajs/react'
 import {
   IconBell,
   IconBuilding,
+  IconChartBar,
   IconCheck,
   IconDatabase,
   IconFileText,
   IconLayoutDashboard,
   IconLogout,
+  IconLogs,
+  IconMail,
   IconMoon,
   IconNews,
+  IconPackage,
+  IconServer,
   IconSettings,
   IconSquarePlus,
   IconStack,
@@ -30,7 +35,20 @@ import {
 } from '@/components/ui/command'
 import { useTheme } from '@/hooks/use-theme'
 
-type PageKey = 'dashboard' | 'teams' | 'blog'
+type PageKey =
+  | 'analytics'
+  | 'dashboard'
+  | 'teams'
+  | 'blog'
+  | 'orgs'
+  | 'leases'
+  | 'properties'
+  | 'pushNotifications'
+  | 'dbBackups'
+  | 'logs'
+  | 'emails'
+  | 'servers'
+  | 'addons'
 
 type CommandEntry = {
   label: string
@@ -90,10 +108,40 @@ export function CommandPalette() {
 
   const appNav: CommandEntry[] = [
     {
+      label: 'Analytics',
+      href: '/analytics',
+      icon: <IconChartBar className='mr-2 h-4 w-4' />,
+      requires: 'analytics',
+    },
+    {
       label: 'Dashboard',
       href: '/dashboard',
       icon: <IconLayoutDashboard className='mr-2 h-4 w-4' />,
       requires: 'dashboard',
+    },
+    {
+      label: 'Leases',
+      href: '/leases',
+      icon: <IconFileText className='mr-2 h-4 w-4' />,
+      requires: 'leases',
+    },
+    {
+      label: 'Properties',
+      href: '/properties',
+      icon: <IconStack className='mr-2 h-4 w-4' />,
+      requires: 'properties',
+    },
+    {
+      label: 'Customers',
+      href: '/orgs',
+      icon: <IconBuilding className='mr-2 h-4 w-4' />,
+      requires: 'orgs',
+    },
+    {
+      label: 'Push notifications',
+      href: '/push-notifications',
+      icon: <IconBell className='mr-2 h-4 w-4' />,
+      requires: 'pushNotifications',
     },
     {
       label: 'Teams',
@@ -102,34 +150,28 @@ export function CommandPalette() {
       requires: 'teams',
     },
     {
-      label: 'Leases',
-      href: '/leases',
-      icon: <IconFileText className='mr-2 h-4 w-4' />,
-      requires: 'dashboard',
-    },
-    {
-      label: 'Properties',
-      href: '/properties',
-      icon: <IconStack className='mr-2 h-4 w-4' />,
-      requires: 'dashboard',
-    },
-    {
-      label: 'Customers',
-      href: '/orgs',
-      icon: <IconBuilding className='mr-2 h-4 w-4' />,
-      requires: 'dashboard',
-    },
-    {
-      label: 'Push notifications',
-      href: '/push-notifications',
-      icon: <IconBell className='mr-2 h-4 w-4' />,
-      requires: 'dashboard',
-    },
-    {
       label: 'Backups',
       href: '/db-backups',
       icon: <IconDatabase className='mr-2 h-4 w-4' />,
-      requires: 'dashboard',
+      requires: 'dbBackups',
+    },
+    {
+      label: 'Servers',
+      href: '/servers',
+      icon: <IconServer className='mr-2 h-4 w-4' />,
+      requires: 'servers',
+    },
+    {
+      label: 'Logs',
+      href: '/logs',
+      icon: <IconLogs className='mr-2 h-4 w-4' />,
+      requires: 'logs',
+    },
+    {
+      label: 'Emails',
+      href: '/emails',
+      icon: <IconMail className='mr-2 h-4 w-4' />,
+      requires: 'emails',
     },
     {
       label: 'Blog',
@@ -160,6 +202,12 @@ export function CommandPalette() {
       href: '/blog/manage/authors',
       icon: <IconNews className='mr-2 h-4 w-4' />,
       requires: 'blog',
+    },
+    {
+      label: 'Addons',
+      href: '/addons',
+      icon: <IconPackage className='mr-2 h-4 w-4' />,
+      requires: 'addons',
     },
     { label: 'Settings', href: '/settings', icon: <IconSettings className='mr-2 h-4 w-4' /> },
   ]

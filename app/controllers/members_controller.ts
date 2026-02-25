@@ -119,6 +119,8 @@ export default class MembersController {
     const member = await TeamMember.query().where('id', memberId).firstOrFail()
 
     const body = await request.validateUsing(updateMemberValidator)
+    const requestBody = request.body() as Record<string, unknown> | undefined
+
     if (body.allowedPages !== undefined) {
       const pages = Array.isArray(body.allowedPages) ? body.allowedPages : null
       const resolved = pages?.length ? [...pages] : null
@@ -127,7 +129,11 @@ export default class MembersController {
       }
       member.allowedPages = resolved?.length ? resolved : null
     }
-    if (body.enableProdAccess !== undefined) {
+    // Apply enableProdAccess when present in request (including false) so toggling off is persisted
+    if (requestBody && Object.prototype.hasOwnProperty.call(requestBody, 'enableProdAccess')) {
+      const v = requestBody.enableProdAccess
+      member.enableProdAccess = v === true || v === 'true' || v === 1
+    } else if (body.enableProdAccess !== undefined) {
       member.enableProdAccess = body.enableProdAccess
     }
     if (body.dataAccessMode !== undefined) {

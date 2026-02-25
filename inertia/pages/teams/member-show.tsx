@@ -105,7 +105,7 @@ export default function MemberShow({ member }: MemberShowProps) {
 
   const handleSave = () => {
     updateMutation.mutate({
-      enableProdAccess,
+      enableProdAccess: Boolean(enableProdAccess),
       propertiesAccessMode,
       leasesAccessMode,
       allowedLeaseableEntityIds: Array.from(selectedPropertyIds),
@@ -137,18 +137,28 @@ export default function MemberShow({ member }: MemberShowProps) {
               value={member.role ? member.role.charAt(0).toUpperCase() + member.role.slice(1) : '—'}
             />
           </SimpleGrid>
-          <div className='mt-6 flex items-center justify-between rounded-lg border border-border p-3'>
+          <div className='mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between rounded-lg border border-border p-3'>
             <div>
               <Label htmlFor='member-prod-access'>Enable Prod access</Label>
               <p className='text-xs text-muted-foreground'>
                 If off, this member can only access the dev database, not production.
               </p>
             </div>
-            <Switch
-              id='member-prod-access'
-              checked={enableProdAccess}
-              onCheckedChange={setEnableProdAccess}
-            />
+            <div className='flex items-center gap-3 shrink-0'>
+              <Switch
+                id='member-prod-access'
+                checked={enableProdAccess}
+                onCheckedChange={setEnableProdAccess}
+              />
+              <Button
+                size='sm'
+                variant='secondary'
+                onClick={handleSave}
+                isLoading={updateMutation.isPending}
+                loadingText='Saving…'>
+                Save
+              </Button>
+            </div>
           </div>
         </AppCard>
 

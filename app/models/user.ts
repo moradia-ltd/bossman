@@ -30,6 +30,9 @@ export default class User extends compose(SuperBaseModel, AuthFinder) {
   declare email: string
 
   @column()
+  declare isGodAdmin: boolean
+
+  @column()
   declare role: 'super_admin' | 'admin' | 'normal_user'
 
   @computed()

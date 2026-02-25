@@ -126,7 +126,9 @@ export function Sidebar({ children }: SidebarProps) {
     showSectionLabels,
   } = useSidebar()
   const pageAccess = (page.props as { pageAccess?: string[] | null }).pageAccess
+  const enableProdAccess = (page.props as { enableProdAccess?: boolean }).enableProdAccess ?? true
 
+  console.log('enableProdAccess', enableProdAccess)
   /** Maps nav href to the page key used in pageAccess (must match backend PAGE_KEY_TO_PATH). */
   const pathToPageKey = (href: string): string | null => {
     const path = `/${String(href || '')
@@ -294,12 +296,14 @@ export function Sidebar({ children }: SidebarProps) {
         )}
       </ScrollArea>
 
-      <div className='border-t p-3 text-center'>
-        <span
-          className={`text-xs font-bold text-center text-${environment === 'prod' ? 'green' : 'red'}-500`}>
-          {startCase(environment)}{' '}
-        </span>
-      </div>
+      {enableProdAccess && (
+        <div className='border-t p-3 text-center'>
+          <span
+            className={`text-xs font-bold text-center text-${environment === 'prod' ? 'green' : 'red'}-500`}>
+            {startCase(environment)}{' '}
+          </span>
+        </div>
+      )}
       {/* User section */}
       <div className='border-t p-3'>
         <DropdownMenu>
@@ -337,29 +341,33 @@ export function Sidebar({ children }: SidebarProps) {
             </div>
             <DropdownMenuSeparator />
 
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <IconWorld className='h-4 w-4' />
-                Environment
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent side='right' align='start' className='p-2'>
-                <DropdownMenuRadioGroup
-                  value={environment}
-                  onValueChange={(v) => setEnvironment(v as 'prod' | 'dev')}>
-                  <DropdownMenuRadioItem value='prod'>
-                    <IconSun className='h-4 w-4' />
-                    Production
-                  </DropdownMenuRadioItem>
+            {enableProdAccess && (
+              <>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <IconWorld className='h-4 w-4' />
+                    Environment
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent side='right' align='start' className='p-2'>
+                    <DropdownMenuRadioGroup
+                      value={environment}
+                      onValueChange={(v) => setEnvironment(v as 'prod' | 'dev')}>
+                      <DropdownMenuRadioItem value='prod'>
+                        <IconSun className='h-4 w-4' />
+                        Production
+                      </DropdownMenuRadioItem>
 
-                  <DropdownMenuRadioItem value='dev'>
-                    <IconDeviceLaptop className='h-4 w-4' />
-                    Development
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
+                      <DropdownMenuRadioItem value='dev'>
+                        <IconDeviceLaptop className='h-4 w-4' />
+                        Development
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
 
-            <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
+              </>
+            )}
 
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>

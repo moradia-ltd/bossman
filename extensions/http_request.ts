@@ -39,6 +39,7 @@ Request.macro('paginationQs', async function (this: Request) {
 declare module '@adonisjs/core/http' {
   interface Request {
     appEnv(): AppEnv
+    /** Set by enable_prod_access_middleware for Inertia sharedData. When false, hide env switcher. */
 
     timeZone(): string
     userDateTime(): DateTime

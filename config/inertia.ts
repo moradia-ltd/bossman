@@ -16,6 +16,8 @@ const inertiaConfig = defineConfig({
   sharedData: {
     user: (ctx) => ctx.inertia.always(() => ctx.auth?.user),
     appEnv: (ctx) => (ctx.session?.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev',
+    /** When false, user is restricted to dev; hide environment dropdown in sidebar. Set by enable_prod_access_middleware. */
+
     isDev: () => env.get('NODE_ENV') === 'development',
     pageAccess: (ctx) =>
       ctx.inertia.always(async () => {
@@ -24,12 +26,11 @@ const inertiaConfig = defineConfig({
         if (!user.isAdminOrSuperAdmin) return null
         return await getPageAccessForUser(user.id)
       }),
-    nodeEnv: () => env.get('NODE_ENV'),
     params: (ctx) => ctx.request.params(),
     errors: (ctx) => ctx.session?.flashMessages.get('errors'),
     qs: async (ctx) => ({
       ...ctx.request.qs(),
-      ...(app.inTest ? {} : await ctx.request?.paginationQs()),
+      ...(await ctx.request?.paginationQs()),
     }),
     isLoggedIn: (ctx) => ctx.inertia.always(() => ctx.auth?.isAuthenticated ?? false),
   },

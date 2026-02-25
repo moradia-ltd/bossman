@@ -72,7 +72,8 @@ interface TeamsPageProps extends SharedProps {
   members?: PaginatedResponse<RawTeamMember>
 }
 
-export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
+export default function TeamsPage({ members }: TeamsPageProps) {
+  console.log("🚀 ~ TeamsPage ~ members:", members)
   const queryClient = useQueryClient()
   const { query, changePage, changeRows, searchTable } = useInertiaParams({
     page: 1,
@@ -85,7 +86,7 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
   const [editMemberPages, setEditMemberPages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
   const [editEnableProdAccess, setEditEnableProdAccess] = useState(true)
 
-  const members = membersProp
+
 
   const updateMemberMutation = useMutation({
     mutationFn: async ({
@@ -175,15 +176,15 @@ export default function TeamsPage({ members: membersProp }: TeamsPageProps) {
               pagination={
                 members?.meta
                   ? {
-                      page: members.meta.currentPage,
-                      pageSize: members.meta.perPage,
-                      total: members.meta.total,
-                      onPageChange: (p) => changePage(p),
-                      onPageSizeChange: (pageSize) => {
-                        changeRows(pageSize)
-                        changePage(1)
-                      },
-                    }
+                    page: members.meta.currentPage,
+                    pageSize: members.meta.perPage,
+                    total: members.meta.total,
+                    onPageChange: (p) => changePage(p),
+                    onPageSizeChange: (pageSize) => {
+                      changeRows(pageSize)
+                      changePage(1)
+                    },
+                  }
                   : undefined
               }
               emptyMessage='No members found'
