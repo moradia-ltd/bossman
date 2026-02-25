@@ -13,12 +13,15 @@ export default class ServersController {
       return response.forbidden()
     }
 
-    return inertia.render('servers/index', {
-      projects: inertia.defer(async () => {
-        const railway = new RailwayApiService()
-        return railway.listProjects()
-      }),
-    })
+    return (inertia.render as (page: string, props: object) => ReturnType<HttpContext['inertia']['render']>)(
+      'servers/index',
+      {
+        projects: inertia.defer((async () => {
+          const railway = new RailwayApiService()
+          return railway.listProjects()
+        }) as never),
+      },
+    )
   }
 
   async show({ params, request, auth, inertia, response }: HttpContext) {
@@ -28,12 +31,15 @@ export default class ServersController {
 
     const projectId = params.projectId
     const projectName = request.input('name') as string | undefined
-    return inertia.render('servers/project-show', {
-      projectName: projectName ?? null,
-      project: inertia.defer(async () => {
-        const railway = new RailwayApiService()
-        return railway.getProject(projectId)
-      }),
-    })
+    return (inertia.render as (page: string, props: object) => ReturnType<HttpContext['inertia']['render']>)(
+      'servers/project-show',
+      {
+        projectName: projectName ?? null,
+        project: inertia.defer((async () => {
+          const railway = new RailwayApiService()
+          return railway.getProject(projectId)
+        }) as never),
+      },
+    )
   }
 }
