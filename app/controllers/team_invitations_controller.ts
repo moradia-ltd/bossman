@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto'
+
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
-import { appUrl } from '#emails/global'
+
 import TeamInvitation from '#models/team_invitation'
 import TeamMember from '#models/team_member'
 import User from '#models/user'
@@ -10,11 +11,14 @@ import { generateShortId } from '#services/app.functions'
 import mailer from '#services/email_service'
 import notificationService from '#services/notification_service'
 import { getPageAccessForUser } from '#services/page_access_service'
+import env from '#start/env'
 import {
   acceptTeamInviteGuestValidator,
   inviteToTeamValidator,
   updateInvitationValidator,
 } from '#validators/team'
+
+const appUrl = env.get('APP_URL')
 
 function hashInviteToken(token: string) {
   return createHash('sha256').update(token).digest('hex')

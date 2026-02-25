@@ -2,12 +2,16 @@ import type { HttpContext } from '@adonisjs/core/http'
 import emitter from '@adonisjs/core/services/emitter'
 import hash from '@adonisjs/core/services/hash'
 import { attachmentManager } from '@jrmc/adonis-attachment'
-import { appUrl } from '#emails/global'
+
 import User from '#models/user'
 import { generateShortId } from '#services/app.functions'
 import mailer from '#services/email_service'
+import env from '#start/env'
 import { updatePasswordValidator, updateProfileValidator } from '#validators/user'
+
 import { allowedImageExtensions } from '../data/file.js'
+
+const appUrl = env.get('APP_URL')
 
 export default class UsersController {
   async updateProfile({ auth, request, response, logger }: HttpContext) {

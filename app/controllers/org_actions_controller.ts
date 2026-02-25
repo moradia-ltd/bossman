@@ -1,18 +1,22 @@
 import { createHash } from 'node:crypto'
+
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
+
 import { banUser } from '#boss/jobs/ban_user'
-import { appUrl } from '#emails/global'
 import AccountBan from '#models/account_ban'
 import DeleteAccountRequest from '#models/delete_account_request'
 import Org from '#models/org'
 import { generateShortId } from '#services/app.functions'
 import mailer from '#services/email_service'
+import env from '#start/env'
 import { banUserValidator, bulkOrgIdsValidator } from '#validators/org_action'
 
 function hashDeleteRequestToken(token: string) {
   return createHash('sha256').update(token).digest('hex')
 }
+
+const appUrl = env.get('APP_URL')
 
 export default class OrgActionsController {
   async getBanStatus({ request, params, response }: HttpContext) {
