@@ -15,9 +15,9 @@
   @vite(['resources/css/app.css', 'inertia/app/app.tsx', `inertia/pages/${page.component}.tsx`])
 </head>
 
-@serverStats()
 
 <body class="min-h-screen w-screen font-sans">
+  @serverStats()
   @inertia()
 </body>
 

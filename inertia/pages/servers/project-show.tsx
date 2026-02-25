@@ -1,6 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   IconChevronDown,
   IconChevronRight,
@@ -11,8 +10,7 @@ import {
   IconServer,
   IconTerminal2,
 } from '@tabler/icons-react'
-
-import { RuntimeLogsSheet } from './components/runtime-logs-sheet'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { timeAgo } from '#utils/date'
@@ -22,16 +20,17 @@ import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { BaseSheet } from '@/components/ui/base-sheet'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
+import { RuntimeLogsSheet } from './components/runtime-logs-sheet'
 
 interface RailwayService {
   id: string
@@ -92,6 +91,8 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
   } | null>(null)
   const [selectedDeploymentId, setSelectedDeploymentId] = useState<string | null>(null)
 
+
+
   const { data: deployments = [], isLoading: deploymentsLoading } = useQuery({
     queryKey: ['railway', 'deployments', selectedService?.id, selectedService?.environmentId],
     queryFn: async () => {
@@ -105,6 +106,8 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
     },
     enabled: !!selectedService && deploymentsSheetOpen,
   })
+
+  console.log('deployments', deployments)
 
   const restartMutation = useMutation({
     mutationFn: (deploymentId: string) => api.post(`/railway/deployments/${deploymentId}/restart`),
@@ -175,7 +178,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
         return 'default'
       case 'BUILDING':
       case 'DEPLOYING':
-      case 'PENDING':
+      case 'NEEDS_APPROVAL':
         return 'secondary'
       case 'FAILED':
       case 'CRASHED':
@@ -267,13 +270,12 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                   key={d.id}
                   className='overflow-hidden border-border bg-card transition-colors hover:border-primary/25'>
                   <div
-                    className={`border-l-4 ${
-                      d.status === 'SUCCESS'
-                        ? 'border-l-green-500'
-                        : d.status === 'FAILED' || d.status === 'CRASHED'
-                          ? 'border-l-destructive'
-                          : 'border-l-amber-500'
-                    }`}>
+                    className={`border-l-4 ${d.status === 'SUCCESS'
+                      ? 'border-l-green-500'
+                      : d.status === 'FAILED' || d.status === 'CRASHED'
+                        ? 'border-l-destructive'
+                        : 'border-l-amber-500'
+                      }`}>
                     <div className='flex flex-col gap-3 p-4'>
                       <p
                         className='text-sm font-medium text-foreground truncate'
@@ -296,7 +298,7 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
                         </div>
                         {index === 0 && (
                           <div className='flex shrink-0 items-center gap-2'>
-                            {d.status === 'PENDING' && (
+                            {d.status === 'NEEDS_APPROVAL' && (
                               <Button
                                 variant='default'
                                 size='xs'

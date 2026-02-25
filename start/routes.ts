@@ -241,7 +241,17 @@ router.get('/swagger', async () => {
 })
 
 router.get('/admin/api/server-stats', '#controllers/server_stats_controller.index')
-
+// router
+//   .group(() => {
+//     router.get('queries', '#controllers/debug_controller.queries')
+//     router.get('events', '#controllers/debug_controller.events')
+//     router.get('routes', '#controllers/debug_controller.routes')
+//     router.get('emails', '#controllers/debug_controller.emails')
+//     router.get('emails/:id/preview', '#controllers/debug_controller.emailPreview')
+//     router.get('traces', '#controllers/debug_controller.traces')
+//     router.get('traces/:id', '#controllers/debug_controller.traceDetail')
+//   })
+//   .prefix('/admin/api/debug')
 // Renders Swagger-UI and passes YAML-output of /swagger
 router.get('/docs/:id?', async ({ params }) => {
   const id = params.id
