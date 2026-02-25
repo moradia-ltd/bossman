@@ -12,6 +12,8 @@
     "rootDir": "./inertia",
     "composite": true,
     "noEmit": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
   },
   "include": [
     "./inertia/**/*.ts",
