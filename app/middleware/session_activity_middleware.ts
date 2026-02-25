@@ -1,7 +1,15 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
 import { DateTime } from 'luxon'
+
 import sessionService from '#services/session_service'
+
+/** Paths that poll frequently; skip activity DB updates to avoid constant writes. */
+const SKIP_ACTIVITY_PATHS = ['/admin/api/server-stats', '/admin/api/debug']
+
+function shouldSkipActivityUpdate(url: string): boolean {
+  return SKIP_ACTIVITY_PATHS.some((p) => url.startsWith(p))
+}
 
 /**
  * Middleware to update the last activity timestamp for the current session
@@ -9,56 +17,56 @@ import sessionService from '#services/session_service'
 export default class SessionActivityMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     // Only enforce/update if user is authenticated
-    if (ctx.auth.user) {
-      const userId = ctx.auth.user.id
-      const ipAddress = ctx.request.ip()
-      const userAgent = ctx.request.header('user-agent') || null
+    // if (ctx.auth.user) {
+    //   const userId = ctx.auth.user.id
+    //   const ipAddress = ctx.request.ip()
+    //   const userAgent = ctx.request.header('user-agent') || null
 
-      let deviceSessionId = ctx.session.get('deviceSessionId') as string | undefined
+    //   let deviceSessionId = ctx.session.get('deviceSessionId') as string | undefined
 
-      // Backwards compat: if missing, attach a new device session id and create a row
-      if (!deviceSessionId) {
-        deviceSessionId = ctx.session.sessionId
-        ctx.session.put('deviceSessionId', deviceSessionId)
-        await sessionService.createOrUpdateSession({
-          deviceSessionId,
-          userId,
-          ipAddress,
-          userAgent,
-          lastActivity: DateTime.now(),
-        })
-      } else {
-        const exists = await sessionService.sessionExists(deviceSessionId, userId)
-        if (!exists) {
-          // Session was revoked elsewhere; force logout
-          await ctx.auth.use('web').logout()
-          ctx.session.forget('deviceSessionId')
+    //   // Backwards compat: if missing, attach a new device session id and create a row
+    //   if (!deviceSessionId) {
+    //     deviceSessionId = ctx.session.sessionId
+    //     ctx.session.put('deviceSessionId', deviceSessionId)
+    //     await sessionService.createOrUpdateSession({
+    //       deviceSessionId,
+    //       userId,
+    //       ipAddress,
+    //       userAgent,
+    //       lastActivity: DateTime.now(),
+    //     })
+    //   } else {
+    //     const exists = await sessionService.sessionExists(deviceSessionId, userId)
+    //     if (!exists) {
+    //       // Session was revoked elsewhere; force logout
+    //       await ctx.auth.use('web').logout()
+    //       ctx.session.forget('deviceSessionId')
 
-          if (ctx.request.url().startsWith('/api/')) {
-            return ctx.response.unauthorized({ error: 'Session revoked' })
-          }
+    //       if (ctx.request.url().startsWith('/api/')) {
+    //         return ctx.response.unauthorized({ error: 'Session revoked' })
+    //       }
 
-          return ctx.response.redirect('/login')
-        }
-      }
-    }
+    //       return ctx.response.redirect('/login')
+    //     }
+    //   }
+    // }
 
     await next()
 
-    // Update activity after the request completes
-    if (ctx.auth.user) {
-      const userId = ctx.auth.user.id
-      const deviceSessionId = ctx.session.get('deviceSessionId') as string | undefined
+    // Update activity after the request completes (skip for polling endpoints)
+    // if (ctx.auth.user && !shouldSkipActivityUpdate(ctx.request.url())) {
+    //   const userId = ctx.auth.user.id
+    //   const deviceSessionId = ctx.session.get('deviceSessionId') as string | undefined
 
-      if (deviceSessionId) {
-        await sessionService.updateActivityById(deviceSessionId, userId)
-      } else {
-        await sessionService.updateActivity({
-          userId,
-          ipAddress: ctx.request.ip(),
-          userAgent: ctx.request.header('user-agent') || null,
-        })
-      }
-    }
+    //   if (deviceSessionId) {
+    //     await sessionService.updateActivityById(deviceSessionId, userId)
+    //   } else {
+    //     await sessionService.updateActivity({
+    //       userId,
+    //       ipAddress: ctx.request.ip(),
+    //       userAgent: ctx.request.header('user-agent') || null,
+    //     })
+    //   }
+    // }
   }
 }

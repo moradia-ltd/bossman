@@ -5,15 +5,14 @@ import {
   httpCollector,
   logCollector,
   processCollector,
-  queueCollector,
-  redisCollector,
   systemCollector,
 } from 'adonisjs-server-stats/collectors'
 
 export default defineConfig({
-  // How often to collect and broadcast stats (in milliseconds)
+  // How often to collect and broadcast stats (in milliseconds).
+  // Higher = fewer HTTP requests and fewer session commits from the stats bar.
   shouldShow: (ctx) => ctx.auth.user?.isGodAdmin,
-  intervalMs: 3000,
+  intervalMs: 10_000,
 
   devToolbar: {
     enabled: true,
@@ -30,6 +29,7 @@ export default defineConfig({
   channelName: 'admin/server-stats',
   // HTTP endpoint that serves the latest stats snapshot (set to false to disable)
   endpoint: '/admin/api/server-stats',
+
   collectors: [
     // CPU usage, event loop lag, heap/RSS memory, uptime, Node.js version
     processCollector(),
@@ -43,21 +43,6 @@ export default defineConfig({
     // Lucid connection pool: used/free/pending/max connections
     // Requires @adonisjs/lucid
     dbPoolCollector({ connectionName: 'default' }),
-
-    // Redis server stats: memory, connected clients, keys, hit rate
-    // Requires @adonisjs/redis
-    // redisCollector(),
-
-    // BullMQ queue stats: active/waiting/delayed/failed jobs
-    // Requires bullmq -- connects directly to Redis (not via @adonisjs/redis)
-    // queueCollector({
-    //   queueName: 'default',
-    //   connection: {
-    //     host: env.get('QUEUE_REDIS_HOST'),
-    //     port: env.get('QUEUE_REDIS_PORT'),
-    //     password: env.get('QUEUE_REDIS_PASSWORD'),
-    //   },
-    // }),
 
     // Log file stats: errors/warnings in a 5-minute window, entries/minute
     logCollector({ logPath: 'logs/adonisjs.log' }),

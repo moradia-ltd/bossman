@@ -1,16 +1,23 @@
 import string from '@adonisjs/core/helpers/string'
 import emitter from '@adonisjs/core/services/emitter'
 import logger from '@adonisjs/core/services/logger'
-import UserListener from '#listeners/user'
 
 import '#boss/base'
+import UserListener from '#listeners/user'
 
 emitter.on('user:created', [UserListener, 'userCreated'])
 emitter.on('user:deleted', [UserListener, 'userDeleted'])
 emitter.on('new:custom-user', [UserListener, 'newCustomUser'])
 
+// Fires once per HTTP request when the session is written. Frequent commits usually
+// come from polling (e.g. server-stats bar, debug panel, Transmit). See config/server_stats
+// intervalMs and session_activity_middleware SKIP_ACTIVITY_PATHS to reduce noise.
+// emitter.on('session:committed', () => {
+//   console.log(`Session committed: ${Date.now()}`)
+// })
+
 emitter.on('db:connection:connect', (connectionName) => {
-  console.log(`Database connection "${connectionName.clientName}" is now established.`)
+  logger.info(`Database connection "${connectionName.clientName}" is now established.`)
 })
 
 emitter.on('db:connection:disconnect', (connectionName) => {

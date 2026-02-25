@@ -235,8 +235,6 @@ router
   .prefix('api/v1/audits')
   .use(middleware.auth())
 
-transmit.registerRoutes()
-
 router.get('/health', [HealthChecksController])
 
 router.get('/swagger', async () => {
@@ -271,3 +269,5 @@ router.get('/docs/:id?', async ({ params }) => {
   return AutoSwagger.default.scalar('/swagger')
   // return AutoSwagger.default.rapidoc('/swagger', 'read')
 })
+
+transmit.registerRoutes()

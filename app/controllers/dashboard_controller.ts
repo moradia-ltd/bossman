@@ -1,11 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
+
 import Activity from '#models/activity'
 
 export default class DashboardController {
-  async stats({ request, response }: HttpContext) {
+  async stats({ request, response, logger }: HttpContext) {
     const appEnv = request.appEnv()
     const conn = db.connection(appEnv)
+
+    logger.info('DashboardController stats', { appEnv })
 
     const [usersResult, leasesResult, activityResult] = await Promise.all([
       conn.rawQuery('SELECT COUNT(*)::int AS total FROM users'),
