@@ -89,7 +89,7 @@ router
       return response.ok({ appEnv })
     })
     router.put('update-env', async ({ request, session, response }) => {
-      const updateEnvValidator = vine.compile(
+      const updateEnvValidator = vine.create(
         vine.object({
           appEnv: vine.enum(['dev', 'prod'] as const),
         }),

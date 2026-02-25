@@ -1,13 +1,13 @@
 import vine from '@vinejs/vine'
 
-export const updateProfileValidator = vine.compile(
+export const updateProfileValidator = vine.create(
   vine.object({
     fullName: vine.string().maxLength(255).optional(),
     email: vine.string().toLowerCase().trim().email().optional(),
   }),
 )
 
-export const updatePasswordValidator = vine.compile(
+export const updatePasswordValidator = vine.create(
   vine.object({
     currentPassword: vine.string(),
     newPassword: vine.string().minLength(8),

@@ -1,6 +1,6 @@
 import vine from '@vinejs/vine'
 
-export const createBlogPostValidator = vine.compile(
+export const createBlogPostValidator = vine.create(
   vine.object({
     title: vine.string().trim().minLength(2).maxLength(255),
     summary: vine.string().trim().maxLength(1000).optional(),
@@ -15,7 +15,7 @@ export const createBlogPostValidator = vine.compile(
   }),
 )
 
-export const updateBlogPostValidator = vine.compile(
+export const updateBlogPostValidator = vine.create(
   vine.object({
     title: vine.string().trim().minLength(2).maxLength(255).optional(),
     summary: vine.string().trim().maxLength(1000).optional(),
@@ -30,20 +30,20 @@ export const updateBlogPostValidator = vine.compile(
   }),
 )
 
-export const createBlogCategoryValidator = vine.compile(
+export const createBlogCategoryValidator = vine.create(
   vine.object({
     name: vine.string().trim().minLength(2).maxLength(255),
     description: vine.string().trim().maxLength(2000).optional(),
   }),
 )
 
-export const createBlogTagValidator = vine.compile(
+export const createBlogTagValidator = vine.create(
   vine.object({
     name: vine.string().trim().minLength(1).maxLength(255),
   }),
 )
 
-export const createBlogAuthorValidator = vine.compile(
+export const createBlogAuthorValidator = vine.create(
   vine.object({
     name: vine.string().trim().minLength(2).maxLength(255),
     email: vine.string().trim().email().toLowerCase().optional(),

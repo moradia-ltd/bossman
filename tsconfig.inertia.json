@@ -10,7 +10,8 @@
   "extends": "./inertia/tsconfig.json",
   "compilerOptions": {
     "rootDir": "./inertia",
-    "composite": true
+    "composite": true,
+    "noEmit": false,
   },
   "include": [
     "./inertia/**/*.ts",

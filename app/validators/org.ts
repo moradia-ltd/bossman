@@ -24,7 +24,7 @@ const pages = vine.object({
     }),
   ),
 })
-export const createCustomerUserValidator = vine.compile(
+export const createCustomerUserValidator = vine.create(
   vine.object({
     name: vine.string(),
     email: vine.string().email(),
@@ -66,7 +66,7 @@ export const createCustomerUserValidator = vine.compile(
   }),
 )
 
-export const editCustomerUserValidator = vine.compile(
+export const editCustomerUserValidator = vine.create(
   vine.object({
     name: vine.string(),
     ownerRole: vine.enum(['landlord', 'agency']),
@@ -119,7 +119,7 @@ const customPaymentScheduleUpdate = vine.object({
   plan: vine.enum(['standard', 'essential', 'premium']).optional(),
 })
 
-export const updateOrgValidator = vine.compile(
+export const updateOrgValidator = vine.create(
   vine.object({
     name: vine.string().optional(),
     creatorEmail: vine.string().email().optional(),

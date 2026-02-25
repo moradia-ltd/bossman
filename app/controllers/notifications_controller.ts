@@ -1,9 +1,10 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import vine from '@vinejs/vine'
+
 import Notification from '#models/notification'
 import notificationService from '#services/notification_service'
 
-const markAsReadValidator = vine.compile(
+const markAsReadValidator = vine.create(
   vine.object({
     notificationId: vine.string(),
   }),
