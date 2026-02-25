@@ -7,7 +7,7 @@
   "scripts": {
     "start": "ENV_PATH=../ node build/bin/server.js",
     "build": "node ace build",
-    "dev": "rm -f public/assets/.vite/manifest.json 2>/dev/null; node ace serve --hmr",
+    "dev": " node ace serve --hmr",
     "test": "node ace test",
     "fmt": "oxfmt",
     "init": "oxfmt --migrate biome",
