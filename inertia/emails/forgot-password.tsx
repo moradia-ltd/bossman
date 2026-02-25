@@ -1,8 +1,9 @@
-import { appUrl } from '#emails/global'
 import { EmailButton, EmailHeading, EmailLink, EmailText, EmailWrapper } from '#emails/layout'
+import env from '#start/env'
 import type { Emails } from '#types/mails'
 
 function ForgotPassword(props: Emails['forgot-password']) {
+  const appUrl = env.get('APP_URL', 'http://localhost:3333')
   const resetUrl = `${appUrl}/reset-password?token=${props.token}`
 
   return (
