@@ -1,5 +1,6 @@
 import { BaseModel, beforeDelete, beforeSave, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import type { HasMany, HasOne } from '@adonisjs/lucid/types/relations'
+
 import Org from '#models/org'
 import Property from '#models/property'
 import TogethaUser from '#models/togetha_user'

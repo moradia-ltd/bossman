@@ -2,6 +2,7 @@ import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import type { DateTime } from 'luxon'
+
 import Addon from './addon.js'
 import Org from './org.js'
 

@@ -26,7 +26,7 @@ server.use([
   () => import('#middleware/container_bindings_middleware'),
   () => import('@adonisjs/static/static_middleware'),
   () => import('@adonisjs/vite/vite_middleware'),
-  () => import('@adonisjs/inertia/inertia_middleware'),
+  () => import('#middleware/inertia_middleware'),
   () => import('adonisjs-server-stats/middleware'),
 ])
 
@@ -42,7 +42,7 @@ router.use([
   () => import('@adonisjs/shield/shield_middleware'),
   () => import('@adonisjs/auth/initialize_auth_middleware'),
   () => import('#middleware/silent_auth_middleware'),
-  () => import('#middleware/session_activity_middleware'),
+  // () => import('#middleware/session_activity_middleware'),
   () => import('#middleware/enable_prod_access_middleware'),
 ])
 

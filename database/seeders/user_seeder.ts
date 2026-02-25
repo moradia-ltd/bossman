@@ -1,5 +1,6 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import { DateTime } from 'luxon'
+
 import User from '#models/user'
 
 export default class extends BaseSeeder {

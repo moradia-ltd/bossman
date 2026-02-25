@@ -68,7 +68,7 @@ export default class DashboardController {
   }
 
   async index({ inertia }: HttpContext) {
-    return inertia.render('dashboard/index')
+    return inertia.render('dashboard/index' as never, {})
   }
 
   async recentActivity({ request, response }: HttpContext) {

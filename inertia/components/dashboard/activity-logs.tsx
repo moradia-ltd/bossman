@@ -1,8 +1,9 @@
 import { Link } from '@inertiajs/react'
-import { useQuery } from '@tanstack/react-query'
 import { IconActivity, IconClock, IconFilePencil, IconPlus, IconTrash } from '@tabler/icons-react'
-import { Badge } from '@/components/ui/badge'
+import { useQuery } from '@tanstack/react-query'
+
 import { AppCard } from '@/components/ui/app-card'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Loading } from '@/components/ui/loading'

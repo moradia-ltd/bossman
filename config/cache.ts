@@ -1,5 +1,6 @@
 import { defineConfig, drivers, store } from '@adonisjs/cache'
 import app from '@adonisjs/core/services/app'
+
 import env from '#start/env'
 
 const cacheConfig = defineConfig({

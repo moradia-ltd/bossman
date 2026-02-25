@@ -1,9 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
+
 import Activity from '#models/activity'
 import Lease from '#models/lease'
 import Payment from '#models/payment'
 import { getDataAccessForUser } from '#services/data_access_service'
+import LeaseTransformer from '#transformers/lease_transformer'
 
 export default class LeasesController {
   async index({ auth, request, inertia }: HttpContext) {
@@ -25,9 +27,12 @@ export default class LeasesController {
       }
     }
 
-    const leases = baseQuery.withPagination(params)
+    const leasesPromise = baseQuery.withPagination(params)
     return inertia.render('leases/index', {
-      leases: inertia.defer(async () => leases),
+      leases: inertia.defer(async () => {
+        const p = await leasesPromise
+        return LeaseTransformer.paginate(p.all(), p.getMeta())
+      }),
       dataAccessExpired: dataAccess?.dataAccessExpired ?? false,
       dataAccessExpiredAt: dataAccess?.dataAccessExpiredAt ?? null,
     })
@@ -60,7 +65,7 @@ export default class LeasesController {
       }
     }
 
-    return inertia.render('leases/show', { lease })
+    return inertia.render('leases/show', { lease: LeaseTransformer.transform(lease) })
   }
 
   async payments({ response, request, params }: HttpContext) {

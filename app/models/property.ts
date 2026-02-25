@@ -2,13 +2,14 @@ import { compose } from '@adonisjs/core/helpers'
 import { belongsTo, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { Auditable } from '@stouder-io/adonis-auditing'
+
 import LeaseableEntity from '#models/leaseable_entity'
 import TogethaActivity from '#models/togetha_activity'
+
 import Document from './document.js'
 import Landlord from './landlord.js'
 import Lease from './lease.js'
 import Org from './org.js'
-
 import SuperBaseModel from './super_base.js'
 
 export type CouncilTaxBand = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'unknown'

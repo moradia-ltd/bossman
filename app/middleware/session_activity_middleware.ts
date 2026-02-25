@@ -21,9 +21,7 @@ export default class SessionActivityMiddleware {
     //   const userId = ctx.auth.user.id
     //   const ipAddress = ctx.request.ip()
     //   const userAgent = ctx.request.header('user-agent') || null
-
     //   let deviceSessionId = ctx.session.get('deviceSessionId') as string | undefined
-
     //   // Backwards compat: if missing, attach a new device session id and create a row
     //   if (!deviceSessionId) {
     //     deviceSessionId = ctx.session.sessionId
@@ -41,23 +39,18 @@ export default class SessionActivityMiddleware {
     //       // Session was revoked elsewhere; force logout
     //       await ctx.auth.use('web').logout()
     //       ctx.session.forget('deviceSessionId')
-
     //       if (ctx.request.url().startsWith('/api/')) {
     //         return ctx.response.unauthorized({ error: 'Session revoked' })
     //       }
-
     //       return ctx.response.redirect('/login')
     //     }
     //   }
     // }
-
-    await next()
-
+    // await next()
     // Update activity after the request completes (skip for polling endpoints)
     // if (ctx.auth.user && !shouldSkipActivityUpdate(ctx.request.url())) {
     //   const userId = ctx.auth.user.id
     //   const deviceSessionId = ctx.session.get('deviceSessionId') as string | undefined
-
     //   if (deviceSessionId) {
     //     await sessionService.updateActivityById(deviceSessionId, userId)
     //   } else {

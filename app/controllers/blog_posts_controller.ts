@@ -1,10 +1,15 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
+
 import BlogAuthor from '#models/blog_author'
 import BlogCategory from '#models/blog_category'
 import BlogPost from '#models/blog_post'
 import BlogTag from '#models/blog_tag'
+import BlogAuthorTransformer from '#transformers/blog_author_transformer'
+import BlogCategoryTransformer from '#transformers/blog_category_transformer'
+import BlogPostTransformer from '#transformers/blog_post_transformer'
+import BlogTagTransformer from '#transformers/blog_tag_transformer'
 import { createBlogPostValidator, updateBlogPostValidator } from '#validators/blog'
 
 export default class BlogPostsController {
@@ -20,7 +25,12 @@ export default class BlogPostsController {
       .sortBy(params.sortBy || 'publishedAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 12)
 
-    return inertia.render('blog/index', { posts: inertia.defer(async () => posts) })
+    return inertia.render('blog/index', {
+      posts: inertia.defer(async () => {
+        const p = await posts
+        return BlogPostTransformer.paginate(p.all(), p.getMeta()) as never
+      }) as never,
+    })
   }
 
   async show({ params, inertia, response }: HttpContext) {
@@ -34,7 +44,7 @@ export default class BlogPostsController {
 
     if (!post) return response.notFound({ error: 'Post not found' })
 
-    return inertia.render('blog/show', { post })
+    return inertia.render('blog/show', { post: BlogPostTransformer.transform(post) as never })
   }
 
   async adminIndex({ request, inertia }: HttpContext) {
@@ -51,7 +61,12 @@ export default class BlogPostsController {
       .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 10)
 
-    return inertia.render('blog/manage/index', { posts: inertia.defer(async () => posts) })
+    return inertia.render('blog/manage/index', {
+      posts: inertia.defer(async () => {
+        const p = await posts
+        return BlogPostTransformer.paginate(p.all(), p.getMeta()) as never
+      }),
+    })
   }
 
   async create({ inertia }: HttpContext) {
@@ -60,9 +75,9 @@ export default class BlogPostsController {
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
 
     return inertia.render('blog/manage/create', {
-      categories,
-      tags,
-      authors,
+      categories: BlogCategoryTransformer.transform(categories) as never,
+      tags: BlogTagTransformer.transform(tags) as never,
+      authors: BlogAuthorTransformer.transform(authors) as never,
     })
   }
 
@@ -81,10 +96,10 @@ export default class BlogPostsController {
     const authors = await BlogAuthor.query().orderBy('name', 'asc')
 
     return inertia.render('blog/manage/edit', {
-      post,
-      categories,
-      tags,
-      authors,
+      post: BlogPostTransformer.transform(post) as never,
+      categories: BlogCategoryTransformer.transform(categories) as never,
+      tags: BlogTagTransformer.transform(tags) as never,
+      authors: BlogAuthorTransformer.transform(authors) as never,
     })
   }
 

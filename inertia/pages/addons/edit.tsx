@@ -1,5 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
+
 import type { RawAddon } from '#types/model-types'
 import { startCase } from '#utils/functions'
 import { DashboardLayout } from '@/components/dashboard/layout'

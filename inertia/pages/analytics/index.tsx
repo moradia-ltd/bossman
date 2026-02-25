@@ -1,7 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link } from '@inertiajs/react'
-import { useQuery } from '@tanstack/react-query'
-import { format, subDays, subMonths, subYears } from 'date-fns'
 import {
   IconActivity,
   IconBriefcase,
@@ -11,7 +9,10 @@ import {
   IconUser,
   IconTool,
 } from '@tabler/icons-react'
+import { useQuery } from '@tanstack/react-query'
+import { format, subDays, subMonths, subYears } from 'date-fns'
 import { useMemo, useState } from 'react'
+
 import type { PaginatedResponse } from '#types/extra'
 import type { RawActivity, RawLease, RawOrg } from '#types/model-types'
 import { timeAgo } from '#utils/date'
@@ -22,12 +23,12 @@ import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
+import { BaseSheet } from '@/components/ui/base-sheet'
 import type { ChartConfig } from '@/components/ui/chart'
 import { DatePresetPicker } from '@/components/ui/date-preset-picker'
-import { BaseSheet } from '@/components/ui/base-sheet'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { SimpleGrid } from '@/components/ui/simplegrid'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import api from '@/lib/http'
 
 const ANALYTICS_DATE_PRESETS = [
@@ -332,11 +333,14 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
             return null
           })}
         </ul>
-        {entitiesData && entitiesData.meta.total > entitiesData.data.length && (
-          <div className='text-muted-foreground mt-4 rounded-lg bg-muted/30 px-3 py-2 text-center text-xs'>
-            Showing {entitiesData.data.length} of {entitiesData.meta.total} — scroll for more
-          </div>
-        )}
+        {entitiesData &&
+          (entitiesData.metadata ?? entitiesData.meta)?.total != null &&
+          (entitiesData.metadata ?? entitiesData.meta)!.total > entitiesData.data.length && (
+            <div className='text-muted-foreground mt-4 rounded-lg bg-muted/30 px-3 py-2 text-center text-xs'>
+              Showing {entitiesData.data.length} of{' '}
+              {(entitiesData.metadata ?? entitiesData.meta)!.total} — scroll for more
+            </div>
+          )}
       </ScrollArea>
     )
   }

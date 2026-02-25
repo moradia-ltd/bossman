@@ -2,7 +2,7 @@ import vine from '@vinejs/vine'
 
 const billingType = vine.enum(['one_off', 'recurring_monthly', 'recurring_yearly', 'usage'])
 
-export const createAddonValidator = vine.compile(
+export const createAddonValidator = vine.create(
   vine.object({
     name: vine.string().trim().minLength(1).maxLength(255),
     shortDescription: vine.string().trim().maxLength(2000).optional(),
@@ -16,7 +16,7 @@ export const createAddonValidator = vine.compile(
   }),
 )
 
-export const updateAddonValidator = vine.compile(
+export const updateAddonValidator = vine.create(
   vine.object({
     name: vine.string().trim().minLength(1).maxLength(255),
     shortDescription: vine.string().trim().maxLength(2000).optional(),

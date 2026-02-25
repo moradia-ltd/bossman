@@ -13,11 +13,13 @@ import type { BelongsTo, HasMany, ManyToMany } from '@adonisjs/lucid/types/relat
 import { type Attachment, attachment } from '@jrmc/adonis-attachment'
 import { Auditable } from '@stouder-io/adonis-auditing'
 import { DateTime } from 'luxon'
+
 import Tenant from '#models/tenant'
 import meiliSearchClient from '#services/meilisearch_service'
 import type { TogethaCurrencies } from '#utils/currency'
 import DateService from '#utils/date'
 import LeaseUtils from '#utils/lease_utils'
+
 import { FileStoreRoutes } from '../enum/file_store.js'
 import Document from './document.js'
 import type { LeaseSubmitters } from './lease_submitter.js'

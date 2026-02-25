@@ -4,6 +4,7 @@ import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { Auditable } from '@stouder-io/adonis-auditing'
 import { DateTime } from 'luxon'
+
 import Lease from './lease.js'
 import SuperBaseModel from './super_base.js'
 import Tenant from './tenant.js'

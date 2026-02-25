@@ -1,11 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
-import { appUrl } from '#emails/global'
+
 import PasswordReset from '#models/password_reset'
 import User from '#models/user'
 import { generateShortId } from '#services/app.functions'
 import sessionService from '#services/session_service'
+import env from '#start/env'
 import { forgotPasswordValidator, loginValidator, resetPasswordValidator } from '#validators/auth'
+
+const appUrl = env.get('APP_URL')
 
 export default class AuthController {
   async login({ request, response, auth, now, session }: HttpContext) {

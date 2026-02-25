@@ -1,4 +1,5 @@
 import { MeiliSearch } from 'meilisearch'
+
 import env from '#start/env'
 
 const meiliSearchClient = new MeiliSearch({

@@ -1,12 +1,12 @@
 import vine from '@vinejs/vine'
 
-export const bulkOrgIdsValidator = vine.compile(
+export const bulkOrgIdsValidator = vine.create(
   vine.object({
     orgIds: vine.array(vine.string()).minLength(1),
   }),
 )
 
-export const banUserValidator = vine.compile(
+export const banUserValidator = vine.create(
   vine.object({
     reason: vine.string(),
     metadata: vine

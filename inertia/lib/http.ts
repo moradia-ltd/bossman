@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
+
 import type { APIRoutes } from '#extensions/routes-types'
 
 export const multipartHeaders = {

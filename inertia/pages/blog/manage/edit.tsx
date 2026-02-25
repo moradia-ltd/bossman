@@ -1,6 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router, useForm } from '@inertiajs/react'
 import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react'
+
 import type { RawBlogAuthor, RawBlogCategory, RawBlogPost, RawBlogTag } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'

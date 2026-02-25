@@ -8,10 +8,10 @@ import User from '#models/user'
 test.group('Auth', (group) => {
   group.each.setup(async () => {
     await testUtils.db().truncate()
-    group.each.setup(() => testUtils.db().withGlobalTransaction())
+    group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
   })
 
-  test('should login user with valid credentials', async ({ client, assert }) => {
+  test('should login user with valid credentials', async ({ client }) => {
     await User.create({
       fullName: 'John Doe',
       email: 'john-login@example.com',

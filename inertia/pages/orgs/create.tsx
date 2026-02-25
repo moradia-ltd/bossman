@@ -1,15 +1,17 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router } from '@inertiajs/react'
+import { IconClipboardCheck, IconId, IconUsers } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { IconClipboardCheck, IconId, IconUsers } from '@tabler/icons-react'
 import { toast } from 'sonner'
+
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { LoadingOverlay } from '@/components/ui'
 import { createStepperSteps, Stepper } from '@/components/ui/stepper'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
+
 import { CreateCustomerFormStepOne } from './components/create-customer-step-one'
 import { CreateCustomerFormStepTwo } from './components/create-customer-step-two'
 import { CreateCustomerSummary } from './components/create-customer-summary'

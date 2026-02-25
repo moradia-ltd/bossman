@@ -3,7 +3,7 @@ import type { Infer } from '@vinejs/vine/types'
 
 export type QueryParams = Infer<typeof queryParamsSchema>
 
-export const queryParamsSchema = vine.compile(
+export const queryParamsSchema = vine.create(
   vine.object({
     page: vine.number().optional(),
     perPage: vine.number().optional(),

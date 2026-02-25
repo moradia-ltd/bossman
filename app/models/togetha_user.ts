@@ -8,6 +8,7 @@ import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import { type Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
+
 import { FileStoreRoutes } from '../enum/file_store.js'
 import Activity from './activity.js'
 import Notification from './notification.js'

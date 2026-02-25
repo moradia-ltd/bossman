@@ -13,11 +13,13 @@ import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import { type Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
+
 import Org from '#models/org'
 // import Property, { type CouncilTaxBand } from '#models/property'
 // import Room from '#models/room'
 // import Unit from '#models/unit'
 import meiliSearchClient from '#services/meilisearch_service'
+
 import Document from './document.js'
 // import Document from './document.js'
 import Lease from './lease.js'

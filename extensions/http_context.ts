@@ -2,8 +2,8 @@ import { HttpContext } from '@adonisjs/core/http'
 import type { Emails } from '@adonisjs/core/types'
 import type { CookieOptions } from '@adonisjs/core/types/http'
 import { DateTime } from 'luxon'
-import mailer from '#services/email_service'
 
+import mailer from '#services/email_service'
 import type { MailerService } from '#types/mails'
 
 HttpContext.getter('mailer', function (this: HttpContext) {

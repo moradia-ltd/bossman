@@ -3,6 +3,7 @@ import type {
   ChainableContract,
   ExcutableQueryBuilderContract,
 } from '@adonisjs/lucid/types/querybuilder'
+
 import DateService from '#utils/date'
 import type { QueryParams } from '#utils/vine'
 

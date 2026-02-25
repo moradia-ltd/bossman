@@ -1,6 +1,4 @@
 import { router, usePage } from '@inertiajs/react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useFormik } from 'formik'
 import {
   IconCopy,
   IconDownload,
@@ -9,18 +7,21 @@ import {
   IconShieldCheck,
   IconShieldOff,
 } from '@tabler/icons-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useFormik } from 'formik'
 import { useState } from 'react'
 import { toast } from 'sonner'
+
 import { TwoFactorModal } from '@/components/settings/two_factor_modal'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { BaseDialog } from '@/components/ui/base-dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password_input'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { dateTimeFormatter } from '@/lib/date'
-import { BaseDialog } from '@/components/ui/base-dialog'
-import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/seperator'
+import { dateTimeFormatter } from '@/lib/date'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 

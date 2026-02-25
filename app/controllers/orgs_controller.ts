@@ -4,6 +4,7 @@ import logger from '@adonisjs/core/services/logger'
 import db from '@adonisjs/lucid/services/db'
 import axios from 'axios'
 import type Stripe from 'stripe'
+
 import Activity from '#models/activity'
 import Agency from '#models/agency'
 import Landlord from '#models/landlord'
@@ -18,6 +19,7 @@ import { LoopService } from '#services/loop_service'
 import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
 import StripeService from '#services/stripe_service'
+import OrgTransformer from '#transformers/org_transformer'
 import type { AppCountries } from '#types/extra'
 import { createCustomerUserValidator, updateOrgValidator } from '#validators/org'
 
@@ -65,7 +67,10 @@ export default class OrgsController {
       agencies: agenciesResult.total,
     }
 
-    return inertia.render('orgs/index', { orgs: inertia.defer(async () => orgs), stats })
+    return inertia.render('orgs/index', {
+      orgs: inertia.defer(async () => OrgTransformer.paginate(orgs.all(), orgs.getMeta())),
+      stats,
+    } as never)
   }
 
   async stats({ request, response }: HttpContext) {
@@ -82,7 +87,7 @@ export default class OrgsController {
   }
 
   async create({ inertia }: HttpContext) {
-    return inertia.render('orgs/create')
+    return inertia.render('orgs/create', {} as never)
   }
 
   async store({ request, response, logger }: HttpContext) {
@@ -279,13 +284,16 @@ export default class OrgsController {
       console.log('error', error.response.data)
     }
 
-    return inertia.render('orgs/show', { org, isLoopsUser })
+    return inertia.render('orgs/show', {
+      org: OrgTransformer.transform(org),
+      isLoopsUser,
+    } as never)
   }
 
   async edit({ params, inertia, request }: HttpContext) {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
-    return inertia.render('orgs/edit', { org })
+    return inertia.render('orgs/edit', { org: OrgTransformer.transform(org) } as never)
   }
 
   async update({ params, request, response }: HttpContext) {
@@ -381,10 +389,12 @@ export default class OrgsController {
   async activities({ request, params, response }: HttpContext) {
     const appEnv = request.appEnv()
     const paginationParams = await request.paginationQs()
+
     const activities = await Activity.query({ connection: appEnv })
       .where('org_id', params.id)
       .orderBy('created_at', 'desc')
       .paginate(paginationParams.page ?? 1, paginationParams.perPage ?? 10)
+
     return response.ok(activities)
   }
 
@@ -415,7 +425,11 @@ export default class OrgsController {
       .where('status', 'active')
       .where('end_date', '>=', now.toISODate()!)
       .getCount()
-    return inertia.render('orgs/invoices/create', { org, activeLeasesCount })
+
+    return inertia.render('orgs/invoices/create', {
+      org: OrgTransformer.transform(org),
+      activeLeasesCount,
+    } as never)
   }
 
   async storeInvoice({ params, request, response, session }: HttpContext) {
@@ -463,10 +477,7 @@ export default class OrgsController {
       )
       return response.redirect(`/orgs/${params.id}?tab=invoices`)
     } catch (err: unknown) {
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as Error).message)
-          : 'Failed to create draft invoice.'
+      const message = err instanceof Error ? err.message : 'Failed to create draft invoice.'
       session.flash('errors', { error: message })
       return response.redirect().back()
     }
@@ -475,13 +486,12 @@ export default class OrgsController {
   async createInvoiceLineItem({ params, inertia, request, response }: HttpContext) {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
-    if (!org.paymentCustomerId) {
-      return response.notFound()
-    }
+    if (!org.paymentCustomerId) return response.notFound()
+
     return inertia.render('orgs/invoices/line-items/create', {
-      org,
+      org: OrgTransformer.transform(org),
       invoiceId: params.invoiceId,
-    })
+    } as never)
   }
 
   async storeInvoiceLineItem({ params, request, response, session }: HttpContext) {
@@ -496,6 +506,7 @@ export default class OrgsController {
     const amountInput = request.input('amount')
     const amount = typeof amountInput === 'string' ? parseFloat(amountInput) : Number(amountInput)
     const currency = (request.input('currency') ?? 'gbp').toString().trim().toLowerCase() || 'gbp'
+
     if (!description || Number.isNaN(amount) || amount < 0) {
       session.flash('errors', { error: 'Description and a valid amount are required.' })
       return response.redirect().back()
@@ -509,10 +520,7 @@ export default class OrgsController {
       session.flash('success', 'Line item added to the draft invoice.')
       return response.redirect(`/orgs/${params.id}?tab=invoices`)
     } catch (err: unknown) {
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as Error).message)
-          : 'Failed to add line item.'
+      const message = err instanceof Error ? err.message : 'Failed to add line item.'
       session.flash('errors', { error: message })
       return response.redirect().back()
     }

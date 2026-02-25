@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import hash from '@adonisjs/core/services/hash'
+
 import twoFactorService from '#services/two_factor_service'
 
 export default class TwoFactorController {

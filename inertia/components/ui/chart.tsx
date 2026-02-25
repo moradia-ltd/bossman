@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react'
 import { ResponsiveContainer } from 'recharts'
+
 import { cn } from '@/lib/utils'
 
 export type ChartConfig = Record<

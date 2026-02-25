@@ -1,6 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head } from '@inertiajs/react'
 import { useState } from 'react'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
 import { startCase } from '#utils/functions'
@@ -13,6 +14,7 @@ import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
+
 import { LogsFilters } from './components/logs-filters'
 
 /** Audit row from @stouder-io/adonis-auditing (camelCase or snake_case from serialization). */
@@ -197,11 +199,11 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
                 columns={buildColumns(openView)}
                 data={audits?.data ?? []}
                 pagination={
-                  audits?.meta
+                  (audits?.metadata ?? audits?.meta)
                     ? {
-                        page: audits.meta.currentPage,
-                        pageSize: audits.meta.perPage,
-                        total: audits.meta.total,
+                        page: (audits?.metadata ?? audits?.meta)?.currentPage ?? 1,
+                        pageSize: (audits?.metadata ?? audits?.meta)?.perPage ?? 10,
+                        total: (audits?.metadata ?? audits?.meta)?.total ?? 0,
                         onPageChange: changePage,
                         onPageSizeChange: (pageSize) => {
                           changeRows(pageSize)

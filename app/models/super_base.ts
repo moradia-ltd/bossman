@@ -24,7 +24,6 @@ export default class SuperBaseModel extends BaseModel {
 
   public async deepMerge(fieldName: keyof Partial<ModelAttributes<this>>, newData: ModelObject) {
     // Get the existing data for the given field from the database.
-    // @ts-expect-error - We are dynamically accessing the field name here.
     const existingData = this[fieldName] || {}
 
     const deepMerge = (obj1: ModelObject, obj2: ModelObject) => {

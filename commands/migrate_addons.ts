@@ -1,5 +1,6 @@
 import { BaseCommand } from '@adonisjs/core/ace'
 import type { CommandOptions } from '@adonisjs/core/types/ace'
+
 import Addon from '#models/addon'
 
 export default class MigrateAddons extends BaseCommand {

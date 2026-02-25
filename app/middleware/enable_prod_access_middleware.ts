@@ -9,7 +9,7 @@ import type { NextFn } from '@adonisjs/core/types/http'
 export default class EnableProdAccessMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const user = ctx.auth.user
-    const enableProdAccess = user?.enableProdAccess || (user?.isGodAdmin as boolean)
+    const enableProdAccess = Boolean(user?.enableProdAccess ?? user?.isGodAdmin ?? false)
     ctx.inertia.share({ enableProdAccess })
     await next()
   }

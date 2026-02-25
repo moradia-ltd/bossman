@@ -7,6 +7,7 @@ import { column, computed, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import { type Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
+
 import Session from './session.js'
 import SuperBaseModel from './super_base.js'
 

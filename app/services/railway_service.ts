@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
+
 import env from '#start/env'
 
 const RAILWAY_GRAPHQL = 'https://backboard.railway.app/graphql/v2'

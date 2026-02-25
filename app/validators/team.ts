@@ -1,9 +1,10 @@
 import vine from '@vinejs/vine'
+
 import { PAGE_KEYS } from '#utils/page_access'
 
 const email = vine.string().toLowerCase().trim().email()
 
-export const inviteToTeamValidator = vine.compile(
+export const inviteToTeamValidator = vine.create(
   vine.object({
     email,
     role: vine.enum(['owner', 'admin', 'member']).optional(),
@@ -12,7 +13,7 @@ export const inviteToTeamValidator = vine.compile(
   }),
 )
 
-export const acceptTeamInviteGuestValidator = vine.compile(
+export const acceptTeamInviteGuestValidator = vine.create(
   vine.object({
     token: vine.string().trim(),
     fullName: vine.string().trim().minLength(2).maxLength(255),
@@ -21,13 +22,13 @@ export const acceptTeamInviteGuestValidator = vine.compile(
   }),
 )
 
-export const acceptTeamInviteAuthedValidator = vine.compile(
+export const acceptTeamInviteAuthedValidator = vine.create(
   vine.object({
     token: vine.string().trim(),
   }),
 )
 
-export const updateMemberValidator = vine.compile(
+export const updateMemberValidator = vine.create(
   vine.object({
     allowedPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
     enableProdAccess: vine.boolean().optional(),
@@ -41,7 +42,7 @@ export const updateMemberValidator = vine.compile(
   }),
 )
 
-export const updateInvitationValidator = vine.compile(
+export const updateInvitationValidator = vine.create(
   vine.object({
     allowedPages: vine.array(vine.enum(PAGE_KEYS)).optional(),
     enableProdAccess: vine.boolean().optional(),

@@ -1,6 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Link, router, usePage } from '@inertiajs/react'
 import { IconArrowRight, IconMenu2 } from '@tabler/icons-react'
+
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

@@ -1,5 +1,6 @@
 import router from '@adonisjs/core/services/router'
 import vine from '@vinejs/vine'
+
 import { middleware } from '#start/kernel'
 
 const AnalyticsController = () => import('#controllers/analytics_controller')
@@ -68,7 +69,7 @@ router
     router.get('/orgs/:id/invoices', [OrgsController, 'invoices'])
 
     router.get('/push-notifications/users', [PushNotificationsController, 'users'])
-    router.post('/db-backups', [DbBackupsController, 'store'])
+    router.post('/db-backups', [DbBackupsController, 'store']).as('api.db_backups.store')
     router.post('/db-backups/:id/restore', [DbBackupsController, 'restore'])
 
     router.get('/emails', [EmailsController, 'index'])
@@ -88,7 +89,7 @@ router
       return response.ok({ appEnv })
     })
     router.put('update-env', async ({ request, session, response }) => {
-      const updateEnvValidator = vine.compile(
+      const updateEnvValidator = vine.create(
         vine.object({
           appEnv: vine.enum(['dev', 'prod'] as const),
         }),

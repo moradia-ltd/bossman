@@ -1,6 +1,7 @@
 import { afterDelete, afterSave, beforeSave, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import type { DateTime } from 'luxon'
+
 import meiliSearchClient from '#services/meilisearch_service'
 
 import Lease from './lease.js'

@@ -1,6 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link, router } from '@inertiajs/react'
-import { useMutation } from '@tanstack/react-query'
 import {
   IconBriefcase,
   IconBuilding,
@@ -9,8 +8,10 @@ import {
   IconStar,
   IconUser,
 } from '@tabler/icons-react'
+import { useMutation } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawOrg } from '#types/model-types'
 import { timeAgo } from '#utils/date'

@@ -1,9 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
+import { IconUserX } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { IconUserX } from '@tabler/icons-react'
 import { useState } from 'react'
+
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { EmptyState, SimpleGrid } from '@/components/ui'

@@ -1,11 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
 import { IconLoader2, IconTerminal2 } from '@tabler/icons-react'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
+
 import { BaseSheet } from '@/components/ui/base-sheet'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import api from '@/lib/http'
 import { dateFormatter } from '@/lib/date'
+import api from '@/lib/http'
 
 export interface RailwayLog {
   message: string

@@ -5,6 +5,7 @@
  */
 
 import { BaseCommand } from '@adonisjs/core/ace'
+
 import PushNotification from '#models/push_notification'
 import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
 import env from '#start/env'

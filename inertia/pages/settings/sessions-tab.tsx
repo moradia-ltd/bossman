@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   IconDeviceDesktop,
   IconDeviceMobile,
@@ -6,7 +5,9 @@ import {
   IconLogout,
   IconTrash,
 } from '@tabler/icons-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
+
 import type { RawSession } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'

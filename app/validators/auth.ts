@@ -2,7 +2,7 @@ import vine from '@vinejs/vine'
 
 const email = vine.string().toLowerCase().trim().email()
 
-export const createUserValidator = vine.compile(
+export const createUserValidator = vine.create(
   vine.object({
     fullName: vine.string().maxLength(255),
     email,
@@ -10,7 +10,7 @@ export const createUserValidator = vine.compile(
   }),
 )
 
-export const loginValidator = vine.compile(
+export const loginValidator = vine.create(
   vine.object({
     email,
     password: vine.string(),
@@ -19,13 +19,13 @@ export const loginValidator = vine.compile(
   }),
 )
 
-export const forgotPasswordValidator = vine.compile(
+export const forgotPasswordValidator = vine.create(
   vine.object({
     email,
   }),
 )
 
-export const resetPasswordValidator = vine.compile(
+export const resetPasswordValidator = vine.create(
   vine.object({
     newPassword: vine.string(),
     token: vine.string(),

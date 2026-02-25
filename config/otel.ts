@@ -1,5 +1,6 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig, OTLPTraceExporter } from '@adonisjs/otel'
+
 import env from '#start/env'
 
 export default defineConfig({

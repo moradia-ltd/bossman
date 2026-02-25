@@ -1,7 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { IconCopy, IconPencil, IconPlus } from '@tabler/icons-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
+
 import { AppCard } from '@/components/ui/app-card'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'

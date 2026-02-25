@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import db from '@adonisjs/lucid/services/db'
+
 import Activity from '#models/activity'
 import Lease from '#models/lease'
 import MaintenanceRequest from '#models/maintenance_request'
@@ -26,7 +27,7 @@ function parseDateRange(request: HttpContext['request']): DateRange {
 
 export default class AnalyticsController {
   async index({ inertia }: HttpContext) {
-    return inertia.render('analytics/index')
+    return inertia.render('analytics/index', {})
   }
 
   /** Orgs stats and growth (never includes test accounts). */

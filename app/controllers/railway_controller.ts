@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+
 import { getPageAccessForUser } from '#services/page_access_service'
 import { RailwayApiService } from '#services/railway_service'
 

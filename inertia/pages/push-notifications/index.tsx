@@ -2,6 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
 import { IconBell, IconPlus, IconRefresh } from '@tabler/icons-react'
 import { useState } from 'react'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
@@ -25,7 +26,8 @@ export type RawPushNotification = {
   sentAt: string | null
   status: string
   errorMessage: string | null
-  createdAt: string
+  createdAt: string | null
+  updatedAt: string | null
 }
 
 interface PushNotificationsIndexProps extends SharedProps {
@@ -174,7 +176,9 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
               <IconBell className='h-5 w-5' />
               Notifications
             </CardTitle>
-            <CardDescription>{notifications.meta.total} total</CardDescription>
+            <CardDescription>
+              {(notifications?.metadata ?? notifications?.meta)?.total ?? 0} total
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <DataTable
@@ -182,9 +186,9 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
               data={notifications.data}
               emptyMessage='No push notifications yet.'
               pagination={{
-                page: notifications.meta.currentPage,
-                pageSize: notifications.meta.perPage,
-                total: notifications.meta.total,
+                page: (notifications?.metadata ?? notifications?.meta)?.currentPage ?? 1,
+                pageSize: (notifications?.metadata ?? notifications?.meta)?.perPage ?? 20,
+                total: (notifications?.metadata ?? notifications?.meta)?.total ?? 0,
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               }}

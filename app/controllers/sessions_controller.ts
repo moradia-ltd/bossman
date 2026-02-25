@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+
 import sessionService from '#services/session_service'
 
 export default class SessionsController {

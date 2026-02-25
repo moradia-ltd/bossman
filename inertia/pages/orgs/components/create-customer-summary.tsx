@@ -1,10 +1,12 @@
 import type { FormikProps } from 'formik'
+
 import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
 import { OnlyShowIf, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+
 import type { CreateCustomerFormValues } from '../create-form'
 
 interface CreateCustomerSummaryProps {

@@ -1,8 +1,9 @@
 import { router } from '@inertiajs/react'
+import { IconAlertTriangle, IconTrash } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
-import { IconAlertTriangle, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { Button } from '@/components/ui/button'

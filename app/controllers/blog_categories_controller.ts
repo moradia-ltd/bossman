@@ -1,12 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
+
 import BlogCategory from '#models/blog_category'
+import BlogCategoryTransformer from '#transformers/blog_category_transformer'
 import { createBlogCategoryValidator } from '#validators/blog'
 
 export default class BlogCategoriesController {
   async index({ inertia }: HttpContext) {
     const categories = await BlogCategory.query().orderBy('name', 'asc')
     return inertia.render('blog/manage/categories', {
-      categories: inertia.defer(async () => categories),
+      categories: inertia.defer(async () => BlogCategoryTransformer.transform(categories)),
     })
   }
 

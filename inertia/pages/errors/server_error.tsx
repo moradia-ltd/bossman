@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react'
 import { IconAlertCircle, IconArrowLeft, IconHome, IconRefresh } from '@tabler/icons-react'
+
 import { PublicLayout } from '@/components/layouts/public'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,5 +1,4 @@
 import { Link, router } from '@inertiajs/react'
-import { useMutation } from '@tanstack/react-query'
 import {
   IconCircleCheck,
   IconLoader2,
@@ -7,8 +6,10 @@ import {
   IconMailCheck,
   IconCircleX,
 } from '@tabler/icons-react'
+import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'

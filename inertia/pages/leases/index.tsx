@@ -1,7 +1,8 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
-import { useQuery } from '@tanstack/react-query'
 import { IconAlertCircle, IconCircleCheck, IconCircleX, IconFileText } from '@tabler/icons-react'
+import { useQuery } from '@tanstack/react-query'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
@@ -11,13 +12,14 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { LoadingSkeleton, Stack } from '@/components/ui'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
+
 import { StatusBadge } from './components/status'
 
 interface LeasesIndexProps extends SharedProps {
@@ -61,11 +63,14 @@ const columns: Column<RawLease>[] = [
     key: 'Org',
     header: 'Org',
     width: 130,
-    cell: (row) => (
-      <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>
-        {row.org.cleanName}
-      </Link>
-    ),
+    cell: (row) =>
+      row.org ? (
+        <Link href={`/orgs/${row.org.id}`} className='font-medium hover:underline'>
+          {row.org.cleanName ?? row.org.name}
+        </Link>
+      ) : (
+        '—'
+      ),
   },
   {
     key: 'Created At',
@@ -149,9 +154,9 @@ export default function LeasesIndex({
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
               pagination={{
-                page: leases?.meta.currentPage,
-                pageSize: leases?.meta.perPage,
-                total: leases?.meta.total,
+                page: (leases?.metadata ?? leases?.meta)?.currentPage ?? 1,
+                pageSize: (leases?.metadata ?? leases?.meta)?.perPage ?? 20,
+                total: (leases?.metadata ?? leases?.meta)?.total ?? 0,
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               }}

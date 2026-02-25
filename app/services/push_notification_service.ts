@@ -1,6 +1,7 @@
 import logger from '@adonisjs/core/services/logger'
 import db from '@adonisjs/lucid/services/db'
 import { DateTime } from 'luxon'
+
 import type PushNotification from '#models/push_notification'
 import { sendOneSignalPush } from '#services/one_signal_service'
 

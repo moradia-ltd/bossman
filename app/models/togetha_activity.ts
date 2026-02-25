@@ -2,6 +2,7 @@ import logger from '@adonisjs/core/services/logger'
 import { afterCreate, BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { ModelObject } from '@adonisjs/lucid/types/model'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+
 import Document from './document.js'
 import FileUpload from './file_upload.js'
 import Lease from './lease.js'
@@ -10,7 +11,6 @@ import Org from './org.js'
 import Payment from './payment.js'
 // import Photo from './photo.js'
 import Property from './property.js'
-
 import Tenant from './tenant.js'
 import User from './user.js'
 

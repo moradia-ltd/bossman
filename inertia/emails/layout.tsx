@@ -14,7 +14,7 @@ import {
   Text,
 } from '@react-email/components'
 import type React from 'react'
-import { appUrl } from '#emails/global'
+
 import { baseStyles, footerStyles, mergeStyles } from '#emails/styles'
 
 interface EmailWrapperProps {

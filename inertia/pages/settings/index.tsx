@@ -1,9 +1,11 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, router, usePage } from '@inertiajs/react'
+
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+
 import { NotificationsTab } from './notifications-tab'
 import { PasswordTab } from './password-tab'
 import { ProfileTab } from './profile-tab'

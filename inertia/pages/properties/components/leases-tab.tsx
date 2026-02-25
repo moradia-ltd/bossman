@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'

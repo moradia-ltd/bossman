@@ -8,6 +8,7 @@ import {
 } from '@tabler/icons-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+
 import { timeAgo } from '#utils/date'
 import { Badge } from '@/components/ui/badge'
 import { BaseSheet } from '@/components/ui/base-sheet'
@@ -169,12 +170,13 @@ export function DeploymentsSheet({
                 key={d.id}
                 className='overflow-hidden border-border bg-card transition-colors hover:border-primary/25'>
                 <div
-                  className={`border-l-4 ${d.status === 'SUCCESS'
-                    ? 'border-l-green-500'
-                    : d.status === 'FAILED' || d.status === 'CRASHED'
-                      ? 'border-l-destructive'
-                      : 'border-l-amber-500'
-                    }`}>
+                  className={`border-l-4 ${
+                    d.status === 'SUCCESS'
+                      ? 'border-l-green-500'
+                      : d.status === 'FAILED' || d.status === 'CRASHED'
+                        ? 'border-l-destructive'
+                        : 'border-l-amber-500'
+                  }`}>
                   <div className='flex flex-col gap-3 p-4'>
                     <p
                       className='truncate text-sm font-medium text-foreground'

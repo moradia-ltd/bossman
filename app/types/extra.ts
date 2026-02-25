@@ -1,5 +1,6 @@
 import type { MultipartFile } from '@adonisjs/core/bodyparser'
 import type db from '@adonisjs/lucid/services/db'
+
 import type { baseCountries } from '../data/countries.js'
 
 export type AppCountries = (typeof baseCountries)[number]['name']
@@ -22,14 +23,19 @@ export type Column<T> = {
   /** Flex grow weight. Columns with flex share remaining space proportionally. */
   flex?: number
 }
+export type PaginationMeta = {
+  currentPage: number
+  perPage: number
+  total: number
+  lastPage: number
+}
+
 export type PaginatedResponse<T> = {
   data: T[]
-  meta: {
-    currentPage: number
-    perPage: number
-    total: number
-    lastPage: number
-  }
+  /** Lucid paginator uses "meta" */
+  meta?: PaginationMeta
+  /** Transformer paginate() uses "metadata"; support both for compatibility */
+  metadata?: PaginationMeta
 }
 
 export type File = MultipartFile | undefined

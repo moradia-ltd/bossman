@@ -1,4 +1,5 @@
 import vine from '@vinejs/vine'
+
 import { worker } from '#boss/base'
 
 export const cleanUp = worker

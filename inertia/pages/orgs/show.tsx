@@ -1,7 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, router } from '@inertiajs/react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { useFormik } from 'formik'
 import {
   IconBuildingStore,
   IconFlask,
@@ -12,9 +10,12 @@ import {
   IconUserCheck,
   IconUserX,
 } from '@tabler/icons-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useFormik } from 'formik'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import * as Yup from 'yup'
+
 import type { RawOrg } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { timeAgo } from '#utils/date'
@@ -38,6 +39,7 @@ import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
+
 import { ActivitiesTab } from './components/activities-tab'
 import { InvoicesTab } from './components/invoices-tab'
 import { LeasesTab } from './components/leases-tab'

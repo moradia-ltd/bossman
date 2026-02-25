@@ -1,5 +1,6 @@
 import type { Icon } from '@tabler/icons-react'
 import * as React from 'react'
+
 import { cn } from '@/lib/utils'
 
 interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -1,5 +1,5 @@
-import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { slugify } from '@adonisjs/lucid-slugify'
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 import type { DateTime } from 'luxon'
 
 export default class Addon extends BaseModel {

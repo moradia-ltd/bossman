@@ -3,6 +3,7 @@ import { belongsTo, column, computed } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { Auditable } from '@stouder-io/adonis-auditing'
 import { DateTime } from 'luxon'
+
 import SuperBaseModel from './super_base.js'
 import type { TeamRole } from './team_member.js'
 import User from './user.js'

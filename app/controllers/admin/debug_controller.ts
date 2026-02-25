@@ -1,5 +1,5 @@
-import app from '@adonisjs/core/services/app'
 import type { HttpContext } from '@adonisjs/core/http'
+import app from '@adonisjs/core/services/app'
 import type { DebugStore } from 'adonisjs-server-stats/debug'
 import PackageDebugController from 'adonisjs-server-stats/debug/controller'
 

@@ -1,9 +1,10 @@
+import { slugify } from '@adonisjs/lucid-slugify'
 import { column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type { DateTime } from 'luxon'
-import { slugify } from '@adonisjs/lucid-slugify'
-import SuperBaseModel from './super_base.js'
+
 import BlogPost from './blog_post.js'
+import SuperBaseModel from './super_base.js'
 
 export default class BlogCategory extends SuperBaseModel {
   static table = 'blog_categories'

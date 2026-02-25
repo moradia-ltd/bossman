@@ -2,6 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
 import { IconCalendar, IconChevronRight, IconServer } from '@tabler/icons-react'
 import pluralize from 'pluralize'
+
 import { timeAgo } from '#utils/date'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'

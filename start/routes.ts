@@ -12,38 +12,11 @@ import transmit from '@adonisjs/transmit/services/main'
 import AutoSwagger from 'adonis-autoswagger'
 
 import swagger from '#config/swagger'
+import { controllers } from '#generated/controllers'
 
 import { middleware } from './kernel.js'
-import { loginThrottle, throttle } from './limiter.js'
 import './api/api.js'
-
-const AuthController = () => import('#controllers/auth_controller')
-const HealthChecksController = () => import('#controllers/health_checks_controller')
-const UsersController = () => import('#controllers/users_controller')
-const TwoFactorController = () => import('#controllers/two_factor_controller')
-const SessionsController = () => import('#controllers/sessions_controller')
-const NotificationsController = () => import('#controllers/notifications_controller')
-const AuditsController = () => import('#controllers/audits_controller')
-const MembersController = () => import('#controllers/members_controller')
-const TeamInvitationsController = () => import('#controllers/team_invitations_controller')
-const BlogPostsController = () => import('#controllers/blog_posts_controller')
-const BlogCategoriesController = () => import('#controllers/blog_categories_controller')
-const BlogTagsController = () => import('#controllers/blog_tags_controller')
-const BlogAuthorsController = () => import('#controllers/blog_authors_controller')
-const DashboardController = () => import('#controllers/dashboard_controller')
-const TeamsPageController = () => import('#controllers/teams_page_controller')
-const LeasesController = () => import('#controllers/leases_controller')
-const LeaseableEntitiesController = () => import('#controllers/leaseable_entities_controller')
-const OrgsController = () => import('#controllers/orgs_controller')
-const PushNotificationsController = () => import('#controllers/push_notifications_controller')
-const AnalyticsController = () => import('#controllers/analytics_controller')
-const DbBackupsController = () => import('#controllers/db_backups_controller')
-const LogsPageController = () => import('#controllers/logs_page_controller')
-const EmailsPageController = () => import('#controllers/emails_page_controller')
-const ServersController = () => import('#controllers/servers_controller')
-const AddonsController = () => import('#controllers/addons_controller')
-const ConfirmDeleteCustomUserController = () =>
-  import('#controllers/confirm_delete_custom_user_controller')
+import { loginThrottle, throttle } from './limiter.js'
 
 router.get('/', async ({ auth, response }) => {
   return auth.user ? response.redirect('/dashboard') : response.redirect('/login')
@@ -55,67 +28,67 @@ router.get('/', async ({ auth, response }) => {
  */
 router
   .group(() => {
-    router.get('/dashboard', [DashboardController, 'index'])
-    router.get('/teams', [TeamsPageController, 'index'])
-    router.get('/teams/members/:id', [TeamsPageController, 'show'])
-    router.get('/leases', [LeasesController, 'index'])
-    router.get('/leases/:id', [LeasesController, 'show'])
-    router.get('/properties', [LeaseableEntitiesController, 'index'])
-    router.get('/properties/:id', [LeaseableEntitiesController, 'show'])
-    router.get('/orgs', [OrgsController, 'index'])
-    router.get('/orgs/create', [OrgsController, 'create'])
-    router.get('/orgs/:id/edit', [OrgsController, 'edit'])
-    router.get('/orgs/:id', [OrgsController, 'show'])
-    router.get('/orgs/:id/invoices/create', [OrgsController, 'createInvoice'])
-    router.post('/orgs/:id/invoices', [OrgsController, 'storeInvoice'])
+    router.get('/dashboard', [controllers.Dashboard, 'index'])
+    router.get('/teams', [controllers.TeamsPage, 'index'])
+    router.get('/teams/members/:id', [controllers.TeamsPage, 'show'])
+    router.get('/leases', [controllers.Leases, 'index'])
+    router.get('/leases/:id', [controllers.Leases, 'show'])
+    router.get('/properties', [controllers.LeaseableEntities, 'index'])
+    router.get('/properties/:id', [controllers.LeaseableEntities, 'show'])
+    router.get('/orgs', [controllers.Orgs, 'index'])
+    router.get('/orgs/create', [controllers.Orgs, 'create'])
+    router.get('/orgs/:id/edit', [controllers.Orgs, 'edit'])
+    router.get('/orgs/:id', [controllers.Orgs, 'show'])
+    router.get('/orgs/:id/invoices/create', [controllers.Orgs, 'createInvoice'])
+    router.post('/orgs/:id/invoices', [controllers.Orgs, 'storeInvoice'])
     router.get('/orgs/:id/invoices/:invoiceId/line-items/create', [
-      OrgsController,
+      controllers.Orgs,
       'createInvoiceLineItem',
     ])
     router.post('/orgs/:id/invoices/:invoiceId/line-items', [
-      OrgsController,
+      controllers.Orgs,
       'storeInvoiceLineItem',
     ])
-    router.get('/push-notifications', [PushNotificationsController, 'index'])
-    router.get('/push-notifications/create', [PushNotificationsController, 'create'])
-    router.post('/push-notifications', [PushNotificationsController, 'store'])
-    router.post('/push-notifications/:id/resend', [PushNotificationsController, 'resend'])
-    router.get('/analytics', [AnalyticsController, 'index'])
-    router.get('/db-backups', [DbBackupsController, 'index'])
-    router.get('/db-backups/:id/download', [DbBackupsController, 'download'])
-    router.get('/logs', [LogsPageController, 'index'])
-    router.get('/servers', [ServersController, 'index'])
-    router.get('/servers/:projectId', [ServersController, 'show'])
-    router.get('/addons', [AddonsController, 'index'])
-    router.get('/addons/create', [AddonsController, 'create'])
-    router.post('/addons', [AddonsController, 'store'])
-    router.get('/addons/:id/edit', [AddonsController, 'edit'])
-    router.put('/addons/:id', [AddonsController, 'update'])
-    router.get('/emails', [EmailsPageController, 'index'])
-    router.get('/emails/:id', [EmailsPageController, 'show'])
-    router.post('/db-backups', [DbBackupsController, 'store'])
-    router.delete('/db-backups/:id', [DbBackupsController, 'destroy'])
+    router.get('/push-notifications', [controllers.PushNotifications, 'index'])
+    router.get('/push-notifications/create', [controllers.PushNotifications, 'create'])
+    router.post('/push-notifications', [controllers.PushNotifications, 'store'])
+    router.post('/push-notifications/:id/resend', [controllers.PushNotifications, 'resend'])
+    router.get('/analytics', [controllers.Analytics, 'index'])
+    router.get('/db-backups', [controllers.DbBackups, 'index'])
+    router.get('/db-backups/:id/download', [controllers.DbBackups, 'download'])
+    router.get('/logs', [controllers.LogsPage, 'index'])
+    router.get('/servers', [controllers.Servers, 'index'])
+    router.get('/servers/:projectId', [controllers.Servers, 'show'])
+    router.get('/addons', [controllers.Addons, 'index'])
+    router.get('/addons/create', [controllers.Addons, 'create'])
+    router.post('/addons', [controllers.Addons, 'store'])
+    router.get('/addons/:id/edit', [controllers.Addons, 'edit'])
+    router.put('/addons/:id', [controllers.Addons, 'update'])
+    router.get('/emails', [controllers.EmailsPage, 'index'])
+    router.get('/emails/:id', [controllers.EmailsPage, 'show'])
+    router.post('/db-backups', [controllers.DbBackups, 'store'])
+    router.delete('/db-backups/:id', [controllers.DbBackups, 'destroy'])
 
     router
       .group(() => {
-        router.get('/', [BlogPostsController, 'adminIndex'])
-        router.get('/create', [BlogPostsController, 'create'])
-        router.post('/', [BlogPostsController, 'store'])
-        router.get('/:id/edit', [BlogPostsController, 'edit'])
-        router.put('/:id', [BlogPostsController, 'update'])
-        router.delete('/:id', [BlogPostsController, 'destroy'])
+        router.get('/', [controllers.BlogPosts, 'adminIndex'])
+        router.get('/create', [controllers.BlogPosts, 'create'])
+        router.post('/', [controllers.BlogPosts, 'store'])
+        router.get('/:id/edit', [controllers.BlogPosts, 'edit'])
+        router.put('/:id', [controllers.BlogPosts, 'update'])
+        router.delete('/:id', [controllers.BlogPosts, 'destroy'])
 
-        router.get('/categories', [BlogCategoriesController, 'index'])
-        router.post('/categories', [BlogCategoriesController, 'store'])
-        router.delete('/categories/:id', [BlogCategoriesController, 'destroy'])
+        router.get('/categories', [controllers.BlogCategories, 'index'])
+        router.post('/categories', [controllers.BlogCategories, 'store'])
+        router.delete('/categories/:id', [controllers.BlogCategories, 'destroy'])
 
-        router.get('/tags', [BlogTagsController, 'index'])
-        router.post('/tags', [BlogTagsController, 'store'])
-        router.delete('/tags/:id', [BlogTagsController, 'destroy'])
+        router.get('/tags', [controllers.BlogTags, 'index'])
+        router.post('/tags', [controllers.BlogTags, 'store'])
+        router.delete('/tags/:id', [controllers.BlogTags, 'destroy'])
 
-        router.get('/authors', [BlogAuthorsController, 'index'])
-        router.post('/authors', [BlogAuthorsController, 'store'])
-        router.delete('/authors/:id', [BlogAuthorsController, 'destroy'])
+        router.get('/authors', [controllers.BlogAuthors, 'index'])
+        router.post('/authors', [controllers.BlogAuthors, 'store'])
+        router.delete('/authors/:id', [controllers.BlogAuthors, 'destroy'])
       })
       .prefix('blog/manage')
   })
@@ -124,44 +97,48 @@ router
 // Guest routes (web login uses server redirect so session cookie is set in same navigation)
 router
   .group(() => {
-    router.on('/login').renderInertia('login')
-    router.on('/forgot-password').renderInertia('forgot-password')
-    router.on('/reset-password').renderInertia('reset-password')
+    router.get('/login', ({ inertia }) => inertia.render('login' as never, {}))
+    router.get('/forgot-password', ({ inertia }) => inertia.render('forgot-password' as never, {}))
+    router.get('/reset-password', ({ inertia }) => inertia.render('reset-password' as never, {}))
   })
   .use(middleware.guest())
 
 // Public routes
-router.on('/verify-email').renderInertia('verify-email')
-router.on('/verify-email-change').renderInertia('verify-email-change')
-router.get('/confirm-delete-custom-user', [ConfirmDeleteCustomUserController, 'respond'])
-router.on('/account-deletion-result').renderInertia('account-deletion-result')
-router.get('/blog', [BlogPostsController, 'index'])
-router.get('/blog/:slug', [BlogPostsController, 'show'])
-router.get('/join', [TeamInvitationsController, 'joinPage'])
+router.get('/verify-email', ({ inertia }) => inertia.render('verify-email' as never, {}))
+router.get('/verify-email-change', ({ inertia }) =>
+  inertia.render('verify-email-change' as never, {}),
+)
+router.get('/confirm-delete-custom-user', [controllers.ConfirmDeleteCustomUser, 'respond'])
+router.get('/account-deletion-result', ({ inertia }) =>
+  inertia.render('account-deletion-result' as never, {}),
+)
+router.get('/blog', [controllers.BlogPosts, 'index'])
+router.get('/blog/:slug', [controllers.BlogPosts, 'show'])
+router.get('/join', [controllers.TeamInvitations, 'joinPage'])
 
 // Authenticated routes
 router
   .group(() => {
-    router.get('/logout', [AuthController, 'logout'])
+    router.get('/logout', [controllers.Auth, 'logout'])
   })
   .use([middleware.auth()])
 
 // Settings page
 router
   .group(() => {
-    router.on('/settings').renderInertia('settings/index')
+    router.get('/settings', ({ inertia }) => inertia.render('settings/index' as never, {}))
   })
   .use([middleware.auth()])
 
 router
   .group(() => {
-    router.post('/login', [AuthController, 'login'])
-    router.post('/forgot-password', [AuthController, 'forgotPassword'])
-    router.post('/reset-password', [AuthController, 'resetPassword'])
-    router.get('/verify-email', [AuthController, 'verifyEmail'])
-    router.get('/verify-email-change', [AuthController, 'verifyEmailChange'])
+    router.post('/login', [controllers.Auth, 'login']).use(throttle)
+    router.post('/forgot-password', [controllers.Auth, 'forgotPassword'])
+    router.post('/reset-password', [controllers.Auth, 'resetPassword'])
+    router.get('/verify-email', [controllers.Auth, 'verifyEmail'])
+    router.get('/verify-email-change', [controllers.Auth, 'verifyEmailChange'])
     router
-      .post('/verify-email/resend', [AuthController, 'resendVerificationEmail'])
+      .post('/verify-email/resend', [controllers.Auth, 'resendVerificationEmail'])
       .use(middleware.auth())
   })
   .prefix('api/v1/auth')
@@ -169,21 +146,21 @@ router
 
 router
   .group(() => {
-    router.put('/profile', [UsersController, 'updateProfile'])
-    router.put('/password', [UsersController, 'updatePassword'])
-    router.post('/avatar', [UsersController, 'uploadAvatar'])
-    router.delete('/avatar', [UsersController, 'deleteAvatar'])
-    router.get('/sessions', [SessionsController, 'index'])
-    router.post('/sessions/revoke', [SessionsController, 'revoke'])
-    router.post('/sessions/revoke-all', [SessionsController, 'revokeAll'])
-    router.delete('/account', [UsersController, 'deleteAccount'])
-    router.put('/settings', [UsersController, 'updateSettings'])
-    router.get('/settings', [UsersController, 'getSettings'])
-    router.post('/2fa/setup', [TwoFactorController, 'setup'])
-    router.post('/2fa/enable', [TwoFactorController, 'enable'])
-    router.post('/2fa/disable', [TwoFactorController, 'disable'])
-    router.post('/2fa/verify', [TwoFactorController, 'verify'])
-    router.post('/2fa/recovery-codes', [TwoFactorController, 'regenerateRecoveryCodes'])
+    router.put('/profile', [controllers.Users, 'updateProfile'])
+    router.put('/password', [controllers.Users, 'updatePassword'])
+    router.post('/avatar', [controllers.Users, 'uploadAvatar'])
+    router.delete('/avatar', [controllers.Users, 'deleteAvatar'])
+    router.get('/sessions', [controllers.Sessions, 'index'])
+    router.post('/sessions/revoke', [controllers.Sessions, 'revoke'])
+    router.post('/sessions/revoke-all', [controllers.Sessions, 'revokeAll'])
+    router.delete('/account', [controllers.Users, 'deleteAccount'])
+    router.put('/settings', [controllers.Users, 'updateSettings'])
+    router.get('/settings', [controllers.Users, 'getSettings'])
+    router.post('/2fa/setup', [controllers.TwoFactor, 'setup'])
+    router.post('/2fa/enable', [controllers.TwoFactor, 'enable'])
+    router.post('/2fa/disable', [controllers.TwoFactor, 'disable'])
+    router.post('/2fa/verify', [controllers.TwoFactor, 'verify'])
+    router.post('/2fa/recovery-codes', [controllers.TwoFactor, 'regenerateRecoveryCodes'])
   })
   .prefix('api/v1/user')
   .use(middleware.auth())
@@ -191,19 +168,19 @@ router
 // Members and invitations (no teams)
 router
   .group(() => {
-    router.get('/', [MembersController, 'index'])
-    router.get('/invitations', [MembersController, 'invitations'])
-    router.get('/data-access-options', [MembersController, 'dataAccessOptions'])
-    router.put('/:memberId', [MembersController, 'updateMember'])
+    router.get('/', [controllers.Members, 'index'])
+    router.get('/invitations', [controllers.Members, 'invitations'])
+    router.get('/data-access-options', [controllers.Members, 'dataAccessOptions'])
+    router.put('/:memberId', [controllers.Members, 'updateMember'])
   })
   .prefix('api/v1/members')
   .use(middleware.auth())
 
 router
   .group(() => {
-    router.post('/', [TeamInvitationsController, 'invite'])
-    router.put('/:invitationId', [TeamInvitationsController, 'updateInvitation'])
-    router.post('/:invitationId/invite-link', [TeamInvitationsController, 'inviteLink'])
+    router.post('/', [controllers.TeamInvitations, 'invite'])
+    router.put('/:invitationId', [controllers.TeamInvitations, 'updateInvitation'])
+    router.post('/:invitationId/invite-link', [controllers.TeamInvitations, 'inviteLink'])
   })
   .prefix('api/v1/invitations')
   .use(middleware.auth())
@@ -211,31 +188,31 @@ router
 // Public team invitation routes
 router
   .group(() => {
-    router.post('/accept', [TeamInvitationsController, 'accept'])
+    router.post('/accept', [controllers.TeamInvitations, 'accept'])
   })
   .prefix('api/v1/team-invitations')
 
 // Notification routes
 router
   .group(() => {
-    router.get('/', [NotificationsController, 'index'])
-    router.post('/mark-as-read', [NotificationsController, 'markAsRead'])
-    router.post('/mark-all-as-read', [NotificationsController, 'markAllAsRead'])
-    router.get('/unread-count', [NotificationsController, 'unreadCount'])
-    router.delete('/:id', [NotificationsController, 'delete'])
+    router.get('/', [controllers.Notifications, 'index'])
+    router.post('/mark-as-read', [controllers.Notifications, 'markAsRead'])
+    router.post('/mark-all-as-read', [controllers.Notifications, 'markAllAsRead'])
+    router.get('/unread-count', [controllers.Notifications, 'unreadCount'])
+    router.delete('/:id', [controllers.Notifications, 'delete'])
   })
   .prefix('api/v1/notifications')
   .use(middleware.auth())
 
 router
   .group(() => {
-    router.get('/', [AuditsController, 'index'])
-    router.get('/recent', [AuditsController, 'recent'])
+    router.get('/', [controllers.Audits, 'index'])
+    router.get('/recent', [controllers.Audits, 'recent'])
   })
   .prefix('api/v1/audits')
   .use(middleware.auth())
 
-router.get('/health', [HealthChecksController])
+router.get('/health', [controllers.HealthChecks])
 
 router.get('/swagger', async () => {
   return AutoSwagger.default.docs(router.toJSON(), swagger)

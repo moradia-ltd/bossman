@@ -1,6 +1,6 @@
 import vine from '@vinejs/vine'
 
-export const storePushNotificationValidator = vine.compile(
+export const storePushNotificationValidator = vine.create(
   vine.object({
     targetType: vine.enum(['all', 'all_landlords', 'all_tenants', 'all_agencies', 'specific']),
     targetUserIds: vine.array(vine.string()).optional(),

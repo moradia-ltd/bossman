@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+
 import User from '#models/user'
 import { getPageAccessForUser } from '#services/page_access_service'
 import { RailwayApiService } from '#services/railway_service'
@@ -13,11 +14,16 @@ export default class ServersController {
       return response.forbidden()
     }
 
-    return inertia.render('servers/index', {
-      projects: inertia.defer(async () => {
+    return (
+      inertia.render as (
+        page: string,
+        props: object,
+      ) => ReturnType<HttpContext['inertia']['render']>
+    )('servers/index', {
+      projects: inertia.defer((async () => {
         const railway = new RailwayApiService()
         return railway.listProjects()
-      }),
+      }) as never),
     })
   }
 
@@ -28,12 +34,17 @@ export default class ServersController {
 
     const projectId = params.projectId
     const projectName = request.input('name') as string | undefined
-    return inertia.render('servers/project-show', {
+    return (
+      inertia.render as (
+        page: string,
+        props: object,
+      ) => ReturnType<HttpContext['inertia']['render']>
+    )('servers/project-show', {
       projectName: projectName ?? null,
-      project: inertia.defer(async () => {
+      project: inertia.defer((async () => {
         const railway = new RailwayApiService()
         return railway.getProject(projectId)
-      }),
+      }) as never),
     })
   }
 }

@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto'
+
 import type { HttpContext } from '@adonisjs/core/http'
+
 import DeleteAccountRequest from '#models/delete_account_request'
 import mailer from '#services/email_service'
 
