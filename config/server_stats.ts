@@ -14,9 +14,10 @@ export default defineConfig({
   // How often to collect and broadcast stats (in milliseconds)
   shouldShow: (ctx) => ctx.auth.user?.isGodAdmin,
   intervalMs: 3000,
+
   devToolbar: {
     enabled: true,
-    tracing: true,
+    // tracing: true,
     dashboard: true,
     dashboardPath: 'stats',
     persistDebugData: true,

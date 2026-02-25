@@ -13,6 +13,7 @@ export default class extends BaseSchema {
       table.text('content').nullable()
 
       table.string('thumbnail_url').nullable()
+      table.jsonb('cover_image').nullable()
       table.string('cover_image_url').nullable()
 
       table.string('category_id').nullable().references('blog_categories.id').onDelete('SET NULL')

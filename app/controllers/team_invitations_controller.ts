@@ -265,6 +265,7 @@ export default class TeamInvitationsController {
           emailVerifiedAt: now,
           token: null,
           role: invitation.invitedUserRole,
+          enableProdAccess: invitation.enableProdAccess ?? true,
         },
         { client: trx },
       )

@@ -3,6 +3,7 @@ import { belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import { Auditable } from '@stouder-io/adonis-auditing'
 import type { DateTime } from 'luxon'
+
 import SuperBaseModel from './super_base.js'
 import User from './user.js'
 
@@ -20,7 +21,7 @@ export default class TeamMember extends compose(SuperBaseModel, Auditable) {
   @column()
   declare role: TeamRole
 
-  @column({ columnName: 'enable_prod_access', serializeAs: 'enableProdAccess' })
+  @column()
   declare enableProdAccess: boolean
 
   /** Data access: 'all' = full access; 'selected' = only allowed properties/leases (legacy, prefer per-resource modes). */

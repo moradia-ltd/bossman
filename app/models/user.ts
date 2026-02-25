@@ -35,6 +35,10 @@ export default class User extends compose(SuperBaseModel, AuthFinder) {
   @column()
   declare role: 'super_admin' | 'admin' | 'normal_user'
 
+  /** When false, user is restricted to dev DB; sidebar hides environment switcher. Synced from team member when applicable. */
+  @column({ columnName: 'enable_prod_access', serializeAs: 'enableProdAccess' })
+  declare enableProdAccess: boolean
+
   @computed()
   public get isAdminOrSuperAdmin() {
     return this.role === 'admin' || this.role === 'super_admin'
