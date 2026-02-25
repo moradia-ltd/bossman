@@ -16,15 +16,15 @@ export default defineConfig({
 
   devToolbar: {
     enabled: true,
-    // tracing: true,
+    tracing: true,
     dashboard: true,
     dashboardPath: 'stats',
     persistDebugData: true,
-    excludeFromTracing: ['admin', '__transmit', 'stats'],
+    excludeFromTracing: ['/admin/api/debug', '/__transmit/events', ' /stats/api/requests'],
   },
 
   // Real-time transport: 'transmit' for SSE via @adonisjs/transmit, 'none' for polling only
-  transport: 'transmit',
+  transport: 'none',
   // Transmit channel name clients subscribe to
   channelName: 'admin/server-stats',
   // HTTP endpoint that serves the latest stats snapshot (set to false to disable)
