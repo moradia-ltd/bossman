@@ -204,6 +204,11 @@ export function CommandPalette() {
       requires: 'blog',
     },
     {
+      label: 'Stats',
+      href: '/stats',
+      icon: <IconChartBar className='mr-2 h-4 w-4' />,
+    },
+    {
       label: 'Addons',
       href: '/addons',
       icon: <IconPackage className='mr-2 h-4 w-4' />,

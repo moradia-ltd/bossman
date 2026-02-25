@@ -24,11 +24,11 @@ const shieldConfig = defineConfig({
 
   /**
    * Control how your website should be embedded inside
-   * iFrames
+   * iFrames. SAMEORIGIN allows the debug panel to show email previews in an iframe.
    */
   xFrame: {
     enabled: true,
-    action: 'DENY',
+    action: 'SAMEORIGIN',
   },
 
   /**
