@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { IconPencil, IconPlus } from '@tabler/icons-react'
+import { IconCopy, IconPencil, IconPlus } from '@tabler/icons-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { AppCard } from '@/components/ui/app-card'
@@ -257,6 +257,24 @@ export function TeamInvitations() {
     setEditEnableProdAccess(inv.enableProdAccess ?? true)
   }
 
+  const copyInviteLinkMutation = useMutation({
+    mutationFn: async (invitationId: string) => {
+      const res = await api.post<{ inviteLink: string }>(
+        `/invitations/${invitationId}/invite-link` as Parameters<typeof api.post>[0],
+      )
+      return res.data
+    },
+    onSuccess: async (data) => {
+      if (data?.inviteLink) {
+        await navigator.clipboard.writeText(data.inviteLink)
+        toast.success('Invite link copied to clipboard')
+      }
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to get invite link')
+    },
+  })
+
   return (
     <>
       {invitationRows.length > 0 && (
@@ -271,7 +289,7 @@ export function TeamInvitations() {
                   <TableHead>Prod access</TableHead>
                   <TableHead>Invited by</TableHead>
                   <TableHead>Invited</TableHead>
-                  <TableHead className='w-10' />
+                  <TableHead className='w-[100px]'>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -302,13 +320,23 @@ export function TeamInvitations() {
                       {inv.createdAt ? new Date(inv.createdAt).toLocaleDateString() : '—'}
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant='ghost'
-                        size='icon'
-                        aria-label='Edit page access'
-                        onClick={() => openEditInvitation(inv)}>
-                        <IconPencil className='h-4 w-4' />
-                      </Button>
+                      <HStack spacing={1}>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          aria-label='Copy invite link'
+                          onClick={() => copyInviteLinkMutation.mutate(inv.id)}
+                          disabled={copyInviteLinkMutation.isPending}>
+                          <IconCopy className='h-4 w-4' />
+                        </Button>
+                        <Button
+                          variant='ghost'
+                          size='icon'
+                          aria-label='Edit page access'
+                          onClick={() => openEditInvitation(inv)}>
+                          <IconPencil className='h-4 w-4' />
+                        </Button>
+                      </HStack>
                     </TableCell>
                   </TableRow>
                 ))}

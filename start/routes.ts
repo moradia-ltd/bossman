@@ -201,6 +201,7 @@ router
   .group(() => {
     router.post('/', [TeamInvitationsController, 'invite'])
     router.put('/:invitationId', [TeamInvitationsController, 'updateInvitation'])
+    router.post('/:invitationId/invite-link', [TeamInvitationsController, 'inviteLink'])
   })
   .prefix('api/v1/invitations')
   .use(middleware.auth())

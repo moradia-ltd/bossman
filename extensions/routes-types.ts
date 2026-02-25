@@ -77,6 +77,7 @@ export const API_ROUTES = {
     '/user/2fa/verify',
     '/user/2fa/recovery-codes',
     '/invitations',
+    '/invitations/:invitationId/invite-link',
     '/team-invitations/accept',
     '/notifications/mark-as-read',
     '/notifications/mark-all-as-read',

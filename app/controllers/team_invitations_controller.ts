@@ -327,4 +327,34 @@ export default class TeamInvitationsController {
       data: invitation,
     })
   }
+
+  /**
+   * Regenerate the invite token and return the invite link.
+   * Any previously sent link will no longer work.
+   */
+  async inviteLink({ auth, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const freshUser = await User.findByOrFail('email', user.email)
+    const invitationId = request.param('invitationId')
+
+    if (!user.isAdminOrSuperAdmin) {
+      return response.forbidden({ error: 'Access required.' })
+    }
+    const allowed = await getPageAccessForUser(freshUser.id)
+    if (Array.isArray(allowed) && !allowed.includes('teams')) {
+      return response.forbidden({ error: 'You do not have access to manage teams.' })
+    }
+
+    const invitation = await TeamInvitation.query()
+      .where('id', invitationId)
+      .whereNull('accepted_at')
+      .firstOrFail()
+
+    const token = generateShortId(48)
+    invitation.tokenHash = hashInviteToken(token)
+    await invitation.save()
+
+    const inviteLink = `${appUrl}/join?token=${token}`
+    return response.ok({ inviteLink })
+  }
 }
