@@ -1,7 +1,7 @@
 # Match official AdonisJS deployment Dockerfile; add postgresql-client for pg_dump (DB backups)
 # https://docs.adonisjs.com/guides/getting-started/deployment#creating-a-docker-image
 
-FROM node:22.16.0-alpine3.22 AS base
+FROM node:24.14.0-alpine3.23 AS base
 
 # All deps stage
 FROM base AS deps
