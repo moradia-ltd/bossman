@@ -84,6 +84,21 @@ export default class RailwayController {
     }
   }
 
+  async deploymentBuildLogs(ctx: HttpContext) {
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
+    const { params, response } = ctx
+    const service = new RailwayApiService()
+    try {
+      const logs = await service.getDeploymentBuildLogs(params.id)
+      return response.ok(logs)
+    } catch (err) {
+      return response.badRequest({
+        message: err instanceof Error ? err.message : 'Failed to fetch build logs',
+      })
+    }
+  }
+
   async deploymentRestart(ctx: HttpContext) {
     const err = await ensureServersAccess(ctx)
     if (err) return err
@@ -110,6 +125,29 @@ export default class RailwayController {
     } catch (err) {
       return response.badRequest({
         message: err instanceof Error ? err.message : 'Failed to redeploy',
+      })
+    }
+  }
+
+  /**
+   * Trigger deploy for a service (e.g. when latest deployment is needs_approval).
+   * Requires serviceId in params and environmentId in query.
+   */
+  async serviceDeploy(ctx: HttpContext) {
+    const err = await ensureServersAccess(ctx)
+    if (err) return err
+    const { params, request, response } = ctx
+    const environmentId = request.qs().environmentId as string | undefined
+    if (!environmentId) {
+      return response.badRequest({ message: 'environmentId is required' })
+    }
+    const apiService = new RailwayApiService()
+    try {
+      await apiService.serviceInstanceRedeploy(params.serviceId, environmentId)
+      return response.ok({ success: true })
+    } catch (err) {
+      return response.badRequest({
+        message: err instanceof Error ? err.message : 'Failed to trigger deploy',
       })
     }
   }

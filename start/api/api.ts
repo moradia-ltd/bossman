@@ -78,8 +78,10 @@ router
     router.get('/railway/projects/:id', [RailwayController, 'project'])
     router.get('/railway/services/:serviceId/deployments', [RailwayController, 'deployments'])
     router.get('/railway/deployments/:id/logs/runtime', [RailwayController, 'deploymentLogs'])
+    router.get('/railway/deployments/:id/logs/build', [RailwayController, 'deploymentBuildLogs'])
     router.post('/railway/deployments/:id/restart', [RailwayController, 'deploymentRestart'])
     router.post('/railway/deployments/:id/redeploy', [RailwayController, 'deploymentRedeploy'])
+    router.post('/railway/services/:serviceId/deploy', [RailwayController, 'serviceDeploy'])
 
     router.get('update-env', ({ session, response }) => {
       const appEnv = (session.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev'

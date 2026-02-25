@@ -205,6 +205,35 @@ export class RailwayApiService {
     }))
   }
 
+  /**
+   * Get build logs for a deployment (see https://docs.railway.com/integrations/api/manage-deployments#get-build-logs).
+   */
+  async getDeploymentBuildLogs(
+    deploymentId: string,
+    limit: number = 500,
+  ): Promise<RailwayRuntimeLog[]> {
+    const data = await this.graphql<{
+      buildLogs: Array<{ message: string; severity?: string; timestamp: string }>
+    }>(
+      `
+      query buildLogs($deploymentId: String!, $limit: Int) {
+        buildLogs(deploymentId: $deploymentId, limit: $limit) {
+          message
+          severity
+          timestamp
+        }
+      }
+    `,
+      { deploymentId, limit },
+    )
+    const logs = data.buildLogs ?? []
+    return logs.map((log) => ({
+      message: log.message,
+      timestamp: log.timestamp,
+      level: log.severity ?? undefined,
+    }))
+  }
+
   async deploymentRestart(deploymentId: string): Promise<boolean> {
     const data = await this.graphql<{ deploymentRestart: boolean }>(
       `
@@ -227,5 +256,21 @@ export class RailwayApiService {
       { id: deploymentId },
     )
     return data.deploymentRedeploy
+  }
+
+  /**
+   * Trigger a deploy for a service (e.g. when latest deployment is needs_approval).
+   * Uses serviceInstanceRedeploy so Railway starts a deployment for the service.
+   */
+  async serviceInstanceRedeploy(serviceId: string, environmentId: string): Promise<boolean> {
+    const data = await this.graphql<{ serviceInstanceRedeploy: boolean }>(
+      `
+      mutation serviceInstanceRedeploy($serviceId: String!, $environmentId: String!) {
+        serviceInstanceRedeploy(serviceId: $serviceId, environmentId: $environmentId)
+      }
+    `,
+      { serviceId, environmentId },
+    )
+    return data.serviceInstanceRedeploy === true
   }
 }
