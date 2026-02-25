@@ -4,6 +4,19 @@
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
+  "scripts": {
+    "start": "ENV_PATH=../ node build/bin/server.js",
+    "build": "node ace build",
+    "dev": "node ace serve --hmr",
+    "test": "node ace test",
+    "fmt": "oxfmt",
+    "init": "oxfmt --migrate biome",
+    "fmt:check": "oxfmt --check",
+    "typecheck": "tsc --noEmit",
+    "email:dev": "email dev --dir='inertia/emails' ",
+    "refresh": "node ace refresh:routes",
+    "loc": "npx cloc app extensions inertia providers start tests commands resources database  config"
+  },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
     "#exceptions/*": "./app/exceptions/*.js",
@@ -27,19 +40,6 @@
     "#utils/*": "./app/utils/*.js",
     "#audit_resolvers/*": "./app/audit_resolvers/*.js",
     "#boss/*": "./boss/*.js"
-  },
-  "scripts": {
-    "start": "ENV_PATH=../ node build/bin/server.js",
-    "build": "node ace build",
-    "dev": "node ace serve --hmr",
-    "test": "node ace test",
-    "fmt": "oxfmt",
-    "init": "oxfmt --migrate biome",
-    "fmt:check": "oxfmt --check",
-    "typecheck": "tsc --noEmit",
-    "email:dev": "email dev --dir='inertia/emails' ",
-    "refresh": "node ace refresh:routes",
-    "loc": "npx cloc app extensions inertia providers start tests commands resources database  config"
   },
   "dependencies": {
     "@adonisjs/auth": "^9.5.1",

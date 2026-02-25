@@ -12,5 +12,9 @@
   "bracketSameLine": true,
   "bracketSpacing": true,
   "singleAttributePerLine": false,
-  "ignorePatterns": []
+  "ignorePatterns": [],
+  "sortPackageJson": false,
+  "sortImports": {
+    "order": "asc"
+  }
 }

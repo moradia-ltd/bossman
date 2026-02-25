@@ -9,7 +9,6 @@ import {
   redisCollector,
   systemCollector,
 } from 'adonisjs-server-stats/collectors'
-import env from '#start/env'
 
 export default defineConfig({
   // How often to collect and broadcast stats (in milliseconds)
