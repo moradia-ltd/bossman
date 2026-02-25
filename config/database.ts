@@ -14,12 +14,14 @@ const dbConfig = defineConfig({
     prod: {
       client: 'pg',
       connection: env.get('PROD_DB'),
+      debug: true,
     },
 
     default: {
       client: 'pg',
       connection: env.get('ADMIN_DB'),
       useNullAsDefault: true,
+      debug: true,
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],

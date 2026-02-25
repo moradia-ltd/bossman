@@ -30,7 +30,7 @@ export default function NotFound() {
               variant='outline'
               onClick={() => router.visit(-1 as unknown as string)}
               className='w-full sm:w-auto'
-              leftIcon={<ArrowLeft className='h-4 w-4' />}>
+              leftIcon={<IconArrowLeft className='h-4 w-4' />}>
               Go Back
             </Button>
             <a href='/'>

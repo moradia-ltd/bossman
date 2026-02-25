@@ -12,6 +12,7 @@ import {
 
 export default defineConfig({
   // How often to collect and broadcast stats (in milliseconds)
+  shouldShow: (ctx) => ctx.auth.user?.isGodAdmin,
   intervalMs: 3000,
   devToolbar: {
     enabled: true,
@@ -19,6 +20,7 @@ export default defineConfig({
     dashboard: true,
     dashboardPath: 'stats',
     persistDebugData: true,
+    excludeFromTracing: ['admin', '__transmit', 'stats'],
   },
 
   // Real-time transport: 'transmit' for SSE via @adonisjs/transmit, 'none' for polling only
