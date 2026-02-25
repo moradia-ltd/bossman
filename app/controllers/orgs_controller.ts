@@ -4,6 +4,7 @@ import logger from '@adonisjs/core/services/logger'
 import db from '@adonisjs/lucid/services/db'
 import axios from 'axios'
 import type Stripe from 'stripe'
+
 import Activity from '#models/activity'
 import Agency from '#models/agency'
 import Landlord from '#models/landlord'
@@ -13,12 +14,12 @@ import Property from '#models/property'
 import SubscriptionPlan from '#models/subscription_plan'
 import TogethaTeam from '#models/togetha_teams'
 import TogethaUser from '#models/togetha_user'
-import OrgTransformer from '#transformers/org_transformer'
 import mailer from '#services/email_service'
 import { LoopService } from '#services/loop_service'
 import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
 import StripeService from '#services/stripe_service'
+import OrgTransformer from '#transformers/org_transformer'
 import type { AppCountries } from '#types/extra'
 import { createCustomerUserValidator, updateOrgValidator } from '#validators/org'
 
@@ -69,7 +70,7 @@ export default class OrgsController {
     return inertia.render('orgs/index', {
       orgs: inertia.defer(async () => OrgTransformer.paginate(orgs.all(), orgs.getMeta())),
       stats,
-    })
+    } as never)
   }
 
   async stats({ request, response }: HttpContext) {
@@ -86,7 +87,7 @@ export default class OrgsController {
   }
 
   async create({ inertia }: HttpContext) {
-    return inertia.render('orgs/create')
+    return inertia.render('orgs/create', {} as never)
   }
 
   async store({ request, response, logger }: HttpContext) {
@@ -286,13 +287,13 @@ export default class OrgsController {
     return inertia.render('orgs/show', {
       org: OrgTransformer.transform(org),
       isLoopsUser,
-    })
+    } as never)
   }
 
   async edit({ params, inertia, request }: HttpContext) {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
-    return inertia.render('orgs/edit', { org: OrgTransformer.transform(org) })
+    return inertia.render('orgs/edit', { org: OrgTransformer.transform(org) } as never)
   }
 
   async update({ params, request, response }: HttpContext) {
@@ -425,7 +426,7 @@ export default class OrgsController {
     return inertia.render('orgs/invoices/create', {
       org: OrgTransformer.transform(org),
       activeLeasesCount,
-    })
+    } as never)
   }
 
   async storeInvoice({ params, request, response, session }: HttpContext) {
@@ -491,7 +492,7 @@ export default class OrgsController {
     return inertia.render('orgs/invoices/line-items/create', {
       org: OrgTransformer.transform(org),
       invoiceId: params.invoiceId,
-    })
+    } as never)
   }
 
   async storeInvoiceLineItem({ params, request, response, session }: HttpContext) {
