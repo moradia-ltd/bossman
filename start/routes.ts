@@ -132,7 +132,7 @@ router
 
 router
   .group(() => {
-    router.post('/login', [controllers.Auth, 'login'])
+    router.post('/login', [controllers.Auth, 'login']).use(throttle)
     router.post('/forgot-password', [controllers.Auth, 'forgotPassword'])
     router.post('/reset-password', [controllers.Auth, 'resetPassword'])
     router.get('/verify-email', [controllers.Auth, 'verifyEmail'])

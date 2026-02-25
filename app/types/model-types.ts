@@ -1,6 +1,6 @@
 import type { BelongsTo, HasMany, HasOne, ManyToMany } from '@adonisjs/lucid/types/relations'
-
 import type { DateTime } from 'luxon'
+
 import type Activity from '#models/activity'
 import type Addon from '#models/addon'
 import type BlogAuthor from '#models/blog_author'
