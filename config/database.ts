@@ -9,7 +9,7 @@ const dbConfig = defineConfig({
     dev: {
       client: 'pg',
       connection: env.get('DEV_DB'),
-      debug: false,
+      debug: true,
     },
     prod: {
       client: 'pg',

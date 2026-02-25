@@ -10,7 +10,7 @@ type AppEnv = 'dev' | 'prod'
 export default class AppEnvMiddleware {
   async handle(ctx: HttpContext, next: NextFn) {
     const appEnv =
-      (ctx.session.get('appEnv') as AppEnv | undefined) ??
+      (ctx.session?.get('appEnv') as AppEnv | undefined) ??
       (ctx.request.header('app-env') as AppEnv | undefined) ??
       'dev'
     ;(ctx.request as { _appEnv?: AppEnv })._appEnv = appEnv
