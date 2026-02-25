@@ -1,4 +1,5 @@
 import { BaseTransformer } from '@adonisjs/core/transformers'
+
 import type Session from '#models/session'
 
 export default class SessionTransformer extends BaseTransformer<Session> {
@@ -8,7 +9,6 @@ export default class SessionTransformer extends BaseTransformer<Session> {
       'userId',
       'ipAddress',
       'userAgent',
-      'expiresAt',
       'createdAt',
       'updatedAt',
     ])

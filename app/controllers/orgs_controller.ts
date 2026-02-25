@@ -389,10 +389,12 @@ export default class OrgsController {
   async activities({ request, params, response }: HttpContext) {
     const appEnv = request.appEnv()
     const paginationParams = await request.paginationQs()
+
     const activities = await Activity.query({ connection: appEnv })
       .where('org_id', params.id)
       .orderBy('created_at', 'desc')
       .paginate(paginationParams.page ?? 1, paginationParams.perPage ?? 10)
+
     return response.ok(activities)
   }
 
@@ -423,6 +425,7 @@ export default class OrgsController {
       .where('status', 'active')
       .where('end_date', '>=', now.toISODate()!)
       .getCount()
+
     return inertia.render('orgs/invoices/create', {
       org: OrgTransformer.transform(org),
       activeLeasesCount,
@@ -474,10 +477,7 @@ export default class OrgsController {
       )
       return response.redirect(`/orgs/${params.id}?tab=invoices`)
     } catch (err: unknown) {
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as Error).message)
-          : 'Failed to create draft invoice.'
+      const message = err instanceof Error ? err.message : 'Failed to create draft invoice.'
       session.flash('errors', { error: message })
       return response.redirect().back()
     }
@@ -486,9 +486,8 @@ export default class OrgsController {
   async createInvoiceLineItem({ params, inertia, request, response }: HttpContext) {
     const appEnv = request.appEnv()
     const org = await Org.query({ connection: appEnv }).where('id', params.id).firstOrFail()
-    if (!org.paymentCustomerId) {
-      return response.notFound()
-    }
+    if (!org.paymentCustomerId) return response.notFound()
+
     return inertia.render('orgs/invoices/line-items/create', {
       org: OrgTransformer.transform(org),
       invoiceId: params.invoiceId,
@@ -507,6 +506,7 @@ export default class OrgsController {
     const amountInput = request.input('amount')
     const amount = typeof amountInput === 'string' ? parseFloat(amountInput) : Number(amountInput)
     const currency = (request.input('currency') ?? 'gbp').toString().trim().toLowerCase() || 'gbp'
+
     if (!description || Number.isNaN(amount) || amount < 0) {
       session.flash('errors', { error: 'Description and a valid amount are required.' })
       return response.redirect().back()
@@ -520,10 +520,7 @@ export default class OrgsController {
       session.flash('success', 'Line item added to the draft invoice.')
       return response.redirect(`/orgs/${params.id}?tab=invoices`)
     } catch (err: unknown) {
-      const message =
-        err && typeof err === 'object' && 'message' in err
-          ? String((err as Error).message)
-          : 'Failed to add line item.'
+      const message = err instanceof Error ? err.message : 'Failed to add line item.'
       session.flash('errors', { error: message })
       return response.redirect().back()
     }
