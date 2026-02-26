@@ -33,6 +33,7 @@ export function RuntimeLogsSheet({ open, onOpenChange, deploymentId }: RuntimeLo
       return res.data ?? []
     },
     enabled: !!deploymentId && open,
+    refetchInterval: open ? 3_000 : false,
   })
 
   // Scroll to bottom when sheet opens and logs are loaded so latest logs are visible.

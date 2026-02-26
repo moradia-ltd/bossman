@@ -6,7 +6,6 @@ import type { PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
 import { PublicLayout } from '@/components/layouts/public'
 import { LoadingSkeleton } from '@/components/ui'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -210,44 +209,10 @@ function PostCard({ post }: { post: RawBlogPost }) {
         </CardContent>
 
         <CardFooter className='mt-auto'>
-          <HStack justify='between' align='center' spacing={3}>
-            <AuthorRow post={post} />
-            <MetaDateAndReadTime post={post} className='text-muted-foreground' />
-          </HStack>
+          <MetaDateAndReadTime post={post} className='text-muted-foreground' />
         </CardFooter>
       </Card>
     </Link>
-  )
-}
-
-function AuthorRow({ post }: { post: RawBlogPost }) {
-  const authors = post.authors || []
-  if (!authors.length) return <span className='text-xs text-muted-foreground'>—</span>
-
-  const first = authors[0]
-  const more = authors.length - 1
-
-  return (
-    <div className='flex items-center gap-2 min-w-0'>
-      <div className='flex -space-x-2'>
-        {authors.slice(0, 2).map((a) => (
-          <Avatar key={a.id} className='h-7 w-7 border border-border'>
-            {a.avatarUrl ? (
-              <AvatarImage src={a.avatarUrl} alt={a.name || a.email || 'Author'} />
-            ) : null}
-            <AvatarFallback className='text-[10px]'>
-              {getInitials(a.name || a.email || 'A')}
-            </AvatarFallback>
-          </Avatar>
-        ))}
-      </div>
-      <div className='min-w-0'>
-        <div className='text-xs text-muted-foreground truncate'>
-          {first?.name || first?.email || '—'}
-          {more > 0 ? ` +${more}` : ''}
-        </div>
-      </div>
-    </div>
   )
 }
 
@@ -291,11 +256,4 @@ function getReadingMinutes(text: string) {
   const words = trimmed.split(/\s+/).filter(Boolean).length
   const minutes = Math.max(1, Math.round(words / 220))
   return minutes
-}
-
-function getInitials(value: string) {
-  const parts = value.trim().split(/\s+/).filter(Boolean)
-  const first = parts[0]?.[0] ?? 'A'
-  const last = parts.length > 1 ? parts[parts.length - 1]?.[0] : ''
-  return `${first}${last}`.toUpperCase()
 }

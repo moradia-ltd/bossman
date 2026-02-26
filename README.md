@@ -31,7 +31,7 @@ The admin app for [Togetha](https://togetha.co.uk) — property and tenancy mana
 - **Teams** – Team management and invitations
 - **Push notifications** – OneSignal integration; send to all users, landlords, tenants, or agencies; schedule or send now (title, description, image, URL)
 - **Backups** – Database backup list and create
-- **Blog** – Public blog and manage (posts, categories, tags, authors)
+- **Blog** – Public blog and manage (posts, categories)
 - **Settings** – Profile, password, notifications, sessions, two-factor auth, delete account
 
 ## Project Structure

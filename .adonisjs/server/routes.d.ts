@@ -132,12 +132,6 @@ export type ScannedRoutes = {
     'blog_categories.index': { paramsTuple?: []; params?: {} }
     'blog_categories.store': { paramsTuple?: []; params?: {} }
     'blog_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'blog_tags.index': { paramsTuple?: []; params?: {} }
-    'blog_tags.store': { paramsTuple?: []; params?: {} }
-    'blog_tags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'blog_authors.index': { paramsTuple?: []; params?: {} }
-    'blog_authors.store': { paramsTuple?: []; params?: {} }
-    'blog_authors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'confirm_delete_custom_user.respond': { paramsTuple?: []; params?: {} }
     'blog_posts.index': { paramsTuple?: []; params?: {} }
     'blog_posts.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
@@ -280,8 +274,6 @@ export type ScannedRoutes = {
     'blog_posts.create': { paramsTuple?: []; params?: {} }
     'blog_posts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'blog_categories.index': { paramsTuple?: []; params?: {} }
-    'blog_tags.index': { paramsTuple?: []; params?: {} }
-    'blog_authors.index': { paramsTuple?: []; params?: {} }
     'confirm_delete_custom_user.respond': { paramsTuple?: []; params?: {} }
     'blog_posts.index': { paramsTuple?: []; params?: {} }
     'blog_posts.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
@@ -395,8 +387,6 @@ export type ScannedRoutes = {
     'blog_posts.create': { paramsTuple?: []; params?: {} }
     'blog_posts.edit': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'blog_categories.index': { paramsTuple?: []; params?: {} }
-    'blog_tags.index': { paramsTuple?: []; params?: {} }
-    'blog_authors.index': { paramsTuple?: []; params?: {} }
     'confirm_delete_custom_user.respond': { paramsTuple?: []; params?: {} }
     'blog_posts.index': { paramsTuple?: []; params?: {} }
     'blog_posts.show': { paramsTuple: [ParamValue]; params: {'slug': ParamValue} }
@@ -445,8 +435,6 @@ export type ScannedRoutes = {
     'db_backups.store': { paramsTuple?: []; params?: {} }
     'blog_posts.store': { paramsTuple?: []; params?: {} }
     'blog_categories.store': { paramsTuple?: []; params?: {} }
-    'blog_tags.store': { paramsTuple?: []; params?: {} }
-    'blog_authors.store': { paramsTuple?: []; params?: {} }
     'auth.login': { paramsTuple?: []; params?: {} }
     'auth.forgot_password': { paramsTuple?: []; params?: {} }
     'auth.reset_password': { paramsTuple?: []; params?: {} }
@@ -472,8 +460,6 @@ export type ScannedRoutes = {
     'db_backups.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'blog_posts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'blog_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'blog_tags.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'blog_authors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.delete_avatar': { paramsTuple?: []; params?: {} }
     'users.delete_account': { paramsTuple?: []; params?: {} }
     'members.destroy': { paramsTuple: [ParamValue]; params: {'memberId': ParamValue} }

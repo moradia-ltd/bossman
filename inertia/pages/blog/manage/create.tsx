@@ -2,7 +2,7 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { IconPlus } from '@tabler/icons-react'
 
-import type { RawBlogAuthor, RawBlogCategory, RawBlogTag } from '#types/model-types'
+import type { RawBlogCategory } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Button } from '@/components/ui/button'
@@ -22,11 +22,9 @@ import { Textarea } from '@/components/ui/textarea'
 
 interface BlogAdminCreateProps extends SharedProps {
   categories: RawBlogCategory[]
-  tags: RawBlogTag[]
-  authors: RawBlogAuthor[]
 }
 
-export default function BlogAdminCreate({ categories, tags, authors }: BlogAdminCreateProps) {
+export default function BlogAdminCreate({ categories }: BlogAdminCreateProps) {
   const { data, setData, post, processing, errors } = useForm<{
     title: string
     summary: string
@@ -34,8 +32,6 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
     thumbnailUrl: string
     coverImageUrl: string
     categoryId: string | null
-    tagIds: string[]
-    authorIds: string[]
     publish: boolean
   }>({
     title: '',
@@ -44,8 +40,6 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
     thumbnailUrl: '',
     coverImageUrl: '',
     categoryId: null,
-    tagIds: [],
-    authorIds: [],
     publish: false,
   })
 
@@ -56,7 +50,7 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
         <PageHeader
           backHref='/blog/manage'
           title='New post'
-          description='Create a post with tags, category, and authors.'
+          description='Create a post with category.'
         />
 
         <Card>
@@ -164,86 +158,6 @@ export default function BlogAdminCreate({ categories, tags, authors }: BlogAdmin
                     </Label>
                   </div>
                 </div>
-              </div>
-
-              <div className='grid gap-6 lg:grid-cols-2'>
-                <Card>
-                  <CardHeader className='pb-3'>
-                    <CardTitle className='text-base'>Tags</CardTitle>
-                    <CardDescription>
-                      Pick tags. Manage tags in{' '}
-                      <Link href='/blog/manage/tags' className='text-primary hover:underline'>
-                        Tags
-                      </Link>
-                      .
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className='space-y-2'>
-                    {tags.length ? (
-                      tags.map((t) => (
-                        <div key={t.id} className='flex items-center gap-2 text-sm'>
-                          <Checkbox
-                            checked={data.tagIds.includes(t.id)}
-                            onCheckedChange={(checked) => {
-                              const next = new Set(data.tagIds)
-                              if (checked) next.add(t.id)
-                              else next.delete(t.id)
-                              setData('tagIds', Array.from(next))
-                            }}
-                          />
-                          <span>{t.name}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className='text-sm text-muted-foreground'>No tags yet.</div>
-                    )}
-                    {errors.tagIds ? (
-                      <p className='text-sm text-destructive'>{errors.tagIds}</p>
-                    ) : null}
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className='pb-3'>
-                    <CardTitle className='text-base'>Authors</CardTitle>
-                    <CardDescription>
-                      Select one or more authors. Manage authors in{' '}
-                      <Link href='/blog/manage/authors' className='text-primary hover:underline'>
-                        Authors
-                      </Link>
-                      .
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className='space-y-2'>
-                    {authors.length ? (
-                      authors.map((a) => (
-                        <div key={a.id} className='flex items-center gap-2 text-sm'>
-                          <Checkbox
-                            checked={data.authorIds.includes(a.id)}
-                            onCheckedChange={(checked) => {
-                              const next = new Set(data.authorIds)
-                              if (checked) next.add(a.id)
-                              else next.delete(a.id)
-                              setData('authorIds', Array.from(next))
-                            }}
-                          />
-                          <span>{a.name}</span>
-                        </div>
-                      ))
-                    ) : (
-                      <div className='text-sm text-muted-foreground'>
-                        No authors yet. Create one in{' '}
-                        <Link href='/blog/manage/authors' className='text-primary hover:underline'>
-                          Authors
-                        </Link>
-                        .
-                      </div>
-                    )}
-                    {errors.authorIds ? (
-                      <p className='text-sm text-destructive'>{errors.authorIds}</p>
-                    ) : null}
-                  </CardContent>
-                </Card>
               </div>
 
               <div className='flex flex-wrap items-center gap-2'>

@@ -7,10 +7,8 @@
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps } from '@adonisjs/inertia/types'
 import type AddonTransformer from '#transformers/addon_transformer'
-import type BlogAuthorTransformer from '#transformers/blog_author_transformer'
 import type BlogCategoryTransformer from '#transformers/blog_category_transformer'
 import type BlogPostTransformer from '#transformers/blog_post_transformer'
-import type BlogTagTransformer from '#transformers/blog_tag_transformer'
 import type DbBackupTransformer from '#transformers/db_backup_transformer'
 import type DocumentTransformer from '#transformers/document_transformer'
 import type LeaseTransformer from '#transformers/lease_transformer'
@@ -32,10 +30,6 @@ export namespace Data {
   export namespace Addon {
     export type Variants = InferVariants<AddonTransformer>
   }
-  export type BlogAuthor = InferData<BlogAuthorTransformer>
-  export namespace BlogAuthor {
-    export type Variants = InferVariants<BlogAuthorTransformer>
-  }
   export type BlogCategory = InferData<BlogCategoryTransformer>
   export namespace BlogCategory {
     export type Variants = InferVariants<BlogCategoryTransformer>
@@ -43,10 +37,6 @@ export namespace Data {
   export type BlogPost = InferData<BlogPostTransformer>
   export namespace BlogPost {
     export type Variants = InferVariants<BlogPostTransformer>
-  }
-  export type BlogTag = InferData<BlogTagTransformer>
-  export namespace BlogTag {
-    export type Variants = InferVariants<BlogTagTransformer>
   }
   export type DbBackup = InferData<DbBackupTransformer>
   export namespace DbBackup {

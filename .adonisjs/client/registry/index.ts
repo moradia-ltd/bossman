@@ -774,42 +774,6 @@ const routes = {
     tokens: [{"old":"/blog/manage/categories/:id","type":0,"val":"blog","end":""},{"old":"/blog/manage/categories/:id","type":0,"val":"manage","end":""},{"old":"/blog/manage/categories/:id","type":0,"val":"categories","end":""},{"old":"/blog/manage/categories/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['blog_categories.destroy']['types'],
   },
-  'blog_tags.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/blog/manage/tags',
-    tokens: [{"old":"/blog/manage/tags","type":0,"val":"blog","end":""},{"old":"/blog/manage/tags","type":0,"val":"manage","end":""},{"old":"/blog/manage/tags","type":0,"val":"tags","end":""}],
-    types: placeholder as Registry['blog_tags.index']['types'],
-  },
-  'blog_tags.store': {
-    methods: ["POST"],
-    pattern: '/blog/manage/tags',
-    tokens: [{"old":"/blog/manage/tags","type":0,"val":"blog","end":""},{"old":"/blog/manage/tags","type":0,"val":"manage","end":""},{"old":"/blog/manage/tags","type":0,"val":"tags","end":""}],
-    types: placeholder as Registry['blog_tags.store']['types'],
-  },
-  'blog_tags.destroy': {
-    methods: ["DELETE"],
-    pattern: '/blog/manage/tags/:id',
-    tokens: [{"old":"/blog/manage/tags/:id","type":0,"val":"blog","end":""},{"old":"/blog/manage/tags/:id","type":0,"val":"manage","end":""},{"old":"/blog/manage/tags/:id","type":0,"val":"tags","end":""},{"old":"/blog/manage/tags/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['blog_tags.destroy']['types'],
-  },
-  'blog_authors.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/blog/manage/authors',
-    tokens: [{"old":"/blog/manage/authors","type":0,"val":"blog","end":""},{"old":"/blog/manage/authors","type":0,"val":"manage","end":""},{"old":"/blog/manage/authors","type":0,"val":"authors","end":""}],
-    types: placeholder as Registry['blog_authors.index']['types'],
-  },
-  'blog_authors.store': {
-    methods: ["POST"],
-    pattern: '/blog/manage/authors',
-    tokens: [{"old":"/blog/manage/authors","type":0,"val":"blog","end":""},{"old":"/blog/manage/authors","type":0,"val":"manage","end":""},{"old":"/blog/manage/authors","type":0,"val":"authors","end":""}],
-    types: placeholder as Registry['blog_authors.store']['types'],
-  },
-  'blog_authors.destroy': {
-    methods: ["DELETE"],
-    pattern: '/blog/manage/authors/:id',
-    tokens: [{"old":"/blog/manage/authors/:id","type":0,"val":"blog","end":""},{"old":"/blog/manage/authors/:id","type":0,"val":"manage","end":""},{"old":"/blog/manage/authors/:id","type":0,"val":"authors","end":""},{"old":"/blog/manage/authors/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['blog_authors.destroy']['types'],
-  },
   'confirm_delete_custom_user.respond': {
     methods: ["GET","HEAD"],
     pattern: '/confirm-delete-custom-user',

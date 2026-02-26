@@ -81,14 +81,6 @@ router
         router.get('/categories', [controllers.BlogCategories, 'index'])
         router.post('/categories', [controllers.BlogCategories, 'store'])
         router.delete('/categories/:id', [controllers.BlogCategories, 'destroy'])
-
-        router.get('/tags', [controllers.BlogTags, 'index'])
-        router.post('/tags', [controllers.BlogTags, 'store'])
-        router.delete('/tags/:id', [controllers.BlogTags, 'destroy'])
-
-        router.get('/authors', [controllers.BlogAuthors, 'index'])
-        router.post('/authors', [controllers.BlogAuthors, 'store'])
-        router.delete('/authors/:id', [controllers.BlogAuthors, 'destroy'])
       })
       .prefix('blog/manage')
   })

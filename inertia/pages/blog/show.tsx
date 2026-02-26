@@ -15,8 +15,6 @@ export default function BlogShow({ post }: BlogShowProps) {
   const publishedLabel = post.publishedAt ? formatDate(post.publishedAt) : null
   const minutes = getReadingMinutes(post.content || post.summary || '')
   const paragraphs = splitParagraphsWithKeys(post.content || '')
-  const authorsLabel = getAuthorsLabel(post)
-  const tagsLabel = getTagsLabel(post)
 
   return (
     <PublicLayout>
@@ -50,12 +48,6 @@ export default function BlogShow({ post }: BlogShowProps) {
                 <div className='flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground'>
                   {post.category?.name ? (
                     <Badge variant='secondary'>{post.category.name}</Badge>
-                  ) : null}
-                  {authorsLabel ? (
-                    <span className='inline-flex items-center gap-1'>
-                      <span className='text-muted-foreground'>By</span>
-                      <span className='text-foreground/80'>{authorsLabel}</span>
-                    </span>
                   ) : null}
                   {publishedLabel ? (
                     <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
@@ -93,11 +85,6 @@ export default function BlogShow({ post }: BlogShowProps) {
                 )}
               </div>
 
-              {tagsLabel ? (
-                <div className='text-sm text-muted-foreground'>
-                  <span className='font-medium text-foreground/80'>Tags:</span> {tagsLabel}
-                </div>
-              ) : null}
             </article>
           </div>
         </div>
@@ -149,24 +136,6 @@ function getReadingMinutes(text: string) {
   const words = trimmed.split(/\s+/).filter(Boolean).length
   const minutes = Math.max(1, Math.round(words / 220))
   return minutes
-}
-
-function getAuthorsLabel(post: RawBlogPost) {
-  const authors = post.authors || []
-  if (!authors.length) return null
-  return authors
-    .map((a) => a.name || a.email)
-    .filter(Boolean)
-    .join(', ')
-}
-
-function getTagsLabel(post: RawBlogPost) {
-  const tags = post.tags || []
-  if (!tags.length) return null
-  return tags
-    .map((t) => t.name)
-    .filter(Boolean)
-    .join(', ')
 }
 
 function hashString(value: string) {

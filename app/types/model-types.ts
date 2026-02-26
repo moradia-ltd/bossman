@@ -3,10 +3,8 @@ import type { DateTime } from 'luxon'
 
 import type Activity from '#models/activity'
 import type Addon from '#models/addon'
-import type BlogAuthor from '#models/blog_author'
 import type BlogCategory from '#models/blog_category'
 import type BlogPost from '#models/blog_post'
-import type BlogTag from '#models/blog_tag'
 import type DbBackup from '#models/db_backup'
 import type Lease from '#models/lease'
 import type LeaseableEntity from '#models/leaseable_entity'
@@ -61,9 +59,7 @@ export type RawSession = ExtractModelType<Session>
 export type RawTeamInvitation = ExtractModelType<TeamInvitation>
 export type RawTeamMember = ExtractModelType<TeamMember>
 export type RawBlogCategory = ExtractModelType<BlogCategory>
-export type RawBlogAuthor = ExtractModelType<BlogAuthor>
 export type RawBlogPost = ExtractModelType<BlogPost>
-export type RawBlogTag = ExtractModelType<BlogTag>
 export type RawUser = ExtractModelType<User>
 export type RawLease = ExtractModelType<Lease>
 export type RawLeaseableEntity = ExtractModelType<LeaseableEntity>

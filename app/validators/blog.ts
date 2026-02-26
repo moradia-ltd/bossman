@@ -9,8 +9,6 @@ export const createBlogPostValidator = vine.create(
     thumbnailUrl: vine.string().trim().maxLength(2048).trim().optional(),
     coverImageUrl: vine.string().trim().maxLength(2048).trim().optional(),
     categoryId: vine.string().trim().optional(),
-    tagIds: vine.array(vine.string()).optional(),
-    authorIds: vine.array(vine.string()),
     publish: vine.boolean().optional(),
   }),
 )
@@ -24,8 +22,6 @@ export const updateBlogPostValidator = vine.create(
     thumbnailUrl: vine.string().trim().maxLength(2048).optional(),
     coverImageUrl: vine.string().trim().maxLength(2048).optional(),
     categoryId: vine.string().trim().optional(),
-    tagIds: vine.array(vine.string()).optional(),
-    authorIds: vine.array(vine.string()).optional(),
     publish: vine.boolean().optional(),
   }),
 )
@@ -37,17 +33,3 @@ export const createBlogCategoryValidator = vine.create(
   }),
 )
 
-export const createBlogTagValidator = vine.create(
-  vine.object({
-    name: vine.string().trim().minLength(1).maxLength(255),
-  }),
-)
-
-export const createBlogAuthorValidator = vine.create(
-  vine.object({
-    name: vine.string().trim().minLength(2).maxLength(255),
-    email: vine.string().trim().email().toLowerCase().optional(),
-    avatarUrl: vine.string().trim().maxLength(2048).optional(),
-    bio: vine.string().trim().maxLength(5000).optional(),
-  }),
-)

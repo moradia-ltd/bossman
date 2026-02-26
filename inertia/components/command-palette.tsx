@@ -193,18 +193,6 @@ export function CommandPalette() {
       requires: 'blog',
     },
     {
-      label: 'Blog tags',
-      href: '/blog/manage/tags',
-      icon: <IconNews className='mr-2 h-4 w-4' />,
-      requires: 'blog',
-    },
-    {
-      label: 'Blog authors',
-      href: '/blog/manage/authors',
-      icon: <IconNews className='mr-2 h-4 w-4' />,
-      requires: 'blog',
-    },
-    {
       label: 'Stats',
       href: '/stats',
       icon: <IconChartBar className='mr-2 h-4 w-4' />,

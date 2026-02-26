@@ -33,6 +33,7 @@ export function BuildLogsSheet({ open, onOpenChange, deploymentId }: BuildLogsSh
       return res.data ?? []
     },
     enabled: !!deploymentId && open,
+    refetchInterval: open ? 3_000 : false,
   })
 
   useEffect(() => {

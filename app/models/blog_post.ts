@@ -1,27 +1,21 @@
 import { slugify } from '@adonisjs/lucid-slugify'
-import { belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
-import type { BelongsTo, ManyToMany } from '@adonisjs/lucid/types/relations'
+import { belongsTo, column } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import type { DateTime } from 'luxon'
 
-import BlogAuthor from './blog_author.js'
 import BlogCategory from './blog_category.js'
-import BlogTag from './blog_tag.js'
 import SuperBaseModel from './super_base.js'
 
-export default class BlogPost extends SuperBaseModel {
+export default class BlogPost {
   static table = 'blog_posts'
 
-  @column({ isPrimary: true })
-  declare id: string
+  @column()
+  declare id: number
 
   @column()
   declare title: string
 
   @column()
-  @slugify({
-    strategy: 'dbIncrement',
-    fields: ['title'],
-  })
   declare slug: string
 
   @column()
@@ -50,18 +44,4 @@ export default class BlogPost extends SuperBaseModel {
 
   @belongsTo(() => BlogCategory, { foreignKey: 'categoryId' })
   declare category: BelongsTo<typeof BlogCategory>
-
-  @manyToMany(() => BlogTag, {
-    pivotTable: 'blog_post_tags',
-    pivotForeignKey: 'blog_post_id',
-    pivotRelatedForeignKey: 'blog_tag_id',
-  })
-  declare tags: ManyToMany<typeof BlogTag>
-
-  @manyToMany(() => BlogAuthor, {
-    pivotTable: 'blog_post_authors',
-    pivotForeignKey: 'blog_post_id',
-    pivotRelatedForeignKey: 'blog_author_id',
-  })
-  declare authors: ManyToMany<typeof BlogAuthor>
 }

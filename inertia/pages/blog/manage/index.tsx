@@ -102,7 +102,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
       <div className='space-y-6'>
         <PageHeader
           title='Blog'
-          description='Create and manage posts, tags, and categories.'
+          description='Create and manage posts and categories.'
           actions={
             <>
               <Button variant='outline' asChild>
@@ -110,12 +110,6 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
               </Button>
               <Button variant='outline' leftIcon={<IconTags />} asChild>
                 <Link href='/blog/manage/categories'>Categories</Link>
-              </Button>
-              <Button variant='outline' leftIcon={<IconTags />} asChild>
-                <Link href='/blog/manage/tags'>Tags</Link>
-              </Button>
-              <Button variant='outline' leftIcon={<IconTags />} asChild>
-                <Link href='/blog/manage/authors'>Authors</Link>
               </Button>
               <Button leftIcon={<IconPlus />} asChild>
                 <Link href='/blog/manage/create'>New post</Link>

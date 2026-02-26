@@ -10,10 +10,8 @@ export declare const controllers: {
     Analytics: () => Promise<typeof import("#controllers/analytics_controller")>;
     Audits: () => Promise<typeof import("#controllers/audits_controller")>;
     Auth: () => Promise<typeof import("#controllers/auth_controller")>;
-    BlogAuthors: () => Promise<typeof import("#controllers/blog_authors_controller")>;
     BlogCategories: () => Promise<typeof import("#controllers/blog_categories_controller")>;
     BlogPosts: () => Promise<typeof import("#controllers/blog_posts_controller")>;
-    BlogTags: () => Promise<typeof import("#controllers/blog_tags_controller")>;
     ConfirmDeleteCustomUser: () => Promise<typeof import("#controllers/confirm_delete_custom_user_controller")>;
     Dashboard: () => Promise<typeof import("#controllers/dashboard_controller")>;
     DbBackups: () => Promise<typeof import("#controllers/db_backups_controller")>;

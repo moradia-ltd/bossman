@@ -186,16 +186,6 @@ export interface ApiDefinition {
     store: typeof routes['blog_categories.store']
     destroy: typeof routes['blog_categories.destroy']
   }
-  blogTags: {
-    index: typeof routes['blog_tags.index']
-    store: typeof routes['blog_tags.store']
-    destroy: typeof routes['blog_tags.destroy']
-  }
-  blogAuthors: {
-    index: typeof routes['blog_authors.index']
-    store: typeof routes['blog_authors.store']
-    destroy: typeof routes['blog_authors.destroy']
-  }
   confirmDeleteCustomUser: {
     respond: typeof routes['confirm_delete_custom_user.respond']
   }

@@ -54,7 +54,7 @@ export const PAGE_OPTIONS: Array<{
   { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
   { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
   { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
-  { key: 'blog', label: 'Blog', description: 'Manage blog posts, tags, categories, authors' },
+  { key: 'blog', label: 'Blog', description: 'Manage blog posts and categories' },
   { key: 'orgs', label: 'Organisations', description: 'Organisations and customers' },
   { key: 'leases', label: 'Leases', description: 'Leases and tenancies' },
   { key: 'properties', label: 'Properties', description: 'Properties and leaseable entities' },

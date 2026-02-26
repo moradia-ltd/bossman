@@ -18,12 +18,10 @@ declare module '@adonisjs/inertia/types' {
     'addons/index': ExtractProps<(typeof import('../../inertia/pages/addons/index.tsx'))['default']>
     'analytics/index': ExtractProps<(typeof import('../../inertia/pages/analytics/index.tsx'))['default']>
     'blog/index': ExtractProps<(typeof import('../../inertia/pages/blog/index.tsx'))['default']>
-    'blog/manage/authors': ExtractProps<(typeof import('../../inertia/pages/blog/manage/authors.tsx'))['default']>
     'blog/manage/categories': ExtractProps<(typeof import('../../inertia/pages/blog/manage/categories.tsx'))['default']>
     'blog/manage/create': ExtractProps<(typeof import('../../inertia/pages/blog/manage/create.tsx'))['default']>
     'blog/manage/edit': ExtractProps<(typeof import('../../inertia/pages/blog/manage/edit.tsx'))['default']>
     'blog/manage/index': ExtractProps<(typeof import('../../inertia/pages/blog/manage/index.tsx'))['default']>
-    'blog/manage/tags': ExtractProps<(typeof import('../../inertia/pages/blog/manage/tags.tsx'))['default']>
     'blog/show': ExtractProps<(typeof import('../../inertia/pages/blog/show.tsx'))['default']>
     'dashboard/components/team-invitations': ExtractProps<(typeof import('../../inertia/pages/dashboard/components/team-invitations.tsx'))['default']>
     'dashboard/index': ExtractProps<(typeof import('../../inertia/pages/dashboard/index.tsx'))['default']>
