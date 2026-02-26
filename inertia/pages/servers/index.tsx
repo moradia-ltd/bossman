@@ -42,8 +42,8 @@ export default function ServersIndex({
   sort,
   sortOptions = [],
 }: ServersIndexProps) {
-  const handleSortChange = (value: string) => {
-    router.get('/servers', { sort: value })
+  const handleSortChange = (value: string | null) => {
+    if (value) router.get('/servers', { sort: value })
   }
 
   return (
