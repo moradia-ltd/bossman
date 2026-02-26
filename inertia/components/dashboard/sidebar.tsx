@@ -90,12 +90,20 @@ const adminNavSections: NavSection[] = [
         icon: <IconBell className='h-4 w-4' />,
       },
       { title: 'Teams', href: '/teams', icon: <IconUsers className='h-4 w-4' /> },
-      { title: 'Backups', href: '/db-backups', icon: <IconDatabase className='h-4 w-4' /> },
-      { title: 'Servers', href: '/servers', icon: <IconServer className='h-4 w-4' /> },
       { title: 'Logs', href: '/logs', icon: <IconLogs className='h-4 w-4' /> },
       { title: 'Emails', href: '/emails', icon: <IconMail className='h-4 w-4' /> },
       { title: 'Blog', href: '/blog/manage', icon: <IconNews className='h-4 w-4' /> },
       { title: 'Addons', href: '/addons', icon: <IconPackage className='h-4 w-4' /> },
+    ],
+  },
+]
+
+const developerNavSections: NavSection[] = [
+  {
+    label: 'Developer',
+    items: [
+      { title: 'Servers', href: '/servers', icon: <IconServer className='h-4 w-4' /> },
+      { title: 'Backups', href: '/db-backups', icon: <IconDatabase className='h-4 w-4' /> },
     ],
   },
 ]
@@ -161,6 +169,7 @@ export function Sidebar({ children }: SidebarProps) {
   const allNavSections: NavSection[] = [
     ...appNavSections,
     ...adminNavSections,
+    ...developerNavSections,
     ...settingsNavSections,
   ]
   const effectiveNavSections: NavSection[] = allNavSections.map((section) => ({
