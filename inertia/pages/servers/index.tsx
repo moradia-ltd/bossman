@@ -1,6 +1,8 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link, router } from '@inertiajs/react'
+import { Head, Link, router } from '@inertiajs/react'
+import { useQuery } from '@tanstack/react-query'
 import { IconCalendar, IconChevronRight, IconServer } from '@tabler/icons-react'
+import { useMemo } from 'react'
 import pluralize from 'pluralize'
 
 import { timeAgo } from '#utils/date'
@@ -17,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { startCase } from '#utils/functions'
+import api from '@/lib/http'
 
 interface RailwayProject {
   id: string
@@ -26,22 +29,64 @@ interface RailwayProject {
   updatedAt: string
 }
 
-interface SortOption {
-  value: string
-  label: string
+const SORT_VALUES = [
+  'updatedAt:desc',
+  'updatedAt:asc',
+  'name:asc',
+  'name:desc',
+  'createdAt:desc',
+  'createdAt:asc',
+] as const
+
+type SortValue = (typeof SORT_VALUES)[number]
+
+const SORT_LABELS: Record<SortValue, string> = {
+  'updatedAt:desc': 'Updated (newest first)',
+  'updatedAt:asc': 'Updated (oldest first)',
+  'name:asc': 'Name A–Z',
+  'name:desc': 'Name Z–A',
+  'createdAt:desc': 'Created (newest first)',
+  'createdAt:asc': 'Created (oldest first)',
+}
+
+const SORT_OPTIONS = SORT_VALUES.map((value) => ({
+  value,
+  label: SORT_LABELS[value],
+}))
+
+function sortProjects(projects: RailwayProject[], sort: SortValue): RailwayProject[] {
+  const [field, order] = sort.split(':') as [keyof RailwayProject, 'asc' | 'desc']
+  return [...projects].sort((a, b) => {
+    const aVal = a[field]
+    const bVal = b[field]
+    if (aVal == null && bVal == null) return 0
+    if (aVal == null) return order === 'asc' ? -1 : 1
+    if (bVal == null) return order === 'asc' ? 1 : -1
+    const cmp = String(aVal).localeCompare(String(bVal), undefined, { numeric: true })
+    return order === 'asc' ? cmp : -cmp
+  })
 }
 
 interface ServersIndexProps extends SharedProps {
-  projects: RailwayProject[]
   sort: string
-  sortOptions: SortOption[]
 }
 
-export default function ServersIndex({
-  projects = [],
-  sort,
-  sortOptions = [],
-}: ServersIndexProps) {
+export default function ServersIndex({ sort }: ServersIndexProps) {
+  const { data: projects = [], isLoading, error } = useQuery({
+    queryKey: ['railway', 'projects'],
+    queryFn: async () => {
+      const res = await api.get<RailwayProject[]>(
+        '/railway/projects' as Parameters<typeof api.get>[0],
+      )
+      return res.data ?? []
+    },
+  })
+
+  const sortedProjects = useMemo(
+    () => sortProjects(projects, sort as SortValue),
+    [projects, sort],
+  )
+
   const handleSortChange = (value: string | null) => {
     if (value) router.get('/servers', { sort: value })
   }
@@ -55,32 +100,40 @@ export default function ServersIndex({
           title='Servers'
           description='Railway projects. Open a project to view its services, deployments, and logs.'
         />
-        {sortOptions.length > 0 && (
-          <div className='flex flex-wrap items-center justify-end gap-2 mb-4'>
-            <span className='text-sm text-muted-foreground'>Sort:</span>
-            <Select value={sort} onValueChange={handleSortChange} itemToStringValue={(v) => startCase(v) ?? ''}>
-              <SelectTrigger className='w-[200px]' size='sm'>
-                <SelectValue placeholder='Sort by' />
-              </SelectTrigger>
-              <SelectContent>
-                {sortOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
+        <div className='flex flex-wrap items-center justify-end gap-2 mb-4'>
+          <span className='text-sm text-muted-foreground'>Sort:</span>
+          <Select value={sort} onValueChange={handleSortChange} itemToStringValue={(v) => startCase(v) ?? ''}>
+            <SelectTrigger className='w-[200px]' size='sm'>
+              <SelectValue placeholder='Sort by' />
+            </SelectTrigger>
+            <SelectContent>
+              {SORT_OPTIONS.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-        <Deferred data='projects' fallback={<LoadingSkeleton type='list' />}>
+        {isLoading ? (
+          <LoadingSkeleton type='list' />
+        ) : error ? (
+          <AppCard title='Projects' className='space-y-6'>
+            <EmptyState
+              icon={IconServer}
+              title='Failed to load projects'
+              description={error instanceof Error ? error.message : 'Something went wrong.'}
+              className='rounded-lg border border-dashed border-border bg-muted/30'
+            />
+          </AppCard>
+        ) : (
           <AppCard
             title='Projects'
-            description={`${pluralize('project', projects.length)} on Railway`}
+            description={`${pluralize('project', sortedProjects.length)} on Railway`}
             className='space-y-6'>
-
             <div className='grid gap-5 sm:grid-cols-2 xl:grid-cols-3'>
-              {projects.map((project) => (
+              {sortedProjects.map((project) => (
                 <Link
                   key={project.id}
                   href={`/servers/${project.id}?name=${encodeURIComponent(project.name)}`}>
@@ -106,7 +159,7 @@ export default function ServersIndex({
                 </Link>
               ))}
             </div>
-            {projects.length === 0 && (
+            {sortedProjects.length === 0 && (
               <EmptyState
                 icon={IconServer}
                 title='No projects found'
@@ -115,7 +168,7 @@ export default function ServersIndex({
               />
             )}
           </AppCard>
-        </Deferred>
+        )}
       </div>
     </DashboardLayout>
   )

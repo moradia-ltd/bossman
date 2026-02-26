@@ -3,6 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Addon from '#models/addon'
 import StripeService from '#services/stripe_service'
 import AddonTransformer from '#transformers/addon_transformer'
+import { renderInertia } from '#utils/inertia'
 import { createAddonValidator, updateAddonValidator } from '#validators/addon'
 
 export default class AddonsController {
@@ -14,12 +15,9 @@ export default class AddonsController {
       .orderBy('sort_order', 'asc')
       .orderBy('name', 'asc')
 
-    return (
-      inertia.render as (
-        page: 'addons/index',
-        props: { addons: unknown },
-      ) => ReturnType<HttpContext['inertia']['render']>
-    )('addons/index', { addons: AddonTransformer.transform(addons) })
+    return renderInertia(inertia, 'addons/index', {
+      addons: AddonTransformer.transform(addons),
+    })
   }
 
   async create({ inertia }: HttpContext) {
