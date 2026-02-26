@@ -5,9 +5,6 @@
 
 export const controllers = {
   Addons: () => import('#controllers/addons_controller'),
-  admin: {
-    Debug: () => import('#controllers/admin/debug_controller'),
-  },
   Analytics: () => import('#controllers/analytics_controller'),
   Audits: () => import('#controllers/audits_controller'),
   Auth: () => import('#controllers/auth_controller'),
@@ -30,7 +27,6 @@ export const controllers = {
   Orgs: () => import('#controllers/orgs_controller'),
   PushNotifications: () => import('#controllers/push_notifications_controller'),
   Railway: () => import('#controllers/railway_controller'),
-  ServerStats: () => import('#controllers/server_stats_controller'),
   Servers: () => import('#controllers/servers_controller'),
   Sessions: () => import('#controllers/sessions_controller'),
   TeamInvitations: () => import('#controllers/team_invitations_controller'),

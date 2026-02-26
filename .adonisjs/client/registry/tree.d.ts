@@ -3,6 +3,17 @@ import type { routes } from './index.ts'
 
 export interface ApiDefinition {
   serverStats: {
+    api: typeof routes['server-stats.api']
+    debug: {
+      queries: typeof routes['server-stats.debug.queries']
+      events: typeof routes['server-stats.debug.events']
+      routes: typeof routes['server-stats.debug.routes']
+      logs: typeof routes['server-stats.debug.logs']
+      emails: typeof routes['server-stats.debug.emails']
+      emailPreview: typeof routes['server-stats.debug.emailPreview']
+      traces: typeof routes['server-stats.debug.traces']
+      traceDetail: typeof routes['server-stats.debug.traceDetail']
+    }
     dashboard: typeof routes['server-stats.dashboard']
     overview: typeof routes['server-stats.overview'] & {
       chart: typeof routes['server-stats.overview.chart']
@@ -35,7 +46,6 @@ export interface ApiDefinition {
       create: typeof routes['server-stats.filters.create']
       delete: typeof routes['server-stats.filters.delete']
     }
-    index: typeof routes['server_stats.index']
   }
   drive: {
     fs: {
@@ -244,15 +254,6 @@ export interface ApiDefinition {
     recent: typeof routes['audits.recent']
   }
   healthChecks: typeof routes['health_checks']
-  debug: {
-    queries: typeof routes['debug.queries']
-    events: typeof routes['debug.events']
-    routes: typeof routes['debug.routes']
-    emails: typeof routes['debug.emails']
-    emailPreview: typeof routes['debug.email_preview']
-    traces: typeof routes['debug.traces']
-    traceDetail: typeof routes['debug.trace_detail']
-  }
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']

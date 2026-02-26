@@ -218,21 +218,6 @@ router.get('/swagger', async () => {
   return AutoSwagger.default.docs(router.toJSON(), swagger)
 })
 
-router.get('/admin/api/server-stats', '#controllers/server_stats_controller.index')
-
-router
-  .group(() => {
-    router.get('queries', '#controllers/admin/debug_controller.queries')
-    router.get('events', '#controllers/admin/debug_controller.events')
-    router.get('routes', '#controllers/admin/debug_controller.routes')
-    router.get('emails', '#controllers/admin/debug_controller.emails')
-    router.get('emails/:id/preview', '#controllers/admin/debug_controller.emailPreview')
-    router.get('traces', '#controllers/admin/debug_controller.traces')
-    router.get('traces/:id', '#controllers/admin/debug_controller.traceDetail')
-  })
-  .prefix('/admin/api/debug')
-// .use(middleware.admin())
-
 // Renders Swagger-UI and passes YAML-output of /swagger
 router.get('/docs/:id?', async ({ params }) => {
   const id = params.id

@@ -6,6 +6,60 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
+  'server-stats.api': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/server-stats',
+    tokens: [{"old":"/admin/api/server-stats","type":0,"val":"admin","end":""},{"old":"/admin/api/server-stats","type":0,"val":"api","end":""},{"old":"/admin/api/server-stats","type":0,"val":"server-stats","end":""}],
+    types: placeholder as Registry['server-stats.api']['types'],
+  },
+  'server-stats.debug.queries': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/queries',
+    tokens: [{"old":"/admin/api/debug/queries","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/queries","type":0,"val":"api","end":""},{"old":"/admin/api/debug/queries","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/queries","type":0,"val":"queries","end":""}],
+    types: placeholder as Registry['server-stats.debug.queries']['types'],
+  },
+  'server-stats.debug.events': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/events',
+    tokens: [{"old":"/admin/api/debug/events","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/events","type":0,"val":"api","end":""},{"old":"/admin/api/debug/events","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/events","type":0,"val":"events","end":""}],
+    types: placeholder as Registry['server-stats.debug.events']['types'],
+  },
+  'server-stats.debug.routes': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/routes',
+    tokens: [{"old":"/admin/api/debug/routes","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/routes","type":0,"val":"api","end":""},{"old":"/admin/api/debug/routes","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/routes","type":0,"val":"routes","end":""}],
+    types: placeholder as Registry['server-stats.debug.routes']['types'],
+  },
+  'server-stats.debug.logs': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/logs',
+    tokens: [{"old":"/admin/api/debug/logs","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/logs","type":0,"val":"api","end":""},{"old":"/admin/api/debug/logs","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/logs","type":0,"val":"logs","end":""}],
+    types: placeholder as Registry['server-stats.debug.logs']['types'],
+  },
+  'server-stats.debug.emails': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/emails',
+    tokens: [{"old":"/admin/api/debug/emails","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/emails","type":0,"val":"api","end":""},{"old":"/admin/api/debug/emails","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/emails","type":0,"val":"emails","end":""}],
+    types: placeholder as Registry['server-stats.debug.emails']['types'],
+  },
+  'server-stats.debug.emailPreview': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/emails/:id/preview',
+    tokens: [{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"api","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"emails","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":1,"val":"id","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"preview","end":""}],
+    types: placeholder as Registry['server-stats.debug.emailPreview']['types'],
+  },
+  'server-stats.debug.traces': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/traces',
+    tokens: [{"old":"/admin/api/debug/traces","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/traces","type":0,"val":"api","end":""},{"old":"/admin/api/debug/traces","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/traces","type":0,"val":"traces","end":""}],
+    types: placeholder as Registry['server-stats.debug.traces']['types'],
+  },
+  'server-stats.debug.traceDetail': {
+    methods: ["GET","HEAD"],
+    pattern: '/admin/api/debug/traces/:id',
+    tokens: [{"old":"/admin/api/debug/traces/:id","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/traces/:id","type":0,"val":"api","end":""},{"old":"/admin/api/debug/traces/:id","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/traces/:id","type":0,"val":"traces","end":""},{"old":"/admin/api/debug/traces/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['server-stats.debug.traceDetail']['types'],
+  },
   'server-stats.dashboard': {
     methods: ["GET","HEAD"],
     pattern: '/stats',
@@ -1007,54 +1061,6 @@ const routes = {
     pattern: '/health',
     tokens: [{"old":"/health","type":0,"val":"health","end":""}],
     types: placeholder as Registry['health_checks']['types'],
-  },
-  'server_stats.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/server-stats',
-    tokens: [{"old":"/admin/api/server-stats","type":0,"val":"admin","end":""},{"old":"/admin/api/server-stats","type":0,"val":"api","end":""},{"old":"/admin/api/server-stats","type":0,"val":"server-stats","end":""}],
-    types: placeholder as Registry['server_stats.index']['types'],
-  },
-  'debug.queries': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/queries',
-    tokens: [{"old":"/admin/api/debug/queries","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/queries","type":0,"val":"api","end":""},{"old":"/admin/api/debug/queries","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/queries","type":0,"val":"queries","end":""}],
-    types: placeholder as Registry['debug.queries']['types'],
-  },
-  'debug.events': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/events',
-    tokens: [{"old":"/admin/api/debug/events","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/events","type":0,"val":"api","end":""},{"old":"/admin/api/debug/events","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/events","type":0,"val":"events","end":""}],
-    types: placeholder as Registry['debug.events']['types'],
-  },
-  'debug.routes': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/routes',
-    tokens: [{"old":"/admin/api/debug/routes","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/routes","type":0,"val":"api","end":""},{"old":"/admin/api/debug/routes","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/routes","type":0,"val":"routes","end":""}],
-    types: placeholder as Registry['debug.routes']['types'],
-  },
-  'debug.emails': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/emails',
-    tokens: [{"old":"/admin/api/debug/emails","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/emails","type":0,"val":"api","end":""},{"old":"/admin/api/debug/emails","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/emails","type":0,"val":"emails","end":""}],
-    types: placeholder as Registry['debug.emails']['types'],
-  },
-  'debug.email_preview': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/emails/:id/preview',
-    tokens: [{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"api","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"emails","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":1,"val":"id","end":""},{"old":"/admin/api/debug/emails/:id/preview","type":0,"val":"preview","end":""}],
-    types: placeholder as Registry['debug.email_preview']['types'],
-  },
-  'debug.traces': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/traces',
-    tokens: [{"old":"/admin/api/debug/traces","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/traces","type":0,"val":"api","end":""},{"old":"/admin/api/debug/traces","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/traces","type":0,"val":"traces","end":""}],
-    types: placeholder as Registry['debug.traces']['types'],
-  },
-  'debug.trace_detail': {
-    methods: ["GET","HEAD"],
-    pattern: '/admin/api/debug/traces/:id',
-    tokens: [{"old":"/admin/api/debug/traces/:id","type":0,"val":"admin","end":""},{"old":"/admin/api/debug/traces/:id","type":0,"val":"api","end":""},{"old":"/admin/api/debug/traces/:id","type":0,"val":"debug","end":""},{"old":"/admin/api/debug/traces/:id","type":0,"val":"traces","end":""},{"old":"/admin/api/debug/traces/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['debug.trace_detail']['types'],
   },
   'event_stream': {
     methods: ["GET","HEAD"],

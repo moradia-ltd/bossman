@@ -7,6 +7,105 @@ import type { InferInput } from '@vinejs/vine/types'
 export type ParamValue = string | number | bigint | boolean
 
 export interface Registry {
+  'server-stats.api': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/server-stats'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.queries': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/queries'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.events': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/events'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.routes': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/routes'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.logs': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/logs'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.emails': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/emails'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.emailPreview': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/emails/:id/preview'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.traces': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/traces'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.debug.traceDetail': {
+    methods: ["GET","HEAD"]
+    pattern: '/admin/api/debug/traces/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+    }
+  }
   'server-stats.dashboard': {
     methods: ["GET","HEAD"]
     pattern: '/stats'
@@ -1842,94 +1941,6 @@ export interface Registry {
       params: {}
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/health_checks_controller').default['handle']>>>
-    }
-  }
-  'server_stats.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/server-stats'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.queries': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/queries'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.events': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/events'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.routes': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/routes'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.emails': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/emails'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.email_preview': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/emails/:id/preview'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.traces': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/traces'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'debug.trace_detail': {
-    methods: ["GET","HEAD"]
-    pattern: '/admin/api/debug/traces/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: unknown
     }
   }
   'event_stream': {

@@ -11,7 +11,10 @@ import {
 export default defineConfig({
   // How often to collect and broadcast stats (in milliseconds).
   // Higher = fewer HTTP requests and fewer session commits from the stats bar.
-  shouldShow: (ctx) => ctx.auth.user?.isGodAdmin,
+  shouldShow: (ctx) => {
+    const user = ctx.auth.user
+    return user?.isGodAdmin || true
+  },
   intervalMs: 10_000,
 
   devToolbar: {

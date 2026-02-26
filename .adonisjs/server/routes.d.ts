@@ -4,6 +4,15 @@ type ParamValue = string | number | bigint | boolean
 
 export type ScannedRoutes = {
   ALL: {
+    'server-stats.api': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.queries': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.events': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.routes': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.logs': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.emails': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.emailPreview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.debug.traces': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.traceDetail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'server-stats.dashboard': { paramsTuple?: []; params?: {} }
     'server-stats.overview': { paramsTuple?: []; params?: {} }
     'server-stats.overview.chart': { paramsTuple?: []; params?: {} }
@@ -171,19 +180,20 @@ export type ScannedRoutes = {
     'audits.index': { paramsTuple?: []; params?: {} }
     'audits.recent': { paramsTuple?: []; params?: {} }
     'health_checks': { paramsTuple?: []; params?: {} }
-    'server_stats.index': { paramsTuple?: []; params?: {} }
-    'debug.queries': { paramsTuple?: []; params?: {} }
-    'debug.events': { paramsTuple?: []; params?: {} }
-    'debug.routes': { paramsTuple?: []; params?: {} }
-    'debug.emails': { paramsTuple?: []; params?: {} }
-    'debug.email_preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'debug.traces': { paramsTuple?: []; params?: {} }
-    'debug.trace_detail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
   }
   GET: {
+    'server-stats.api': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.queries': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.events': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.routes': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.logs': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.emails': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.emailPreview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.debug.traces': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.traceDetail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'server-stats.dashboard': { paramsTuple?: []; params?: {} }
     'server-stats.overview': { paramsTuple?: []; params?: {} }
     'server-stats.overview.chart': { paramsTuple?: []; params?: {} }
@@ -287,17 +297,18 @@ export type ScannedRoutes = {
     'audits.index': { paramsTuple?: []; params?: {} }
     'audits.recent': { paramsTuple?: []; params?: {} }
     'health_checks': { paramsTuple?: []; params?: {} }
-    'server_stats.index': { paramsTuple?: []; params?: {} }
-    'debug.queries': { paramsTuple?: []; params?: {} }
-    'debug.events': { paramsTuple?: []; params?: {} }
-    'debug.routes': { paramsTuple?: []; params?: {} }
-    'debug.emails': { paramsTuple?: []; params?: {} }
-    'debug.email_preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'debug.traces': { paramsTuple?: []; params?: {} }
-    'debug.trace_detail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
+    'server-stats.api': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.queries': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.events': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.routes': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.logs': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.emails': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.emailPreview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'server-stats.debug.traces': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.traceDetail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'server-stats.dashboard': { paramsTuple?: []; params?: {} }
     'server-stats.overview': { paramsTuple?: []; params?: {} }
     'server-stats.overview.chart': { paramsTuple?: []; params?: {} }
@@ -401,14 +412,6 @@ export type ScannedRoutes = {
     'audits.index': { paramsTuple?: []; params?: {} }
     'audits.recent': { paramsTuple?: []; params?: {} }
     'health_checks': { paramsTuple?: []; params?: {} }
-    'server_stats.index': { paramsTuple?: []; params?: {} }
-    'debug.queries': { paramsTuple?: []; params?: {} }
-    'debug.events': { paramsTuple?: []; params?: {} }
-    'debug.routes': { paramsTuple?: []; params?: {} }
-    'debug.emails': { paramsTuple?: []; params?: {} }
-    'debug.email_preview': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'debug.traces': { paramsTuple?: []; params?: {} }
-    'debug.trace_detail': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
   }
   POST: {
