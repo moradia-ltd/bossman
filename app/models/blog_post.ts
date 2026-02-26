@@ -13,8 +13,8 @@ export default class BlogPost extends BaseModel {
   @column()
   declare title: string
 
-  @column({ prepare: (value: unknown) => JSON.stringify(value) })
-  declare body: Record<string, unknown> | unknown[]
+  @column({})
+  declare body: string
 
   @column() declare slug: string
 

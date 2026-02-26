@@ -3,7 +3,7 @@ import vine from '@vinejs/vine'
 export const createBlogPostValidator = vine.create(
   vine.object({
     title: vine.string().trim().minLength(2).maxLength(255),
-    body: vine.any(), // JSON: object or array, required
+    body: vine.string().trim(),
     excerpt: vine.string().trim().maxLength(2000).optional(),
     coverImageAltUrl: vine.string().trim().maxLength(2048).optional(),
     publish: vine.boolean().optional(),
@@ -13,7 +13,7 @@ export const createBlogPostValidator = vine.create(
 export const updateBlogPostValidator = vine.create(
   vine.object({
     title: vine.string().trim().minLength(2).maxLength(255).optional(),
-    body: vine.any().optional(),
+    body: vine.string().trim().optional(),
     excerpt: vine.string().trim().maxLength(2000).optional(),
     coverImageAltUrl: vine.string().trim().maxLength(2048).optional(),
     publish: vine.boolean().optional(),

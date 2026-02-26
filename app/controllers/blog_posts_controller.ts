@@ -101,10 +101,7 @@ export default class BlogPostsController {
         {
           ...body,
           slug,
-          body:
-            typeof body.body === 'string'
-              ? (JSON.parse(body.body) as Record<string, unknown> | unknown[])
-              : body.body,
+          body: typeof body.body === 'string' ? body.body : '',
           coverImageAltUrl: coverImageAltUrl ?? null,
         },
         { client: trx },
@@ -138,10 +135,7 @@ export default class BlogPostsController {
     try {
       post.merge(body)
       if (body.body !== undefined) {
-        post.body =
-          typeof body.body === 'string'
-            ? (JSON.parse(body.body) as Record<string, unknown> | unknown[])
-            : body.body
+        post.body = typeof body.body === 'string' ? body.body : ''
       }
 
       if (coverImageAltUrl !== undefined) post.coverImageAltUrl = coverImageAltUrl ?? null

@@ -10,6 +10,65 @@ const strapi = axios.create({
   headers: { Authorization: `Bearer ${env.get('STRAPI_API')}` },
 })
 
+/** Render inline children (text + bold + link) to a single string for markdown */
+function renderInline(children: StrapiInlineChild[] | undefined): string {
+  if (!children?.length) return ''
+  const parts: string[] = []
+  for (const child of children) {
+    if (child.type === 'link' && child.url) {
+      const inner = renderInline(child.children)
+      parts.push(`[${inner}](${child.url})`)
+    } else if (child.type === 'text') {
+      const t = child.text ?? ''
+      parts.push(child.bold ? `**${t}**` : t)
+    }
+  }
+  return parts.join('')
+}
+/** Convert Strapi rich text body to markdown (paragraphs, lists, images, links) */
+function strapiBodyToMarkdown(body: StrapiBlock[] | null | undefined): string {
+  if (!body || !Array.isArray(body)) return ''
+  const lines: string[] = []
+  for (const block of body) {
+    const imgUrl = block.url ?? block.image?.url
+    if (imgUrl) {
+      const full = imgUrl.startsWith('http') ? imgUrl : `${STRAPI_BASE}${imgUrl}`
+      lines.push(`![](${full})`)
+      continue
+    }
+    if (block.type === 'list' && Array.isArray(block.children)) {
+      const prefix = block.format === 'ordered' ? '1.' : '-'
+      for (const item of block.children) {
+        const itemChildren = 'children' in item ? item.children : undefined
+        const text = renderInline(itemChildren as StrapiInlineChild[] | undefined).trim()
+        if (text) lines.push(`${prefix} ${text}`)
+      }
+      continue
+    }
+    if (block.type === 'paragraph' && block.children?.length) {
+      const line = renderInline(block.children as StrapiInlineChild[]).trim()
+      if (line) lines.push(line)
+      else lines.push('')
+    } else {
+      lines.push('')
+    }
+  }
+  // Join with \n\n except consecutive list lines (so they form one list)
+  const listLineRegex = /^(\d+\.|-)\s/
+  let out = ''
+  for (let i = 0; i < lines.length; i++) {
+    const curr = lines[i]
+    const prev = i > 0 ? lines[i - 1] : ''
+    const currIsList = listLineRegex.test(curr)
+    const prevIsList = listLineRegex.test(prev)
+    if (i > 0) {
+      out += currIsList && prevIsList ? '\n' : '\n\n'
+    }
+    out += curr
+  }
+  return out
+}
+
 export default class MigrateBlogs extends BaseCommand {
   static commandName = 'migrate:blogs'
   static description = ''
@@ -31,7 +90,7 @@ export default class MigrateBlogs extends BaseCommand {
           { slug: actualPost.slug },
           {
             title: actualPost.title,
-            body: actualPost.body,
+            body: strapiBodyToMarkdown(actualPost.body),
             slug: actualPost.slug,
             excerpt: actualPost.description || actualPost.summary,
             publishedAt: actualPost.publishedAt,

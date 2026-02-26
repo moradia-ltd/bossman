@@ -3,7 +3,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react'
 import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react'
 
 import type { RawBlogPost } from '#types/model-types'
-import { RichTextEditor, EMPTY_TIPTAP_DOC } from '@/components/blog/rich-text-editor'
+import { MarkdownEditor } from '@/components/blog/markdown-editor'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Button } from '@/components/ui/button'
@@ -14,18 +14,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
-
-function normalizeBodyForEditor(body: RawBlogPost['body']): Record<string, unknown> | unknown[] {
-  if (
-    body != null &&
-    typeof body === 'object' &&
-    'type' in body &&
-    (body as { type: string }).type === 'doc'
-  ) {
-    return body as Record<string, unknown>
-  }
-  return EMPTY_TIPTAP_DOC
-}
 
 const COVER_PHOTO_OPTIONS = [
   { value: 'upload', label: 'Upload photo', description: 'Upload an image file' },
@@ -49,7 +37,7 @@ interface BlogAdminEditProps extends SharedProps {
 export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
   const { data, setData, put, processing, errors } = useForm<{
     title: string
-    body: Record<string, unknown> | unknown[]
+    body: string
     excerpt: string
     coverPhotoMode: CoverPhotoMode
     coverImageFile: File | null
@@ -58,7 +46,7 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
     publish: boolean
   }>({
     title: post.title,
-    body: normalizeBodyForEditor(post.body),
+    body: typeof post.body === 'string' ? post.body : '',
     excerpt: post.excerpt || '',
     coverPhotoMode: getInitialCoverMode(post),
     coverImageFile: null,
@@ -76,18 +64,17 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
   const submit = () => {
     put(`/blog/manage/${post.id}`, {
       preserveScroll: true,
-      transform: (payload) => {
+      transform: (payload: typeof data) => {
         const { coverImageFile, coverPhotoMode, coverImageUrl, coverImageAltText, ...rest } =
           payload
         const out: Record<string, unknown> = {
           ...rest,
-          body: rest.body,
           coverImageAltUrl: coverPhotoMode === 'link' ? coverImageUrl : coverImageAltText,
         }
         if (coverImageFile instanceof File) out.coverImage = coverImageFile
         return out
       },
-    })
+    } as Parameters<typeof put>[1])
   }
 
   return (
@@ -150,12 +137,11 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                   htmlFor='body'
                   error={errors.body}
                   className='md:col-span-2'>
-                  <RichTextEditor
+                  <MarkdownEditor
                     key={post.id}
                     editorKey={String(post.id)}
                     value={data.body}
-                    onChange={(json) => setData('body', json)}
-                    placeholder='Start writing…'
+                    onChange={(markdown) => setData('body', markdown)}
                   />
                 </FormField>
 
@@ -176,7 +162,7 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                       <FormField
                         label='Image file'
                         htmlFor='coverImageFile'
-                        error={errors.coverImage}>
+                        error={(errors as Record<string, string | undefined>).coverImage}>
                         <Input
                           id='coverImageFile'
                           type='file'
@@ -190,7 +176,7 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                       <FormField
                         label='Alt text'
                         htmlFor='coverImageAltText'
-                        error={errors.coverImageAltUrl}>
+                        error={(errors as Record<string, string | undefined>).coverImageAltUrl}>
                         <Input
                           id='coverImageAltText'
                           value={data.coverImageAltText}
@@ -203,7 +189,7 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                     <FormField
                       label='Image URL'
                       htmlFor='coverImageUrl'
-                      error={errors.coverImageAltUrl}>
+                      error={(errors as Record<string, string | undefined>).coverImageAltUrl}>
                       <Input
                         id='coverImageUrl'
                         type='url'

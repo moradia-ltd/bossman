@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/dashboard/page_header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { RichTextEditor, EMPTY_TIPTAP_DOC } from '@/components/blog/rich-text-editor'
+import { MarkdownEditor } from '@/components/blog/markdown-editor'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -26,7 +26,7 @@ interface BlogAdminCreateProps extends SharedProps {}
 export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
   const { data, setData, post, processing, errors } = useForm<{
     title: string
-    body: Record<string, unknown> | unknown[]
+    body: string
     excerpt: string
     coverPhotoMode: CoverPhotoMode
     coverImageFile: File | null
@@ -35,7 +35,7 @@ export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
     publish: boolean
   }>({
     title: '',
-    body: EMPTY_TIPTAP_DOC,
+    body: '',
     excerpt: '',
     coverPhotoMode: 'upload',
     coverImageFile: null,
@@ -51,7 +51,6 @@ export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
         const { coverImageFile, coverPhotoMode, coverImageUrl, coverImageAltText, ...rest } = payload
         const out: Record<string, unknown> = {
           ...rest,
-          body: rest.body,
           coverImageAltUrl: coverPhotoMode === 'link' ? coverImageUrl : coverImageAltText,
         }
         if (coverImageFile instanceof File) out.coverImage = coverImageFile
@@ -115,10 +114,9 @@ export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
                   htmlFor='body'
                   error={errors.body}
                   className='md:col-span-2'>
-                  <RichTextEditor
+                  <MarkdownEditor
                     value={data.body}
-                    onChange={(json) => setData('body', json)}
-                    placeholder='Start writing…'
+                    onChange={(markdown) => setData('body', markdown)}
                   />
                 </FormField>
 
