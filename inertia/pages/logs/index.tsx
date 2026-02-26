@@ -51,7 +51,10 @@ function buildColumns(onView: (row: RawAudit) => void): Column<RawAudit>[] {
       key: 'auditableType',
       header: 'Model',
       width: 160,
-      cell: (row) => <span className='font-mono text-sm'>{startCase(row.auditableType)}</span>,
+      cell: (row) => {
+        const type = row.auditableType ?? row.auditable_type
+        return <span className='font-mono text-sm'>{type ? startCase(type) : '—'}</span>
+      },
     },
     {
       key: 'event',
@@ -59,22 +62,18 @@ function buildColumns(onView: (row: RawAudit) => void): Column<RawAudit>[] {
       width: 100,
       cell: (row) => <span className='capitalize font-medium'>{startCase(row.event)}</span>,
     },
-
     {
       key: 'auditableId',
       header: 'Record ID',
       width: 140,
-      cell: (row) => (
-        <span className='font-mono text-xs text-muted-foreground truncate block max-w-[120px]'>
-          {String(row.auditableId)}
-        </span>
-      ),
-    },
-    {
-      key: 'userId',
-      header: 'User ID',
-      width: 120,
-      cell: (row) => <span className='font-mono text-xs text-muted-foreground'>{row.userId}</span>,
+      cell: (row) => {
+        const id = row.auditableId ?? row.auditable_id
+        return (
+          <span className='font-mono text-xs text-muted-foreground truncate block max-w-[120px]'>
+            {id != null ? String(id) : '—'}
+          </span>
+        )
+      },
     },
     {
       key: 'createdAt',

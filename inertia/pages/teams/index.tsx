@@ -34,19 +34,20 @@ import {
 
 const memberColumns: Column<RawTeamMember>[] = [
   {
-    key: '',
-    header: 'Name',
+    key: 'user',
+    header: 'Member',
     sortable: true,
     cell(row) {
-      return <span className='font-medium'>{row.user?.fullName || row.user?.email || '—'}</span>
-    },
-  },
-  {
-    key: 'email',
-    header: 'Email',
-    sortable: true,
-    cell(row) {
-      return <span className='text-sm text-muted-foreground'>{row.user?.email || '—'}</span>
+      const name = row.user?.fullName || row.user?.email || '—'
+      const email = row.user?.email
+      return (
+        <div>
+          <div className='font-medium'>{name}</div>
+          {email && name !== email && (
+            <div className='text-xs text-muted-foreground'>{email}</div>
+          )}
+        </div>
+      )
     },
   },
   {
