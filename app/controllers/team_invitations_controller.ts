@@ -362,4 +362,26 @@ export default class TeamInvitationsController {
     const inviteLink = `${appUrl}/join?token=${token}`
     return response.ok({ inviteLink })
   }
+
+  async destroy({ auth, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const freshUser = await User.findByOrFail('email', user.email)
+    const invitationId = request.param('invitationId')
+
+    if (!user.isAdminOrSuperAdmin) {
+      return response.forbidden({ error: 'Access required.' })
+    }
+    const allowed = await getPageAccessForUser(freshUser.id)
+    if (Array.isArray(allowed) && !allowed.includes('teams')) {
+      return response.forbidden({ error: 'You do not have access to manage teams.' })
+    }
+
+    const invitation = await TeamInvitation.query()
+      .where('id', invitationId)
+      .whereNull('accepted_at')
+      .firstOrFail()
+
+    await invitation.delete()
+    return response.ok({ message: 'Invitation deleted.' })
+  }
 }

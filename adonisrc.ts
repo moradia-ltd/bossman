@@ -93,6 +93,7 @@ export default defineConfig({
     () => import('#start/events'),
     () => import('#start/boss'),
     () => import('#start/email'),
+    () => import('#start/mail')
   ],
 
   /*

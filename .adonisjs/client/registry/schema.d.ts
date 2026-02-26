@@ -1833,6 +1833,17 @@ export interface Registry {
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/team_invitations_controller').default['updateInvitation']>>>
     }
   }
+  'team_invitations.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/invitations/:invitationId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { invitationId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/team_invitations_controller').default['destroy']>>>
+    }
+  }
   'team_invitations.invite_link': {
     methods: ["POST"]
     pattern: '/api/v1/invitations/:invitationId/invite-link'

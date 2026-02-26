@@ -1002,6 +1002,12 @@ const routes = {
     tokens: [{"old":"/api/v1/invitations/:invitationId","type":0,"val":"api","end":""},{"old":"/api/v1/invitations/:invitationId","type":0,"val":"v1","end":""},{"old":"/api/v1/invitations/:invitationId","type":0,"val":"invitations","end":""},{"old":"/api/v1/invitations/:invitationId","type":1,"val":"invitationId","end":""}],
     types: placeholder as Registry['team_invitations.update_invitation']['types'],
   },
+  'team_invitations.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/invitations/:invitationId',
+    tokens: [{"old":"/api/v1/invitations/:invitationId","type":0,"val":"api","end":""},{"old":"/api/v1/invitations/:invitationId","type":0,"val":"v1","end":""},{"old":"/api/v1/invitations/:invitationId","type":0,"val":"invitations","end":""},{"old":"/api/v1/invitations/:invitationId","type":1,"val":"invitationId","end":""}],
+    types: placeholder as Registry['team_invitations.destroy']['types'],
+  },
   'team_invitations.invite_link': {
     methods: ["POST"],
     pattern: '/api/v1/invitations/:invitationId/invite-link',

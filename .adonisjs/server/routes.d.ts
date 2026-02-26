@@ -170,6 +170,7 @@ export type ScannedRoutes = {
     'members.update_member': { paramsTuple: [ParamValue]; params: {'memberId': ParamValue} }
     'team_invitations.invite': { paramsTuple?: []; params?: {} }
     'team_invitations.update_invitation': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
+    'team_invitations.destroy': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
     'team_invitations.invite_link': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
     'team_invitations.accept': { paramsTuple?: []; params?: {} }
     'notifications.index': { paramsTuple?: []; params?: {} }
@@ -474,6 +475,7 @@ export type ScannedRoutes = {
     'blog_authors.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'users.delete_avatar': { paramsTuple?: []; params?: {} }
     'users.delete_account': { paramsTuple?: []; params?: {} }
+    'team_invitations.destroy': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
     'notifications.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {

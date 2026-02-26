@@ -1,4 +1,4 @@
-import { IconCopy, IconPencil, IconPlus } from '@tabler/icons-react'
+import { IconCopy, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -10,6 +10,13 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { HStack } from '@/components/ui/hstack'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Stack } from '@/components/ui/stack'
 import { Switch } from '@/components/ui/switch'
 import {
@@ -20,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { BaseDialog } from '@/components/ui/base-dialog'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import api from '@/lib/http'
 
@@ -63,6 +71,14 @@ export const PAGE_OPTIONS: Array<{
   { key: 'addons', label: 'Addons', description: 'Manage addons' },
 ]
 
+export type InviteRole = 'owner' | 'admin' | 'member'
+
+export const INVITE_ROLE_OPTIONS: Array<{ value: InviteRole; label: string }> = [
+  { value: 'owner', label: 'Owner' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'member', label: 'Member' },
+]
+
 export function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): PageKey[] {
   const set = new Set(pages)
   if (next) set.add(key)
@@ -84,18 +100,26 @@ export interface InvitationRow {
 export function TeamInvitationsInviteButton() {
   const queryClient = useQueryClient()
   const [inviteEmail, setInviteEmail] = useState('')
+  const [inviteRole, setInviteRole] = useState<InviteRole>('member')
   const [invitePages, setInvitePages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
   const [enableProdAccess, setEnableProdAccess] = useState(true)
 
   const inviteMutation = useMutation({
-    mutationFn: (payload: { email: string; allowedPages: PageKey[]; enableProdAccess: boolean }) =>
+    mutationFn: (payload: {
+      email: string
+      role: InviteRole
+      allowedPages: PageKey[]
+      enableProdAccess: boolean
+    }) =>
       api.post('/invitations', {
         email: payload.email,
+        role: payload.role,
         allowedPages: payload.allowedPages,
         enableProdAccess: payload.enableProdAccess,
       }),
     onSuccess: async () => {
       setInviteEmail('')
+      setInviteRole('member')
       setInvitePages(PAGE_OPTIONS.map((o) => o.key))
       setEnableProdAccess(true)
       toast.success('Invite sent successfully')
@@ -138,26 +162,47 @@ export function TeamInvitationsInviteButton() {
         if (!email) return
         inviteMutation.mutate({
           email,
+          role: inviteRole,
           allowedPages: invitePages,
           enableProdAccess,
         })
       }}
       onSecondaryAction={() => {
         setInviteEmail('')
+        setInviteRole('member')
         setInvitePages(PAGE_OPTIONS.map((o) => o.key))
         setEnableProdAccess(true)
       }}
       className='max-w-2xl'>
       <Stack spacing={4}>
-        <div className='space-y-2'>
-          <Label htmlFor='inviteEmail'>Invite by email</Label>
-          <Input
-            id='inviteEmail'
-            type='email'
-            placeholder='staff@company.com'
-            value={inviteEmail}
-            onChange={(e) => setInviteEmail(e.target.value)}
-          />
+        <div className='grid gap-4 sm:grid-cols-2'>
+          <div className='space-y-2'>
+            <Label htmlFor='inviteEmail'>Invite by email</Label>
+            <Input
+              id='inviteEmail'
+              type='email'
+              placeholder='staff@company.com'
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+            />
+          </div>
+          <div className='space-y-2'>
+            <Label htmlFor='inviteRole'>Role</Label>
+            <Select
+              value={inviteRole}
+              onValueChange={(v) => setInviteRole(v as InviteRole)}>
+              <SelectTrigger id='inviteRole' className='w-full'>
+                <SelectValue placeholder='Select role' />
+              </SelectTrigger>
+              <SelectContent>
+                {INVITE_ROLE_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className='flex items-center justify-between rounded-lg border border-border p-3'>
@@ -276,6 +321,19 @@ export function TeamInvitations() {
     },
   })
 
+  const deleteInvitationMutation = useMutation({
+    mutationFn: async (invitationId: string) => {
+      await api.delete(`/invitations/${invitationId}`)
+    },
+    onSuccess: () => {
+      toast.success('Invitation deleted')
+      queryClient.invalidateQueries({ queryKey: ['dashboard-invitations'] })
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to delete invitation')
+    },
+  })
+
   return (
     <>
       {invitationRows.length > 0 && (
@@ -284,8 +342,7 @@ export function TeamInvitations() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
+                  <TableHead>User</TableHead>
                   <TableHead>Page access</TableHead>
                   <TableHead>Prod access</TableHead>
                   <TableHead>Invited by</TableHead>
@@ -296,9 +353,9 @@ export function TeamInvitations() {
               <TableBody>
                 {invitationRows.map((inv) => (
                   <TableRow key={inv.id}>
-                    <TableCell className='font-medium'>{inv.email}</TableCell>
                     <TableCell>
-                      <span className='capitalize'>{inv.role}</span>
+                      <div className='font-medium'>{inv.email}</div>
+                      <div className='text-xs text-muted-foreground capitalize'>{inv.role}</div>
                     </TableCell>
                     <TableCell>
                       {!inv.allowedPages?.length ? (
@@ -337,6 +394,25 @@ export function TeamInvitations() {
                           onClick={() => openEditInvitation(inv)}>
                           <IconPencil className='h-4 w-4' />
                         </Button>
+                        <BaseDialog
+                          title='Delete invitation?'
+                          description={`This will revoke the invitation sent to ${inv.email}. They will no longer be able to use the invite link. This cannot be undone.`}
+                          trigger={
+                            <Button
+                              variant='ghost'
+                              size='icon'
+                              aria-label='Delete invitation'
+                              disabled={deleteInvitationMutation.isPending}
+                              className='text-destructive hover:bg-destructive/10 hover:text-destructive'>
+                              <IconTrash className='h-4 w-4' />
+                            </Button>
+                          }
+                          primaryText='Delete'
+                          secondaryText='Cancel'
+                          primaryVariant='destructive'
+                          isLoading={deleteInvitationMutation.isPending}
+                          onPrimaryAction={() => deleteInvitationMutation.mutate(inv.id)}
+                        />
                       </HStack>
                     </TableCell>
                   </TableRow>

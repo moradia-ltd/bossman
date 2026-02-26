@@ -180,6 +180,7 @@ router
   .group(() => {
     router.post('/', [controllers.TeamInvitations, 'invite'])
     router.put('/:invitationId', [controllers.TeamInvitations, 'updateInvitation'])
+    router.delete('/:invitationId', [controllers.TeamInvitations, 'destroy'])
     router.post('/:invitationId/invite-link', [controllers.TeamInvitations, 'inviteLink'])
   })
   .prefix('api/v1/invitations')

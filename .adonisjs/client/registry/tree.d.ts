@@ -203,6 +203,7 @@ export interface ApiDefinition {
     joinPage: typeof routes['team_invitations.join_page']
     invite: typeof routes['team_invitations.invite']
     updateInvitation: typeof routes['team_invitations.update_invitation']
+    destroy: typeof routes['team_invitations.destroy']
     inviteLink: typeof routes['team_invitations.invite_link']
     accept: typeof routes['team_invitations.accept']
   }
