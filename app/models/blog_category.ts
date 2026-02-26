@@ -1,9 +1,6 @@
-import { slugify } from '@adonisjs/lucid-slugify'
-import { column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { column } from '@adonisjs/lucid/orm'
 import type { DateTime } from 'luxon'
 
-import BlogPost from './blog_post.js'
 import SuperBaseModel from './super_base.js'
 
 export default class BlogCategory extends SuperBaseModel {
@@ -16,13 +13,6 @@ export default class BlogCategory extends SuperBaseModel {
   declare name: string
 
   @column()
-  @slugify({
-    strategy: 'dbIncrement',
-    fields: ['name'],
-  })
-  declare slug: string
-
-  @column()
   declare description: string | null
 
   @column.dateTime({ autoCreate: true })
@@ -30,7 +20,4 @@ export default class BlogCategory extends SuperBaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
-
-  @hasMany(() => BlogPost)
-  declare posts: HasMany<typeof BlogPost>
 }

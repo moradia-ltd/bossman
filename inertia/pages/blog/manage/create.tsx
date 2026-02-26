@@ -2,46 +2,63 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { IconPlus } from '@tabler/icons-react'
 
-import type { RawBlogCategory } from '#types/model-types'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { RichTextEditor, EMPTY_TIPTAP_DOC } from '@/components/blog/rich-text-editor'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { RadioGroup } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 
-interface BlogAdminCreateProps extends SharedProps {
-  categories: RawBlogCategory[]
-}
+const COVER_PHOTO_OPTIONS = [
+  { value: 'upload', label: 'Upload photo', description: 'Upload an image file' },
+  { value: 'link', label: 'Link', description: 'Use an image URL' },
+] as const
 
-export default function BlogAdminCreate({ categories }: BlogAdminCreateProps) {
+type CoverPhotoMode = (typeof COVER_PHOTO_OPTIONS)[number]['value']
+
+interface BlogAdminCreateProps extends SharedProps {}
+
+export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
   const { data, setData, post, processing, errors } = useForm<{
     title: string
-    summary: string
-    content: string
-    thumbnailUrl: string
+    body: Record<string, unknown> | unknown[]
+    excerpt: string
+    coverPhotoMode: CoverPhotoMode
+    coverImageFile: File | null
     coverImageUrl: string
-    categoryId: string | null
+    coverImageAltText: string
     publish: boolean
   }>({
     title: '',
-    summary: '',
-    content: '',
-    thumbnailUrl: '',
+    body: EMPTY_TIPTAP_DOC,
+    excerpt: '',
+    coverPhotoMode: 'upload',
+    coverImageFile: null,
     coverImageUrl: '',
-    categoryId: null,
+    coverImageAltText: '',
     publish: false,
   })
+
+  const submit = () => {
+    post('/blog/manage', {
+      preserveScroll: true,
+      transform: (payload) => {
+        const { coverImageFile, coverPhotoMode, coverImageUrl, coverImageAltText, ...rest } = payload
+        const out: Record<string, unknown> = {
+          ...rest,
+          body: rest.body,
+          coverImageAltUrl: coverPhotoMode === 'link' ? coverImageUrl : coverImageAltText,
+        }
+        if (coverImageFile instanceof File) out.coverImage = coverImageFile
+        return out
+      },
+    })
+  }
 
   return (
     <DashboardLayout>
@@ -50,19 +67,19 @@ export default function BlogAdminCreate({ categories }: BlogAdminCreateProps) {
         <PageHeader
           backHref='/blog/manage'
           title='New post'
-          description='Create a post with category.'
+          description='Create a post. Slug is auto-generated from the title.'
         />
 
         <Card>
           <CardHeader>
             <CardTitle>Post</CardTitle>
-            <CardDescription>Slug is generated automatically from the title.</CardDescription>
+            <CardDescription>Slug is auto-generated from the title.</CardDescription>
           </CardHeader>
           <CardContent>
             <form
               onSubmit={(e) => {
                 e.preventDefault()
-                post('/blog/manage', { preserveScroll: true })
+                submit()
               }}
               className='space-y-6'>
               <div className='grid gap-4 md:grid-cols-2'>
@@ -81,69 +98,85 @@ export default function BlogAdminCreate({ categories }: BlogAdminCreateProps) {
                 </FormField>
 
                 <FormField
-                  label='Summary'
-                  htmlFor='summary'
-                  error={errors.summary}
+                  label='Excerpt'
+                  htmlFor='excerpt'
+                  error={errors.excerpt}
                   className='md:col-span-2'>
                   <Textarea
-                    id='summary'
-                    value={data.summary}
-                    onChange={(e) => setData('summary', e.target.value)}
+                    id='excerpt'
+                    value={data.excerpt}
+                    onChange={(e) => setData('excerpt', e.target.value)}
                     rows={3}
                   />
                 </FormField>
 
                 <FormField
-                  label='Content'
-                  htmlFor='content'
-                  error={errors.content}
+                  label='Body'
+                  htmlFor='body'
+                  error={errors.body}
                   className='md:col-span-2'>
-                  <Textarea
-                    id='content'
-                    value={data.content}
-                    onChange={(e) => setData('content', e.target.value)}
-                    rows={10}
+                  <RichTextEditor
+                    value={data.body}
+                    onChange={(json) => setData('body', json)}
+                    placeholder='Start writing…'
                   />
                 </FormField>
 
-                <FormField label='Thumbnail URL' htmlFor='thumbnailUrl' error={errors.thumbnailUrl}>
-                  <Input
-                    id='thumbnailUrl'
-                    value={data.thumbnailUrl}
-                    onChange={(e) => setData('thumbnailUrl', e.target.value)}
-                    placeholder='https://...'
+                <div className='md:col-span-2 space-y-4'>
+                  <Label>Cover photo</Label>
+                  <RadioGroup
+                    options={COVER_PHOTO_OPTIONS.map((o) => ({
+                      value: o.value,
+                      label: o.label,
+                      description: o.description,
+                    }))}
+                    value={data.coverPhotoMode}
+                    onChange={(value) => setData('coverPhotoMode', value as CoverPhotoMode)}
+                    cols={2}
                   />
-                </FormField>
-
-                <FormField
-                  label='Cover image URL'
-                  htmlFor='coverImageUrl'
-                  error={errors.coverImageUrl}>
-                  <Input
-                    id='coverImageUrl'
-                    value={data.coverImageUrl}
-                    onChange={(e) => setData('coverImageUrl', e.target.value)}
-                    placeholder='https://...'
-                  />
-                </FormField>
-
-                <FormField label='Category' error={errors.categoryId}>
-                  <Select
-                    value={data.categoryId ?? ''}
-                    onValueChange={(value) => setData('categoryId', value ? value : null)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder='None' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value=''>None</SelectItem>
-                      {categories.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormField>
+                  {data.coverPhotoMode === 'upload' ? (
+                    <div className='space-y-3'>
+                      <FormField
+                        label='Image file'
+                        htmlFor='coverImageFile'
+                        error={errors.coverImage}>
+                        <Input
+                          id='coverImageFile'
+                          type='file'
+                          accept='image/*'
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            setData('coverImageFile', file ?? null)
+                          }}
+                        />
+                      </FormField>
+                      <FormField
+                        label='Alt text'
+                        htmlFor='coverImageAltText'
+                        error={errors.coverImageAltUrl}>
+                        <Input
+                          id='coverImageAltText'
+                          value={data.coverImageAltText}
+                          onChange={(e) => setData('coverImageAltText', e.target.value)}
+                          placeholder='Describe the image for accessibility'
+                        />
+                      </FormField>
+                    </div>
+                  ) : (
+                    <FormField
+                      label='Image URL'
+                      htmlFor='coverImageUrl'
+                      error={errors.coverImageAltUrl}>
+                      <Input
+                        id='coverImageUrl'
+                        type='url'
+                        value={data.coverImageUrl}
+                        onChange={(e) => setData('coverImageUrl', e.target.value)}
+                        placeholder='https://…'
+                      />
+                    </FormField>
+                  )}
+                </div>
 
                 <div className='space-y-2'>
                   <Label>Publish</Label>

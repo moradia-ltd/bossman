@@ -5,6 +5,23 @@ import { IconArrowRight, IconCalendar, IconClock } from '@tabler/icons-react'
 import type { PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
 import { PublicLayout } from '@/components/layouts/public'
+
+function getCoverImageUrl(post: RawBlogPost): string | null {
+  const c = post.coverImage
+  if (c && typeof c === 'object' && 'url' in c && typeof (c as { url?: string }).url === 'string')
+    return (c as { url: string }).url
+  const alt = post.coverImageAltUrl
+  if (alt && typeof alt === 'string' && (alt.startsWith('http://') || alt.startsWith('https://')))
+    return alt
+  return null
+}
+
+function getCoverImageAlt(post: RawBlogPost): string {
+  const url = post.coverImageAltUrl
+  if (url && typeof url === 'string' && !url.startsWith('http')) return url
+  return post.title
+}
+
 import { LoadingSkeleton } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -102,10 +119,10 @@ function FeaturedPostCard({ post }: { post: RawBlogPost }) {
         <div className='grid gap-0 lg:grid-cols-[1.2fr_1fr]'>
           <div className='relative bg-muted'>
             <div className='aspect-[16/9] lg:aspect-auto lg:h-full'>
-              {post.thumbnailUrl ? (
+              {getCoverImageUrl(post) ? (
                 <img
-                  src={post.thumbnailUrl}
-                  alt={post.title}
+                  src={getCoverImageUrl(post)!}
+                  alt={getCoverImageAlt(post)}
                   className='h-full w-full object-cover'
                   loading='lazy'
                 />
@@ -116,11 +133,6 @@ function FeaturedPostCard({ post }: { post: RawBlogPost }) {
             <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent' />
             <div className='absolute bottom-4 left-4 right-4'>
               <HStack spacing={2} wrap align='center'>
-                {post.category?.name ? (
-                  <Badge className='bg-background/90 text-foreground' variant='secondary'>
-                    {post.category.name}
-                  </Badge>
-                ) : null}
                 <MetaDateAndReadTime post={post} className='text-white/90' />
               </HStack>
             </div>
@@ -133,15 +145,15 @@ function FeaturedPostCard({ post }: { post: RawBlogPost }) {
                 <div className='text-2xl sm:text-3xl font-bold tracking-tight group-hover:underline'>
                   {post.title}
                 </div>
-                {post.summary ? (
+                {post.excerpt ? (
                   <p className='text-muted-foreground text-sm sm:text-base line-clamp-3'>
-                    {post.summary}
+                    {post.excerpt}
                   </p>
                 ) : null}
               </Stack>
 
               <HStack justify='between' align='center' className='mt-auto gap-4'>
-                <AuthorRow post={post} />
+                {/* <AuthorRow post={post} /> */}
                 <HStack spacing={1} align='center' className='text-sm font-medium'>
                   Read
                   <IconArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
@@ -161,10 +173,10 @@ function PostCard({ post }: { post: RawBlogPost }) {
       <Card className='overflow-hidden h-full flex flex-col'>
         <div className='relative bg-muted'>
           <div className='aspect-[16/9]'>
-            {post.thumbnailUrl ? (
+            {getCoverImageUrl(post) ? (
               <img
-                src={post.thumbnailUrl}
-                alt={post.title}
+                src={getCoverImageUrl(post)!}
+                alt={getCoverImageAlt(post)}
                 className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]'
                 loading='lazy'
               />
@@ -173,40 +185,16 @@ function PostCard({ post }: { post: RawBlogPost }) {
             )}
           </div>
           <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80' />
-          <div className='absolute bottom-3 left-3 right-3 flex flex-wrap items-center gap-2'>
-            {post.category?.name ? (
-              <Badge className='bg-background/90 text-foreground' variant='secondary'>
-                {post.category.name}
-              </Badge>
-            ) : null}
-          </div>
         </div>
 
         <CardHeader className='space-y-2'>
           <CardTitle className='text-xl leading-snug group-hover:underline line-clamp-2'>
             {post.title}
           </CardTitle>
-          {post.summary ? (
-            <p className='text-sm text-muted-foreground line-clamp-3'>{post.summary}</p>
+          {post.excerpt ? (
+            <p className='text-sm text-muted-foreground line-clamp-3'>{post.excerpt}</p>
           ) : null}
         </CardHeader>
-
-        <CardContent>
-          <Stack spacing={3}>
-            {post.tags?.length ? (
-              <HStack spacing={2} wrap>
-                {post.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag.id} variant='outline'>
-                    {tag.name}
-                  </Badge>
-                ))}
-                {post.tags.length > 3 ? (
-                  <Badge variant='outline'>+{post.tags.length - 3}</Badge>
-                ) : null}
-              </HStack>
-            ) : null}
-          </Stack>
-        </CardContent>
 
         <CardFooter className='mt-auto'>
           <MetaDateAndReadTime post={post} className='text-muted-foreground' />
@@ -218,7 +206,7 @@ function PostCard({ post }: { post: RawBlogPost }) {
 
 function MetaDateAndReadTime({ post, className }: { post: RawBlogPost; className?: string }) {
   const dateLabel = post.publishedAt ? formatDate(post.publishedAt) : null
-  const minutes = getReadingMinutes(post.content || post.summary || '')
+  const minutes = getReadingMinutes(post.excerpt || '')
 
   return (
     <HStack spacing={2} align='center' className={['text-xs', className].filter(Boolean).join(' ')}>

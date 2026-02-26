@@ -21,4 +21,5 @@ export enum FileStoreRoutes {
   SALES = 'documents/sales',
   COMPANY_LOGOS = 'company-logos',
   COMPANY_FAVICONS = 'company-favicons',
+  BLOG_IMAGES = 'blog-images',
 }

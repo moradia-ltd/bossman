@@ -23,7 +23,7 @@ function isPublished(post: RawBlogPost) {
 }
 
 export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
-  const [isDeletingId, setIsDeletingId] = useState<string | null>(null)
+  const [isDeletingId, setIsDeletingId] = useState<number | null>(null)
   const { changePage, changeRows, searchTable, query } = useInertiaParams({
     page: 1,
     perPage: 10,
@@ -50,11 +50,6 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
           {isPublished(row) ? 'Published' : 'Draft'}
         </Badge>
       ),
-    },
-    {
-      key: 'category',
-      header: 'Category',
-      cell: (row) => row.category?.name || '—',
     },
     {
       key: 'publishedAt',

@@ -3,12 +3,9 @@ import vine from '@vinejs/vine'
 export const createBlogPostValidator = vine.create(
   vine.object({
     title: vine.string().trim().minLength(2).maxLength(255),
-    summary: vine.string().trim().maxLength(1000).optional(),
-    content: vine.string().optional(),
-    // Accept empty strings from form inputs; we normalize to null in controllers.
-    thumbnailUrl: vine.string().trim().maxLength(2048).trim().optional(),
-    coverImageUrl: vine.string().trim().maxLength(2048).trim().optional(),
-    categoryId: vine.string().trim().optional(),
+    body: vine.any(), // JSON: object or array, required
+    excerpt: vine.string().trim().maxLength(2000).optional(),
+    coverImageAltUrl: vine.string().trim().maxLength(2048).optional(),
     publish: vine.boolean().optional(),
   }),
 )
@@ -16,12 +13,9 @@ export const createBlogPostValidator = vine.create(
 export const updateBlogPostValidator = vine.create(
   vine.object({
     title: vine.string().trim().minLength(2).maxLength(255).optional(),
-    summary: vine.string().trim().maxLength(1000).optional(),
-    content: vine.string().optional(),
-    // Accept empty strings from form inputs; we normalize to null in controllers.
-    thumbnailUrl: vine.string().trim().maxLength(2048).optional(),
-    coverImageUrl: vine.string().trim().maxLength(2048).optional(),
-    categoryId: vine.string().trim().optional(),
+    body: vine.any().optional(),
+    excerpt: vine.string().trim().maxLength(2000).optional(),
+    coverImageAltUrl: vine.string().trim().maxLength(2048).optional(),
     publish: vine.boolean().optional(),
   }),
 )
@@ -32,4 +26,3 @@ export const createBlogCategoryValidator = vine.create(
     description: vine.string().trim().maxLength(2000).optional(),
   }),
 )
-
