@@ -41,7 +41,6 @@ export type PageKey =
   | 'properties'
   | 'pushNotifications'
   | 'dbBackups'
-  | 'logs'
   | 'emails'
   | 'servers'
   | 'addons'
@@ -65,7 +64,6 @@ export const PAGE_OPTIONS: Array<{
     description: 'Send and manage push notifications',
   },
   { key: 'dbBackups', label: 'DB backups', description: 'Create and manage database backups' },
-  { key: 'logs', label: 'Logs', description: 'View audit events across the app' },
   { key: 'emails', label: 'Emails', description: 'View sent emails (Resend)' },
   { key: 'servers', label: 'Servers', description: 'Railway projects and deployments' },
   { key: 'addons', label: 'Addons', description: 'Manage addons' },
