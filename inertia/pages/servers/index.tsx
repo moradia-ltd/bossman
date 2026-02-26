@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link } from '@inertiajs/react'
+import { Deferred, Head, Link, router } from '@inertiajs/react'
 import { IconCalendar, IconChevronRight, IconServer } from '@tabler/icons-react'
 import pluralize from 'pluralize'
 
@@ -9,6 +9,14 @@ import { PageHeader } from '@/components/dashboard/page_header'
 import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Card } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { startCase } from '#utils/functions'
 
 interface RailwayProject {
   id: string
@@ -18,11 +26,26 @@ interface RailwayProject {
   updatedAt: string
 }
 
-interface ServersIndexProps extends SharedProps {
-  projects: RailwayProject[]
+interface SortOption {
+  value: string
+  label: string
 }
 
-export default function ServersIndex({ projects = [] }: ServersIndexProps) {
+interface ServersIndexProps extends SharedProps {
+  projects: RailwayProject[]
+  sort: string
+  sortOptions: SortOption[]
+}
+
+export default function ServersIndex({
+  projects = [],
+  sort,
+  sortOptions = [],
+}: ServersIndexProps) {
+  const handleSortChange = (value: string) => {
+    router.get('/servers', { sort: value })
+  }
+
   return (
     <DashboardLayout>
       <Head title='Servers' />
@@ -32,12 +55,30 @@ export default function ServersIndex({ projects = [] }: ServersIndexProps) {
           title='Servers'
           description='Railway projects. Open a project to view its services, deployments, and logs.'
         />
+        {sortOptions.length > 0 && (
+          <div className='flex flex-wrap items-center justify-end gap-2 mb-4'>
+            <span className='text-sm text-muted-foreground'>Sort:</span>
+            <Select value={sort} onValueChange={handleSortChange} itemToStringValue={(v) => startCase(v) ?? ''}>
+              <SelectTrigger className='w-[200px]' size='sm'>
+                <SelectValue placeholder='Sort by' />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <Deferred data='projects' fallback={<LoadingSkeleton type='list' />}>
           <AppCard
             title='Projects'
             description={`${pluralize('project', projects.length)} on Railway`}
             className='space-y-6'>
+
             <div className='grid gap-5 sm:grid-cols-2 xl:grid-cols-3'>
               {projects.map((project) => (
                 <Link

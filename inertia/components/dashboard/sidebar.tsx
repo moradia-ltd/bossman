@@ -108,14 +108,6 @@ const developerNavSections: NavSection[] = [
   },
 ]
 
-const settingsNavSections: NavSection[] = [
-  {
-    label: 'Settings',
-    items: [
-      { title: 'Preferences', href: '/settings', icon: <IconSettings className='h-4 w-4' /> },
-    ],
-  },
-]
 interface SidebarProps {
   children?: React.ReactNode
 }
@@ -170,11 +162,10 @@ export function Sidebar({ children }: SidebarProps) {
     ...appNavSections,
     ...adminNavSections,
     ...developerNavSections,
-    ...settingsNavSections,
   ]
   const effectiveNavSections: NavSection[] = allNavSections.map((section) => ({
     ...section,
-    items: section.items.filter((item) => item.href === '/settings' || canSeePage(item.href)),
+    items: section.items.filter((item) => canSeePage(item.href)),
   }))
 
   const currentPath = (() => {
@@ -349,6 +340,11 @@ export function Sidebar({ children }: SidebarProps) {
               <div className='truncate text-sm font-medium'>{user?.email || '—'}</div>
             </div>
             <DropdownMenuSeparator />
+
+            <DropdownMenuItem onClick={() => router.visit('/settings')}>
+              <IconSettings className='h-4 w-4' />
+              Settings
+            </DropdownMenuItem>
 
             {enableProdAccess && (
               <>
