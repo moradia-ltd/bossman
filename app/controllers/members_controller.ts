@@ -169,4 +169,28 @@ export default class MembersController {
 
     return response.ok({ message: 'Member updated successfully', data: member })
   }
+
+  async destroy({ auth, request, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    const freshUser = await User.findByOrFail('email', user.email)
+    const memberId = request.param('memberId')
+
+    if (!user.isAdminOrSuperAdmin) {
+      return response.forbidden({ error: 'Access required.' })
+    }
+    const allowed = await getPageAccessForUser(freshUser.id)
+    if (Array.isArray(allowed) && !allowed.includes('teams')) {
+      return response.forbidden({ error: 'You do not have access to manage teams.' })
+    }
+
+    const member = await TeamMember.query().where('id', memberId).firstOrFail()
+
+    // Prevent removing yourself
+    if (member.userId === freshUser.id) {
+      return response.badRequest({ error: 'You cannot remove yourself from the team.' })
+    }
+
+    await member.delete()
+    return response.ok({ message: 'Member removed.' })
+  }
 }

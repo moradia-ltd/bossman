@@ -1811,6 +1811,17 @@ export interface Registry {
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/members_controller').default['updateMember']>>>
     }
   }
+  'members.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/members/:memberId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { memberId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/members_controller').default['destroy']>>>
+    }
+  }
   'team_invitations.invite': {
     methods: ["POST"]
     pattern: '/api/v1/invitations'

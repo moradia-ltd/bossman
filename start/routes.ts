@@ -172,6 +172,7 @@ router
     router.get('/invitations', [controllers.Members, 'invitations'])
     router.get('/data-access-options', [controllers.Members, 'dataAccessOptions'])
     router.put('/:memberId', [controllers.Members, 'updateMember'])
+    router.delete('/:memberId', [controllers.Members, 'destroy'])
   })
   .prefix('api/v1/members')
   .use(middleware.auth())

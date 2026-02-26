@@ -990,6 +990,12 @@ const routes = {
     tokens: [{"old":"/api/v1/members/:memberId","type":0,"val":"api","end":""},{"old":"/api/v1/members/:memberId","type":0,"val":"v1","end":""},{"old":"/api/v1/members/:memberId","type":0,"val":"members","end":""},{"old":"/api/v1/members/:memberId","type":1,"val":"memberId","end":""}],
     types: placeholder as Registry['members.update_member']['types'],
   },
+  'members.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/members/:memberId',
+    tokens: [{"old":"/api/v1/members/:memberId","type":0,"val":"api","end":""},{"old":"/api/v1/members/:memberId","type":0,"val":"v1","end":""},{"old":"/api/v1/members/:memberId","type":0,"val":"members","end":""},{"old":"/api/v1/members/:memberId","type":1,"val":"memberId","end":""}],
+    types: placeholder as Registry['members.destroy']['types'],
+  },
   'team_invitations.invite': {
     methods: ["POST"],
     pattern: '/api/v1/invitations',

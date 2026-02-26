@@ -242,6 +242,7 @@ export interface ApiDefinition {
     invitations: typeof routes['members.invitations']
     dataAccessOptions: typeof routes['members.data_access_options']
     updateMember: typeof routes['members.update_member']
+    destroy: typeof routes['members.destroy']
   }
   notifications: {
     index: typeof routes['notifications.index']

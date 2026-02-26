@@ -1,6 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link, router } from '@inertiajs/react'
-import { IconPencil, IconSettings } from '@tabler/icons-react'
+import { IconPencil, IconSettings, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -13,6 +13,7 @@ import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
+import { BaseDialog } from '@/components/ui/base-dialog'
 import { BaseModal } from '@/components/ui/base-modal'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -119,6 +120,20 @@ export default function TeamsPage({ members }: TeamsPageProps) {
     setEditEnableProdAccess(row.enableProdAccess ?? true)
   }
 
+  const deleteMemberMutation = useMutation({
+    mutationFn: async (memberId: string) => {
+      await api.delete(`/members/${memberId}`)
+    },
+    onSuccess: () => {
+      toast.success('Member removed')
+      queryClient.invalidateQueries({ queryKey: ['dashboard-members'] })
+      router.reload()
+    },
+    onError: (err: ServerErrorResponse) => {
+      toast.error(serverErrorResponder(err) || 'Failed to remove member')
+    },
+  })
+
   const memberColumnsWithActions: Column<RawTeamMember>[] = useMemo(
     () => [
       ...memberColumns,
@@ -140,6 +155,25 @@ export default function TeamsPage({ members }: TeamsPageProps) {
               onClick={() => openEditMember(row)}>
               <IconPencil className='h-4 w-4' />
             </Button>
+            <BaseDialog
+              title='Remove member?'
+              description={`${row.user?.fullName || row.user?.email || 'This member'} will lose access to the dashboard. They can be invited again later.`}
+              trigger={
+                <Button
+                  variant='ghost'
+                  size='xs'
+                  aria-label='Remove member'
+                  disabled={deleteMemberMutation.isPending}
+                  className='text-destructive hover:bg-destructive/10 hover:text-destructive'>
+                  <IconTrash className='h-4 w-4' />
+                </Button>
+              }
+              primaryText='Remove'
+              secondaryText='Cancel'
+              primaryVariant='destructive'
+              isLoading={deleteMemberMutation.isPending}
+              onPrimaryAction={() => deleteMemberMutation.mutate(row.id)}
+            />
           </div>
         ),
       },
