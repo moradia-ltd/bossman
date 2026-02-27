@@ -522,7 +522,10 @@ export function DataTable<T extends { id?: string | number }>({
                     )}
                     {columns.map((column, idx) => (
                       <TableCell key={column.key} className='min-w-0' style={colStyles[idx]}>
-                        <div className='min-w-0 overflow-hidden'>
+                        <div
+                          className={
+                            column.key === 'actions' ? 'flex shrink-0' : 'min-w-0 overflow-hidden'
+                          }>
                           {column.cell
                             ? column.cell(row)
                             : String((row as Record<string, unknown>)[column.key] ?? '')}

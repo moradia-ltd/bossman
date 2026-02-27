@@ -32,6 +32,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
       key: 'title',
       header: 'Title',
       sortable: true,
+      width: 330,
       cell: (row) => (
         <div className='space-y-1'>
           <div className='flex items-center gap-2 flex-wrap'>
@@ -44,18 +45,19 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
     {
       key: 'publishedAt',
       header: 'Published',
+      // width: 110,
       cell: (row) => (row.publishedAt ? new Date(row.publishedAt).toLocaleDateString() : '—'),
     },
     {
       key: 'actions',
       header: 'Actions',
+      // minWidth: 200,
+      // width: 200,
       cell: (row) => (
         <div className='flex items-center justify-end gap-2'>
-          <Link href={`/blog/manage/${row.id}/edit`}  >
-            <Button variant='ghost' size='icon' asChild leftIcon={<IconEdit className='h-4 w-4' />}>
-              Edit
-            </Button>
-          </Link>
+          <Button variant='ghost' size='icon' asChild leftIcon={<IconEdit className='h-4 w-4' />}>
+            <Link href={`/blog/manage/${row.id}/edit`}>Edit</Link>
+          </Button>
           {row.publishedAt ? (
             <Button variant='ghost' size='icon' asChild>
               <Link href={`/blog/${row.slug}`}>View</Link>
@@ -99,22 +101,22 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
         </>
       }>
       <Deferred data='posts' fallback={<LoadingSkeleton type='table' />}>
-          <AppCard title='Posts' description='Search, paginate, and manage your posts.'>
-            <DataTable
-              columns={columns}
-              data={posts?.data ?? []}
-              searchable
-              searchPlaceholder='Search posts...'
-              searchValue={String(query.search || '')}
-              onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={tablePagination(posts, {
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              })}
-              emptyMessage='No posts found'
-            />
-          </AppCard>
-        </Deferred>
+        <AppCard title='Posts' description='Search, paginate, and manage your posts.'>
+          <DataTable
+            columns={columns}
+            data={posts?.data ?? []}
+            searchable
+            searchPlaceholder='Search posts...'
+            searchValue={String(query.search || '')}
+            onSearchChange={(value) => searchTable(String(value || ''))}
+            pagination={tablePagination(posts, {
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            })}
+            emptyMessage='No posts found'
+          />
+        </AppCard>
+      </Deferred>
     </DashboardPage>
   )
 }

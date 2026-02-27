@@ -58,12 +58,13 @@ export default class BlogPostsController {
     const params = await request.paginationQs()
     const env = request.appEnv()
     const posts = await BlogPost.query({ connection: env })
+      .orderByRaw('published_at DESC NULLS LAST')
       .orderBy('createdAt', 'desc')
       .if(params.search, (q) => {
         const term = `%${params.search}%`
         q.whereILike('title', term).orWhereILike('excerpt', term)
       })
-      .sortBy(params.sortBy || 'createdAt', params.sortOrder || 'desc')
+      .sortBy(params.sortBy || 'publishedAt', params.sortOrder || 'desc')
       .paginate(params.page || 1, params.perPage || 10)
 
     return inertia.render('blog/manage/index', {
