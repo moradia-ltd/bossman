@@ -1,3 +1,4 @@
+import { slugify } from '@adonisjs/lucid-slugify'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
@@ -13,10 +14,12 @@ export default class BlogPost extends BaseModel {
   @column()
   declare title: string
 
-  @column({})
+  @column()
   declare body: string
 
-  @column() declare slug: string
+  @column()
+  @slugify({ fields: ['title'], strategy: 'dbIncrement' })
+  declare slug: string
 
   @column() declare excerpt: string | null
 

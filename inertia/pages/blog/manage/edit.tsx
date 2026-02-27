@@ -16,18 +16,14 @@ import { RadioGroup } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 
 const COVER_PHOTO_OPTIONS = [
-  { value: 'upload', label: 'Upload photo', description: 'Upload an image file' },
-  { value: 'link', label: 'Link', description: 'Use an image URL' },
+  { value: false, label: 'Upload photo', description: 'Upload an image file' },
+  { value: true, label: 'Link', description: 'Use an image URL' },
 ] as const
 
-type CoverPhotoMode = (typeof COVER_PHOTO_OPTIONS)[number]['value']
-
-function getInitialCoverMode(post: RawBlogPost): CoverPhotoMode {
-  const c = post.coverImage
-  if (c && typeof c === 'object' && 'url' in c) return 'upload'
+function getInitialIsUploadedPhotoLink(post: RawBlogPost): boolean {
   const alt = post.coverImageAltUrl
-  if (alt && (alt.startsWith('http://') || alt.startsWith('https://'))) return 'link'
-  return 'upload'
+  if (alt && (alt.startsWith('http://') || alt.startsWith('https://'))) return true
+  return false
 }
 
 interface BlogAdminEditProps extends SharedProps {
@@ -39,42 +35,22 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
     title: string
     body: string
     excerpt: string
-    coverPhotoMode: CoverPhotoMode
-    coverImageFile: File | null
-    coverImageUrl: string
-    coverImageAltText: string
+    isUploadedPhotoLink: boolean
+    coverImageAltUrl: string
+    coverImage: File | null
     publish: boolean
   }>({
     title: post.title,
     body: typeof post.body === 'string' ? post.body : '',
     excerpt: post.excerpt || '',
-    coverPhotoMode: getInitialCoverMode(post),
-    coverImageFile: null,
-    coverImageUrl:
-      getInitialCoverMode(post) === 'link' && post.coverImageAltUrl
-        ? post.coverImageAltUrl
-        : '',
-    coverImageAltText:
-      getInitialCoverMode(post) === 'upload' && post.coverImageAltUrl
-        ? post.coverImageAltUrl
-        : '',
+    isUploadedPhotoLink: getInitialIsUploadedPhotoLink(post),
+    coverImageAltUrl: post.coverImageAltUrl || '',
+    coverImage: null,
     publish: Boolean(post.publishedAt),
   })
 
   const submit = () => {
-    put(`/blog/manage/${post.id}`, {
-      preserveScroll: true,
-      transform: (payload: typeof data) => {
-        const { coverImageFile, coverPhotoMode, coverImageUrl, coverImageAltText, ...rest } =
-          payload
-        const out: Record<string, unknown> = {
-          ...rest,
-          coverImageAltUrl: coverPhotoMode === 'link' ? coverImageUrl : coverImageAltText,
-        }
-        if (coverImageFile instanceof File) out.coverImage = coverImageFile
-        return out
-      },
-    } as Parameters<typeof put>[1])
+    put(`/blog/manage/${post.id}`, { preserveScroll: true })
   }
 
   return (
@@ -149,38 +125,38 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                   <Label>Cover photo</Label>
                   <RadioGroup
                     options={COVER_PHOTO_OPTIONS.map((o) => ({
-                      value: o.value,
+                      value: String(o.value),
                       label: o.label,
                       description: o.description,
                     }))}
-                    value={data.coverPhotoMode}
-                    onChange={(value) => setData('coverPhotoMode', value as CoverPhotoMode)}
+                    value={String(data.isUploadedPhotoLink)}
+                    onChange={(value) => setData('isUploadedPhotoLink', value === 'true')}
                     cols={2}
                   />
-                  {data.coverPhotoMode === 'upload' ? (
+                  {!data.isUploadedPhotoLink ? (
                     <div className='space-y-3'>
                       <FormField
                         label='Image file'
-                        htmlFor='coverImageFile'
+                        htmlFor='coverImage'
                         error={(errors as Record<string, string | undefined>).coverImage}>
                         <Input
-                          id='coverImageFile'
+                          id='coverImage'
                           type='file'
                           accept='image/*'
                           onChange={(e) => {
                             const file = e.target.files?.[0]
-                            setData('coverImageFile', file ?? null)
+                            setData('coverImage', file ?? null)
                           }}
                         />
                       </FormField>
                       <FormField
                         label='Alt text'
-                        htmlFor='coverImageAltText'
+                        htmlFor='coverImageAltUrl'
                         error={(errors as Record<string, string | undefined>).coverImageAltUrl}>
                         <Input
-                          id='coverImageAltText'
-                          value={data.coverImageAltText}
-                          onChange={(e) => setData('coverImageAltText', e.target.value)}
+                          id='coverImageAltUrl'
+                          value={data.coverImageAltUrl}
+                          onChange={(e) => setData('coverImageAltUrl', e.target.value)}
                           placeholder='Describe the image for accessibility'
                         />
                       </FormField>
@@ -188,13 +164,13 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                   ) : (
                     <FormField
                       label='Image URL'
-                      htmlFor='coverImageUrl'
+                      htmlFor='coverImageAltUrl'
                       error={(errors as Record<string, string | undefined>).coverImageAltUrl}>
                       <Input
-                        id='coverImageUrl'
+                        id='coverImageAltUrl'
                         type='url'
-                        value={data.coverImageUrl}
-                        onChange={(e) => setData('coverImageUrl', e.target.value)}
+                        value={data.coverImageAltUrl}
+                        onChange={(e) => setData('coverImageAltUrl', e.target.value)}
                         placeholder='https://…'
                       />
                     </FormField>

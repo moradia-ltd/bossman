@@ -75,7 +75,7 @@ export default class BlogPostsController {
   }
 
   async create({ inertia }: HttpContext) {
-    return inertia.render('blog/manage/create')
+    return inertia.render('blog/manage/create', {} as never)
   }
 
   async edit({ params, inertia, response, request }: HttpContext) {
@@ -90,29 +90,27 @@ export default class BlogPostsController {
   }
 
   async store({ request, response }: HttpContext) {
-    const { publish, coverImageAltUrl, ...body } =
+    const { publish, isUploadedPhotoLink, coverImageAltUrl, ...body } =
       await request.validateUsing(createBlogPostValidator)
 
     const trx = await db.transaction()
     try {
-      const slug = slugify(body.title)
+      const post = await BlogPost.create(body, { client: trx })
 
-      const post = await BlogPost.create(
-        {
-          ...body,
-          slug,
-          body: typeof body.body === 'string' ? body.body : '',
-          coverImageAltUrl: coverImageAltUrl ?? null,
-        },
-        { client: trx },
-      )
-
-      const coverFile = request.file('coverImage', {
-        size: '5mb',
-        extnames: allowedImageExtensions,
-      })
-      if (coverFile?.isValid) {
-        post.coverImage = await attachmentManager.createFromFile(coverFile)
+      if (isUploadedPhotoLink && coverImageAltUrl && isUrl(coverImageAltUrl)) {
+        post.coverImageAltUrl = coverImageAltUrl
+        post.coverImage = null
+      } else {
+        const coverFile = request.file('coverImage', {
+          size: '5mb',
+          extnames: allowedImageExtensions,
+        })
+        if (coverFile?.isValid) {
+          post.coverImage = (await attachmentManager.createFromFile(
+            coverFile,
+          )) as BlogPost['coverImage']
+        }
+        post.coverImageAltUrl = coverImageAltUrl ?? null
       }
 
       if (publish) post.publishedAt = DateTime.now()
@@ -127,7 +125,7 @@ export default class BlogPostsController {
   }
 
   async update({ params, request, response }: HttpContext) {
-    const { publish, coverImageAltUrl, ...body } =
+    const { publish, isUploadedPhotoLink, coverImageAltUrl, ...body } =
       await request.validateUsing(updateBlogPostValidator)
     const trx = await db.transaction()
     const post = await BlogPost.findOrFail(params.id, { client: trx })
@@ -138,16 +136,24 @@ export default class BlogPostsController {
         post.body = typeof body.body === 'string' ? body.body : ''
       }
 
-      if (coverImageAltUrl !== undefined) post.coverImageAltUrl = coverImageAltUrl ?? null
-
-      const coverFile = request.file('coverImage', {
-        size: '5mb',
-        extnames: allowedImageExtensions,
-      })
-      if (coverFile?.isValid) {
-        post.coverImage = await attachmentManager.createFromFile(coverFile)
-      } else if (coverImageAltUrl !== undefined && isUrl(coverImageAltUrl ?? '')) {
-        post.coverImage = null
+      if (isUploadedPhotoLink !== undefined) {
+        if (isUploadedPhotoLink && coverImageAltUrl && isUrl(coverImageAltUrl)) {
+          post.coverImageAltUrl = coverImageAltUrl
+          post.coverImage = null
+        } else {
+          const coverFile = request.file('coverImage', {
+            size: '5mb',
+            extnames: allowedImageExtensions,
+          })
+          if (coverFile?.isValid) {
+            post.coverImage = (await attachmentManager.createFromFile(
+              coverFile,
+            )) as BlogPost['coverImage']
+          }
+          if (coverImageAltUrl !== undefined) post.coverImageAltUrl = coverImageAltUrl ?? null
+        }
+      } else if (coverImageAltUrl !== undefined) {
+        post.coverImageAltUrl = coverImageAltUrl ?? null
       }
 
       post.publishedAt = publish ? (post.publishedAt ?? DateTime.now()) : null

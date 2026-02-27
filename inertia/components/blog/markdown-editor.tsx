@@ -27,14 +27,35 @@ export function MarkdownEditor({
   editorKey,
 }: MarkdownEditorProps) {
   const ref = React.useRef<MDXEditorMethods>(null)
+  const [mounted, setMounted] = React.useState(false)
 
   React.useEffect(() => {
-    if (!ref.current || value === undefined) return
+    setMounted(true)
+  }, [])
+
+  React.useEffect(() => {
+    if (!mounted || !ref.current || editorKey === undefined) return
     ref.current.setMarkdown(value)
-  }, [editorKey])
+  }, [mounted, editorKey])
+
+  if (!mounted) {
+    return (
+      <div
+        className={cn(
+          'flex min-h-[280px] items-center justify-center rounded-lg border border-input bg-muted/30 text-muted-foreground',
+          className,
+        )}>
+        <span className="text-sm">Loading editor…</span>
+      </div>
+    )
+  }
 
   return (
-    <div className={cn('rounded-lg border border-input bg-background overflow-hidden', className)}>
+    <div
+      className={cn(
+        'rounded-lg border border-input bg-background overflow-hidden',
+        className,
+      )}>
       <MDXEditor
         ref={ref}
         markdown={value}
