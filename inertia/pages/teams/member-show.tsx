@@ -119,16 +119,11 @@ export default function MemberShow({ member }: MemberShowProps) {
   const leases = optionsData?.leases ?? []
 
   return (
-    <DashboardLayout>
-      <Head title={`${displayName} – Team member`} />
-      <div className='space-y-6'>
-        <PageHeader
-          title={displayName}
-          description='Manage this team member’s data access to properties and leases.'
-          backHref='/teams'
-        />
-
-        <AppCard title='Member' description='Team member details'>
+    <DashboardPage
+      title={`${displayName} – Team member`}
+      description='Manage this team member’s data access to properties and leases.'
+      backHref='/teams'>
+      <AppCard title='Member' description='Team member details'>
           <SimpleGrid cols={4}>
             <DetailRow label='Name' value={member.user?.fullName ?? '—'} />
             <DetailRow label='Email' value={member.user?.email ?? '—'} />
