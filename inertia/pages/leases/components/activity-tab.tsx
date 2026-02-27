@@ -1,37 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
-import type { Column, PaginatedResponse } from '#types/extra'
+import type { PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
+import { activityTabColumns } from '@/components/dashboard/activity-columns'
 import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
-import { Badge } from '@/components/ui/badge'
-import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
 
 interface ActivityTabProps {
   leaseId: string
 }
-
-const columns: Column<RawActivity>[] = [
-  { key: 'summary', header: 'Summary' },
-  {
-    key: 'createdAt',
-    header: 'Date',
-
-    cell: (row) => (row.createdAt ? dateFormatter(row.createdAt) : '—'),
-  },
-  {
-    key: 'isSystemAction',
-    header: 'Source',
-    cell: (row) =>
-      row.isSystemAction ? (
-        <Badge variant='secondary'>System</Badge>
-      ) : (
-        <Badge variant='outline'>{row.user?.name}</Badge>
-      ),
-  },
-]
 
 export function ActivityTab({ leaseId }: ActivityTabProps) {
   const [page, setPage] = useState(1)
@@ -53,7 +32,7 @@ export function ActivityTab({ leaseId }: ActivityTabProps) {
   return (
     <AppCard title='Activity' description='Recent activity for this lease'>
       <DataTable
-        columns={columns}
+        columns={activityTabColumns}
         data={activity}
         loading={isPending}
         emptyMessage='No activity yet.'

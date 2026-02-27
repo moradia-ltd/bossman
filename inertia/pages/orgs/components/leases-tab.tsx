@@ -1,53 +1,12 @@
-import { Link } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
-import type { Column, PaginatedResponse } from '#types/extra'
+import type { PaginatedResponse } from '#types/extra'
 import type { RawLease } from '#types/model-types'
-import { formatCurrency } from '#utils/currency'
 import { DataTable } from '@/components/dashboard/data-table'
+import { leasesTableColumns } from '@/components/leases'
 import { AppCard } from '@/components/ui/app-card'
-import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
-import { LeaseStatusBadge } from '@/components/leases/status-badge'
-
-const columns: Column<RawLease>[] = [
-  {
-    key: 'name',
-    header: 'Lease',
-    minWidth: 200,
-    flex: 1,
-    cell: (row) => (
-      <Link href={`/leases/${row.id}`} className='font-medium hover:underline'>
-        {row.cleanName ?? row.name ?? row.shortId}
-      </Link>
-    ),
-  },
-  {
-    key: 'status',
-    header: 'Status',
-    width: 110,
-    cell: (row) => <LeaseStatusBadge status={row.status} />,
-  },
-  {
-    key: 'rentAmount',
-    header: 'Rent',
-    width: 100,
-    cell: (row) => formatCurrency(row.rentAmount, row.currency) ?? '—',
-  },
-  {
-    key: 'startDate',
-    header: 'Start',
-    width: 110,
-    cell: (row) => (row.startDate ? dateFormatter(row.startDate) : '—'),
-  },
-  {
-    key: 'endDate',
-    header: 'End',
-    width: 110,
-    cell: (row) => (row.endDate ? dateFormatter(row.endDate) : '—'),
-  },
-]
 
 type LeasesTabProps = {
   orgId: string
@@ -73,7 +32,7 @@ export function LeasesTab({ orgId }: LeasesTabProps) {
   return (
     <AppCard title='Leases' description='Leases for this organisation'>
       <DataTable
-        columns={columns}
+        columns={leasesTableColumns}
         data={leases}
         loading={isPending}
         emptyMessage='No leases yet.'

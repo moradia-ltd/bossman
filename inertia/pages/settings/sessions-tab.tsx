@@ -1,7 +1,4 @@
 import {
-  IconDeviceDesktop,
-  IconDeviceMobile,
-  IconDeviceTablet,
   IconLogout,
   IconTrash,
 } from '@tabler/icons-react'
@@ -11,6 +8,7 @@ import { toast } from 'sonner'
 import type { RawSession } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
+import { DeviceIcon } from '@/components/settings/device-icon'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
@@ -20,17 +18,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LoadingCard } from '@/components/ui/loading'
 import { dateTimeFormatter } from '@/lib/date'
 import api from '@/lib/http'
-
-function getDeviceIcon(deviceType: string | null) {
-  switch (deviceType) {
-    case 'mobile':
-      return <IconDeviceMobile className='h-4 w-4' />
-    case 'tablet':
-      return <IconDeviceTablet className='h-4 w-4' />
-    default:
-      return <IconDeviceDesktop className='h-4 w-4' />
-  }
-}
 
 interface SessionRow {
   id: string
@@ -157,7 +144,9 @@ export function SessionsTab() {
                 header: 'Device',
                 cell: (row: SessionRow) => (
                   <div className='flex items-center gap-3'>
-                    <span className='text-muted-foreground'>{getDeviceIcon(row.deviceType)}</span>
+                    <span className='text-muted-foreground'>
+                      <DeviceIcon deviceType={row.deviceType} />
+                    </span>
                     <div className='min-w-0'>
                       <div className='flex items-center gap-2'>
                         <div className='font-medium truncate'>{row.browserOs}</div>
