@@ -32,7 +32,7 @@ export type RawPushNotification = {
 }
 
 interface PushNotificationsIndexProps extends SharedProps {
-  notifications: PaginatedResponse<RawPushNotification>
+  notifications?: PaginatedResponse<RawPushNotification>
 }
 
 const targetTypeLabel: Record<string, string> = {
@@ -181,9 +181,9 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
           <CardContent>
             <DataTable
               columns={columns}
-              data={notifications.data}
+              data={notifications?.data ?? []}
               emptyMessage='No push notifications yet.'
-              pagination={tablePagination(notifications, {
+              pagination={tablePagination(notifications ?? null, {
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               })}

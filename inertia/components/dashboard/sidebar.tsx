@@ -191,9 +191,11 @@ export function Sidebar({ children }: SidebarProps) {
   const renderItem = (item: NavItem) => {
     const isActive = isNavItemActive(item.href)
     const linkClassName = cn(
-      'flex items-center gap-3 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+      'flex items-center gap-3 rounded-lg px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors',
       !isOpen && !isMobile && 'justify-center px-2',
-      isActive && 'bg-primary text-sidebar-primary-foreground',
+      isActive
+        ? 'bg-primary text-sidebar-primary-foreground hover:bg-primary hover:text-sidebar-primary-foreground'
+        : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
     )
 
     // Desktop collapsed sidebar: show tooltip on hover
