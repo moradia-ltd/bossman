@@ -5,20 +5,23 @@ import drive from '@adonisjs/drive/services/main'
 import DbBackup from '#models/db_backup'
 import BackupService from '#services/backup_service'
 import DbBackupTransformer from '#transformers/db_backup_transformer'
+import { paginatedIndex } from '#utils/paginated_index'
 
 export default class DbBackupsController {
   async index({ request, inertia }: HttpContext) {
-    const params = await request.paginationQs()
     const appEnv = request.appEnv()
-    const backups = await DbBackup.query({ connection: appEnv })
-      .orderBy('createdAt', 'desc')
-      .paginate(params.page ?? 1, params.perPage ?? 20)
-
-    return inertia.render('db-backups/index', {
-      backups: inertia.defer(async () =>
-        DbBackupTransformer.paginate(backups.all(), backups.getMeta()),
-      ),
-    })
+    const pageProps = await paginatedIndex(
+      request,
+      inertia,
+      'backups',
+      (page, perPage) =>
+        DbBackup.query({ connection: appEnv })
+          .orderBy('createdAt', 'desc')
+          .paginate(page, perPage),
+      DbBackupTransformer,
+      { defaultPerPage: 20 },
+    )
+    return inertia.render('db-backups/index', pageProps)
   }
 
   /** API: create a new backup. Returns JSON. */

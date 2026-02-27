@@ -1,12 +1,11 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router, useForm } from '@inertiajs/react'
+import { Link, router, useForm } from '@inertiajs/react'
 import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react'
 
 import type { RawBlogPost } from '#types/model-types'
 import { COVER_PHOTO_OPTIONS, getInitialIsUploadedPhotoLink } from '@/components/blog'
 import { MarkdownEditor } from '@/components/blog/markdown-editor'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -45,21 +44,17 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title={`Edit: ${post.title}`} />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/blog/manage'
-          title='Edit post'
-          description={`/${post.slug}`}
-          actions={
-            <Button variant='outline' asChild>
-              <Link href={`/blog/${post.slug}`}>View</Link>
-            </Button>
-          }
-        />
-
-        <Card>
+    <DashboardPage
+      title='Edit post'
+      description={`/${post.slug}`}
+      backHref='/blog/manage'
+      actions={
+        <Button variant='outline' asChild>
+          <Link href={`/blog/${post.slug}`}>View</Link>
+        </Button>
+      }
+    >
+      <Card>
           <CardHeader>
             <CardTitle>Post</CardTitle>
             <CardDescription>Update fields.</CardDescription>
@@ -210,7 +205,6 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
             </form>
           </CardContent>
         </Card>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

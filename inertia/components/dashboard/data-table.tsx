@@ -33,29 +33,16 @@ import {
 } from '@/components/ui/table'
 import { useDisclosure } from '@/hooks/use-disclosure'
 import { cn } from '@/lib/utils'
+import type { Column as BaseColumn, ColumnWidthValue } from '#types/extra'
 
-/** px number or CSS width string (e.g. '10rem', '20%') */
-type WidthValue = number | string
-
-interface Column<T> {
-  key: string
-  header: string
-  cell?: (row: T) => React.ReactNode
-  sortable?: boolean
+/** DataTable column: extends base Column with filter props */
+interface Column<T> extends BaseColumn<T> {
   filterable?: boolean
   filterType?: 'text' | 'select' | 'date' | 'dateRange'
   filterOptions?: { value: string; label: string }[]
-  /** Minimum column width (px or CSS string). Prevents column from shrinking too much. */
-  minWidth?: WidthValue
-  /** Maximum column width (px or CSS string). Prevents long content from stretching this column. */
-  maxWidth?: WidthValue
-  /** Fixed or preferred width (px or CSS string). */
-  width?: WidthValue
-  /** Flex grow weight. Columns with flex share remaining space proportionally; others keep min/max/width. */
-  flex?: number
 }
 
-function toCssWidth(value: WidthValue | undefined): string | undefined {
+function toCssWidth(value: ColumnWidthValue | undefined): string | undefined {
   if (value === undefined) return undefined
   if (typeof value === 'number') return `${value}px`
   return value

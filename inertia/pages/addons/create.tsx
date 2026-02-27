@@ -1,9 +1,8 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 
 import { startCase } from '#utils/functions'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -59,17 +58,12 @@ export default function AddonsCreate(_props: AddonsCreateProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title='New addon' />
-
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/addons'
-          title='New addon'
-          description='Create an addon and set its price on this page.'
-        />
-
-        <form
+    <DashboardPage
+      title='New addon'
+      description='Create an addon and set its price on this page.'
+      backHref='/addons'
+    >
+      <form
           onSubmit={(e) => {
             e.preventDefault()
             post('/addons', { preserveScroll: true })
@@ -235,7 +229,6 @@ export default function AddonsCreate(_props: AddonsCreateProps) {
             </Button>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

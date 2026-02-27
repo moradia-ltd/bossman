@@ -13,30 +13,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import type { BaseSheetOverlayProps } from '@/components/ui/base-overlay-types'
 
-export interface BaseSheetProps {
-  title?: React.ReactNode
-  description?: React.ReactNode
-  trigger?: React.ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  side?: 'left' | 'right' | 'top' | 'bottom'
-  onPrimaryAction?: () => void | Promise<void>
-  onSecondaryAction?: () => void
-  primaryText?: string
-  secondaryText?: string
-  primaryVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  secondaryVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  primaryDisabled?: boolean
-  secondaryDisabled?: boolean
-  isLoading?: boolean
-  showSecondary?: boolean
-  /** When true, show footer with primary/secondary actions. Default false. */
-  showFooter?: boolean
-  children?: React.ReactNode
-  className?: string
-  contentStyle?: React.CSSProperties
-}
+export type BaseSheetProps = BaseSheetOverlayProps
 
 export function BaseSheet({
   title,

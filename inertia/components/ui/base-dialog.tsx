@@ -13,27 +13,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import type { BaseOverlayProps } from '@/components/ui/base-overlay-types'
 import { cn } from '@/lib/utils'
 
-export interface BaseDialogProps {
-  title: string
-  description?: string
-  trigger?: React.ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  onPrimaryAction?: () => void | Promise<void>
-  onSecondaryAction?: () => void
-  primaryText?: string
-  secondaryText?: string
-  primaryVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  secondaryVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  primaryDisabled?: boolean
-  secondaryDisabled?: boolean
-  isLoading?: boolean
-  children?: React.ReactNode
-  className?: string
-  showSecondary?: boolean
-}
+export type BaseDialogProps = BaseOverlayProps
 
 export function BaseDialog({
   title,

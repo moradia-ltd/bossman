@@ -1213,7 +1213,6 @@ export const baseCountries = [
 ] as const
 
 export const onlyCountryNames = baseCountries.map((country) => country.name)
-export type AppCountries = (typeof onlyCountryNames)[number]
 
 // write function to move the united kingdom to the top of the list and return new array
 

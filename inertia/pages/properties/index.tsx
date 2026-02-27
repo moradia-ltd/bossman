@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link } from '@inertiajs/react'
+import { Deferred, Link } from '@inertiajs/react'
 import { IconBuilding, IconHome, IconMapPin } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 
@@ -8,8 +8,7 @@ import type { RawLeaseableEntity } from '#types/model-types'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DataAccessExpiredAlert } from '@/components/dashboard/data-access-expired-alert'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
@@ -85,15 +84,11 @@ export default function LeaseableEntitiesIndex({
   })
 
   return (
-    <DashboardLayout>
-      <Head title='Properties' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Properties'
-          description='Standalone properties and blocks of properties available for lease.'
-        />
-
-        <DataAccessExpiredAlert
+    <DashboardPage
+      title='Properties'
+      description='Standalone properties and blocks of properties available for lease.'
+    >
+      <DataAccessExpiredAlert
           expired={Boolean(dataAccessExpired)}
           expiredAt={dataAccessExpiredAt}
         />
@@ -140,7 +135,6 @@ export default function LeaseableEntitiesIndex({
             />
           </AppCard>
         </Deferred>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

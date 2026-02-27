@@ -1,8 +1,7 @@
 import { DateTime } from 'luxon'
 
 import TeamMember from '#models/team_member'
-
-export type AppEnv = 'dev' | 'prod'
+import type { AppEnv } from '#types/env'
 
 export interface DataAccessFilter {
   propertiesMode: 'all' | 'selected'

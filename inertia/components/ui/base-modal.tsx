@@ -13,26 +13,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { HStack } from '@/components/ui/hstack'
+import type { BaseOverlayProps } from '@/components/ui/base-overlay-types'
 
-export interface BaseModalProps {
-  title: string
-  description?: string
-  trigger?: React.ReactNode
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  onPrimaryAction?: () => void | Promise<void>
-  onSecondaryAction?: () => void
-  primaryText?: string
-  secondaryText?: string
-  primaryVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  secondaryVariant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  primaryDisabled?: boolean
-  secondaryDisabled?: boolean
-  isLoading?: boolean
-  children?: React.ReactNode
-  className?: string
-  showSecondary?: boolean
-}
+export type BaseModalProps = BaseOverlayProps
 
 export function BaseModal({
   title,

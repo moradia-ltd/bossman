@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react'
 
-export interface OnlyShowIfProps {
+export interface ConditionalShowProps {
   condition: boolean
   children: ReactNode
   fallback?: ReactNode
 }
 
-export const OnlyShowIf = ({ condition, children, fallback = null }: OnlyShowIfProps) => {
+export const OnlyShowIf = ({ condition, children, fallback = null }: ConditionalShowProps) => {
   if (condition) {
     return <>{children}</>
   }

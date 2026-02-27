@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link, router } from '@inertiajs/react'
+import { Deferred, Link, router } from '@inertiajs/react'
 import {
   IconBriefcase,
   IconBuilding,
@@ -18,8 +18,7 @@ import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { FilterSortBar } from '@/components/dashboard/filter-sort-bar'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
@@ -299,23 +298,18 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
   ]
 
   return (
-    <DashboardLayout>
-      <Head title='Orgs' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Customers'
-          description='View and manage customers.'
-          actions={
-            <Button asChild>
-              <Link href='/orgs/create'>
-                <IconPlus className='mr-2 h-4 w-4' />
-                Create
-              </Link>
-            </Button>
-          }
-        />
-
-        <SimpleGrid cols={{ base: 1, md: 3 }} spacing={4}>
+    <DashboardPage
+      title='Customers'
+      description='View and manage customers.'
+      actions={
+        <Button asChild>
+          <Link href='/orgs/create'>
+            <IconPlus className='mr-2 h-4 w-4' />
+            Create
+          </Link>
+        </Button>
+      }>
+      <SimpleGrid cols={{ base: 1, md: 3 }} spacing={4}>
           <StatCard
             title='Total'
             description='All customers'
@@ -368,7 +362,6 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
             </div>
           </AppCard>
         </Deferred>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

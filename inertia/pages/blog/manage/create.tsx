@@ -1,11 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { IconPlus } from '@tabler/icons-react'
 
 import { COVER_PHOTO_OPTIONS } from '@/components/blog'
 import { MarkdownEditor } from '@/components/blog/markdown-editor'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -42,16 +41,12 @@ export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title='New blog post' />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/blog/manage'
-          title='New post'
-          description='Create a post. Slug is auto-generated from the title.'
-        />
-
-        <Card>
+    <DashboardPage
+      title='New post'
+      description='Create a post. Slug is auto-generated from the title.'
+      backHref='/blog/manage'
+    >
+      <Card>
           <CardHeader>
             <CardTitle>Post</CardTitle>
             <CardDescription>Slug is auto-generated from the title.</CardDescription>
@@ -188,7 +183,6 @@ export default function BlogAdminCreate(_props: BlogAdminCreateProps) {
             </form>
           </CardContent>
         </Card>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

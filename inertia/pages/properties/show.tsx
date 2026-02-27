@@ -1,11 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 
 import type { RawLeaseableEntity } from '#types/model-types'
 import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -32,16 +31,12 @@ export default function PropertyShow({ property }: PropertyShowProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title={`Property: ${property.address}`} />
-      <div className='space-y-6'>
-        <PageHeader
-          title={property.address}
-          backHref='/properties'
-          description={`${startCase(property.type)} - ${startCase(property.subType) ?? ''}`}
-        />
-
-        <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
+    <DashboardPage
+      title={property.address}
+      description={`${startCase(property.type)} - ${startCase(property.subType) ?? ''}`}
+      backHref='/properties'
+    >
+      <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
           <TabsList>
             <TabsTrigger value='details'>Details</TabsTrigger>
             <TabsTrigger value='leases'>Leases</TabsTrigger>
@@ -80,7 +75,6 @@ export default function PropertyShow({ property }: PropertyShowProps) {
             <ActivityTab propertyId={property.id} />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

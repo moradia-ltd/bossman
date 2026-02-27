@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { IconFileText, IconHome, IconStack } from '@tabler/icons-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
@@ -8,8 +8,7 @@ import { toast } from 'sonner'
 
 import type { RawTeamMember } from '#types/model-types'
 import DetailRow from '@/components/dashboard/detail-row'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
@@ -298,7 +297,6 @@ export default function MemberShow({ member }: MemberShowProps) {
             </Button>
           </div>
         </AppCard>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

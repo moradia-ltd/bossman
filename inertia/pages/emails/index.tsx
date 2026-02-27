@@ -1,13 +1,12 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { IconChevronLeft, IconChevronRight, IconMail } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import type { Column } from '#types/extra'
 import { timeAgo } from '#utils/date'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseSheet } from '@/components/ui/base-sheet'
@@ -232,15 +231,11 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
   ]
 
   return (
-    <DashboardLayout>
-      <Head title='Emails' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Emails'
-          description='Sent emails from Resend. Open an email to view details and share the link.'
-        />
-
-        <BaseSheet
+    <DashboardPage
+      title='Emails'
+      description='Sent emails from Resend. Open an email to view details and share the link.'
+    >
+      <BaseSheet
           open={viewSheetOpen}
           onOpenChange={(open) => !open && closeSheet()}
           title='Email details'
@@ -319,7 +314,6 @@ export default function EmailsIndex({ emailId: initialEmailId }: EmailsIndexProp
             )}
           </div>
         </AppCard>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

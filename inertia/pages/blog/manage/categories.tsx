@@ -1,10 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, router, useForm } from '@inertiajs/react'
+import { Deferred, router, useForm } from '@inertiajs/react'
 import { IconPlus, IconTrash } from '@tabler/icons-react'
 
 import type { RawBlogCategory } from '#types/model-types'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseModal } from '@/components/ui/base-modal'
@@ -33,15 +32,12 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
   })
 
   return (
-    <DashboardLayout>
-      <Head title='Blog categories' />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/blog/manage'
-          title='Categories'
-          description='Create and manage blog categories.'
-          actions={
-            <BaseModal
+    <DashboardPage
+      title='Categories'
+      description='Create and manage blog categories.'
+      backHref='/blog/manage'
+      actions={
+        <BaseModal
               title='New category'
               description='Slug is generated automatically.'
               trigger={<Button leftIcon={<IconPlus />}>Add category</Button>}
@@ -90,10 +86,9 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
                 </Stack>
               </form>
             </BaseModal>
-          }
-        />
-
-        <Deferred data='categories' fallback={<LoadingSkeleton type='table' />}>
+      }
+    >
+      <Deferred data='categories' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All categories' description={`${(categories ?? []).length} total`}>
             <Table>
               <TableHeader>
@@ -140,7 +135,6 @@ export default function BlogAdminCategories({ categories }: BlogAdminCategoriesP
             </Table>
           </AppCard>
         </Deferred>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

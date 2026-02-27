@@ -1,13 +1,12 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
+import { Link } from '@inertiajs/react'
 import { IconPencil } from '@tabler/icons-react'
 
 import type { RawLease } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { type QuickActionOption, QuickActions } from '@/components/dashboard/quick-actions'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
@@ -42,24 +41,20 @@ export default function LeaseShow({ lease }: LeaseShowProps) {
   ]
 
   return (
-    <DashboardLayout>
-      <Head title={lease.cleanName} />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Lease details'
-          backHref='/leases'
-          description={lease.cleanName}
-          actions={
-            <div className='flex flex-wrap items-center gap-2'>
-              <QuickActions options={quickActions} className='flex items-center gap-1' />
-              <Button variant='outline' size='md' asChild>
-                <Link>View Contract</Link>
-              </Button>
-            </div>
-          }
-        />
-
-        <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
+    <DashboardPage
+      title='Lease details'
+      description={lease.cleanName}
+      backHref='/leases'
+      actions={
+        <div className='flex flex-wrap items-center gap-2'>
+          <QuickActions options={quickActions} className='flex items-center gap-1' />
+          <Button variant='outline' size='md' asChild>
+            <Link>View Contract</Link>
+          </Button>
+        </div>
+      }
+    >
+      <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
           <TabsList>
             <TabsTrigger value='details'>Details</TabsTrigger>
             <TabsTrigger value='payments'>Payments</TabsTrigger>
@@ -111,7 +106,6 @@ export default function LeaseShow({ lease }: LeaseShowProps) {
             <ActivityTab leaseId={lease.id} />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

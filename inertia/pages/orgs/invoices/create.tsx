@@ -1,10 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, useForm } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { IconFileText, IconMinus, IconPlus } from '@tabler/icons-react'
 
 import type { RawOrg } from '#types/model-types'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -74,16 +73,12 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
   const formError = typeof errors.description === 'string' ? errors.description : errors.description
 
   return (
-    <DashboardLayout>
-      <Head title={`Create invoice – ${cleanName}`} />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref={`/orgs/${orgId}?tab=invoices`}
-          title='Create invoice'
-          description={`Create a draft invoice for ${cleanName} with optional line items. You can add more line items later or finalize in Stripe.`}
-        />
-
-        <Card className='w-fit'>
+    <DashboardPage
+      title='Create invoice'
+      description={`Create a draft invoice for ${cleanName} with optional line items. You can add more line items later or finalize in Stripe.`}
+      backHref={`/orgs/${orgId}?tab=invoices`}
+    >
+      <Card className='w-fit'>
           <CardContent className='flex items-center gap-3 py-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-muted'>
               <IconFileText className='h-5 w-5 text-muted-foreground' />
@@ -180,7 +175,6 @@ export default function OrgInvoicesCreate({ org, activeLeasesCount }: OrgInvoice
             </Button>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

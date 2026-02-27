@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
+import { Link } from '@inertiajs/react'
 import {
   IconActivity,
   IconBriefcase,
@@ -18,8 +18,7 @@ import type { RawActivity, RawLease, RawOrg } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { AnalyticsGrowthChart } from '@/components/dashboard/growth-chart'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
@@ -354,26 +353,22 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title='Analytics' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Analytics'
-          description='Stats and growth trends by entity type. Test accounts are excluded from orgs.'
-          actions={
-            <DatePresetPicker
-              startDate={startDate}
-              endDate={endDate}
-              onRangeChange={handleRangeChange}
-              presets={ANALYTICS_DATE_PRESETS}
-              placeholder='Select date range'
-              buttonClassName='min-w-[200px]'
-              buttonSize='sm'
-            />
-          }
+    <DashboardPage
+      title='Analytics'
+      description='Stats and growth trends by entity type. Test accounts are excluded from orgs.'
+      actions={
+        <DatePresetPicker
+          startDate={startDate}
+          endDate={endDate}
+          onRangeChange={handleRangeChange}
+          presets={ANALYTICS_DATE_PRESETS}
+          placeholder='Select date range'
+          buttonClassName='min-w-[200px]'
+          buttonSize='sm'
         />
-
-        <Tabs defaultValue='orgs' className='space-y-6'>
+      }
+    >
+      <Tabs defaultValue='orgs' className='space-y-6'>
           <TabsList className='w-fit h-auto flex-wrap gap-1'>
             <TabsTrigger value='orgs' className='gap-2 rounded-md'>
               <IconBuilding className='h-4 w-4' />
@@ -560,7 +555,6 @@ export default function AnalyticsIndex(_props: AnalyticsIndexProps) {
           showFooter={false}>
           {renderEntitiesList()}
         </BaseSheet>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

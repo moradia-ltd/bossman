@@ -1,12 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawProperty } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
+import { usePaginatedTab } from '@/hooks/use-paginated-tab'
 import api from '@/lib/http'
-import { tablePaginationFromMeta } from '@/lib/pagination'
 
 const columns: Column<RawProperty>[] = [
   {
@@ -31,36 +28,20 @@ type PropertiesTabProps = {
 }
 
 export function PropertiesTab({ orgId }: PropertiesTabProps) {
-  const [page, setPage] = useState(1)
-  const [perPage, setPerPage] = useState(10)
-
-  const { data, isPending } = useQuery({
-    queryKey: ['org-properties', orgId, page, perPage],
-    queryFn: async () => {
-      const res = await api.get<PaginatedResponse<RawProperty>>(`/orgs/${orgId}/properties`, {
-        params: { page, perPage },
-      })
-      return res.data
-    },
-  })
-
-  const properties = data?.data ?? []
-  const meta = data?.meta
+  const { data: properties, loading, pagination } = usePaginatedTab<RawProperty>(
+    ['org-properties', orgId],
+    (page, perPage) =>
+      api.get<PaginatedResponse<RawProperty>>(`/orgs/${orgId}/properties`, { params: { page, perPage } }).then((r) => r.data),
+  )
 
   return (
     <AppCard title='Properties' description='Properties for this organisation'>
       <DataTable
         columns={columns}
         data={properties}
-        loading={isPending}
+        loading={loading}
         emptyMessage='No properties yet.'
-        pagination={tablePaginationFromMeta(meta, {
-          onPageChange: setPage,
-          onPageSizeChange: (size) => {
-            setPerPage(size)
-            setPage(1)
-          },
-        })}
+        pagination={pagination}
       />
     </AppCard>
   )

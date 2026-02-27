@@ -35,21 +35,7 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import { useTheme } from '@/hooks/use-theme'
-
-type PageKey =
-  | 'analytics'
-  | 'dashboard'
-  | 'teams'
-  | 'blog'
-  | 'orgs'
-  | 'leases'
-  | 'properties'
-  | 'pushNotifications'
-  | 'dbBackups'
-  | 'logs'
-  | 'emails'
-  | 'servers'
-  | 'addons'
+import type { PageKey } from '#utils/page_access'
 
 type CommandEntry = {
   label: string

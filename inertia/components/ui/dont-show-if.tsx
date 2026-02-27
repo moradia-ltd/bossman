@@ -1,12 +1,8 @@
-import type { ReactNode } from 'react'
+import type { ConditionalShowProps } from './only-show-if'
 
-export interface DontShowIfProps {
-  condition: boolean
-  children: ReactNode
-  fallback?: ReactNode
-}
+export type { ConditionalShowProps }
 
-export const DontShowIf = ({ condition, children, fallback = null }: DontShowIfProps) => {
+export const DontShowIf = ({ condition, children, fallback = null }: ConditionalShowProps) => {
   if (!condition) {
     return <>{children}</>
   }

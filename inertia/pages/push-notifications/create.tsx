@@ -1,12 +1,11 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 import { IconUserX } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { useState } from 'react'
 
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { EmptyState, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
@@ -84,16 +83,12 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
   }
 
   return (
-    <DashboardLayout>
-      <Head title='Send push notification' />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/push-notifications'
-          title='Send push notification'
-          description='Target Togetha users (landlords, agencies, tenants).'
-        />
-
-        <form onSubmit={handleSubmit} className='space-y-6'>
+    <DashboardPage
+      title='Send push notification'
+      description='Target Togetha users (landlords, agencies, tenants).'
+      backHref='/push-notifications'
+    >
+      <form onSubmit={handleSubmit} className='space-y-6'>
           <AppCard title='Content' description='What should the notification say?'>
             <FormField label='Title' htmlFor='title' required error={errors.title}>
               <Input
@@ -250,7 +245,6 @@ export default function PushNotificationsCreate(_props: PushNotificationsCreateP
             </Button>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

@@ -7,6 +7,7 @@ import TogethaUser from '#models/togetha_user'
 import { resolveUserIds, sendToRecipients } from '#services/push_notification_service'
 import PushNotificationTransformer from '#transformers/push_notification_transformer'
 import { storePushNotificationValidator } from '#validators/push_notification'
+import { paginatedIndex } from '#utils/paginated_index'
 
 export default class PushNotificationsController {
   async users({ request, response }: HttpContext) {
@@ -22,17 +23,18 @@ export default class PushNotificationsController {
   }
 
   async index({ request, inertia }: HttpContext) {
-    const params = await request.paginationQs()
-    const notifications = await PushNotification.query()
-      .orderBy('created_at', 'desc')
-      .paginate(params.page ?? 1, params.perPage ?? 20)
-
-    return inertia.render('push-notifications/index', {
-      notifications: PushNotificationTransformer.paginate(
-        notifications.all(),
-        notifications.getMeta(),
-      ) as never,
-    })
+    const pageProps = await paginatedIndex(
+      request,
+      inertia,
+      'notifications',
+      (page, perPage) =>
+        PushNotification.query()
+          .orderBy('created_at', 'desc')
+          .paginate(page, perPage),
+      PushNotificationTransformer,
+      { defaultPerPage: 20 },
+    )
+    return inertia.render('push-notifications/index', pageProps)
   }
 
   async create({ inertia }: HttpContext) {

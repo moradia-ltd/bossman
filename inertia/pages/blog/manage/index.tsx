@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link, router } from '@inertiajs/react'
+import { Deferred, Link, router } from '@inertiajs/react'
 import { IconEdit, IconPlus, IconTags, IconTrash } from '@tabler/icons-react'
 import { useState } from 'react'
 
@@ -7,8 +7,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
 import { BlogStatusBadge, isPublished } from '@/components/blog'
 import { DataTable } from '@/components/dashboard/data-table'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
@@ -83,28 +82,23 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
   ]
 
   return (
-    <DashboardLayout>
-      <Head title='Blog admin' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Blog'
-          description='Create and manage posts and categories.'
-          actions={
-            <>
-              <Button variant='outline' asChild>
-                <Link href='/blog'>View public blog</Link>
-              </Button>
-              <Button variant='outline' leftIcon={<IconTags />} asChild>
-                <Link href='/blog/manage/categories'>Categories</Link>
-              </Button>
-              <Button leftIcon={<IconPlus />} asChild>
-                <Link href='/blog/manage/create'>New post</Link>
-              </Button>
-            </>
-          }
-        />
-
-        <Deferred data='posts' fallback={<LoadingSkeleton type='table' />}>
+    <DashboardPage
+      title='Blog admin'
+      description='Create and manage posts and categories.'
+      actions={
+        <>
+          <Button variant='outline' asChild>
+            <Link href='/blog'>View public blog</Link>
+          </Button>
+          <Button variant='outline' leftIcon={<IconTags />} asChild>
+            <Link href='/blog/manage/categories'>Categories</Link>
+          </Button>
+          <Button leftIcon={<IconPlus />} asChild>
+            <Link href='/blog/manage/create'>New post</Link>
+          </Button>
+        </>
+      }>
+      <Deferred data='posts' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='Posts' description='Search, paginate, and manage your posts.'>
             <DataTable
               columns={columns}
@@ -121,7 +115,6 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
             />
           </AppCard>
         </Deferred>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

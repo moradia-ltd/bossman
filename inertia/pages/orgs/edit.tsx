@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
 import { toast } from 'sonner'
@@ -7,8 +7,7 @@ import * as Yup from 'yup'
 
 import type { RawOrg } from '#types/model-types'
 import { startCase } from '#utils/functions'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingOverlay, OnlyShowIf } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
@@ -181,28 +180,23 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
   })
 
   return (
-    <DashboardLayout>
-      <Head title={`Edit: ${cleanName}`} />
+    <DashboardPage
+      title={`Edit ${cleanName}`}
+      description='Update organisation details and settings.'
+      backHref={`/orgs/${id}`}
+      actions={
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' size='md' asChild>
+            <Link href={`/orgs/${id}`}>Cancel</Link>
+          </Button>
+          <Button size='md' onClick={() => formik.handleSubmit()} disabled={isPending}>
+            Save changes
+          </Button>
+        </div>
+      }
+    >
       <LoadingOverlay isLoading={isPending} text='Updating organisation...' />
-
-      <div className='space-y-6'>
-        <PageHeader
-          title={`Edit ${cleanName}`}
-          backHref={`/orgs/${id}`}
-          description='Update organisation details and settings.'
-          actions={
-            <div className='flex items-center gap-2'>
-              <Button variant='outline' size='md' asChild>
-                <Link href={`/orgs/${id}`}>Cancel</Link>
-              </Button>
-              <Button size='md' onClick={() => formik.handleSubmit()} disabled={isPending}>
-                Save changes
-              </Button>
-            </div>
-          }
-        />
-
-        <form onSubmit={formik.handleSubmit} className='space-y-6'>
+      <form onSubmit={formik.handleSubmit} className='space-y-6'>
           <AppCard title='Organisation' description='Name, contact and type.'>
             <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing={4}>
               <FormField label='Name' htmlFor='name' error={touched.name && errors.name}>
@@ -602,7 +596,6 @@ export default function OrgsEdit({ org }: OrgsEditProps) {
             </SimpleGrid>
           </AppCard>
         </form>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

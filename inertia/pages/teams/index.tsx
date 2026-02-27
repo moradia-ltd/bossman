@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link, router } from '@inertiajs/react'
+import { Deferred, Link, router } from '@inertiajs/react'
 import { IconPencil, IconSettings, IconTrash } from '@tabler/icons-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
@@ -9,8 +9,7 @@ import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawTeamMember } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseDialog } from '@/components/ui/base-dialog'
@@ -184,16 +183,12 @@ export default function TeamsPage({ members }: TeamsPageProps) {
   )
 
   return (
-    <DashboardLayout>
-      <Head title='Teams' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Team members'
-          description='Invite users and control which pages they can access.'
-          actions={<TeamInvitationsInviteButton />}
-        />
-
-        <TeamInvitations />
+    <DashboardPage
+      title='Team members'
+      description='Invite users and control which pages they can access.'
+      actions={<TeamInvitationsInviteButton />}
+    >
+      <TeamInvitations />
 
         <Deferred data='members' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='Members' description='Users with dashboard access.'>
@@ -287,7 +282,6 @@ export default function TeamsPage({ members }: TeamsPageProps) {
             </div>
           </Stack>
         </BaseModal>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

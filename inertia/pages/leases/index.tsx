@@ -1,5 +1,5 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link } from '@inertiajs/react'
+import { Deferred, Link } from '@inertiajs/react'
 import { IconAlertCircle, IconCircleCheck, IconCircleX, IconFileText } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 
@@ -10,8 +10,7 @@ import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DataAccessExpiredAlert } from '@/components/dashboard/data-access-expired-alert'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { LeaseStatusBadge } from '@/components/leases/status-badge'
 import { LoadingSkeleton, Stack } from '@/components/ui'
@@ -98,13 +97,8 @@ export default function LeasesIndex({
   })
 
   return (
-    <DashboardLayout>
-      <Head title='Leases' />
-
-      <div className='space-y-6'>
-        <PageHeader title='Leases' description='All leases for your organisation.' />
-
-        <DataAccessExpiredAlert
+    <DashboardPage title='Leases' description='All leases for your organisation.'>
+      <DataAccessExpiredAlert
           expired={dataAccessExpired}
           expiredAt={dataAccessExpiredAt}
         />
@@ -154,7 +148,6 @@ export default function LeasesIndex({
             />
           </AppCard>
         </Deferred>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

@@ -1,11 +1,10 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link } from '@inertiajs/react'
+import { Link } from '@inertiajs/react'
 import { IconPackage, IconPlus } from '@tabler/icons-react'
 
 import type { AddonRow } from '@/components/addons/addon-card'
 import { AddonCard } from '@/components/addons/addon-card'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { EmptyState } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
@@ -16,21 +15,15 @@ interface AddonsIndexProps extends SharedProps {
 
 export default function AddonsIndex({ addons }: AddonsIndexProps) {
   return (
-    <DashboardLayout>
-      <Head title='Addons' />
-
-      <div className='space-y-6'>
-        <PageHeader
-          title='Addons'
-          description='Create and manage addons. Each addon can have a price and billing type configured.'
-          actions={
-            <Button asChild leftIcon={<IconPlus className='h-4 w-4' />}>
-              <Link href='/addons/create'>New addon</Link>
-            </Button>
-          }
-        />
-
-        {addons.length === 0 ? (
+    <DashboardPage
+      title='Addons'
+      description='Create and manage addons. Each addon can have a price and billing type configured.'
+      actions={
+        <Button asChild leftIcon={<IconPlus className='h-4 w-4' />}>
+          <Link href='/addons/create'>New addon</Link>
+        </Button>
+      }>
+      {addons.length === 0 ? (
           <EmptyState
             icon={IconPackage}
             title='No addons'
@@ -48,7 +41,6 @@ export default function AddonsIndex({ addons }: AddonsIndexProps) {
             </div>
           </AppCard>
         )}
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

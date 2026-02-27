@@ -21,8 +21,7 @@ import { formatCurrency } from '#utils/currency'
 import { timeAgo } from '#utils/date'
 import { startCase } from '#utils/functions'
 import DetailRow from '@/components/dashboard/detail-row'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { type QuickActionOption, QuickActions } from '@/components/dashboard/quick-actions'
 import { DateTimePicker, OnlyShowIf, SimpleGrid } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
@@ -265,9 +264,25 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
   ]
 
   return (
-    <DashboardLayout>
-      <Head title={`Org: ${cleanName}`} />
-
+    <DashboardPage
+      title={cleanName}
+      description={org.companyName ? String(org.companyName) : undefined}
+      backHref='/orgs'
+      actions={
+        <div className='flex items-center gap-2'>
+          <Button variant='outline' size='md' asChild>
+            <Link href={`/orgs/${id}/edit`}>
+              <IconPencil className='mr-2 h-4 w-4' />
+              Edit
+            </Link>
+          </Button>
+          <Button variant='outline' size='md' asChild>
+            <Link href={`/orgs/${id}/invoices/create`}>Create invoice</Link>
+          </Button>
+          <QuickActions options={quickActions} />
+        </div>
+      }
+    >
       <BaseSheet
         open={banUserSheetOpen}
         onOpenChange={setBanUserSheetOpen}
@@ -368,28 +383,7 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
         onSecondaryAction={() => setRequestDeleteDialogOpen(false)}
       />
 
-      <div className='space-y-6'>
-        <PageHeader
-          title={cleanName}
-          backHref='/orgs'
-          description={org.companyName ? String(org.companyName) : undefined}
-          actions={
-            <div className='flex items-center gap-2'>
-              <Button variant='outline' size='md' asChild>
-                <Link href={`/orgs/${id}/edit`}>
-                  <IconPencil className='mr-2 h-4 w-4' />
-                  Edit
-                </Link>
-              </Button>
-              <Button variant='outline' size='md' asChild>
-                <Link href={`/orgs/${id}/invoices/create`}>Create invoice</Link>
-              </Button>
-              <QuickActions options={quickActions} />
-            </div>
-          }
-        />
-
-        <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
+      <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
           <TabsList>
             <TabsTrigger value='details'>Details</TabsTrigger>
             <TabsTrigger value='leases'>Leases</TabsTrigger>
@@ -623,7 +617,6 @@ export default function OrgShow({ org, isLoopsUser }: OrgShowProps) {
             <InvoicesTab orgId={id} />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

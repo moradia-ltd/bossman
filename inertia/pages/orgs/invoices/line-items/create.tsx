@@ -1,9 +1,8 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, useForm } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 
 import type { RawOrg } from '#types/model-types'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form_field'
@@ -41,16 +40,12 @@ export default function OrgInvoiceLineItemCreate({
   const formError = typeof errors.error === 'string' ? errors.error : errors.description
 
   return (
-    <DashboardLayout>
-      <Head title={`Add line item – ${cleanName}`} />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref={`/orgs/${orgId}?tab=invoices`}
-          title='Add line item'
-          description={`Add a line item to this draft invoice for ${cleanName}. Amount is in the selected currency (e.g. 10.50 for £10.50).`}
-        />
-
-        <form onSubmit={handleSubmit} className='space-y-6'>
+    <DashboardPage
+      title='Add line item'
+      description={`Add a line item to this draft invoice for ${cleanName}. Amount is in the selected currency (e.g. 10.50 for £10.50).`}
+      backHref={`/orgs/${orgId}?tab=invoices`}
+    >
+      <form onSubmit={handleSubmit} className='space-y-6'>
           <AppCard title='Line item' description='Description, amount and currency for this line.'>
             <div className='grid gap-4 sm:grid-cols-2'>
               <FormField
@@ -103,7 +98,6 @@ export default function OrgInvoiceLineItemCreate({
             </Button>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

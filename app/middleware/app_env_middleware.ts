@@ -1,7 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import type { NextFn } from '@adonisjs/core/types/http'
-
-type AppEnv = 'dev' | 'prod'
+import type { AppEnv } from '#types/env'
 
 /**
  * Sets appEnv on the request from session (or App-Env header fallback) so request.appEnv() works.

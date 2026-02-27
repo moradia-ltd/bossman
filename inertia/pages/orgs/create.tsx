@@ -1,12 +1,11 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { IconClipboardCheck, IconId, IconUsers } from '@tabler/icons-react'
 import { useMutation } from '@tanstack/react-query'
 import { useFormik } from 'formik'
 import { toast } from 'sonner'
 
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingOverlay } from '@/components/ui'
 import { createStepperSteps, Stepper } from '@/components/ui/stepper'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
@@ -76,18 +75,13 @@ export default function OrgsCreate(props: OrgsCreateProps) {
   ])
 
   return (
-    <DashboardLayout>
-      <Head title='New customer' />
+    <DashboardPage
+      title='Create a new plan for your landlords and agencies'
+      description='Set up a new customer in a few steps.'
+      backHref='/orgs'
+    >
       <LoadingOverlay isLoading={isPending} text='Creating customer...' />
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/orgs'
-          title='Create a new plan for your landlords and agencies'
-          description='Set up a new customer in a few steps.'
-        />
-
-        <Stepper steps={steps} />
-      </div>
-    </DashboardLayout>
+      <Stepper steps={steps} />
+    </DashboardPage>
   )
 }

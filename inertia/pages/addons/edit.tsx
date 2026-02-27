@@ -1,10 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, useForm } from '@inertiajs/react'
+import { Link, useForm } from '@inertiajs/react'
 
 import type { RawAddon } from '#types/model-types'
 import { startCase } from '#utils/functions'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -61,17 +60,12 @@ export default function AddonsEdit({ addon }: AddonsEditProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title={`Edit ${addon.name}`} />
-
-      <div className='space-y-6'>
-        <PageHeader
-          backHref='/addons'
-          title={`Edit ${addon.name}`}
-          description='Update addon details and price. Slug is generated from the name.'
-        />
-
-        <form
+    <DashboardPage
+      title={`Edit ${addon.name}`}
+      description='Update addon details and price. Slug is generated from the name.'
+      backHref='/addons'
+    >
+      <form
           onSubmit={(e) => {
             e.preventDefault()
             put(`/addons/${addon.id}`, { preserveScroll: true })
@@ -237,7 +231,6 @@ export default function AddonsEdit({ addon }: AddonsEditProps) {
             </Button>
           </div>
         </form>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

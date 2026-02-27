@@ -1,13 +1,13 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router } from '@inertiajs/react'
+import { Deferred, Link, router } from '@inertiajs/react'
 import { IconBell, IconPlus, IconRefresh } from '@tabler/icons-react'
 import { useState } from 'react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
+import { LoadingSkeleton } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -155,22 +155,19 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
   ]
 
   return (
-    <DashboardLayout>
-      <Head title='Push notifications' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Push notifications'
-          description='Send push notifications to Togetha users via OneSignal.'
-          actions={
-            <Button asChild>
-              <Link href='/push-notifications/create'>
-                <IconPlus className='mr-2 h-4 w-4' />
-                Send notification
-              </Link>
-            </Button>
-          }
-        />
-
+    <DashboardPage
+      title='Push notifications'
+      description='Send push notifications to Togetha users via OneSignal.'
+      actions={
+        <Button asChild>
+          <Link href='/push-notifications/create'>
+            <IconPlus className='mr-2 h-4 w-4' />
+            Send notification
+          </Link>
+        </Button>
+      }
+    >
+      <Deferred data='notifications' fallback={<LoadingSkeleton type='table' />}>
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
@@ -193,7 +190,7 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
             />
           </CardContent>
         </Card>
-      </div>
-    </DashboardLayout>
+      </Deferred>
+    </DashboardPage>
   )
 }

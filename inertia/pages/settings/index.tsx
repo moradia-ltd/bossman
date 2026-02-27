@@ -1,8 +1,7 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router, usePage } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 
@@ -19,12 +18,11 @@ export default function Settings(_props: SharedProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title='Settings' />
-      <div className='space-y-6'>
-        <PageHeader title='Settings' description='Manage your account settings and preferences.' />
-
-        <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
+    <DashboardPage
+      title='Settings'
+      description='Manage your account settings and preferences.'
+    >
+      <Tabs value={currentTab} onValueChange={handleTabChange} className='space-y-6'>
           <TabsList>
             <TabsTrigger value='profile'>Profile</TabsTrigger>
             <TabsTrigger value='password'>Password</TabsTrigger>
@@ -48,7 +46,6 @@ export default function Settings(_props: SharedProps) {
             <SessionsTab />
           </TabsContent>
         </Tabs>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

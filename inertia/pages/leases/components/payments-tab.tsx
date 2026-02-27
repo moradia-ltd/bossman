@@ -1,14 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
-
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawPayment } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
+import { usePaginatedTab } from '@/hooks/use-paginated-tab'
 import api from '@/lib/http'
-import { tablePaginationFromMeta } from '@/lib/pagination'
 
 const columns: Column<RawPayment>[] = [
   {
@@ -48,36 +45,20 @@ type PaymentsTabProps = {
 }
 
 export function PaymentsTab({ leaseId }: PaymentsTabProps) {
-  const [page, setPage] = useState(1)
-  const [perPage, setPerPage] = useState(10)
-
-  const { data, isPending } = useQuery({
-    queryKey: ['lease-payments', leaseId, page, perPage],
-    queryFn: async () => {
-      const res = await api.get<PaginatedResponse<RawPayment>>(`/leases/${leaseId}/payments`, {
-        params: { page, perPage },
-      })
-      return res.data
-    },
-  })
-
-  const payments = data?.data ?? []
-  const meta = data?.meta
+  const { data: payments, loading, pagination } = usePaginatedTab<RawPayment>(
+    ['lease-payments', leaseId],
+    (page, perPage) =>
+      api.get<PaginatedResponse<RawPayment>>(`/leases/${leaseId}/payments`, { params: { page, perPage } }).then((r) => r.data),
+  )
 
   return (
     <AppCard title='Payments' description='Payment history for this lease'>
       <DataTable
         columns={columns}
         data={payments}
-        loading={isPending}
+        loading={loading}
         emptyMessage='No payments yet.'
-        pagination={tablePaginationFromMeta(meta, {
-          onPageChange: setPage,
-          onPageSizeChange: (size) => {
-            setPerPage(size)
-            setPage(1)
-          },
-        })}
+        pagination={pagination}
       />
     </AppCard>
   )

@@ -1,13 +1,12 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head } from '@inertiajs/react'
+import { Deferred } from '@inertiajs/react'
 import { useState } from 'react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
 import { timeAgo } from '#utils/date'
 import { startCase } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { BaseSheet } from '@/components/ui/base-sheet'
@@ -163,15 +162,11 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
   const closeView = () => setSelectedAudit(null)
 
   return (
-    <DashboardLayout>
-      <Head title='Logs' />
-      <div className='space-y-6'>
-        <PageHeader
-          title='Logs'
-          description='Audit events across the app (create, update, delete on auditable models).'
-        />
-
-        <BaseSheet
+    <DashboardPage
+      title='Logs'
+      description='Audit events across the app (create, update, delete on auditable models).'
+    >
+      <BaseSheet
           open={viewSheetOpen}
           onOpenChange={(open) => !open && closeView()}
           title='Audit details'
@@ -210,7 +205,6 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
             </div>
           </AppCard>
         </Deferred>
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

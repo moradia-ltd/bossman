@@ -1,12 +1,11 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, router } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
 import { IconServer } from '@tabler/icons-react'
 import { useMemo } from 'react'
 import pluralize from 'pluralize'
 
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import {
@@ -46,15 +45,11 @@ export default function ServersIndex({ sort }: ServersIndexProps) {
   }
 
   return (
-    <DashboardLayout>
-      <Head title='Servers' />
-
-      <div className='space-y-6'>
-        <PageHeader
-          title='Servers'
-          description='Railway projects. Open a project to view its services, deployments, and logs.'
-        />
-        <div className='flex flex-wrap items-center justify-end gap-2 mb-4'>
+    <DashboardPage
+      title='Servers'
+      description='Railway projects. Open a project to view its services, deployments, and logs.'
+    >
+      <div className='flex flex-wrap items-center justify-end gap-2 mb-4'>
           <span className='text-sm text-muted-foreground'>Sort:</span>
           <Select value={sort} onValueChange={handleSortChange} itemToStringValue={(v) => startCase(v) ?? ''}>
             <SelectTrigger className='w-[200px]' size='sm'>
@@ -101,7 +96,6 @@ export default function ServersIndex({ sort }: ServersIndexProps) {
             )}
           </AppCard>
         )}
-      </div>
-    </DashboardLayout>
+    </DashboardPage>
   )
 }

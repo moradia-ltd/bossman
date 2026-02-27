@@ -1,10 +1,9 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Deferred, Head, Link } from '@inertiajs/react'
+import { Deferred, Link } from '@inertiajs/react'
 import { IconChevronRight, IconServer } from '@tabler/icons-react'
 import { useState } from 'react'
 
-import { DashboardLayout } from '@/components/dashboard/layout'
-import { PageHeader } from '@/components/dashboard/page_header'
+import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Card } from '@/components/ui/card'
@@ -78,13 +77,8 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
   }
 
   return (
-    <DashboardLayout>
-      <Head title={`Project: ${displayName}`} />
-
-      <div className='space-y-6'>
-        <PageHeader title={displayName} backHref='/servers' />
-
-        <Deferred data='project' fallback={<LoadingSkeleton type='list' />}>
+    <DashboardPage title={displayName} backHref='/servers'>
+      <Deferred data='project' fallback={<LoadingSkeleton type='list' />}>
           {safeProject === null ? (
             <EmptyState
               icon={IconServer}
@@ -137,7 +131,6 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
             </AppCard>
           ) : null}
         </Deferred>
-      </div>
 
       <DeploymentsSheet
         open={deploymentsSheetOpen}
@@ -157,6 +150,6 @@ export default function ServersProjectShow({ projectName, project }: ProjectShow
         onOpenChange={setBuildLogsSheetOpen}
         deploymentId={selectedBuildLogsDeploymentId}
       />
-    </DashboardLayout>
+    </DashboardPage>
   )
 }
