@@ -5,10 +5,27 @@ import axios from 'axios'
 import BlogPost from '#models/blog_post'
 import env from '#start/env'
 
+const STRAPI_BASE = 'https://cms.togetha.co.uk'
 const strapi = axios.create({
   baseURL: 'https://cms.togetha.co.uk/api',
   headers: { Authorization: `Bearer ${env.get('STRAPI_API')}` },
 })
+
+interface StrapiInlineChild {
+  type: 'link' | 'text'
+  url?: string
+  children?: StrapiInlineChild[]
+  text?: string
+  bold?: boolean
+}
+
+interface StrapiBlock {
+  type: string
+  url?: string
+  image?: { url?: string }
+  format?: string
+  children?: StrapiInlineChild[] | Array<{ children?: StrapiInlineChild[] }>
+}
 
 /** Render inline children (text + bold + link) to a single string for markdown */
 function renderInline(children: StrapiInlineChild[] | undefined): string {
@@ -104,7 +121,7 @@ export default class MigrateBlogs extends BaseCommand {
         this.logger.success(`Migrated blog post ${post.title}`)
       } catch (err) {
         console.error(err)
-        this.logger.info(`Error migrating blog post ${blogPost.title}`)
+        this.logger.info(`Error migrating blog post ${actualPost.title ?? actualPost.slug}`)
       }
     }
 
