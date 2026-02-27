@@ -32,27 +32,29 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
       key: 'title',
       header: 'Title',
       sortable: true,
-      width: 330,
+      width: 250,
       cell: (row) => (
         <div className='space-y-1'>
-          <div className='flex items-center gap-2 flex-wrap'>
-            <span className='font-medium'>{row.title}</span>
-            <BlogStatusBadge post={row} className='shrink-0' />
-          </div>
+          <Link href={`/blog/manage/${row.id}/edit`}>
+            <div className='block items-center gap-2'>
+              <div className='font-medium'>{row.title}</div>
+              <BlogStatusBadge post={row} className='shrink-0 mt-1' />
+            </div>
+          </Link>
         </div>
       ),
     },
     {
       key: 'publishedAt',
       header: 'Published',
-      // width: 110,
+      width: 110,
       cell: (row) => (row.publishedAt ? new Date(row.publishedAt).toLocaleDateString() : '—'),
     },
     {
       key: 'actions',
       header: 'Actions',
       // minWidth: 200,
-      // width: 200,
+      width: 100,
       cell: (row) => (
         <div className='flex items-center justify-end gap-2'>
           <Button variant='ghost' size='icon' asChild leftIcon={<IconEdit className='h-4 w-4' />}>

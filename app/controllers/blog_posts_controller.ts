@@ -9,20 +9,6 @@ import { createBlogPostValidator, updateBlogPostValidator } from '#validators/bl
 
 import { allowedImageExtensions } from '../data/file.js'
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-function isUrl(s: string): boolean {
-  return s.startsWith('http://') || s.startsWith('https://')
-}
-
 export default class BlogPostsController {
   async index({ request, inertia }: HttpContext) {
     const params = await request.paginationQs()
@@ -93,35 +79,30 @@ export default class BlogPostsController {
   async store({ request, response }: HttpContext) {
     const { publish, isUploadedPhotoLink, coverImageAltUrl, ...body } =
       await request.validateUsing(createBlogPostValidator)
+    const coverFile = request.file('coverImage', {
+      size: '5mb',
+      extnames: allowedImageExtensions,
+    })
 
-    const trx = await db.transaction()
+    const env = request.appEnv()
+
     try {
-      const post = await BlogPost.create(body, { client: trx })
-
-      if (isUploadedPhotoLink && coverImageAltUrl && isUrl(coverImageAltUrl)) {
+      const post = await BlogPost.create(
+        { ...body, publishedAt: publish ? DateTime.now() : null },
+        { connection: env },
+      )
+      if (isUploadedPhotoLink && coverImageAltUrl) {
         post.coverImageAltUrl = coverImageAltUrl
-        post.coverImage = null
-      } else {
-        const coverFile = request.file('coverImage', {
-          size: '5mb',
-          extnames: allowedImageExtensions,
-        })
-        if (coverFile?.isValid) {
-          post.coverImage = (await attachmentManager.createFromFile(
-            coverFile,
-          )) as BlogPost['coverImage']
-        }
-        post.coverImageAltUrl = coverImageAltUrl ?? null
+      } else if (coverFile?.isValid) {
+        post.coverImage = (await attachmentManager.createFromFile(
+          coverFile,
+        )) as BlogPost['coverImage']
       }
 
-      if (publish) post.publishedAt = DateTime.now()
-      await post.save()
-
-      await trx.commit()
       return response.redirect('/blog/manage')
     } catch (error) {
-      await trx.rollback()
-      throw error
+      console.error(error)
+      return response.badRequest({ error: 'Failed to update post' })
     }
   }
 
@@ -129,16 +110,15 @@ export default class BlogPostsController {
     const { publish, isUploadedPhotoLink, coverImageAltUrl, ...body } =
       await request.validateUsing(updateBlogPostValidator)
     const trx = await db.transaction()
-    const post = await BlogPost.findOrFail(params.id, { client: trx })
+    const env = request.appEnv()
+    const post = await BlogPost.query({ connection: env }).where('id', params.id).first()
+    if (!post) return response.notFound({ error: 'Post not found' })
 
     try {
       post.merge(body)
-      if (body.body !== undefined) {
-        post.body = typeof body.body === 'string' ? body.body : ''
-      }
 
       if (isUploadedPhotoLink !== undefined) {
-        if (isUploadedPhotoLink && coverImageAltUrl && isUrl(coverImageAltUrl)) {
+        if (isUploadedPhotoLink && coverImageAltUrl) {
           post.coverImageAltUrl = coverImageAltUrl
           post.coverImage = null
         } else {
@@ -169,8 +149,10 @@ export default class BlogPostsController {
     }
   }
 
-  async destroy({ params, response }: HttpContext) {
-    const post = await BlogPost.findOrFail(params.id)
+  async destroy({ params, response, request }: HttpContext) {
+    const env = request.appEnv()
+    const post = await BlogPost.query({ connection: env }).where('id', params.id).first()
+    if (!post) return response.notFound({ error: 'Post not found' })
     await post.delete()
     return response.redirect('/blog/manage')
   }

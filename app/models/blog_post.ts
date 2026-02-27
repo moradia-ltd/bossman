@@ -29,15 +29,12 @@ export default class BlogPost extends BaseModel {
   @column()
   declare coverImageAltUrl: string | null
 
-  // @column.dateTime()
-  @column()
+  @column.dateTime()
   declare publishedAt: DateTime | null
 
-  // @column.dateTime({ autoCreate: true })
-  @column()
+  @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
-  // @column.dateTime({ autoCreate: true, autoUpdate: true })
-  @column()
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 }
