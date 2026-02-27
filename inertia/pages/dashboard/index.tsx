@@ -17,6 +17,7 @@ import { AppCard } from '@/components/ui/app-card'
 import type { ChartConfig } from '@/components/ui/chart'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import api from '@/lib/http'
+import { tablePaginationFromMeta } from '@/lib/pagination'
 
 type DashboardStats = {
   totalUsers: number
@@ -121,20 +122,13 @@ export default function DashboardIndex(_props: DashboardIndexProps) {
             data={activities}
             loading={activityLoading}
             emptyMessage='No activity yet.'
-            pagination={
-              activityMeta
-                ? {
-                    page: activityMeta.currentPage,
-                    pageSize: activityMeta.perPage,
-                    total: activityMeta.total,
-                    onPageChange: setActivityPage,
-                    onPageSizeChange: (size) => {
-                      setActivityPerPage(size)
-                      setActivityPage(1)
-                    },
-                  }
-                : undefined
-            }
+            pagination={tablePaginationFromMeta(activityMeta, {
+              onPageChange: setActivityPage,
+              onPageSizeChange: (size) => {
+                setActivityPerPage(size)
+                setActivityPage(1)
+              },
+            })}
           />
         </AppCard>
       </div>

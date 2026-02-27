@@ -19,7 +19,7 @@ import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
-import { getPaginationMeta } from '@/lib/pagination'
+import { tablePagination } from '@/lib/pagination'
 import api from '@/lib/http'
 
 interface LeasesIndexProps extends SharedProps {
@@ -97,8 +97,6 @@ export default function LeasesIndex({
     select: (data) => data?.data,
   })
 
-  const leasesMeta = getPaginationMeta(leases)
-
   return (
     <DashboardLayout>
       <Head title='Leases' />
@@ -148,17 +146,10 @@ export default function LeasesIndex({
               searchPlaceholder='Search by name...'
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={
-                leasesMeta
-                  ? {
-                      page: leasesMeta.currentPage,
-                      pageSize: leasesMeta.perPage,
-                      total: leasesMeta.total,
-                      onPageChange: changePage,
-                      onPageSizeChange: changeRows,
-                    }
-                  : undefined
-              }
+              pagination={tablePagination(leases, {
+                onPageChange: changePage,
+                onPageSizeChange: changeRows,
+              })}
               emptyMessage='No leases found'
             />
           </AppCard>

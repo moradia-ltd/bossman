@@ -23,6 +23,7 @@ import { Stack } from '@/components/ui/stack'
 import { Switch } from '@/components/ui/switch'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
+import { tablePagination } from '@/lib/pagination'
 import api from '@/lib/http'
 import {
   PAGE_OPTIONS,
@@ -206,20 +207,13 @@ export default function TeamsPage({ members }: TeamsPageProps) {
                 searchTable(value)
                 changePage(1)
               }}
-              pagination={
-                (members?.metadata ?? members?.meta)
-                  ? {
-                      page: (members?.metadata ?? members?.meta)?.currentPage ?? 1,
-                      pageSize: (members?.metadata ?? members?.meta)?.perPage ?? 10,
-                      total: (members?.metadata ?? members?.meta)?.total ?? 0,
-                      onPageChange: (p) => changePage(p),
-                      onPageSizeChange: (pageSize) => {
-                        changeRows(pageSize)
-                        changePage(1)
-                      },
-                    }
-                  : undefined
-              }
+              pagination={tablePagination(members, {
+                onPageChange: changePage,
+                onPageSizeChange: (pageSize) => {
+                  changeRows(pageSize)
+                  changePage(1)
+                },
+              })}
               emptyMessage='No members found'
             />
           </AppCard>

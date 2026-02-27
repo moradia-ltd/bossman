@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+import { tablePagination } from '@/lib/pagination'
 
 export type RawPushNotification = {
   id: string
@@ -185,13 +186,10 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
               columns={columns}
               data={notifications.data}
               emptyMessage='No push notifications yet.'
-              pagination={{
-                page: (notifications?.metadata ?? notifications?.meta)?.currentPage ?? 1,
-                pageSize: (notifications?.metadata ?? notifications?.meta)?.perPage ?? 20,
-                total: (notifications?.metadata ?? notifications?.meta)?.total ?? 0,
+              pagination={tablePagination(notifications, {
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
-              }}
+              })}
             />
           </CardContent>
         </Card>

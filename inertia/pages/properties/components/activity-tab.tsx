@@ -7,6 +7,7 @@ import { activityTabColumns } from '@/components/dashboard/activity-columns'
 import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
 import api from '@/lib/http'
+import { tablePaginationFromMeta } from '@/lib/pagination'
 
 type ActivityTabProps = {
   propertyId: string
@@ -37,20 +38,13 @@ export function ActivityTab({ propertyId }: ActivityTabProps) {
         data={activity}
         loading={isPending}
         emptyMessage='No activity yet.'
-        pagination={
-          meta
-            ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-            : undefined
-        }
+        pagination={tablePaginationFromMeta(meta, {
+          onPageChange: setPage,
+          onPageSizeChange: (size) => {
+            setPerPage(size)
+            setPage(1)
+          },
+        })}
       />
     </AppCard>
   )

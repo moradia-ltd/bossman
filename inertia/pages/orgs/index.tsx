@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
+import { tablePagination } from '@/lib/pagination'
 import api from '@/lib/http'
 
 const ORGS_SORT_BY_OPTIONS = [
@@ -353,13 +354,10 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
                 searchPlaceholder='Search by name or company...'
                 searchValue={String(query.search || '')}
                 onSearchChange={(value) => searchTable(String(value || ''))}
-                pagination={{
-                  page: orgs?.meta?.currentPage ?? 1,
-                  pageSize: orgs?.meta?.perPage ?? 20,
-                  total: orgs?.meta?.total ?? 0,
+                pagination={tablePagination(orgs, {
                   onPageChange: changePage,
                   onPageSizeChange: changeRows,
-                }}
+                })}
                 emptyMessage='No customers found'
                 selectable
                 selectedRows={selectedRows}

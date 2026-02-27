@@ -13,6 +13,7 @@ import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
+import { tablePagination } from '@/lib/pagination'
 
 interface BlogAdminIndexProps extends SharedProps {
   posts?: PaginatedResponse<RawBlogPost>
@@ -112,13 +113,10 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
               searchPlaceholder='Search posts...'
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={{
-                page: posts?.metadata?.currentPage ?? 1,
-                pageSize: posts?.metadata?.perPage ?? 10,
-                total: posts?.metadata?.total ?? 0,
+              pagination={tablePagination(posts, {
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
-              }}
+              })}
               emptyMessage='No posts found'
             />
           </AppCard>

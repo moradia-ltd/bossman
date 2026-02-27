@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
+import { tablePagination } from '@/lib/pagination'
 import api from '@/lib/http'
 
 const columns: Column<RawLeaseableEntity>[] = [
@@ -131,13 +132,10 @@ export default function LeaseableEntitiesIndex({
               searchPlaceholder='Search by address...'
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={{
-                page: leaseableEntities?.meta?.currentPage ?? 1,
-                pageSize: leaseableEntities?.meta?.perPage ?? 20,
-                total: leaseableEntities?.meta?.total ?? 0,
+              pagination={tablePagination(leaseableEntities, {
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
-              }}
+              })}
               emptyMessage='No properties found'
             />
           </AppCard>

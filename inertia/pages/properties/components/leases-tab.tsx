@@ -7,6 +7,7 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { leasesTableColumns } from '@/components/leases'
 import { AppCard } from '@/components/ui/app-card'
 import api from '@/lib/http'
+import { tablePaginationFromMeta } from '@/lib/pagination'
 
 type LeasesTabProps = {
   propertyId: string
@@ -37,20 +38,13 @@ export function LeasesTab({ propertyId }: LeasesTabProps) {
         data={leases}
         loading={isPending}
         emptyMessage='No leases for this leaseable entity.'
-        pagination={
-          meta
-            ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-            : undefined
-        }
+        pagination={tablePaginationFromMeta(meta, {
+          onPageChange: setPage,
+          onPageSizeChange: (size) => {
+            setPerPage(size)
+            setPage(1)
+          },
+        })}
       />
     </AppCard>
   )

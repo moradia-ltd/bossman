@@ -8,6 +8,7 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
+import { tablePaginationFromMeta } from '@/lib/pagination'
 
 const columns: Column<RawPayment>[] = [
   {
@@ -70,20 +71,13 @@ export function PaymentsTab({ leaseId }: PaymentsTabProps) {
         data={payments}
         loading={isPending}
         emptyMessage='No payments yet.'
-        pagination={
-          meta
-            ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-            : undefined
-        }
+        pagination={tablePaginationFromMeta(meta, {
+          onPageChange: setPage,
+          onPageSizeChange: (size) => {
+            setPerPage(size)
+            setPage(1)
+          },
+        })}
       />
     </AppCard>
   )

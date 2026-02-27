@@ -31,6 +31,7 @@ import { Stack } from '@/components/ui/stack'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
 import { getFilenameFromContentDisposition } from '@/lib/download'
+import { tablePagination } from '@/lib/pagination'
 import api from '@/lib/http'
 
 interface DbBackupsIndexProps extends SharedProps {
@@ -293,13 +294,10 @@ export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
               columns={columns}
               data={backups?.data ?? []}
               emptyMessage='No backups yet.'
-              pagination={{
-                page: backups?.meta?.currentPage ?? 1,
-                pageSize: backups?.meta?.perPage ?? 20,
-                total: backups?.meta?.total ?? 0,
+              pagination={tablePagination(backups, {
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
-              }}
+              })}
             />
           </AppCard>
         </Deferred>

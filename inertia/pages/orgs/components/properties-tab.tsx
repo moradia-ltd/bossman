@@ -6,6 +6,7 @@ import type { RawProperty } from '#types/model-types'
 import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
 import api from '@/lib/http'
+import { tablePaginationFromMeta } from '@/lib/pagination'
 
 const columns: Column<RawProperty>[] = [
   {
@@ -53,20 +54,13 @@ export function PropertiesTab({ orgId }: PropertiesTabProps) {
         data={properties}
         loading={isPending}
         emptyMessage='No properties yet.'
-        pagination={
-          meta
-            ? {
-                page: meta.currentPage,
-                pageSize: meta.perPage,
-                total: meta.total,
-                onPageChange: setPage,
-                onPageSizeChange: (size) => {
-                  setPerPage(size)
-                  setPage(1)
-                },
-              }
-            : undefined
-        }
+        pagination={tablePaginationFromMeta(meta, {
+          onPageChange: setPage,
+          onPageSizeChange: (size) => {
+            setPerPage(size)
+            setPage(1)
+          },
+        })}
       />
     </AppCard>
   )

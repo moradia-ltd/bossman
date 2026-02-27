@@ -14,6 +14,7 @@ import { BaseSheet } from '@/components/ui/base-sheet'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
+import { tablePagination } from '@/lib/pagination'
 
 import { LogsFilters } from './components/logs-filters'
 
@@ -197,20 +198,13 @@ export default function LogsIndex({ audits, filters }: LogsIndexProps) {
               <DataTable
                 columns={buildColumns(openView)}
                 data={audits?.data ?? []}
-                pagination={
-                  (audits?.metadata ?? audits?.meta)
-                    ? {
-                        page: (audits?.metadata ?? audits?.meta)?.currentPage ?? 1,
-                        pageSize: (audits?.metadata ?? audits?.meta)?.perPage ?? 10,
-                        total: (audits?.metadata ?? audits?.meta)?.total ?? 0,
-                        onPageChange: changePage,
-                        onPageSizeChange: (pageSize) => {
-                          changeRows(pageSize)
-                          changePage(1)
-                        },
-                      }
-                    : undefined
-                }
+                pagination={tablePagination(audits, {
+                  onPageChange: changePage,
+                  onPageSizeChange: (pageSize) => {
+                    changeRows(pageSize)
+                    changePage(1)
+                  },
+                })}
                 emptyMessage='No audit events found'
               />
             </div>
