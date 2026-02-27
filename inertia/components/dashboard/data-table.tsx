@@ -89,6 +89,8 @@ interface DataTableProps<T extends { id?: string | number }> {
     action: (ids: string[]) => void | Promise<void>
     variant?: 'default' | 'destructive' | 'outline'
   }[]
+  /** Optional content rendered on the same row as search (e.g. filter tabs) */
+  toolbarStart?: React.ReactNode
 }
 
 export function DataTable<T extends { id?: string | number }>({
@@ -114,6 +116,7 @@ export function DataTable<T extends { id?: string | number }>({
   onFiltersChange,
   initialFilters,
   bulkActions = [],
+  toolbarStart,
 }: DataTableProps<T>) {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchValue ?? '')
   const searchTimerRef = useRef<NodeJS.Timeout | null>(null)
@@ -295,6 +298,7 @@ export function DataTable<T extends { id?: string | number }>({
       {/* Search and Filter Bar */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='flex flex-1 items-center gap-2'>
+          {toolbarStart}
           {searchable && (
             <div className='relative flex-1 max-w-sm'>
               <IconSearch className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />

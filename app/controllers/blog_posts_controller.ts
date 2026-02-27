@@ -43,7 +43,10 @@ export default class BlogPostsController {
   async adminIndex({ request, inertia }: HttpContext) {
     const params = await request.paginationQs()
     const env = request.appEnv()
+    const status = params.status ?? 'all'
     const posts = await BlogPost.query({ connection: env })
+      .if(status === 'published', (q) => q.whereNotNull('publishedAt'))
+      .if(status === 'draft', (q) => q.whereNull('publishedAt'))
       .orderByRaw('published_at DESC NULLS LAST')
       .orderBy('createdAt', 'desc')
       .if(params.search, (q) => {

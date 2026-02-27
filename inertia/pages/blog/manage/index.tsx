@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
-import { BlogStatusBadge, isPublished } from '@/components/blog'
+import { BlogStatusBadge } from '@/components/blog'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
@@ -14,17 +14,28 @@ import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { tablePagination } from '@/lib/pagination'
 
+type StatusFilter = 'all' | 'published' | 'draft'
+
 interface BlogAdminIndexProps extends SharedProps {
   posts?: PaginatedResponse<RawBlogPost>
 }
 
+const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'published', label: 'Published' },
+  { value: 'draft', label: 'Draft' },
+]
+
 export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
   const [isDeletingId, setIsDeletingId] = useState<number | null>(null)
-  const { changePage, changeRows, searchTable, query } = useInertiaParams({
+  const { changePage, changeRows, searchTable, query, updateQuery } = useInertiaParams({
     page: 1,
     perPage: 10,
     search: '',
+    status: 'all',
   })
+
+  const currentStatus = (query.status as StatusFilter) || 'all'
 
 
   const columns: Column<RawBlogPost>[] = [
@@ -111,6 +122,25 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
             searchPlaceholder='Search posts...'
             searchValue={String(query.search || '')}
             onSearchChange={(value) => searchTable(String(value || ''))}
+            toolbarStart={
+              <div className='flex items-center gap-2 shrink-0'>
+
+                <div className='flex rounded-lg border border-border p-0.5 bg-muted/30'>
+                  {STATUS_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type='button'
+                      onClick={() => updateQuery({ status: opt.value, page: 1 })}
+                      className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${currentStatus === opt.value
+                          ? 'bg-background text-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground'
+                        }`}>
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            }
             pagination={tablePagination(posts, {
               onPageChange: changePage,
               onPageSizeChange: changeRows,
