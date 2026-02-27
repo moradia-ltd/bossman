@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
-import { IconArrowLeft, IconCalendar, IconClock } from '@tabler/icons-react'
+import { IconArrowLeft, IconCalendar, IconClock, IconPencil } from '@tabler/icons-react'
 
 import type { RawBlogPost } from '#types/model-types'
 import { BlogBodyRenderer } from '@/components/blog/blog-body-renderer'
@@ -59,9 +59,14 @@ export default function BlogShow({ post }: BlogShowProps) {
 
         <div className='max-w-screen-xl mx-auto px-6 py-10 space-y-8'>
           <div>
-            <Button variant='ghost' asChild leftIcon={<IconArrowLeft className='h-4 w-4' />}>
-              <Link href='/blog'>Back to blog</Link>
-            </Button>
+            <div className='flex flex-wrap items-center gap-2'>
+              <Button variant='ghost' asChild leftIcon={<IconArrowLeft className='h-4 w-4' />}>
+                <Link href='/blog'>Back to blog</Link>
+              </Button>
+              <Button variant='outline' size='sm' asChild leftIcon={<IconPencil className='h-4 w-4' />}>
+                <Link href={`/blog/manage/${post.id}/edit`}>Edit</Link>
+              </Button>
+            </div>
           </div>
 
           <div className='grid gap-8'>

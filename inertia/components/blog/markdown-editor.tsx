@@ -5,6 +5,16 @@ import {
   quotePlugin,
   thematicBreakPlugin,
   markdownShortcutPlugin,
+  toolbarPlugin,
+  linkPlugin,
+  linkDialogPlugin,
+  UndoRedo,
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  ListsToggle,
+  CreateLink,
+  InsertThematicBreak,
+  Separator,
   type MDXEditorMethods,
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
@@ -53,21 +63,50 @@ export function MarkdownEditor({
   return (
     <div
       className={cn(
-        'rounded-lg border border-input bg-background overflow-hidden',
+        'rounded-lg border border-input bg-background overflow-hidden markdown-editor-wrapper max-h-[420px] flex flex-col',
         className,
       )}>
+      <style>{`
+        .markdown-editor-wrapper ul { list-style-type: disc; padding-left: 1.5rem; margin: 0.5em 0; }
+        .markdown-editor-wrapper ol { list-style-type: decimal; padding-left: 1.5rem; margin: 0.5em 0; }
+        .markdown-editor-wrapper li { margin: 0.25em 0; display: list-item; }
+        .markdown-editor-wrapper li ul,
+        .markdown-editor-wrapper li ol { margin: 0.25em 0; }
+        .markdown-editor-wrapper .mdxeditor-root { max-height: 100%; display: flex; flex-direction: column; min-height: 0; }
+        .markdown-editor-wrapper .mdxeditor-content-scroll { overflow-y: auto !important; max-height: 360px; min-height: 240px; }
+      `}</style>
       <MDXEditor
         ref={ref}
         markdown={value}
         onChange={onChange}
+        contentEditableClassName="mdxeditor-content-scroll"
         plugins={[
+          toolbarPlugin({
+            toolbarContents: () => (
+              <>
+                <UndoRedo />
+                <Separator />
+                <BlockTypeSelect />
+                <Separator />
+                <BoldItalicUnderlineToggles />
+                <CreateLink />
+                <ListsToggle />
+                <InsertThematicBreak />
+              </>
+            ),
+            toolbarClassName: 'border-b border-border bg-muted/30 px-2 py-1 gap-1 flex-wrap shrink-0',
+          }),
+          linkPlugin(),
+          linkDialogPlugin(),
           headingsPlugin(),
           listsPlugin(),
           quotePlugin(),
           thematicBreakPlugin(),
           markdownShortcutPlugin(),
         ]}
-        className="min-h-[280px] prose prose-sm dark:prose-invert max-w-none"
+        className={cn(
+          'min-h-0 flex-1 flex flex-col prose prose-sm dark:prose-invert max-w-none',
+        )}
       />
     </div>
   )

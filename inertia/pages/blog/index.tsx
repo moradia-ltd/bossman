@@ -79,24 +79,51 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
                 ) : null}
 
                 {meta ? (
-                  <HStack justify='between' align='center' className='flex-col sm:flex-row'>
-                    <div className='text-sm text-muted-foreground'>
-                      Page {meta.currentPage} of {meta.lastPage} • {meta.total} posts
+                  <HStack justify='between' align='center' className='flex-col sm:flex-row gap-4'>
+                    <div className='flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground'>
+                      <span>
+                        Page {meta.currentPage} of {meta.lastPage} • {meta.total} posts
+                      </span>
+                      <span className='inline-flex items-center gap-1 flex-wrap'>
+                        Show
+                        {[12, 24, 48].map((n, i) => (
+                          <span key={n} className='inline-flex items-center'>
+                            {i > 0 ? ' · ' : null}
+                            <Link
+                              href={`/blog?page=1&perPage=${n}`}
+                              className={
+                                meta.perPage === n
+                                  ? 'font-medium text-foreground'
+                                  : 'hover:text-foreground underline-offset-2 hover:underline'
+                              }>
+                              {n}
+                            </Link>
+                          </span>
+                        ))}
+                      </span>
                     </div>
-                    <HStack spacing={2}>
+                    <HStack spacing={2} align='center'>
                       <Button
                         variant='outline'
+                        size='sm'
                         disabled={meta.currentPage <= 1}
                         asChild={meta.currentPage > 1}>
-                        <Link href='/blog' data={{ page: meta.currentPage - 1 }}>
+                        <Link
+                          href={
+                            meta.currentPage <= 1
+                              ? '/blog'
+                              : `/blog?page=${meta.currentPage - 1}&perPage=${meta.perPage}`
+                          }>
                           Previous
                         </Link>
                       </Button>
                       <Button
                         variant='outline'
+                        size='sm'
                         disabled={meta.currentPage >= meta.lastPage}
                         asChild={meta.currentPage < meta.lastPage}>
-                        <Link href='/blog' data={{ page: meta.currentPage + 1 }}>
+                        <Link
+                          href={`/blog?page=${meta.currentPage + 1}&perPage=${meta.perPage}`}>
                           Next
                         </Link>
                       </Button>
