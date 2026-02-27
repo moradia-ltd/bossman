@@ -260,8 +260,10 @@ export function DataTable<T extends { id?: string | number }>({
   // Inject scoped CSS so column widths apply reliably (inline styles can be overridden by Tailwind/global CSS)
   const columnWidthCss = useMemo(() => {
     const totalFlex = columns.reduce((sum, col) => sum + (col.flex ?? 0), 0)
-    const selector = (n: number) =>
+    const thTdSelector = (n: number) =>
       `[data-dt-columns="${tableScopeId}"] table th:nth-child(${n}), [data-dt-columns="${tableScopeId}"] table td:nth-child(${n})`
+    const colSelector = (n: number) =>
+      `[data-dt-columns="${tableScopeId}"] table colgroup col:nth-child(${n})`
     return columns
       .map((col, idx) => {
         const n = selectable ? idx + 2 : idx + 1
@@ -274,13 +276,15 @@ export function DataTable<T extends { id?: string | number }>({
         else if (minW) width = minW
         if (!minW && !maxW && !width) return ''
         const decls = [
-          minW && `min-width: ${minW}`,
-          maxW && `max-width: ${maxW}`,
-          width && `width: ${width}`,
+          minW && `min-width: ${minW} !important`,
+          maxW && `max-width: ${maxW} !important`,
+          width && `width: ${width} !important`,
         ]
           .filter(Boolean)
           .join('; ')
-        return `${selector(n)} { ${decls} }`
+        const thTdRule = `${thTdSelector(n)} { ${decls} }`
+        const colRule = `${colSelector(n)} { ${decls} }`
+        return `${thTdRule}\n${colRule}`
       })
       .filter(Boolean)
       .join('\n')
