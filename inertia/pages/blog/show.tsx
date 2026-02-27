@@ -4,6 +4,7 @@ import { IconArrowLeft, IconCalendar, IconClock, IconPencil } from '@tabler/icon
 import type { RawBlogPost } from '#types/model-types'
 import { BlogBodyRenderer } from '@/components/blog/blog-body-renderer'
 import { PublicLayout } from '@/components/layouts/public'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 
@@ -12,12 +13,18 @@ interface BlogShowProps {
 }
 
 function getCoverImageUrl(post: RawBlogPost): string | null {
+  console.log("🚀 ~ getCoverImageUrl ~ post:", post)
+
   const c = post.coverImage
-  if (c && typeof c === 'object' && 'url' in c && typeof (c as { url?: string }).url === 'string')
-    return (c as { url: string }).url
+  if (c && typeof c === 'object' && 'url' in c && typeof (c as { url?: string }).url === 'string') {
+    const u = (c as { url: string }).url.trim()
+    if (u) return u
+  }
   const alt = post.coverImageAltUrl
-  if (alt && typeof alt === 'string' && (alt.startsWith('http://') || alt.startsWith('https://')))
-    return alt
+  if (alt) {
+    const u = alt.trim()
+    if (u) return u
+  }
   return null
 }
 
@@ -50,6 +57,7 @@ export default function BlogShow({ post }: BlogShowProps) {
   const publishedLabel = post.publishedAt ? formatDate(post.publishedAt) : null
   const minutes = getReadingMinutes(post.excerpt || '')
   const coverUrl = getCoverImageUrl(post)
+  console.log("🚀 ~ BlogShow ~ coverUrl:", coverUrl)
 
   return (
     <PublicLayout>
@@ -86,6 +94,9 @@ export default function BlogShow({ post }: BlogShowProps) {
 
               <div className='space-y-3'>
                 <div className='flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground'>
+                  <Badge variant={post.publishedAt ? 'default' : 'secondary'} className='shrink-0'>
+                    {post.publishedAt ? 'Published' : 'Draft'}
+                  </Badge>
                   {publishedLabel ? (
                     <span className='inline-flex items-center gap-1 text-xs text-muted-foreground'>
                       <IconCalendar className='h-3.5 w-3.5' />

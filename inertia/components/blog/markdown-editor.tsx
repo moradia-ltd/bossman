@@ -9,18 +9,54 @@ import {
   linkPlugin,
   linkDialogPlugin,
   UndoRedo,
-  BlockTypeSelect,
+  ButtonWithTooltip,
   BoldItalicUnderlineToggles,
   ListsToggle,
   CreateLink,
   InsertThematicBreak,
   Separator,
+  applyBlockType$,
+  usePublisher,
   type MDXEditorMethods,
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+
+type BlockType = 'paragraph' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'quote'
+
+const BLOCK_BUTTONS: { value: BlockType; label: string; title: string }[] = [
+  { value: 'paragraph', label: 'P', title: 'Paragraph' },
+  { value: 'h1', label: 'H1', title: 'Heading 1' },
+  { value: 'h2', label: 'H2', title: 'Heading 2' },
+  { value: 'h3', label: 'H3', title: 'Heading 3' },
+  { value: 'h4', label: 'H4', title: 'Heading 4' },
+  { value: 'h5', label: 'H5', title: 'Heading 5' },
+  { value: 'h6', label: 'H6', title: 'Heading 6' },
+  { value: 'quote', label: '❝', title: 'Quote' },
+]
+
+/** Toolbar block-type buttons that apply heading/quote/paragraph via applyBlockType$ */
+function BlockTypeButtons() {
+  const applyBlock = usePublisher(applyBlockType$)
+  return (
+    <>
+      {BLOCK_BUTTONS.map(({ value, label, title }) => (
+        <ButtonWithTooltip
+          key={value}
+          title={title}
+          onPointerDown={(e) => {
+            e.preventDefault()
+            applyBlock(value)
+          }}
+        >
+          {label}
+        </ButtonWithTooltip>
+      ))}
+    </>
+  )
+}
 
 export interface MarkdownEditorProps {
   value: string
@@ -97,7 +133,7 @@ export function MarkdownEditor({
               <>
                 <UndoRedo />
                 <Separator />
-                <BlockTypeSelect />
+                <BlockTypeButtons />
                 <Separator />
                 <BoldItalicUnderlineToggles />
                 <CreateLink />

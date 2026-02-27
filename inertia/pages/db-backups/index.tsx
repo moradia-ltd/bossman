@@ -45,9 +45,11 @@ const baseColumns: Column<RawDbBackup>[] = [
   {
     key: 'filePath',
     header: 'File path',
+    minWidth: 320,
+    flex: 1,
     cell: (row) => (
-      <span className='font-mono text-sm' title={row.filePath ?? undefined}>
-        {row.fileName ?? '—'}
+      <span className='font-mono text-sm break-all' title={row.filePath ?? undefined}>
+        {row.filePath}
       </span>
     ),
   },

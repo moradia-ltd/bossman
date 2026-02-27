@@ -30,6 +30,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
     search: '',
   })
 
+
   const columns: Column<RawBlogPost>[] = [
     {
       key: 'title',
@@ -37,18 +38,13 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
       sortable: true,
       cell: (row) => (
         <div className='space-y-1'>
-          <div className='font-medium'>{row.title}</div>
-          <div className='text-xs text-muted-foreground'>/{row.slug}</div>
+          <div className='flex items-center gap-2 flex-wrap'>
+            <span className='font-medium'>{row.title}</span>
+            <Badge variant={isPublished(row) ? 'default' : 'secondary'} className='shrink-0'>
+              {isPublished(row) ? 'Published' : 'Draft'}
+            </Badge>
+          </div>
         </div>
-      ),
-    },
-    {
-      key: 'status',
-      header: 'Status',
-      cell: (row) => (
-        <Badge variant={isPublished(row) ? 'default' : 'secondary'}>
-          {isPublished(row) ? 'Published' : 'Draft'}
-        </Badge>
       ),
     },
     {
@@ -61,11 +57,11 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
       header: 'Actions',
       cell: (row) => (
         <div className='flex items-center justify-end gap-2'>
-          <Button variant='ghost' size='icon' asChild>
-            <Link href={`/blog/manage/${row.id}/edit`}>
-              <IconEdit className='h-4 w-4' />
-            </Link>
-          </Button>
+          <Link href={`/blog/manage/${row.id}/edit`}  >
+            <Button variant='ghost' size='icon' asChild leftIcon={<IconEdit className='h-4 w-4' />}>
+              Edit
+            </Button>
+          </Link>
           {row.publishedAt ? (
             <Button variant='ghost' size='icon' asChild>
               <Link href={`/blog/${row.slug}`}>View</Link>
@@ -74,6 +70,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
           <Button
             variant='ghost'
             size='icon'
+            leftIcon={<IconTrash className='h-4 w-4' />}
             className='text-destructive hover:text-destructive'
             isLoading={isDeletingId === row.id}
             onClick={() => {
@@ -84,7 +81,6 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
                 onFinish: () => setIsDeletingId(null),
               })
             }}>
-            <IconTrash className='h-4 w-4' />
           </Button>
         </div>
       ),
@@ -123,9 +119,9 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
               searchValue={String(query.search || '')}
               onSearchChange={(value) => searchTable(String(value || ''))}
               pagination={{
-                page: posts?.meta?.currentPage ?? 1,
-                pageSize: posts?.meta?.perPage ?? 10,
-                total: posts?.meta?.total ?? 0,
+                page: posts?.metadata?.currentPage ?? 1,
+                pageSize: posts?.metadata?.perPage ?? 10,
+                total: posts?.metadata?.total ?? 0,
                 onPageChange: changePage,
                 onPageSizeChange: changeRows,
               }}

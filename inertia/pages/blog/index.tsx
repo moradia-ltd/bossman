@@ -36,9 +36,10 @@ interface BlogIndexProps extends SharedProps {
 
 export default function BlogIndex({ posts }: BlogIndexProps) {
   const data = posts?.data ?? []
-  const meta = posts?.meta
-  const featured = data[0]
-  const rest = data.slice(1)
+  const meta = posts?.metadata
+  const isFirstPage = !meta || meta.currentPage === 1
+  const featured = isFirstPage ? data[0] : null
+  const rest = isFirstPage ? data.slice(1) : data
 
   return (
     <PublicLayout>
@@ -143,9 +144,9 @@ function FeaturedPostCard({ post }: { post: RawBlogPost }) {
   return (
     <Link href={`/blog/${post.slug}`} className='group block'>
       <Card className='overflow-hidden'>
-        <div className='grid gap-0 lg:grid-cols-[1.2fr_1fr]'>
-          <div className='relative bg-muted'>
-            <div className='aspect-[16/9] lg:aspect-auto lg:h-full'>
+        <div className='grid gap-0 lg:grid-cols-[1.2fr_1fr] lg:max-h-52'>
+          <div className='relative bg-muted min-h-0'>
+            <div className='aspect-[16/9] lg:aspect-auto lg:h-full lg:max-h-52'>
               {getCoverImageUrl(post) ? (
                 <img
                   src={getCoverImageUrl(post)!}
@@ -158,29 +159,28 @@ function FeaturedPostCard({ post }: { post: RawBlogPost }) {
               )}
             </div>
             <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent' />
-            <div className='absolute bottom-4 left-4 right-4'>
+            <div className='absolute bottom-3 left-3 right-3'>
               <HStack spacing={2} wrap align='center'>
                 <MetaDateAndReadTime post={post} className='text-white/90' />
               </HStack>
             </div>
           </div>
 
-          <div className='p-6 lg:p-8'>
-            <Stack spacing={4} className='h-full'>
-              <Stack spacing={2}>
+          <div className='p-4 lg:p-5 min-h-0'>
+            <Stack spacing={3} className='h-full'>
+              <Stack spacing={1.5}>
                 <div className='text-xs text-muted-foreground'>Featured</div>
-                <div className='text-2xl sm:text-3xl font-bold tracking-tight group-hover:underline'>
+                <div className='text-xl sm:text-2xl font-bold tracking-tight group-hover:underline'>
                   {post.title}
                 </div>
                 {post.excerpt ? (
-                  <p className='text-muted-foreground text-sm sm:text-base line-clamp-3'>
+                  <p className='text-muted-foreground text-sm line-clamp-2'>
                     {post.excerpt}
                   </p>
                 ) : null}
               </Stack>
 
               <HStack justify='between' align='center' className='mt-auto gap-4'>
-                {/* <AuthorRow post={post} /> */}
                 <HStack spacing={1} align='center' className='text-sm font-medium'>
                   Read
                   <IconArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-0.5' />
