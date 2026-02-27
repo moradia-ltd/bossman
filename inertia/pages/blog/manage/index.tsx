@@ -5,21 +5,17 @@ import { useState } from 'react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
+import { BlogStatusBadge, isPublished } from '@/components/blog'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 
 interface BlogAdminIndexProps extends SharedProps {
   posts?: PaginatedResponse<RawBlogPost>
-}
-
-function isPublished(post: RawBlogPost) {
-  return Boolean(post.publishedAt)
 }
 
 export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
@@ -40,9 +36,7 @@ export default function BlogAdminIndex({ posts }: BlogAdminIndexProps) {
         <div className='space-y-1'>
           <div className='flex items-center gap-2 flex-wrap'>
             <span className='font-medium'>{row.title}</span>
-            <Badge variant={isPublished(row) ? 'default' : 'secondary'} className='shrink-0'>
-              {isPublished(row) ? 'Published' : 'Draft'}
-            </Badge>
+            <BlogStatusBadge post={row} className='shrink-0' />
           </div>
         </div>
       ),

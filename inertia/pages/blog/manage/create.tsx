@@ -2,22 +2,19 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Head, Link, useForm } from '@inertiajs/react'
 import { IconPlus } from '@tabler/icons-react'
 
+import { COVER_PHOTO_OPTIONS } from '@/components/blog'
+import { MarkdownEditor } from '@/components/blog/markdown-editor'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { MarkdownEditor } from '@/components/blog/markdown-editor'
 import { FormField } from '@/components/ui/form_field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 
-const COVER_PHOTO_OPTIONS = [
-  { value: false, label: 'Upload photo', description: 'Upload an image file' },
-  { value: true, label: 'Link', description: 'Use an image URL' },
-] as const
 
 interface BlogAdminCreateProps extends SharedProps {}
 

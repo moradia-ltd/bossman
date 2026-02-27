@@ -3,6 +3,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react'
 import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react'
 
 import type { RawBlogPost } from '#types/model-types'
+import { COVER_PHOTO_OPTIONS, getInitialIsUploadedPhotoLink } from '@/components/blog'
 import { MarkdownEditor } from '@/components/blog/markdown-editor'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -15,16 +16,6 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 
-const COVER_PHOTO_OPTIONS = [
-  { value: false, label: 'Upload photo', description: 'Upload an image file' },
-  { value: true, label: 'Link', description: 'Use an image URL' },
-] as const
-
-function getInitialIsUploadedPhotoLink(post: RawBlogPost): boolean {
-  const alt = post.coverImageAltUrl
-  if (alt && (alt.startsWith('http://') || alt.startsWith('https://'))) return true
-  return false
-}
 
 interface BlogAdminEditProps extends SharedProps {
   post: RawBlogPost
