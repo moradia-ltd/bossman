@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawDbBackup } from '#types/model-types'
 import { timeAgo } from '#utils/date'
+import { formatFileSize } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
@@ -29,13 +30,8 @@ import {
 import { Stack } from '@/components/ui/stack'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { type ServerErrorResponse, serverErrorResponder } from '@/lib/error'
+import { getFilenameFromContentDisposition } from '@/lib/download'
 import api from '@/lib/http'
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
 
 interface DbBackupsIndexProps extends SharedProps {
   backups: PaginatedResponse<RawDbBackup>
@@ -66,12 +62,6 @@ const baseColumns: Column<RawDbBackup>[] = [
     cell: (row) => timeAgo(row.createdAt ?? ''),
   },
 ]
-
-function getFilenameFromContentDisposition(header: string | null): string | null {
-  if (!header) return null
-  const match = header.match(/filename="?([^";\n]+)"?/)
-  return match ? match[1].trim() : null
-}
 
 export default function DbBackupsIndex({ backups }: DbBackupsIndexProps) {
   const { changePage, changeRows } = useInertiaParams({ page: 1, perPage: 20 })

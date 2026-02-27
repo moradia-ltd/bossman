@@ -1,16 +1,14 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
-import { Head, Link, router } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import { useQuery } from '@tanstack/react-query'
-import { IconCalendar, IconChevronRight, IconServer } from '@tabler/icons-react'
+import { IconServer } from '@tabler/icons-react'
 import { useMemo } from 'react'
 import pluralize from 'pluralize'
 
-import { timeAgo } from '#utils/date'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { EmptyState, LoadingSkeleton } from '@/components/ui'
 import { AppCard } from '@/components/ui/app-card'
-import { Card } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -18,54 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ProjectCard } from '@/components/servers/project-card'
+import { SORT_OPTIONS, sortProjects, type SortValue, type SortableProject } from '@/components/servers/sort-utils'
 import { startCase } from '#utils/functions'
 import api from '@/lib/http'
-
-interface RailwayProject {
-  id: string
-  name: string
-  description: string | null
-  createdAt: string
-  updatedAt: string
-}
-
-const SORT_VALUES = [
-  'updatedAt:desc',
-  'updatedAt:asc',
-  'name:asc',
-  'name:desc',
-  'createdAt:desc',
-  'createdAt:asc',
-] as const
-
-type SortValue = (typeof SORT_VALUES)[number]
-
-const SORT_LABELS: Record<SortValue, string> = {
-  'updatedAt:desc': 'Updated (newest first)',
-  'updatedAt:asc': 'Updated (oldest first)',
-  'name:asc': 'Name A–Z',
-  'name:desc': 'Name Z–A',
-  'createdAt:desc': 'Created (newest first)',
-  'createdAt:asc': 'Created (oldest first)',
-}
-
-const SORT_OPTIONS = SORT_VALUES.map((value) => ({
-  value,
-  label: SORT_LABELS[value],
-}))
-
-function sortProjects(projects: RailwayProject[], sort: SortValue): RailwayProject[] {
-  const [field, order] = sort.split(':') as [keyof RailwayProject, 'asc' | 'desc']
-  return [...projects].sort((a, b) => {
-    const aVal = a[field]
-    const bVal = b[field]
-    if (aVal == null && bVal == null) return 0
-    if (aVal == null) return order === 'asc' ? -1 : 1
-    if (bVal == null) return order === 'asc' ? 1 : -1
-    const cmp = String(aVal).localeCompare(String(bVal), undefined, { numeric: true })
-    return order === 'asc' ? cmp : -cmp
-  })
-}
 
 interface ServersIndexProps extends SharedProps {
   sort: string
@@ -75,7 +29,7 @@ export default function ServersIndex({ sort }: ServersIndexProps) {
   const { data: projects = [], isLoading, error } = useQuery({
     queryKey: ['railway', 'projects'],
     queryFn: async () => {
-      const res = await api.get<RailwayProject[]>(
+      const res = await api.get<SortableProject[]>(
         '/railway/projects' as Parameters<typeof api.get>[0],
       )
       return res.data ?? []
@@ -134,29 +88,7 @@ export default function ServersIndex({ sort }: ServersIndexProps) {
             className='space-y-6'>
             <div className='grid gap-5 sm:grid-cols-2 xl:grid-cols-3'>
               {sortedProjects.map((project) => (
-                <Link
-                  key={project.id}
-                  href={`/servers/${project.id}?name=${encodeURIComponent(project.name)}`}>
-                  <Card className='group relative overflow-hidden border-border bg-card transition-all duration-200 hover:border-primary/30 hover:shadow-md'>
-                    <div className='flex w-full flex-col items-stretch gap-4 p-5 text-left'>
-                      <div className='flex items-start justify-between gap-3'>
-                        <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary ring-1 ring-primary/20'>
-                          <IconServer className='h-6 w-6' />
-                        </div>
-                        <IconChevronRight className='h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5' />
-                      </div>
-                      <div className='min-w-0 flex-1 space-y-1'>
-                        <h3 className='truncate text-base font-semibold tracking-tight text-foreground'>
-                          {project.name}
-                        </h3>
-                      </div>
-                      <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-                        <IconCalendar className='h-3.5 w-3.5 shrink-0' />
-                        <span>Updated {timeAgo(project.updatedAt)}</span>
-                      </div>
-                    </div>
-                  </Card>
-                </Link>
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
             {sortedProjects.length === 0 && (

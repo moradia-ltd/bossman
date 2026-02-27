@@ -9,7 +9,7 @@ import { DataTable } from '@/components/dashboard/data-table'
 import { AppCard } from '@/components/ui/app-card'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
-import { StatusBadge } from '@/pages/leases/components/status'
+import { LeaseStatusBadge } from '@/components/leases/status-badge'
 
 const columns: Column<RawLease>[] = [
   {
@@ -27,7 +27,7 @@ const columns: Column<RawLease>[] = [
     key: 'status',
     header: 'Status',
     width: 140,
-    cell: (row) => <StatusBadge status={row.status} />,
+    cell: (row) => <LeaseStatusBadge status={row.status} />,
   },
   {
     key: 'rentAmount',

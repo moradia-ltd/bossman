@@ -4,17 +4,16 @@ import { IconActivity, IconFileText, IconUsers } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
-import type { Column, PaginatedResponse } from '#types/extra'
+import type { PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
-import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
+import { activityColumns } from '@/components/dashboard/activity-columns'
 import { DataTable } from '@/components/dashboard/data-table'
 import { ActivityPerWeekChart, GrowthChart } from '@/components/dashboard/growth-chart'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { AppCard } from '@/components/ui/app-card'
-import { Badge } from '@/components/ui/badge'
 import type { ChartConfig } from '@/components/ui/chart'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import api from '@/lib/http'
@@ -29,37 +28,6 @@ type DashboardStats = {
     activityByWeek: { date: string; count: number }[]
   }
 }
-
-const activityColumns: Column<RawActivity>[] = [
-  { key: 'summary', header: 'Summary' },
-  {
-    key: 'type',
-    header: 'Type',
-    width: 120,
-    cell: (row) => (
-      <Badge variant='secondary' className='capitalize'>
-        {row.type ?? '—'}
-      </Badge>
-    ),
-  },
-  {
-    key: 'isSystemAction',
-    header: 'Source',
-    width: 190,
-    cell: (row) =>
-      row.isSystemAction ? (
-        <Badge variant='secondary'>System</Badge>
-      ) : (
-        <Badge variant='outline'>{row.user?.name ?? '—'}</Badge>
-      ),
-  },
-  {
-    key: 'createdAt',
-    header: 'When',
-    width: 140,
-    cell: (row) => (row.createdAt ? timeAgo(row.createdAt) : '—'),
-  },
-]
 
 const usersChartConfig = {
   count: { label: 'Users', color: 'var(--chart-1)' },

@@ -9,18 +9,17 @@ import { formatCurrency } from '#utils/currency'
 import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
+import { DataAccessExpiredAlert } from '@/components/dashboard/data-access-expired-alert'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
+import { LeaseStatusBadge } from '@/components/leases/status-badge'
 import { LoadingSkeleton, Stack } from '@/components/ui'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AppCard } from '@/components/ui/app-card'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { dateFormatter } from '@/lib/date'
 import api from '@/lib/http'
-
-import { StatusBadge } from './components/status'
 
 interface LeasesIndexProps extends SharedProps {
   leases: PaginatedResponse<RawLease>
@@ -51,7 +50,7 @@ const columns: Column<RawLease>[] = [
     key: 'status',
     header: 'Status',
     width: 130,
-    cell: (row) => <StatusBadge status={row.status} />,
+    cell: (row) => <LeaseStatusBadge status={row.status} />,
   },
   {
     key: 'rentAmount',
@@ -104,17 +103,10 @@ export default function LeasesIndex({
       <div className='space-y-6'>
         <PageHeader title='Leases' description='All leases for your organisation.' />
 
-        {dataAccessExpired && (
-          <Alert variant='destructive'>
-            <IconAlertCircle className='h-4 w-4' />
-            <AlertTitle>Access expired</AlertTitle>
-            <AlertDescription>
-              Your access to properties and leases expired
-              {dataAccessExpiredAt ? ` on ${dateFormatter(dataAccessExpiredAt)}. ` : '. '}
-              Contact your administrator to restore access.
-            </AlertDescription>
-          </Alert>
-        )}
+        <DataAccessExpiredAlert
+          expired={dataAccessExpired}
+          expiredAt={dataAccessExpiredAt}
+        />
 
         <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={4}>
           <StatCard

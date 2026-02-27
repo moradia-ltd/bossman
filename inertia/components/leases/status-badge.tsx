@@ -2,8 +2,12 @@ import { IconAlertCircle, IconCircleCheck, IconCircleX } from '@tabler/icons-rea
 
 import { Badge } from '@/components/ui/badge'
 
-//  if active green, if pending yellow, if terminated red, if inactive grey
-function StatusBadge({ status }: { status: string }) {
+export interface LeaseStatusBadgeProps {
+  status: string
+}
+
+/** Renders a lease status badge (active, pending, terminated, inactive). */
+export function LeaseStatusBadge({ status }: LeaseStatusBadgeProps) {
   switch (status) {
     case 'active':
       return (
@@ -37,5 +41,3 @@ function StatusBadge({ status }: { status: string }) {
       return <Badge variant='outline'>{status}</Badge>
   }
 }
-
-export { StatusBadge }

@@ -1,17 +1,17 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
-import { IconAlertCircle, IconBuilding, IconHome, IconMapPin } from '@tabler/icons-react'
+import { IconBuilding, IconHome, IconMapPin } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLeaseableEntity } from '#types/model-types'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
+import { DataAccessExpiredAlert } from '@/components/dashboard/data-access-expired-alert'
 import { DashboardLayout } from '@/components/dashboard/layout'
 import { PageHeader } from '@/components/dashboard/page_header'
 import { StatCard } from '@/components/dashboard/stat-card'
 import { LoadingSkeleton } from '@/components/ui'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { SimpleGrid } from '@/components/ui/simplegrid'
@@ -92,17 +92,10 @@ export default function LeaseableEntitiesIndex({
           description='Standalone properties and blocks of properties available for lease.'
         />
 
-        {dataAccessExpired && (
-          <Alert variant='destructive'>
-            <IconAlertCircle className='h-4 w-4' />
-            <AlertTitle>Access expired</AlertTitle>
-            <AlertDescription>
-              Your access to properties and leases expired
-              {dataAccessExpiredAt ? ` on ${dateFormatter(dataAccessExpiredAt)}. ` : '. '}
-              Contact your administrator to restore access.
-            </AlertDescription>
-          </Alert>
-        )}
+        <DataAccessExpiredAlert
+          expired={Boolean(dataAccessExpired)}
+          expiredAt={dataAccessExpiredAt}
+        />
 
         <SimpleGrid cols={{ base: 1, md: 3 }} spacing={4}>
           <StatCard

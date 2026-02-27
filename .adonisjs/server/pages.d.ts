@@ -32,7 +32,6 @@ declare module '@adonisjs/inertia/types' {
     'forgot-password': ExtractProps<(typeof import('../../inertia/pages/forgot-password.tsx'))['default']>
     'leases/components/activity-tab': ExtractProps<(typeof import('../../inertia/pages/leases/components/activity-tab.tsx'))['default']>
     'leases/components/payments-tab': ExtractProps<(typeof import('../../inertia/pages/leases/components/payments-tab.tsx'))['default']>
-    'leases/components/status': ExtractProps<(typeof import('../../inertia/pages/leases/components/status.tsx'))['default']>
     'leases/index': ExtractProps<(typeof import('../../inertia/pages/leases/index.tsx'))['default']>
     'leases/show': ExtractProps<(typeof import('../../inertia/pages/leases/show.tsx'))['default']>
     'login': ExtractProps<(typeof import('../../inertia/pages/login.tsx'))['default']>

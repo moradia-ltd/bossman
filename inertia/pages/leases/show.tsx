@@ -17,7 +17,7 @@ import { dateFormatter } from '@/lib/date'
 
 import { ActivityTab } from './components/activity-tab'
 import { PaymentsTab } from './components/payments-tab'
-import { StatusBadge } from './components/status'
+import { LeaseStatusBadge } from '@/components/leases/status-badge'
 
 interface LeaseShowProps extends SharedProps {
   lease: RawLease
@@ -69,7 +69,7 @@ export default function LeaseShow({ lease }: LeaseShowProps) {
           <TabsContent value='details' className='space-y-6'>
             <AppCard title='Lease information' description='Details and identifiers'>
               <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-                <DetailRow label='Status' value={<StatusBadge status={lease.status} />} />
+                <DetailRow label='Status' value={<LeaseStatusBadge status={lease.status} />} />
                 <DetailRow label='Rent' value={formatCurrency(lease.rentAmount, lease.currency)} />
 
                 <DetailRow label='eLease' value={lease.isELease ? 'Yes' : 'No'} />
