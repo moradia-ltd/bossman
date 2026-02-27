@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppCard } from '@/components/ui/app-card'
 import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 
 function last7Days(): string[] {
@@ -73,13 +73,8 @@ export function ActivityPerWeekChart({ title, data, config }: ActivityPerWeekCha
   const seriesLabel = config.count?.label ?? 'Activity'
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className='text-sm font-medium'>{title}</CardTitle>
-        <CardDescription>Last 10 weeks</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={config} className='h-[200px] w-full'>
+    <AppCard title={title} description='Last 10 weeks'>
+      <ChartContainer config={config} className='h-[200px] w-full'>
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray='3 3' vertical={false} />
             <XAxis
@@ -113,8 +108,7 @@ export function ActivityPerWeekChart({ title, data, config }: ActivityPerWeekCha
             />
           </BarChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }
 
@@ -123,13 +117,8 @@ export function GrowthChart({ title, data, config }: GrowthChartProps) {
   const seriesLabel = config.count?.label ?? 'Count'
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className='text-sm font-medium'>{title}</CardTitle>
-        <CardDescription>Last 7 days</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={config} className='h-[200px] w-full'>
+    <AppCard title={title} description='Last 7 days'>
+      <ChartContainer config={config} className='h-[200px] w-full'>
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray='3 3' vertical={false} />
             <XAxis
@@ -163,8 +152,7 @@ export function GrowthChart({ title, data, config }: GrowthChartProps) {
             />
           </BarChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }
 
@@ -340,15 +328,11 @@ export function AnalyticsGrowthChart({
     : undefined
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className='text-sm font-medium'>{title}</CardTitle>
-        <CardDescription>
-          {new Date(startDate).toLocaleDateString()} – {new Date(endDate).toLocaleDateString()}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={config} className='h-[200px] w-full'>
+    <AppCard
+      title={title}
+      description={`${new Date(startDate).toLocaleDateString()} – ${new Date(endDate).toLocaleDateString()}`}
+    >
+      <ChartContainer config={config} className='h-[200px] w-full'>
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray='3 3' vertical={false} />
             <XAxis
@@ -389,7 +373,6 @@ export function AnalyticsGrowthChart({
             />
           </BarChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+    </AppCard>
   )
 }

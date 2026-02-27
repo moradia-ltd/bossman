@@ -8,9 +8,9 @@ import { timeAgo } from '#utils/date'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DashboardPage } from '@/components/dashboard/dashboard-page'
 import { LoadingSkeleton } from '@/components/ui'
+import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useInertiaParams } from '@/hooks/use-inertia-params'
 import { tablePagination } from '@/lib/pagination'
@@ -168,28 +168,25 @@ export default function PushNotificationsIndex({ notifications }: PushNotificati
       }
     >
       <Deferred data='notifications' fallback={<LoadingSkeleton type='table' />}>
-        <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
+        <AppCard
+          title={
+            <span className='flex items-center gap-2'>
               <IconBell className='h-5 w-5' />
               Notifications
-            </CardTitle>
-            <CardDescription>
-              {(notifications?.metadata ?? notifications?.meta)?.total ?? 0} total
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DataTable
-              columns={columns}
-              data={notifications?.data ?? []}
-              emptyMessage='No push notifications yet.'
-              pagination={tablePagination(notifications ?? null, {
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              })}
-            />
-          </CardContent>
-        </Card>
+            </span>
+          }
+          description={`${(notifications?.metadata ?? notifications?.meta)?.total ?? 0} total`}
+        >
+          <DataTable
+            columns={columns}
+            data={notifications?.data ?? []}
+            emptyMessage='No push notifications yet.'
+            pagination={tablePagination(notifications ?? null, {
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            })}
+          />
+        </AppCard>
       </Deferred>
     </DashboardPage>
   )

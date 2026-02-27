@@ -9,9 +9,9 @@ import {
 } from '@/components/blog'
 import { PublicLayout } from '@/components/layouts/public'
 import { LoadingSkeleton } from '@/components/ui'
+import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { HStack } from '@/components/ui/hstack'
 import { SimpleGrid } from '@/components/ui/simplegrid'
 
@@ -46,12 +46,9 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
 
           <Deferred data='posts' fallback={<LoadingSkeleton type='table' />}>
             {!data.length ? (
-              <Card className='p-10'>
-                <div className='text-center space-y-2'>
-                  <div className='text-lg font-semibold'>No posts yet</div>
-                  <div className='text-sm text-muted-foreground'>Check back soon for updates.</div>
-                </div>
-              </Card>
+              <AppCard title='No posts yet' description='Check back soon for updates.'>
+                <div className='text-center py-4' />
+              </AppCard>
             ) : (
               <>
                 {featured ? <BlogFeaturedPostCard post={featured} /> : null}
