@@ -128,6 +128,8 @@ export function Sidebar({ children }: SidebarProps) {
   } = useSidebar()
   const pageAccess = (page.props as { pageAccess?: string[] | null }).pageAccess
   const enableProdAccess = (page.props as { enableProdAccess?: boolean }).enableProdAccess ?? true
+  const showEnvironmentSwitcher =
+    (page.props as { showEnvironmentSwitcher?: boolean }).showEnvironmentSwitcher ?? false
 
   /** Maps nav href to the page key used in pageAccess (must match backend PAGE_KEY_TO_PATH). */
   const pathToPageKey = (href: string): string | null => {
@@ -348,7 +350,7 @@ export function Sidebar({ children }: SidebarProps) {
               Settings
             </DropdownMenuItem>
 
-            {enableProdAccess && (
+            {showEnvironmentSwitcher && (
               <>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>

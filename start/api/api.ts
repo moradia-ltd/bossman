@@ -88,13 +88,17 @@ router
       const appEnv = (session.get('appEnv') as 'dev' | 'prod' | undefined) ?? 'dev'
       return response.ok({ appEnv })
     })
-    router.put('update-env', async ({ request, session, response }) => {
+    router.put('update-env', async ({ request, session, response, auth }) => {
       const updateEnvValidator = vine.create(
         vine.object({
           appEnv: vine.enum(['dev', 'prod'] as const),
         }),
       )
-      const { appEnv } = await request.validateUsing(updateEnvValidator)
+      const { appEnv: requestedEnv } = await request.validateUsing(updateEnvValidator)
+      const user = auth.getUserOrFail()
+      // Prod-only users (invited with prod access) cannot switch; keep them on prod
+      const isProdOnly = user.enableProdAccess && !user.isGodAdmin
+      const appEnv = isProdOnly ? ('prod' as const) : requestedEnv
       session.put('appEnv', appEnv)
       return response.ok({ message: 'Environment updated successfully', appEnv })
     })

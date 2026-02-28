@@ -2,9 +2,10 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Link } from '@inertiajs/react'
 import { IconAlertCircle, IconCircleCheck, IconCircleX, IconFileText } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
+import { usePage } from '@inertiajs/react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
-import type { RawLease } from '#types/model-types'
+import type { RawLease, RawUser } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
 import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
@@ -84,6 +85,9 @@ export default function LeasesIndex({
   dataAccessExpired = false,
   dataAccessExpiredAt = null,
 }: LeasesIndexProps) {
+  const page = usePage()
+  const user = page.props.user as RawUser | undefined
+  const isGodAdmin = Boolean(user?.isGodAdmin)
   const { changePage, changeRows, searchTable, query } = useInertiaParams({
     page: 1,
     perPage: 20,
@@ -94,6 +98,7 @@ export default function LeasesIndex({
     queryKey: ['leases-stats2'],
     queryFn: async () => await api.get<Stats>('/leases/stats'),
     select: (data) => data?.data,
+    enabled: isGodAdmin,
   })
 
   return (
@@ -103,6 +108,7 @@ export default function LeasesIndex({
           expiredAt={dataAccessExpiredAt}
         />
 
+        {isGodAdmin && (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={4}>
           <StatCard
             title='Total'
@@ -130,6 +136,7 @@ export default function LeasesIndex({
             icon={IconCircleX}
           />
         </SimpleGrid>
+        )}
 
         <Deferred data='leases' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All leases'>

@@ -2,9 +2,10 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Link } from '@inertiajs/react'
 import { IconBuilding, IconHome, IconMapPin } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
+import { usePage } from '@inertiajs/react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
-import type { RawLeaseableEntity } from '#types/model-types'
+import type { RawLeaseableEntity, RawUser } from '#types/model-types'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
 import { DataAccessExpiredAlert } from '@/components/dashboard/data-access-expired-alert'
@@ -69,6 +70,9 @@ export default function LeaseableEntitiesIndex({
   dataAccessExpired,
   dataAccessExpiredAt,
 }: LeaseableEntitiesIndexProps) {
+  const page = usePage()
+  const user = page.props.user as RawUser | undefined
+  const isGodAdmin = Boolean(user?.isGodAdmin)
   const { changePage, changeRows, searchTable, query } = useInertiaParams({
     page: 1,
     perPage: 20,
@@ -81,6 +85,7 @@ export default function LeaseableEntitiesIndex({
       const res = await api.get<LeaseableEntitiesStats>('/leaseable-entities/stats')
       return res.data
     },
+    enabled: isGodAdmin,
   })
 
   return (
@@ -93,6 +98,7 @@ export default function LeaseableEntitiesIndex({
           expiredAt={dataAccessExpiredAt}
         />
 
+        {isGodAdmin && (
         <SimpleGrid cols={{ base: 1, md: 3 }} spacing={4}>
           <StatCard
             title='Total'
@@ -115,6 +121,7 @@ export default function LeaseableEntitiesIndex({
             iconClassName='h-4 w-4 text-green-600'
           />
         </SimpleGrid>
+        )}
 
         <Deferred data='leaseableEntities' fallback={<LoadingSkeleton type='table' />}>
           <AppCard

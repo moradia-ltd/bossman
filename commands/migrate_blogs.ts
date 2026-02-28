@@ -115,7 +115,7 @@ export default class MigrateBlogs extends BaseCommand {
             createdAt: actualPost.createdAt,
             updatedAt: actualPost.updatedAt,
           },
-          { connection: 'dev' },
+          { connection: 'prod' },
         )
 
         this.logger.success(`Migrated blog post ${post.title}`)
