@@ -11,9 +11,10 @@ import {
 import { useMutation } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import { usePage } from '@inertiajs/react'
 
 import type { Column, PaginatedResponse } from '#types/extra'
-import type { RawOrg } from '#types/model-types'
+import type { RawOrg, RawUser } from '#types/model-types'
 import { timeAgo } from '#utils/date'
 import { formatNumber } from '#utils/functions'
 import { DataTable } from '@/components/dashboard/data-table'
@@ -122,6 +123,9 @@ interface OrgsIndexProps extends SharedProps {
 }
 
 export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
+  const page = usePage()
+  const user = page.props.user as RawUser | undefined
+  const isGodAdmin = Boolean(user?.isGodAdmin)
   const { changePage, changeRows, searchTable, query, updateQuery } = useInertiaParams({
     page: 1,
     perPage: 20,
@@ -309,6 +313,7 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
           </Link>
         </Button>
       }>
+      {isGodAdmin && (
       <SimpleGrid cols={{ base: 1, md: 3 }} spacing={4}>
           <StatCard
             title='Total'
@@ -329,6 +334,7 @@ export default function OrgsIndex({ orgs, stats }: OrgsIndexProps) {
             icon={IconBriefcase}
           />
         </SimpleGrid>
+      )}
 
         <Deferred data='orgs' fallback={<LoadingSkeleton type='table' />}>
           <AppCard title='All customers' description={`${orgs?.meta?.total ?? 0} total`}>
