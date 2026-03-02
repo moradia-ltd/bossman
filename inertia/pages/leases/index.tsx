@@ -3,7 +3,6 @@ import { Deferred, Link } from '@inertiajs/react'
 import { IconAlertCircle, IconCircleCheck, IconCircleX, IconFileText } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { usePage } from '@inertiajs/react'
-
 import type { Column, PaginatedResponse } from '#types/extra'
 import type { RawLease, RawUser } from '#types/model-types'
 import { formatCurrency } from '#utils/currency'
@@ -104,11 +103,11 @@ export default function LeasesIndex({
   return (
     <DashboardPage title='Leases' description='All leases for your organisation.'>
       <DataAccessExpiredAlert
-          expired={dataAccessExpired}
-          expiredAt={dataAccessExpiredAt}
-        />
+        expired={dataAccessExpired}
+        expiredAt={dataAccessExpiredAt}
+      />
 
-        {isGodAdmin && (
+      {isGodAdmin && (
         <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing={4}>
           <StatCard
             title='Total'
@@ -136,25 +135,25 @@ export default function LeasesIndex({
             icon={IconCircleX}
           />
         </SimpleGrid>
-        )}
+      )}
 
-        <Deferred data='leases' fallback={<LoadingSkeleton type='table' />}>
-          <AppCard title='All leases'>
-            <DataTable
-              columns={columns}
-              data={leases?.data}
-              searchable
-              searchPlaceholder='Search by name...'
-              searchValue={String(query.search || '')}
-              onSearchChange={(value) => searchTable(String(value || ''))}
-              pagination={tablePagination(leases, {
-                onPageChange: changePage,
-                onPageSizeChange: changeRows,
-              })}
-              emptyMessage='No leases found'
-            />
-          </AppCard>
-        </Deferred>
+      <Deferred data='leases' fallback={<LoadingSkeleton type='table' />}>
+        <AppCard title='All leases'>
+          <DataTable
+            columns={columns}
+            data={leases?.data}
+            searchable
+            searchPlaceholder='Search by name...'
+            searchValue={String(query.search || '')}
+            onSearchChange={(value) => searchTable(String(value || ''))}
+            pagination={tablePagination(leases, {
+              onPageChange: changePage,
+              onPageSizeChange: changeRows,
+            })}
+            emptyMessage='No leases found'
+          />
+        </AppCard>
+      </Deferred>
     </DashboardPage>
   )
 }

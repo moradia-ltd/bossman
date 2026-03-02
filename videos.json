@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "attributes": {
+      "name": "Getting started with togetha",
+      "url": "https://youtu.be/uPtyHaKXrmc",
+      "createdAt": "2024-06-10T13:44:21.624Z",
+      "updatedAt": "2024-06-10T13:44:21.624Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  },
+  {
+    "id": 2,
+    "attributes": {
+      "name": "Understand your Dashboard",
+      "url": "https://youtu.be/R78g2TeXQhI",
+      "createdAt": "2024-06-10T13:47:46.544Z",
+      "updatedAt": "2024-06-10T13:47:46.544Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  },
+  {
+    "id": 3,
+    "attributes": {
+      "name": "Adding Properties",
+      "url": "https://youtu.be/XSHMBt-IFHU",
+      "createdAt": "2024-06-10T13:48:10.270Z",
+      "updatedAt": "2024-06-10T13:48:10.270Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  },
+  {
+    "id": 4,
+    "attributes": {
+      "name": "Rent Collection",
+      "url": "https://youtu.be/4_spDnASNlg",
+      "createdAt": "2024-06-10T13:48:36.266Z",
+      "updatedAt": "2024-06-10T13:48:36.266Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  },
+  {
+    "id": 5,
+    "attributes": {
+      "name": "Creating Tenancies",
+      "url": "https://youtu.be/cyJ3tMmAXlg",
+      "createdAt": "2024-06-10T13:48:55.172Z",
+      "updatedAt": "2024-06-10T13:48:55.172Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  },
+  {
+    "id": 6,
+    "attributes": {
+      "name": "Teams, Calendar, Broadcasts",
+      "url": "https://www.youtube.com/watch?v=N7tylayESs0",
+      "createdAt": "2024-06-10T13:49:26.124Z",
+      "updatedAt": "2024-06-10T13:49:26.124Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  },
+  {
+    "id": 7,
+    "attributes": {
+      "name": "Maintenance requests",
+      "url": "https://www.youtube.com/watch?v=mq_QPQZ-4TI",
+      "createdAt": "2024-06-10T13:49:49.365Z",
+      "updatedAt": "2024-06-10T13:49:49.365Z",
+      "publishedAt": "2024-06-10T13:52:42.882Z"
+    }
+  }
+]
