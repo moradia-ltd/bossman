@@ -219,7 +219,24 @@ export function TeamInvitationsInviteButton() {
         </div>
 
         <div className='space-y-2'>
-          <Label>Page access</Label>
+          <HStack spacing={2} justify='between' align='center'>
+            <Label>Page access</Label>
+            <span className='text-sm'>
+              <button
+                type='button'
+                onClick={() => setInvitePages(PAGE_OPTIONS.map((o) => o.key))}
+                className='text-primary hover:underline'>
+                Select all
+              </button>
+              <span className='text-muted-foreground'> · </span>
+              <button
+                type='button'
+                onClick={() => setInvitePages([])}
+                className='text-primary hover:underline'>
+                Clear all
+              </button>
+            </span>
+          </HStack>
           <div className='max-h-[280px] overflow-y-auto rounded-lg border border-border p-3'>
             <div className='grid gap-2'>
               {PAGE_OPTIONS.map((opt) => {
@@ -460,7 +477,24 @@ export function TeamInvitations() {
             />
           </div>
           <div className='space-y-2'>
-            <Label>Page access</Label>
+            <HStack spacing={2} justify='between' align='center'>
+              <Label>Page access</Label>
+              <span className='text-sm'>
+                <button
+                  type='button'
+                  onClick={() => setEditInvitationPages(PAGE_OPTIONS.map((o) => o.key))}
+                  className='text-primary hover:underline'>
+                  Select all
+                </button>
+                <span className='text-muted-foreground'> · </span>
+                <button
+                  type='button'
+                  onClick={() => setEditInvitationPages([])}
+                  className='text-primary hover:underline'>
+                  Clear all
+                </button>
+              </span>
+            </HStack>
             <div className='max-h-[280px] overflow-y-auto rounded-lg border border-border p-3'>
               <div className='grid gap-2'>
                 {PAGE_OPTIONS.map((opt) => {
