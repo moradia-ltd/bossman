@@ -51,7 +51,7 @@ export const PAGE_OPTIONS: Array<{
   description: string
   required?: boolean
 }> = [
-  { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity', required: true },
+  { key: 'dashboard', label: 'Dashboard', description: 'Overview and activity' },
   { key: 'analytics', label: 'Analytics', description: 'Analytics and reporting' },
   { key: 'teams', label: 'Teams', description: 'Manage teams and invites' },
   { key: 'blog', label: 'Blog', description: 'Manage blog posts and categories' },
@@ -81,7 +81,6 @@ export function togglePageInSet(pages: PageKey[], key: PageKey, next: boolean): 
   const set = new Set(pages)
   if (next) set.add(key)
   else set.delete(key)
-  set.add('dashboard')
   return Array.from(set)
 }
 
@@ -99,7 +98,9 @@ export function TeamInvitationsInviteButton() {
   const queryClient = useQueryClient()
   const [inviteEmail, setInviteEmail] = useState('')
   const [inviteRole, setInviteRole] = useState<InviteRole>('member')
-  const [invitePages, setInvitePages] = useState<PageKey[]>(PAGE_OPTIONS.map((o) => o.key))
+  const [invitePages, setInvitePages] = useState<PageKey[]>(
+    PAGE_OPTIONS.filter((o) => o.key !== 'dashboard').map((o) => o.key),
+  )
   const [enableProdAccess, setEnableProdAccess] = useState(true)
 
   const inviteMutation = useMutation({
@@ -118,7 +119,7 @@ export function TeamInvitationsInviteButton() {
     onSuccess: async () => {
       setInviteEmail('')
       setInviteRole('member')
-      setInvitePages(PAGE_OPTIONS.map((o) => o.key))
+      setInvitePages(PAGE_OPTIONS.filter((o) => o.key !== 'dashboard').map((o) => o.key))
       setEnableProdAccess(true)
       toast.success('Invite sent successfully')
       await queryClient.invalidateQueries({
@@ -133,7 +134,6 @@ export function TeamInvitationsInviteButton() {
   })
 
   const toggleInvitePage = (key: PageKey, next: boolean) => {
-    if (key === 'dashboard') return
     setInvitePages((prev) => togglePageInSet(prev, key, next))
   }
 
@@ -168,7 +168,7 @@ export function TeamInvitationsInviteButton() {
       onSecondaryAction={() => {
         setInviteEmail('')
         setInviteRole('member')
-        setInvitePages(PAGE_OPTIONS.map((o) => o.key))
+        setInvitePages(PAGE_OPTIONS.filter((o) => o.key !== 'dashboard').map((o) => o.key))
         setEnableProdAccess(true)
       }}
       className='max-w-2xl'>
@@ -242,7 +242,7 @@ export function TeamInvitationsInviteButton() {
             </div>
           </div>
           <p className='text-xs text-muted-foreground'>
-            Dashboard is always included so invitees have a landing page.
+            Select which pages the invitee can access after accepting.
           </p>
         </div>
       </Stack>
@@ -486,7 +486,9 @@ export function TeamInvitations() {
                 })}
               </div>
             </div>
-            <p className='text-xs text-muted-foreground'>Dashboard is always included.</p>
+            <p className='text-xs text-muted-foreground'>
+              Select which pages the invitee can access.
+            </p>
           </div>
         </Stack>
       </BaseModal>

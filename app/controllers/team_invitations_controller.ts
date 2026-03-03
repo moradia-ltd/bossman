@@ -145,9 +145,7 @@ export default class TeamInvitationsController {
 
     const resolvedAllowedPages = (() => {
       const raw = Array.isArray(allowedPages) ? allowedPages : []
-      const unique = Array.from(new Set(raw))
-      if (!unique.includes('dashboard')) unique.unshift('dashboard')
-      return unique
+      return Array.from(new Set(raw))
     })()
 
     const existingUser = await User.findBy('email', normalizedEmail)
@@ -317,9 +315,6 @@ export default class TeamInvitationsController {
     if (body.allowedPages !== undefined) {
       const pages = Array.isArray(body.allowedPages) ? body.allowedPages : null
       const resolved = pages?.length ? [...pages] : null
-      if (resolved && !resolved.includes('dashboard')) {
-        resolved.unshift('dashboard')
-      }
       invitation.allowedPages = resolved?.length ? resolved : null
     }
     if (body.enableProdAccess !== undefined) {
