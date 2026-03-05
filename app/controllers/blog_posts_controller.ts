@@ -21,6 +21,7 @@ export default class BlogPostsController {
       .paginate(params.page || 1, params.perPage || 12)
 
     return inertia.render('blog/index', {
+      query: { search: params.search ?? '', page: params.page ?? 1, perPage: params.perPage ?? 12 },
       posts: inertia.defer(async () => {
         const p = await posts
         return BlogPostTransformer.paginate(p.all(), p.getMeta()) as never

@@ -22,6 +22,7 @@ import {
 import '@mdxeditor/editor/style.css'
 import * as React from 'react'
 
+import { useTheme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
 type BlockType = 'paragraph' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'quote'
@@ -74,6 +75,8 @@ export function MarkdownEditor({
 }: MarkdownEditorProps) {
   const ref = React.useRef<MDXEditorMethods>(null)
   const [mounted, setMounted] = React.useState(false)
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
 
   React.useEffect(() => {
     setMounted(true)
@@ -100,6 +103,7 @@ export function MarkdownEditor({
     <div
       className={cn(
         'rounded-lg border border-input bg-background markdown-editor-wrapper max-h-[420px] flex flex-col overflow-visible',
+        isDark && 'dark-theme',
         className,
       )}>
       <style>{`
@@ -114,6 +118,17 @@ export function MarkdownEditor({
         .markdown-editor-wrapper [role="dialog"] { z-index: 100; }
         body [data-radix-popper-content-wrapper] { z-index: 9999; }
         body [role="dialog"] { z-index: 9999; }
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-content-scroll { color: var(--foreground); }
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable p,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable li,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable h1,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable h2,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable h3,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable h4,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable h5,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable h6,
+        .markdown-editor-wrapper.dark-theme .mdxeditor-root-contenteditable blockquote { color: var(--foreground); }
       `}</style>
       <MDXEditor
         ref={ref}

@@ -1,5 +1,6 @@
 import type { SharedProps } from '@adonisjs/inertia/types'
 import { Deferred, Head, Link } from '@inertiajs/react'
+import { useCallback, useRef } from 'react'
 
 import type { PaginatedResponse } from '#types/extra'
 import type { RawBlogPost } from '#types/model-types'
@@ -13,13 +14,42 @@ import { AppCard } from '@/components/ui/app-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { HStack } from '@/components/ui/hstack'
+import { Input } from '@/components/ui/input'
 import { SimpleGrid } from '@/components/ui/simplegrid'
+import { useInertiaParams } from '@/hooks/use-inertia-params'
 
 interface BlogIndexProps extends SharedProps {
+  query?: { search?: string; page?: number; perPage?: number }
   posts?: PaginatedResponse<RawBlogPost>
 }
 
-export default function BlogIndex({ posts }: BlogIndexProps) {
+function blogQuery(page: number, perPage: number, search: string) {
+  const params = new URLSearchParams()
+  if (page > 1) params.set('page', String(page))
+  if (perPage !== 12) params.set('perPage', String(perPage))
+  if (search) params.set('search', search)
+  const qs = params.toString()
+  return qs ? `/blog?${qs}` : '/blog'
+}
+
+export default function BlogIndex({ posts, query: serverQuery }: BlogIndexProps) {
+  const { query, updateQuery } = useInertiaParams({
+    page: serverQuery?.page ?? 1,
+    perPage: serverQuery?.perPage ?? 12,
+    search: serverQuery?.search ?? '',
+  })
+  const search = String(query.search ?? '')
+  const perPage = Number(query.perPage ?? 12) || 12
+  const searchTimeout = useRef<ReturnType<typeof setTimeout>>()
+  const handleSearch = useCallback(
+    (value: string) => {
+      clearTimeout(searchTimeout.current)
+      searchTimeout.current = setTimeout(() => {
+        updateQuery({ search: value, page: 1 })
+      }, 300)
+    },
+    [updateQuery],
+  )
   const data = posts?.data ?? []
   const meta = posts?.metadata
   const isFirstPage = !meta || meta.currentPage === 1
@@ -42,6 +72,15 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
             <p className='text-muted-foreground text-base sm:text-lg max-w-2xl'>
               Learn what's new, how things work, and how to get the most out of the platform.
             </p>
+            <div className='max-w-md'>
+              <Input
+                type='search'
+                placeholder='Search posts...'
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+                className='bg-background'
+              />
+            </div>
           </div>
 
           <Deferred data='posts' fallback={<LoadingSkeleton type='table' />}>
@@ -73,7 +112,7 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
                           <span key={n} className='inline-flex items-center'>
                             {i > 0 ? ' · ' : null}
                             <Link
-                              href={`/blog?page=1&perPage=${n}`}
+                              href={blogQuery(1, n, search)}
                               className={
                                 meta.perPage === n
                                   ? 'font-medium text-foreground'
@@ -94,8 +133,8 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
                         <Link
                           href={
                             meta.currentPage <= 1
-                              ? '/blog'
-                              : `/blog?page=${meta.currentPage - 1}&perPage=${meta.perPage}`
+                              ? blogQuery(1, meta.perPage, search)
+                              : blogQuery(meta.currentPage - 1, meta.perPage, search)
                           }>
                           Previous
                         </Link>
@@ -106,7 +145,7 @@ export default function BlogIndex({ posts }: BlogIndexProps) {
                         disabled={meta.currentPage >= meta.lastPage}
                         asChild={meta.currentPage < meta.lastPage}>
                         <Link
-                          href={`/blog?page=${meta.currentPage + 1}&perPage=${meta.perPage}`}>
+                          href={blogQuery(meta.currentPage + 1, meta.perPage, search)}>
                           Next
                         </Link>
                       </Button>
