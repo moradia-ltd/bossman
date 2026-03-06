@@ -80,7 +80,7 @@ export default class BlogPostsController {
     })
   }
 
-  async store({ request, response }: HttpContext) {
+  async store({ request, response, logger }: HttpContext) {
     const { publish, isUploadedPhotoLink, coverImageAltUrl, ...body } =
       await request.validateUsing(createBlogPostValidator)
     const coverFile = request.file('coverImage', {
@@ -88,6 +88,7 @@ export default class BlogPostsController {
       extnames: allowedImageExtensions,
     })
 
+    logger.info('🚀 ~ BlogPostsController ~ store ~ coverFile:', coverFile)
     const env = request.appEnv()
 
     try {
@@ -95,13 +96,21 @@ export default class BlogPostsController {
         { ...body, publishedAt: publish ? DateTime.now() : null },
         { connection: env },
       )
-      if (isUploadedPhotoLink && coverImageAltUrl) {
-        post.coverImageAltUrl = coverImageAltUrl
-      } else if (coverFile?.isValid) {
-        post.coverImage = (await attachmentManager.createFromFile(
-          coverFile,
-        )) as BlogPost['coverImage']
-      }
+
+      post.coverImage =
+        coverFile && !isUploadedPhotoLink
+          ? ((await attachmentManager.createFromFile(coverFile)) as BlogPost['coverImage'])
+          : null
+      post.coverImageAltUrl = coverImageAltUrl ?? null
+
+      await post.save()
+      // if (isUploadedPhotoLink && coverImageAltUrl) {
+      //   post.coverImageAltUrl = coverImageAltUrl
+      // } else if (coverFile?.isValid) {
+      //   post.coverImage = (await attachmentManager.createFromFile(
+      //     coverFile,
+      //   )) as BlogPost['coverImage']
+      // }
 
       return response.redirect('/blog/manage')
     } catch (error) {
@@ -117,6 +126,10 @@ export default class BlogPostsController {
     const env = request.appEnv()
     const post = await BlogPost.query({ connection: env }).where('id', params.id).first()
     if (!post) return response.notFound({ error: 'Post not found' })
+    const coverFile = request.file('coverImage', {
+      size: '5mb',
+      extnames: allowedImageExtensions,
+    })
 
     try {
       post.merge(body)
@@ -126,10 +139,6 @@ export default class BlogPostsController {
           post.coverImageAltUrl = coverImageAltUrl
           post.coverImage = null
         } else {
-          const coverFile = request.file('coverImage', {
-            size: '5mb',
-            extnames: allowedImageExtensions,
-          })
           if (coverFile?.isValid) {
             post.coverImage = (await attachmentManager.createFromFile(
               coverFile,

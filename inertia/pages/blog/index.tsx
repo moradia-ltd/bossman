@@ -33,23 +33,14 @@ function blogQuery(page: number, perPage: number, search: string) {
 }
 
 export default function BlogIndex({ posts, query: serverQuery }: BlogIndexProps) {
-  const { query, updateQuery } = useInertiaParams({
+  const { query, searchTable } = useInertiaParams({
     page: serverQuery?.page ?? 1,
     perPage: serverQuery?.perPage ?? 12,
     search: serverQuery?.search ?? '',
   })
   const search = String(query.search ?? '')
-  const perPage = Number(query.perPage ?? 12) || 12
-  const searchTimeout = useRef<ReturnType<typeof setTimeout>>()
-  const handleSearch = useCallback(
-    (value: string) => {
-      clearTimeout(searchTimeout.current)
-      searchTimeout.current = setTimeout(() => {
-        updateQuery({ search: value, page: 1 })
-      }, 300)
-    },
-    [updateQuery],
-  )
+
+
   const data = posts?.data ?? []
   const meta = posts?.metadata
   const isFirstPage = !meta || meta.currentPage === 1
@@ -77,7 +68,7 @@ export default function BlogIndex({ posts, query: serverQuery }: BlogIndexProps)
                 type='search'
                 placeholder='Search posts...'
                 value={search}
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) => searchTable(e.target.value)}
                 className='bg-background'
               />
             </div>

@@ -13,9 +13,7 @@ export function getCoverImageUrl(post: RawBlogPost): string | null {
 }
 
 export function getCoverImageAlt(post: RawBlogPost): string {
-  const url = post.coverImageAltUrl
-  if (url && typeof url === 'string' && !url.startsWith('http')) return url
-  return post.title
+  return post.excerpt || post.title || 'Blog post cover image'
 }
 
 export function formatBlogDate(value: string): string {
