@@ -18,3 +18,4 @@
 /// <reference path="../../config/server_stats.ts" />
 /// <reference path="../../config/swagger.ts" />
 /// <reference path="../../config/transmit.ts" />
+/// <reference path="../../config/queue.ts" />

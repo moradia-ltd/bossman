@@ -255,6 +255,64 @@ export class PushNotificationSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class QueueJobSchema extends BaseModel {
+  static $columns = ['id', 'queue', 'status', 'data', 'score', 'workerId', 'acquiredAt', 'executeAt', 'finishedAt', 'error'] as const
+  $columns = QueueJobSchema.$columns
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare queue: string
+  @column()
+  declare status: string
+  @column()
+  declare data: string
+  @column()
+  declare score: bigint | number | null
+  @column()
+  declare workerId: string | null
+  @column()
+  declare acquiredAt: bigint | number | null
+  @column()
+  declare executeAt: bigint | number | null
+  @column()
+  declare finishedAt: bigint | number | null
+  @column()
+  declare error: string | null
+}
+
+export class QueueScheduleSchema extends BaseModel {
+  static $columns = ['id', 'status', 'name', 'payload', 'cronExpression', 'everyMs', 'timezone', 'fromDate', 'toDate', 'runLimit', 'runCount', 'nextRunAt', 'lastRunAt', 'createdAt'] as const
+  $columns = QueueScheduleSchema.$columns
+  @column({ isPrimary: true })
+  declare id: string
+  @column()
+  declare status: string
+  @column()
+  declare name: string
+  @column()
+  declare payload: string
+  @column()
+  declare cronExpression: string | null
+  @column()
+  declare everyMs: bigint | number | null
+  @column()
+  declare timezone: string
+  @column.dateTime()
+  declare fromDate: DateTime | null
+  @column.dateTime()
+  declare toDate: DateTime | null
+  @column()
+  declare runLimit: number | null
+  @column()
+  declare runCount: number
+  @column.dateTime()
+  declare nextRunAt: DateTime | null
+  @column.dateTime()
+  declare lastRunAt: DateTime | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+}
+
 export class RateLimitSchema extends BaseModel {
   static $columns = ['key', 'points', 'expire'] as const
   $columns = RateLimitSchema.$columns
