@@ -246,6 +246,7 @@ export interface ApiDefinition {
     recent: typeof routes['audits.recent']
   }
   healthChecks: typeof routes['health_checks']
+  attachments: typeof routes['attachments']
   eventStream: typeof routes['event_stream']
   subscribe: typeof routes['subscribe']
   unsubscribe: typeof routes['unsubscribe']

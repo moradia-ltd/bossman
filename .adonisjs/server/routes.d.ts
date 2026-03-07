@@ -176,6 +176,7 @@ export type ScannedRoutes = {
     'audits.index': { paramsTuple?: []; params?: {} }
     'audits.recent': { paramsTuple?: []; params?: {} }
     'health_checks': { paramsTuple?: []; params?: {} }
+    'attachments': { paramsTuple: [ParamValue,ParamValue?]; params: {'key': ParamValue,'name'?: ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
@@ -291,6 +292,7 @@ export type ScannedRoutes = {
     'audits.index': { paramsTuple?: []; params?: {} }
     'audits.recent': { paramsTuple?: []; params?: {} }
     'health_checks': { paramsTuple?: []; params?: {} }
+    'attachments': { paramsTuple: [ParamValue,ParamValue?]; params: {'key': ParamValue,'name'?: ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
@@ -404,6 +406,7 @@ export type ScannedRoutes = {
     'audits.index': { paramsTuple?: []; params?: {} }
     'audits.recent': { paramsTuple?: []; params?: {} }
     'health_checks': { paramsTuple?: []; params?: {} }
+    'attachments': { paramsTuple: [ParamValue,ParamValue?]; params: {'key': ParamValue,'name'?: ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
   }
   POST: {

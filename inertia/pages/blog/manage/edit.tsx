@@ -21,6 +21,8 @@ interface BlogAdminEditProps extends SharedProps {
 }
 
 export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
+  console.log("🚀 ~ BlogAdminEdit ~ post:", post.coverImage)
+
   const { data, setData, put, processing, errors } = useForm<{
     title: string
     body: string
@@ -136,7 +138,7 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                       />
                     </FormField>
                     {data.coverImage ? (
-                      <div className="mt-2 rounded-md overflow-hidden border border-border">
+                      <div className="mt-2 w-[400px] rounded-md overflow-hidden border border-border">
                         <img
                           src={URL.createObjectURL(data.coverImage)}
                           alt="Cover preview"
@@ -144,7 +146,7 @@ export default function BlogAdminEdit({ post }: BlogAdminEditProps) {
                         />
                       </div>
                     ) : getCoverImageUrl(post) && !getInitialIsUploadedPhotoLink(post) ? (
-                      <div className="mt-2 rounded-md overflow-hidden border border-border">
+                      <div className="mt-2 w-[400px] rounded-md overflow-hidden border border-border">
                         <img
                           src={getCoverImageUrl(post)!}
                           alt="Current cover"

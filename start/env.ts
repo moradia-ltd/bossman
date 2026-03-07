@@ -46,7 +46,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the drive package
   |----------------------------------------------------------
   */
-  DRIVE_DISK: Env.schema.enum(['fs', 'backup'] as const),
+  DRIVE_DISK: Env.schema.enum(['fs', 'backup', 'blog'] as const),
 
   /*
   |----------------------------------------------------------
@@ -99,5 +99,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring @adonisjs/queue
   |----------------------------------------------------------
   */
-  QUEUE_DRIVER: Env.schema.enum(['redis', 'database', 'sync'] as const)
+  QUEUE_DRIVER: Env.schema.enum(['redis', 'database', 'sync'] as const),
 })

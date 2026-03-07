@@ -10,5 +10,4 @@ export {
   getCoverImageUrl,
   getInitialIsUploadedPhotoLink,
   getReadingMinutes,
-  isPublished,
 } from './blog-utils'

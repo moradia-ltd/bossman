@@ -225,5 +225,5 @@ router.get('/docs/:id?', async ({ params }) => {
   return AutoSwagger.default.scalar('/swagger')
   // return AutoSwagger.default.rapidoc('/swagger', 'read')
 })
-
+router.attachments()
 transmit.registerRoutes()

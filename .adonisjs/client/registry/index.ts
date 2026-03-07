@@ -1038,6 +1038,12 @@ const routes = {
     tokens: [{"old":"/health","type":0,"val":"health","end":""}],
     types: placeholder as Registry['health_checks']['types'],
   },
+  'attachments': {
+    methods: ["GET","HEAD"],
+    pattern: '/attachments/:key/:name?',
+    tokens: [{"old":"/attachments/:key/:name?","type":0,"val":"attachments","end":""},{"old":"/attachments/:key/:name?","type":1,"val":"key","end":""},{"old":"/attachments/:key/:name?","type":3,"val":"name","end":""}],
+    types: placeholder as Registry['attachments']['types'],
+  },
   'event_stream': {
     methods: ["GET","HEAD"],
     pattern: '/__transmit/events',

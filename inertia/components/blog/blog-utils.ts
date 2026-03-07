@@ -1,15 +1,9 @@
 import type { RawBlogPost } from '#types/model-types'
 
 export function getCoverImageUrl(post: RawBlogPost): string | null {
-  const c = post.coverImage
-  if (c && 'url' in c && typeof (c as { url?: string }).url === 'string') {
-    return (c as { url: string }).url.trim()
-  }
-  const alt = post.coverImageAltUrl
-  if (alt) {
-    return alt.trim()
-  }
-  return null
+  const path = post.coverImage?.name
+  const url = 'https://pub-362e8d5887644f3f8b73715561b86e9e.r2.dev/blog-images'
+  return path ? `${url}/${path}` : post.coverImageAltUrl || null
 }
 
 export function getCoverImageAlt(post: RawBlogPost): string {
@@ -33,10 +27,6 @@ export function getReadingMinutes(text: string): number | null {
   if (!trimmed) return null
   const words = trimmed.split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / 220))
-}
-
-export function isPublished(post: RawBlogPost): boolean {
-  return Boolean(post.publishedAt)
 }
 
 /** Used by edit form to detect if cover is "Link" (URL) vs "Upload" */

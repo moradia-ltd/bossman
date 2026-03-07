@@ -2,7 +2,6 @@ import type { SharedProps } from '@adonisjs/inertia/types'
 import { IconActivity, IconFileText, IconUsers } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-
 import type { PaginatedResponse } from '#types/extra'
 import type { RawActivity } from '#types/model-types'
 import { formatNumber } from '#utils/functions'

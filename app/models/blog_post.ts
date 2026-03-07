@@ -1,5 +1,5 @@
 import { slugify } from '@adonisjs/lucid-slugify'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
 import { Attachment, attachment } from '@jrmc/adonis-attachment'
 import type { DateTime } from 'luxon'
 
@@ -28,6 +28,10 @@ export default class BlogPost extends BaseModel {
 
   @column()
   declare coverImageAltUrl: string | null
+
+  @computed() get isPublished() {
+    return Boolean(this.publishedAt)
+  }
 
   @column.dateTime()
   declare publishedAt: DateTime | null

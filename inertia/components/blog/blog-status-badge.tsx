@@ -1,7 +1,7 @@
 import { IconCalendar, IconClock } from '@tabler/icons-react'
 
 import type { RawBlogPost } from '#types/model-types'
-import { formatBlogDate, getReadingMinutes, isPublished } from './blog-utils'
+import { formatBlogDate, getReadingMinutes } from './blog-utils'
 import { Badge } from '@/components/ui/badge'
 
 export interface BlogStatusBadgeProps {
@@ -11,8 +11,8 @@ export interface BlogStatusBadgeProps {
 
 export function BlogStatusBadge({ post, className }: BlogStatusBadgeProps) {
   return (
-    <Badge variant={isPublished(post) ? 'default' : 'secondary'} className={className}>
-      {isPublished(post) ? 'Published' : 'Draft'}
+    <Badge variant={post.isPublished ? 'default' : 'secondary'} className={className}>
+      {post.isPublished ? 'Published' : 'Draft'}
     </Badge>
   )
 }
