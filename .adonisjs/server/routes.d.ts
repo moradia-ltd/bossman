@@ -5,6 +5,8 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'server-stats.api': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.config': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.diagnostics': { paramsTuple?: []; params?: {} }
     'server-stats.debug.queries': { paramsTuple?: []; params?: {} }
     'server-stats.debug.events': { paramsTuple?: []; params?: {} }
     'server-stats.debug.routes': { paramsTuple?: []; params?: {} }
@@ -30,6 +32,7 @@ export type ScannedRoutes = {
     'server-stats.traces.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'server-stats.cache': { paramsTuple?: []; params?: {} }
     'server-stats.cache.show': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
+    'server-stats.cache.delete': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
     'server-stats.jobs': { paramsTuple?: []; params?: {} }
     'server-stats.jobs.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'server-stats.jobs.retry': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -183,6 +186,8 @@ export type ScannedRoutes = {
   }
   GET: {
     'server-stats.api': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.config': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.diagnostics': { paramsTuple?: []; params?: {} }
     'server-stats.debug.queries': { paramsTuple?: []; params?: {} }
     'server-stats.debug.events': { paramsTuple?: []; params?: {} }
     'server-stats.debug.routes': { paramsTuple?: []; params?: {} }
@@ -297,6 +302,8 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'server-stats.api': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.config': { paramsTuple?: []; params?: {} }
+    'server-stats.debug.diagnostics': { paramsTuple?: []; params?: {} }
     'server-stats.debug.queries': { paramsTuple?: []; params?: {} }
     'server-stats.debug.events': { paramsTuple?: []; params?: {} }
     'server-stats.debug.routes': { paramsTuple?: []; params?: {} }
@@ -409,6 +416,18 @@ export type ScannedRoutes = {
     'attachments': { paramsTuple: [ParamValue,ParamValue?]; params: {'key': ParamValue,'name'?: ParamValue} }
     'event_stream': { paramsTuple?: []; params?: {} }
   }
+  DELETE: {
+    'server-stats.cache.delete': { paramsTuple: [ParamValue]; params: {'key': ParamValue} }
+    'server-stats.filters.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'db_backups.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_posts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'blog_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'users.delete_avatar': { paramsTuple?: []; params?: {} }
+    'users.delete_account': { paramsTuple?: []; params?: {} }
+    'members.destroy': { paramsTuple: [ParamValue]; params: {'memberId': ParamValue} }
+    'team_invitations.destroy': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
+    'notifications.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
   POST: {
     'server-stats.jobs.retry': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'server-stats.filters.create': { paramsTuple?: []; params?: {} }
@@ -457,17 +476,6 @@ export type ScannedRoutes = {
     'notifications.mark_all_as_read': { paramsTuple?: []; params?: {} }
     'subscribe': { paramsTuple?: []; params?: {} }
     'unsubscribe': { paramsTuple?: []; params?: {} }
-  }
-  DELETE: {
-    'server-stats.filters.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'db_backups.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'blog_posts.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'blog_categories.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-    'users.delete_avatar': { paramsTuple?: []; params?: {} }
-    'users.delete_account': { paramsTuple?: []; params?: {} }
-    'members.destroy': { paramsTuple: [ParamValue]; params: {'memberId': ParamValue} }
-    'team_invitations.destroy': { paramsTuple: [ParamValue]; params: {'invitationId': ParamValue} }
-    'notifications.delete': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   PUT: {
     'orgs.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

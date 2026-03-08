@@ -5,6 +5,8 @@ export interface ApiDefinition {
   serverStats: {
     api: typeof routes['server-stats.api']
     debug: {
+      config: typeof routes['server-stats.debug.config']
+      diagnostics: typeof routes['server-stats.debug.diagnostics']
       queries: typeof routes['server-stats.debug.queries']
       events: typeof routes['server-stats.debug.events']
       routes: typeof routes['server-stats.debug.routes']
@@ -36,6 +38,7 @@ export interface ApiDefinition {
     }
     cache: typeof routes['server-stats.cache'] & {
       show: typeof routes['server-stats.cache.show']
+      delete: typeof routes['server-stats.cache.delete']
     }
     jobs: typeof routes['server-stats.jobs'] & {
       show: typeof routes['server-stats.jobs.show']
