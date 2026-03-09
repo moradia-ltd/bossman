@@ -1,12 +1,4 @@
 import { defineConfig } from 'adonisjs-server-stats'
-import {
-  appCollector,
-  dbPoolCollector,
-  httpCollector,
-  logCollector,
-  processCollector,
-  systemCollector,
-} from 'adonisjs-server-stats/collectors'
 
 export default defineConfig({
   // How often to collect and broadcast stats (in milliseconds).
