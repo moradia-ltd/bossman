@@ -108,18 +108,6 @@ const routes = {
     tokens: [{"old":"/__stats/api/queries","type":0,"val":"__stats","end":""},{"old":"/__stats/api/queries","type":0,"val":"api","end":""},{"old":"/__stats/api/queries","type":0,"val":"queries","end":""}],
     types: placeholder as Registry['server-stats.queries']['types'],
   },
-  'server-stats.queries.grouped': {
-    methods: ["GET","HEAD"],
-    pattern: '/__stats/api/queries/grouped',
-    tokens: [{"old":"/__stats/api/queries/grouped","type":0,"val":"__stats","end":""},{"old":"/__stats/api/queries/grouped","type":0,"val":"api","end":""},{"old":"/__stats/api/queries/grouped","type":0,"val":"queries","end":""},{"old":"/__stats/api/queries/grouped","type":0,"val":"grouped","end":""}],
-    types: placeholder as Registry['server-stats.queries.grouped']['types'],
-  },
-  'server-stats.queries.explain': {
-    methods: ["GET","HEAD"],
-    pattern: '/__stats/api/queries/:id/explain',
-    tokens: [{"old":"/__stats/api/queries/:id/explain","type":0,"val":"__stats","end":""},{"old":"/__stats/api/queries/:id/explain","type":0,"val":"api","end":""},{"old":"/__stats/api/queries/:id/explain","type":0,"val":"queries","end":""},{"old":"/__stats/api/queries/:id/explain","type":1,"val":"id","end":""},{"old":"/__stats/api/queries/:id/explain","type":0,"val":"explain","end":""}],
-    types: placeholder as Registry['server-stats.queries.explain']['types'],
-  },
   'server-stats.events': {
     methods: ["GET","HEAD"],
     pattern: '/__stats/api/events',
@@ -161,6 +149,18 @@ const routes = {
     pattern: '/__stats/api/traces/:id',
     tokens: [{"old":"/__stats/api/traces/:id","type":0,"val":"__stats","end":""},{"old":"/__stats/api/traces/:id","type":0,"val":"api","end":""},{"old":"/__stats/api/traces/:id","type":0,"val":"traces","end":""},{"old":"/__stats/api/traces/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['server-stats.traces.show']['types'],
+  },
+  'server-stats.queries.grouped': {
+    methods: ["GET","HEAD"],
+    pattern: '/__stats/api/queries/grouped',
+    tokens: [{"old":"/__stats/api/queries/grouped","type":0,"val":"__stats","end":""},{"old":"/__stats/api/queries/grouped","type":0,"val":"api","end":""},{"old":"/__stats/api/queries/grouped","type":0,"val":"queries","end":""},{"old":"/__stats/api/queries/grouped","type":0,"val":"grouped","end":""}],
+    types: placeholder as Registry['server-stats.queries.grouped']['types'],
+  },
+  'server-stats.queries.explain': {
+    methods: ["GET","HEAD"],
+    pattern: '/__stats/api/queries/:id/explain',
+    tokens: [{"old":"/__stats/api/queries/:id/explain","type":0,"val":"__stats","end":""},{"old":"/__stats/api/queries/:id/explain","type":0,"val":"api","end":""},{"old":"/__stats/api/queries/:id/explain","type":0,"val":"queries","end":""},{"old":"/__stats/api/queries/:id/explain","type":1,"val":"id","end":""},{"old":"/__stats/api/queries/:id/explain","type":0,"val":"explain","end":""}],
+    types: placeholder as Registry['server-stats.queries.explain']['types'],
   },
   'server-stats.cache': {
     methods: ["GET","HEAD"],

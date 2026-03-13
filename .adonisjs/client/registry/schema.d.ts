@@ -194,28 +194,6 @@ export interface Registry {
       response: unknown
     }
   }
-  'server-stats.queries.grouped': {
-    methods: ["GET","HEAD"]
-    pattern: '/__stats/api/queries/grouped'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: unknown
-    }
-  }
-  'server-stats.queries.explain': {
-    methods: ["GET","HEAD"]
-    pattern: '/__stats/api/queries/:id/explain'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: unknown
-    }
-  }
   'server-stats.events': {
     methods: ["GET","HEAD"]
     pattern: '/__stats/api/events'
@@ -285,6 +263,28 @@ export interface Registry {
   'server-stats.traces.show': {
     methods: ["GET","HEAD"]
     pattern: '/__stats/api/traces/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.queries.grouped': {
+    methods: ["GET","HEAD"]
+    pattern: '/__stats/api/queries/grouped'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+    }
+  }
+  'server-stats.queries.explain': {
+    methods: ["GET","HEAD"]
+    pattern: '/__stats/api/queries/:id/explain'
     types: {
       body: {}
       paramsTuple: [ParamValue]
