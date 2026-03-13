@@ -24,15 +24,15 @@ emitter.on('db:connection:disconnect', (connectionName) => {
   console.log(`Database connection "${connectionName.clientName}" has been closed.`)
 })
 
-emitter.on('http:request_completed', (event) => {
-  const method = event.ctx.request.method()
-  const url = event.ctx.request.url()
-  const duration = event.duration
+// emitter.on('http:request_completed', (event) => {
+//   const method = event.ctx.request.method()
+//   const url = event.ctx.request.url()
+//   const duration = event.duration
 
-  if (!url.includes('/api/v1')) return
+//   if (!url.includes('/api/v1')) return
 
-  logger.info(`${method} ${url} [${string.prettyHrTime(duration)}]`)
-})
+//   logger.info(`${method} ${url} [${string.prettyHrTime(duration)}]`)
+// })
 
 emitter.on('mail:sent', async (event) => {
   // @ts-expect-error
