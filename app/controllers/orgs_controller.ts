@@ -19,7 +19,7 @@ import mailer from '#services/email_service'
 import { LoopService } from '#services/loop_service'
 import OrgService from '#services/org_service'
 import PermissionService from '#services/permission_service'
-import StripeService from '#services/stripe_service'
+import StripeService, { isoFromUnix } from '#services/stripe_service'
 import OrgTransformer from '#transformers/org_transformer'
 import type { AppEnv } from '#types/env'
 import type { AppCountries } from '#types/extra'
@@ -472,12 +472,9 @@ export default class OrgsController {
       amountDue: inv.amount_due ?? 0,
       total: inv.total ?? 0,
       currency: (inv.currency ?? 'gbp').toUpperCase(),
-      createdAt: inv.created ? new Date(inv.created * 1000).toISOString() : null,
-      dueDate: inv.due_date
-        ? new Date(inv.due_date * 1000).toISOString()
-        : inv.next_payment_attempt
-          ? new Date(inv.next_payment_attempt * 1000).toISOString()
-          : null,
+      createdAt: isoFromUnix(inv.created),
+      dueDate: isoFromUnix(inv.due_date ?? inv.next_payment_attempt),
+      paymentDate: isoFromUnix(inv.status_transitions?.paid_at),
       hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
       invoicePdf: inv.invoice_pdf ?? null,
       customerEmail: inv.customer_email ?? null,

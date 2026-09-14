@@ -41,6 +41,7 @@ export type RawOrgInvoice = {
   currency: string
   createdAt: string | null
   dueDate: string | null
+  paymentDate: string | null
   hostedInvoiceUrl: string | null
   invoicePdf: string | null
 }
@@ -72,16 +73,16 @@ const getColumns = (
     cell: (row) => formatCurrency(row.total / 100, row.currency as TogethaCurrencies),
   },
   {
-    key: 'createdAt',
-    header: 'Date',
-    width: 120,
-    cell: (row) => (row.createdAt ? dateFormatter(row.createdAt) : '—'),
-  },
-  {
     key: 'dueDate',
     header: 'Due date',
     width: 120,
     cell: (row) => (row.dueDate ? dateFormatter(row.dueDate) : '—'),
+  },
+  {
+    key: 'paymentDate',
+    header: 'Payment date',
+    width: 130,
+    cell: (row) => (row.paymentDate ? dateFormatter(row.paymentDate) : '—'),
   },
   {
     key: 'actions',
@@ -244,6 +245,12 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
             <div className='flex justify-between text-sm'>
               <span className='text-muted-foreground'>Due date</span>
               <span>{selectedInvoice.dueDate ? dateFormatter(selectedInvoice.dueDate) : '—'}</span>
+            </div>
+            <div className='flex justify-between text-sm'>
+              <span className='text-muted-foreground'>Payment date</span>
+              <span>
+                {selectedInvoice.paymentDate ? dateFormatter(selectedInvoice.paymentDate) : '—'}
+              </span>
             </div>
 
             <div className='flex flex-col gap-2 pt-4'>

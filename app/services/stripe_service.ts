@@ -101,7 +101,8 @@ export interface UpcomingInvoiceSummary {
   periodEnd: string | null
 }
 
-function isoFromUnix(seconds: number | null | undefined): string | null {
+/** Stripe timestamps are unix seconds; the admin UI wants ISO strings. */
+export function isoFromUnix(seconds: number | null | undefined): string | null {
   return typeof seconds === 'number' ? new Date(seconds * 1000).toISOString() : null
 }
 
