@@ -40,6 +40,7 @@ export type RawOrgInvoice = {
   total: number
   currency: string
   createdAt: string | null
+  dueDate: string | null
   hostedInvoiceUrl: string | null
   invoicePdf: string | null
 }
@@ -75,6 +76,12 @@ const getColumns = (
     header: 'Date',
     width: 120,
     cell: (row) => (row.createdAt ? dateFormatter(row.createdAt) : '—'),
+  },
+  {
+    key: 'dueDate',
+    header: 'Due date',
+    width: 120,
+    cell: (row) => (row.dueDate ? dateFormatter(row.dueDate) : '—'),
   },
   {
     key: 'actions',
@@ -233,6 +240,10 @@ export function InvoicesTab({ orgId }: InvoicesTabProps) {
               <span>
                 {selectedInvoice.createdAt ? dateFormatter(selectedInvoice.createdAt) : '—'}
               </span>
+            </div>
+            <div className='flex justify-between text-sm'>
+              <span className='text-muted-foreground'>Due date</span>
+              <span>{selectedInvoice.dueDate ? dateFormatter(selectedInvoice.dueDate) : '—'}</span>
             </div>
 
             <div className='flex flex-col gap-2 pt-4'>

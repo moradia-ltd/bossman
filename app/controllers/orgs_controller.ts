@@ -473,6 +473,11 @@ export default class OrgsController {
       total: inv.total ?? 0,
       currency: (inv.currency ?? 'gbp').toUpperCase(),
       createdAt: inv.created ? new Date(inv.created * 1000).toISOString() : null,
+      dueDate: inv.due_date
+        ? new Date(inv.due_date * 1000).toISOString()
+        : inv.next_payment_attempt
+          ? new Date(inv.next_payment_attempt * 1000).toISOString()
+          : null,
       hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
       invoicePdf: inv.invoice_pdf ?? null,
       customerEmail: inv.customer_email ?? null,
